@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtModuleMapper">
+
+    <select id="getLinkEnableModuleListByRoleList" parameterType="java.util.List"
+            resultMap="com.fit2cloud.commons.server.base.mapper.ModuleMapper.BaseResultMap">
+        SELECT distinct module.* FROM module LEFT JOIN role_permission ON role_permission.module_id = module.id
+
+        WHERE module.type='link' AND module.active = true AND role_permission.role_id IN
+
+        <foreach collection="roleIdList" open="(" close=")" index="index" item="item" separator=",">#{item}</foreach>
+
+    </select>
+
+    <select id="getModuleList"
+            resultMap="com.fit2cloud.commons.server.base.mapper.ModuleMapper.BaseResultMap">
+        SELECT * FROM module
+        <where>
+            <if test="name !=null">
+                module.name LIKE #{name}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,17 @@
+org.springframework.context.ApplicationListener=\
+com.fit2cloud.commons.server.listeners.ApplicationFailedListener,\
+com.fit2cloud.commons.server.listeners.ApplicationReadyEventListener
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.fit2cloud.autoconfigure.CommonServerConfig,\
+  com.fit2cloud.autoconfigure.SessionRedisConfig,\
+  com.fit2cloud.autoconfigure.RestTemplateConfig,\
+  com.fit2cloud.autoconfigure.BasicDataSourceConfig,\
+  com.fit2cloud.autoconfigure.BasicMybatisConfig,\
+  com.fit2cloud.autoconfigure.BaseShiroConfig,\
+  com.fit2cloud.autoconfigure.HttpCacheConfig,\
+  com.fit2cloud.autoconfigure.AsyncConfig,\
+  com.fit2cloud.autoconfigure.MetricConfig,\
+  com.fit2cloud.autoconfigure.BasicSwaggerConfig,\
+  com.fit2cloud.autoconfigure.I18nConfig
+org.springframework.context.ApplicationContextInitializer=com.fit2cloud.autoconfigure.BasicApplicationContextInitializer
+

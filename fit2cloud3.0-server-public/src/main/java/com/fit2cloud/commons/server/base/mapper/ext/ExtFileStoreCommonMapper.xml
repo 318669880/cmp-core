@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtFileStoreCommonMapper">
+    <select id="listFiles" resultType="com.fit2cloud.commons.server.base.domain.FileStore">
+        select id, name, business_key, size, create_time
+        from file_store
+        where business_key = #{businessKey}
+    </select>
+</mapper>

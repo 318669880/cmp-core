@@ -1,0 +1,10 @@
+<div layout="row" layout-align="start center" class="filter-condition filler-input">
+    <div>{{condition.name}} : </div>
+    <input id="_input_" type="text" class="filter-input-text" ng-model="condition.value"
+           placeholder="{{'i18n_filter_condition_enter' | translator:'请填写'}}{{condition.name}}"
+           ng-blur="addResult(condition)" ng-keypress="addResult(condition, $event)">
+    <md-button class="md-icon-button filter-remove" ng-click="remove()" ng-mouseenter="enter()" ng-mouseleave="leave()">
+        <md-tooltip md-delay="300">{{'i18n_filter_remove' | translator:'清除'}}</md-tooltip>
+        <md-icon>clear</md-icon>
+    </md-button>
+</div>

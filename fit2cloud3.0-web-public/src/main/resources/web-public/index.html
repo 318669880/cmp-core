@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="timestamp" type="java.lang.Long"*/-->
+<!--/*@thymesVar id="IndexConstants" type="java.util.Map"*/-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" th:href="${IndexConstants['ui.favicon']}" type="image/x-icon">
+    <title th:text="${IndexConstants['ui.title']}"></title>
+
+    <link rel="stylesheet"
+          th:href="@{'/web-public/external/angular-material/angular-material.min.css?t='+${timestamp}}">
+    <link rel="stylesheet"
+          th:href="@{'/web-public/external/font-awesome/web-fonts-with-css/css/fontawesome-all.css?t='+${timestamp}}">
+    <link rel="stylesheet" th:href="@{'/web-public/external/material-icons/material-icons.css?t='+${timestamp}}">
+    <link rel="stylesheet" th:href="@{'/web-public/external/angular-busy/angular-busy.min.css?t='+${timestamp}}">
+    <link rel="stylesheet" th:href="@{'web-public/project/css/menu.css?t='+${timestamp}}">
+    <script th:src="@{'/web-public/external/external.min.js?t='+${timestamp}}"></script>
+    <script th:src="@{'web-public/fit2cloud/js/i18n/date-locale.js?t='+${timestamp}}"></script>
+</head>
+
+<body ng-app="MenuApp" ng-cloak>
+<div id="_content" layout="column" layout-fill ng-controller="MenuCtrl" class="hideContent"
+     cg-busy="{promise:indexLoadingLayer,minDuration:500}">
+    <div layout-align="center center" ng-if="!licenseStatus"
+         style="height: 24px;background-color: #c92100;color: #fff;text-align: center;padding: 6px 11px;">
+        <strong>{{licenseMessage}}</strong>
+    </div>
+    <md-toolbar class="md-whiteframe-2dp">
+        <div class="md-toolbar-tools" layout="row" layout-align="start center">
+            <md-button class="md-icon-button f2c-icon-button" ng-click="toggleMenu()">
+                <i class="material-icons md-24 md-light">apps</i>
+            </md-button>
+
+            <div md-truncate class="f2c-logo" ng-click="home()">
+                <img th:src="${IndexConstants['ui.logo']}">
+            </div>
+
+            <h1 md-truncate th:text="${IndexConstants['ui.system.name']}"></h1>
+
+            <md-button ng-click="switch()" class="switch-btn">
+                <div style="max-width: 350px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;float: left">
+                    {{switchInfo}}
+                </div>
+                <md-tooltip class="f2c-tooltip-user">
+                    {{switchInfo}}
+                </md-tooltip>
+                <md-icon>arrow_drop_down</md-icon>
+            </md-button>
+
+            <div flex="auto"></div>
+
+            <md-menu md-position-mode="target bottom">
+                <md-button ng-click="$mdMenu.open()" class="switch-btn" aria-label="Language Menu">
+                    {{currentSystemLanguage.name}}
+                    <md-icon>arrow_drop_down</md-icon>
+                </md-button>
+                <md-menu-content width="2" style="padding: 0px">
+                    <md-menu-item class="language" ng-repeat="languageOption in languageOptions"
+                                  ng-hide="languageOption.id === currentSystemLanguage.id">
+                        <div ng-click="changeLanguage(languageOption.id)">
+                            {{languageOption.name}}
+                        </div>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+            <!--<div>-->
+            <!--<md-button class="md-icon-button f2c-icon-button" ng-click="help()">-->
+            <!--<md-tooltip class="f2c-tooltip">帮助</md-tooltip>-->
+            <!--<md-icon class="md-18 md-light">help</md-icon>-->
+            <!--</md-button>-->
+            <!--</div>-->
+
+            <task-menus></task-menus>
+
+            <notification-menus></notification-menus>
+
+            <md-menu md-position-mode="target bottom">
+                <md-button class="md-icon-button f2c-icon-button" ng-click="$mdMenu.open()" aria-label="User Menu">
+                    <md-tooltip class="f2c-tooltip-user">
+                        {{'i18n_user_' | translator}} ID: {{user.id}}<br>
+                        {{'i18n_user_name_' | translator}}: {{user.name}}<br>
+                        {{'i18n_email' | translator}}: {{user.email}}
+                    </md-tooltip>
+                    <md-icon class="md-36 md-light">account_circle</md-icon>
+                </md-button>
+                <md-menu-content width="3">
+                    <md-menu-item ng-if="user.source === 'local'">
+                        <md-button ng-click="changePwd()">
+                            <i class="fas fa-unlock-alt" style="margin-right: 16px"></i>
+                            {{'i18n_change_password' | translator}}
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-if="user.source === 'local'">
+                        <md-button ng-click="editUserInfo(user)">
+                            <i class="fas fa-info-circle" style="margin-right: 16px"></i>
+                            {{'i18n_basic_information' | translator}}
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="openApi()">
+                            <i class="fas fa-key" style="margin-right: 16px"></i>
+                            API Key
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-href="/logout">
+                            <i class="fas fa-sign-out-alt" style="margin-right: 16px"></i>
+                            {{'i18n_sign_out' | translator}}
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>
+        <md-progress-linear md-mode="indeterminate" class="md-accent frame-loading-process"></md-progress-linear>
+    </md-toolbar>
+
+    <md-content layout="row" flex>
+        <md-sidenav class="md-sidenav-left md-whiteframe-4dp f2c-menu-sidenav" md-component-id="menu">
+            <div layout="column">
+
+                <div flex="auto" layout="row" style="min-height: 47px">
+                    <div flex="33" layout="row">
+                        <div layout="row" class="f2c-home-header" md-ink-ripple ng-click="home()">
+                            <md-icon class="md-20" style="margin: 3px 8px 0px 10px;">home</md-icon>
+                            <div class="md-no-sticky">{{'i18n_home' | translator}}</div>
+                        </div>
+                    </div>
+                    <div flex="33">
+
+                    </div>
+                    <div flex="33">
+                        <div class="menu-search-input" layout="row">
+                            <md-icon>search</md-icon>
+                            <input ng-model="search" type="text" ng-change="menuFilter()"
+                                   placeholder="{{'i18n_search' | translator}}">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div flex="auto" layout="row" layout-wrap ng-show="ttops.length>0"
+                     ng-style="{'min-height':ttopsHCss}">
+                    <div class="f2c-sub-header md-no-sticky" flex="100" layout="row" style="margin-top: 0px;">
+                        <md-icon class="md-20" style="margin: 18px 0 10px 16px;">star</md-icon>
+                        <div class="f2c-sc-header">
+                            {{'i18n_favorites' | translator}}
+                        </div>
+                    </div>
+
+                    <div ng-repeat="menu in ttops" flex="33" md-ink-ripple style="position: relative">
+                        <md-list-item class="f2c-list-item" ng-if="!menu.children" md-no-ink>
+                            <div class="md-no-style md-list-item-inner" ng-click="navigateTo(menu)">
+                                <p ng-if="currentSystemLanguage.id.indexOf('zh') < 0" ng-bind="menu.name" class="f2c-favorite"></p>
+                                <p ng-if="currentSystemLanguage.id.indexOf('zh') >= 0" ng-bind="menu.title" class="f2c-favorite"></p>
+                            </div>
+                            <md-tooltip md-direction="top" ng-if="currentSystemLanguage.id.indexOf('zh') < 0">
+                                {{menu.title}}
+                            </md-tooltip>
+                        </md-list-item>
+                        <md-list-item class="f2c-list-item" ng-if="menu.children" md-no-ink>
+                            <p ng-if="currentSystemLanguage.id.indexOf('zh') < 0" ng-bind="menu.name" class="f2c-favorite"></p>
+                            <p ng-if="currentSystemLanguage.id.indexOf('zh') >= 0" ng-bind="menu.title" class="f2c-favorite"></p>
+                            <md-menu class="md-secondary" md-position-mode="target-left target">
+                                <md-button class="md-icon-button">
+                                    <md-icon md-font-icon="material-icons md-24"
+                                             ng-bind="'keyboard_arrow_right'"></md-icon>
+                                </md-button>
+                                <md-menu-content width="4" class="f2c-menu-content">
+                                    <md-menu-item ng-repeat="sub in menu.children">
+                                        <md-button ng-click="navigateTo(sub)" ng-bind="sub.title"></md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                            <md-tooltip md-direction="top" ng-if="currentSystemLanguage.id.indexOf('zh') < 0">
+                                {{menu.title}}
+                            </md-tooltip>
+                        </md-list-item>
+                    </div>
+                </div>
+                <md-divider style="margin: 10px 16px;" ng-show="ttops.length>0"></md-divider>
+                <div flex="auto" layout="row" layout-align="start start">
+                    <div flex="33" class="f2c-module-column" layout="column">
+                        <div flex="auto"
+                             ng-repeat="module in tmodules"
+                             ng-if="module.location === 0">
+                            <header-menu module="module" toggle-menu="toggleMenu()"
+                                         menu-to-top="menuToTop"></header-menu>
+                        </div>
+                    </div>
+                    <div flex="33" class="f2c-module-column" layout="column" ng-if="tmodules.length>1">
+                        <div flex="auto"
+                             ng-repeat="module in tmodules"
+                             ng-if="module.location === 1">
+                            <header-menu module="module" toggle-menu="toggleMenu()"
+                                         menu-to-top="menuToTop"></header-menu>
+                        </div>
+                    </div>
+                    <div flex="33" class="f2c-module-column" layout="column" ng-if="tmodules.length>2">
+                        <div flex="auto"
+                             ng-repeat="module in tmodules"
+                             ng-if="module.location === 2">
+                            <header-menu module="module" toggle-menu="toggleMenu()"
+                                         menu-to-top="menuToTop"></header-menu>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </md-sidenav>
+        <task-list ng-show="$root.inbox"></task-list>
+        <iframe id="frame" flex class="f2c-frame" src="about:blank"></iframe>
+    </md-content>
+</div>
+
+<script th:inline="javascript" type="text/javascript">
+    window.appversion = [[${timestamp}]];
+    window.IndexConstants = [[${IndexConstants}]];
+    window.frameTargetSrc = [[${frameTargetSrc}]];
+    window.userLocale = [[${userLocale}]];
+</script>
+<script th:src="@{'/web-public/external/angular/angular-sanitize.min.js?t='+${timestamp}}"></script>
+<script th:src="@{'web-public/project/js/menu.js?t='+${timestamp}}"></script>
+</body>
+</html>

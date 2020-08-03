@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtFlowLinkValueScopeMapper">
+    <insert id="batchInsert">
+        INSERT INTO flow_link_value_scope (id, link_value_id, workspace_id, module, type)
+        VALUES
+        <foreach collection="flowLinkValueScopes" item="flowLinkValueScope" index="index" separator=",">
+            (#{flowLinkValueScope.id}, #{flowLinkValueScope.linkValueId}, #{flowLinkValueScope.workspaceId}, #{flowLinkValueScope.module}, #{flowLinkValueScope.type})
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,168 @@
+<div ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_user_create' | translator}}</div>
+        </div>
+    </md-toolbar>
+    <form name="addUserForm" class="md-padding">
+        <input type="password" autocomplete="new-password" hidden>
+        <md-input-container class="md-block">
+            <label>ID</label>
+            <input autocomplete="new-password" minlength="2" md-maxlength="30" required name="id" ng-model="item.id"
+                   ng-pattern="/^[a-zA-Z][a-zA-Z0-9_@.-]*$/"/>
+            <div ng-messages="addUserForm.id.$error">
+                <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength">{{'i18n_input_length_limit_30' | translator}}</div>
+                <div ng-message="minlength">{{'i18n_user_id_min_2' | translator}}</div>
+                <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                     {{'i18n_user_id_error' | translator}}
+                </div>
+            </div>
+            <div class="hint"> {{'i18n_login_identifier' | translator}}</div>
+        </md-input-container>
+        <md-input-container class="md-block">
+            <label> {{'i18n_user_name_' | translator}}</label>
+            <input autocomplete="new-password" minlength="2" md-maxlength="30" required name="name"
+                   ng-model="item.name"/>
+            <div ng-messages="addUserForm.name.$error">
+                <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength">{{'i18n_input_length_limit_30' | translator}}</div>
+                <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                     {{'i18n_name_limit_msg' | translator}}
+                </div>
+            </div>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Email</label>
+            <input autocomplete="new-password" required type="text" name="email" ng-model="item.email"
+                   minlength="5" maxlength="50" md-maxlength="50"
+                   ng-pattern="/[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/"/>
+
+            <div ng-messages="addUserForm.email.$error" role="alert">
+                <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                     {{'i18n_email_limit_msg' | translator}}
+                </div>
+            </div>
+            <div class="hint"> {{'i18n_login_identifier' | translator}}</div>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label> {{'i18n_password' | translator}}</label>
+            <i id="eye" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('password','eye')"></i>
+            <input autocomplete="new-password" id="password" minlength="6" md-maxlength="30" maxlength="30"
+                   type="password"
+                   required
+                   ng-click="changeType('password')"
+                   name="password"
+                   ng-model="item.password"
+            />
+
+            <div ng-messages="addUserForm.password.$error">
+                <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                <div ng-message-exp="['required', 'minlength', 'maxlength']">
+                     {{'i18n_password_check_length_error' | translator}}
+                </div>
+            </div>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label> {{'i18n_confirm_password' | translator}}</label>
+            <i id="eye1" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('rePassword','eye1')"></i>
+            <input autocomplete="new-password" id="rePassword" md-maxlength="30" type="password" required
+                   name="rePassword"
+                   ng-model="item.rePassword"
+                   ng-click="changeType('rePassword')"
+                   password-check="item.password">
+            <div ng-messages="addUserForm.rePassword.$error">
+                <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                <div ng-message="passwordCheck"> {{'i18n_password_check_same_error' | translator}}</div>
+                <div ng-message="md-maxlength">{{'i18n_input_length_limit_30' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label> {{'i18n_phone' | translator}}</label>
+            <input autocomplete="new-password" name="phone" ng-model="item.phone" ng-pattern="/^(1[0-9][0-9])\d{8}$/"/>
+            <div ng-messages="addUserForm.phone.$error">
+                <div ng-message="pattern"> {{'i18n_phone_limit_msg' | translator}}</div>
+            </div>
+        </md-input-container>
+        <div ng-repeat="roleInfo in item.roleInfoList track by $index" style="margin-bottom: 60px">
+            <md-input-container class="md-block" flex-gt-xs="row">
+                <label> {{'i18n_user_type' | translator}}</label>
+                <md-select name="adminRoleId" ng-model="roleInfo.roleId" required
+                           ng-change="changeRole(roleInfo,roleInfo.roleId)">
+                    <md-option ng-value="role.id"
+                               ng-repeat="role in roles"
+                               ng-if="filterRole(role,roleInfo)">
+                        {{role.name}}
+                    </md-option>
+                </md-select>
+                <div ng-messages="addUserForm.adminRoleId.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
+                <md-icon style="cursor:pointer;"
+                         ng-if="item.roleInfoList.length>1"
+                         ng-click=" subtractLine(roleInfo)  ">clear
+                </md-icon>
+                <md-icon ng-if="item.roleInfoList.length <= 1">
+                </md-icon>
+            </md-input-container>
+
+
+            <md-switch class="md-primary" aria-label="enable" layout-align="left"
+                       ng-if="roleInfo.roleType===roleConst.user"
+                       ng-model="roleInfo.workspace" class="md-block" flex-gt-xs="row">
+                 {{'i18n_workspace_create' | translator}}
+            </md-switch>
+
+            <virtual-select-multiple
+                    name="workspaceIds{{$index}}"
+                    value="id"
+                    label="name"
+                    items="workspaces"
+                    placeholder=" {{'i18n_workspace_add' | translator}}"
+                    results="roleInfo.workspaceIds"
+                    required="true"
+                    ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"
+            ></virtual-select-multiple>
+
+            <virtual-select
+                    name="organizationIds{{$index}}"
+                    value="id"
+                    label="name"
+                    items="orgs"
+                    placeholder=" {{'i18n_organization_select' | translator}}"
+                    result="roleInfo.selectOrganizationId"
+                    required="true"
+                    ng-if="roleInfo.roleType=== roleConst.user && roleInfo.workspace"
+            ></virtual-select>
+
+            <virtual-select-multiple
+                    name="organizationIds{{$index}}"
+                    value="id"
+                    label="name"
+                    items="orgs"
+                    placeholder=" {{'i18n_organization_add' | translator}}"
+                    results="roleInfo.organizationIds"
+                    required="true"
+                    ng-if="roleInfo.roleType===roleConst.orgAdmin"
+            ></virtual-select-multiple>
+        </div>
+        <md-button layout="row" layout-align="center" class="md-raised md-success"
+                   ng-disabled="addUserForm.$invalid || !isAddLineAble"
+                   style="width: 95%;" ng-click="addLine(roleInfoList)">
+             {{'i18n_role_add' | translator}}
+        </md-button>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="closeToggleForm()">
+             {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="submitFlag || addUserForm.$invalid"
+                   ng-click="submit('add',item)">
+             {{'i18n_save' | translator}}
+        </md-button>
+    </div>
+</div>

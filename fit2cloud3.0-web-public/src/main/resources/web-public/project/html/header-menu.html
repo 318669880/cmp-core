@@ -1,0 +1,50 @@
+<md-subheader class="f2c-sub-header md-no-sticky" ng-if="$ctrl.module.name">
+    <div>
+        <md-icon class="md-20">{{$ctrl.module.icon}}</md-icon>
+        {{$ctrl.module.name}}
+    </div>
+</md-subheader>
+
+<div ng-repeat="menu in $ctrl.module.menus" aria-label="{{menu.title}}">
+    <md-list-item class="f2c-list-item" ng-if="!menu.children" aria-label="{{menu.title}}"
+                  ng-mouseover="menu.show=true;" ng-mouseleave="menu.show=false;"
+                  ng-click="$ctrl.navigateTo(menu)">
+        <p class="f2c-list-item-ellipsis" ng-bind="menu.title"></p>
+        <md-button ng-click="$ctrl.top($ctrl.module,menu)" class="md-icon-button f2c-icon-button"
+                   ng-show="menu.show || menu.top" ng-if="menu.id" style="margin-right: 6px;">
+            <md-tooltip class="f2c-tooltip" style="font-size: 8px">
+                <span ng-if="!menu.top">{{'i18n_add_favorites' | translator}}</span>
+                <span ng-if="menu.top">{{'i18n_cancel_favorites' | translator}}</span>
+            </md-tooltip>
+            <md-icon class="md-18 "><span ng-if="menu.top">star</span><span ng-if="!menu.top">star_border</span>
+            </md-icon>
+        </md-button>
+        <div class="md-secondary" style="width: 40px"></div>
+    </md-list-item>
+    <md-list-item class="f2c-list-item" ng-if="menu.children" aria-label="{{menu.title}}"
+                  ng-mouseover="menu.show=true;" ng-mouseleave="menu.show=false;">
+        <p class="f2c-list-item-ellipsis" ng-bind="menu.title"></p>
+        <md-button ng-click="$ctrl.top($ctrl.module,menu)" class="md-icon-button f2c-icon-button"
+                   ng-show="menu.show || menu.top" ng-if="menu.id">
+            <md-tooltip class="f2c-tooltip" style="font-size: 8px">
+                <span ng-if="!menu.top">{{'i18n_add_favorites' | translator}}</span>
+                <span ng-if="menu.top">{{'i18n_cancel_favorites' | translator}}</span>
+            </md-tooltip>
+            <md-icon class="md-18 ">
+                <span ng-if="menu.top">star</span>
+                <span ng-if="!menu.top">star_border</span>
+            </md-icon>
+        </md-button>
+        <md-menu class="md-secondary" md-position-mode="target-left target">
+            <md-button class="md-icon-button f2c-icon-button">
+                <md-icon md-font-icon="material-icons md-24" ng-bind="'keyboard_arrow_right'"></md-icon>
+            </md-button>
+            <md-menu-content width="4" class="f2c-menu-content">
+                <md-menu-item ng-repeat="sub in menu.children">
+                    <md-button ng-click="$ctrl.navigateTo(sub)" ng-bind="sub.title"
+                               aria-label="{{sub.title}}"></md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+    </md-list-item>
+</div>

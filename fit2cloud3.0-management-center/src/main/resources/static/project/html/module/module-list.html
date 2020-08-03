@@ -1,0 +1,268 @@
+<div layout-fill ng-controller="ModuleListController" class="content-backdrop license-panel" ng-cloak>
+    <div layout-fill ng-include="background" class="license-background" aria-hidden="true"></div>
+    <div layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>{{'i18n_module_list' | translator:'模块列表'}}</div>
+                <md-button class="md-primary" ng-click="add()" has-permission="MODULE:READ+CREATE">
+                    <md-icon>add_circle_outline</md-icon>
+                     {{'i18n_add' | translator}}
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div cg-busy="{promise:loadingLayer,minDuration:500}" layout-align="center center" layout="column">
+            <md-content layout="column" class="md-padding" style="overflow-y: auto;width: 100%">
+                <div class="module-header" layout="row"
+                     layout-align="center center">
+                    <div>
+                        <md-button class="md-raised" ng-repeat="tag in tags" ng-click="selectTag(tag.tagKey)"
+                                   ng-class="{'md-primary':tag.selected === true}">{{tag.tagValue}}
+                        </md-button>
+                    </div>
+                    <div flex="auto"></div>
+                    <div
+                            layout="row"
+                            layout-align="start center">
+                        <div class="module-input">
+                            <md-input-container style="margin: 0">
+                                <md-icon>search</md-icon>
+                                <input ng-model="param" type="text" ng-change="search(param)"
+                                       placeholder="{{'i18n_module_name' | translator:'模块名称'}}">
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-content" ng-if="infraList.length>0">
+                    <div class="category">
+                        {{'i18n_module_base' | translator:'基础模块'}}
+                    </div>
+                    <div layout="row" layout-wrap layout-padding>
+                        <div ng-repeat="item in infraList " flex-gt-lg="25" flex-gt-md="33" flex-md="33"
+                             flex-gt-xs="50" flex-xs="100">
+                            <div class="module-card md-whiteframe-2dp" layout="column">
+                                <div class="header">
+                                    <div class="title">
+                                        {{item.name}}
+                                    </div>
+                                    <div style="float: right;display: inline;" layout="column"
+                                         has-permissions="SYSTEM_LOG:READ,MODULE:READ+DELETE">
+                                        <md-menu md-position-mode="target bottom">
+                                            <md-button class="md-icon-button f2c-icon-button"
+                                                       ng-click="$mdMenu.open()"
+                                                       style="padding: 0px;height: 24px;min-height: 0;width: 24px;margin: 0px">
+                                                <md-icon class="cursor" auto-open="false">more_vert</md-icon>
+                                            </md-button>
+                                            <md-menu-content width="2.5" style="background-color: white">
+                                                <md-menu-item>
+                                                    <md-button ng-click="goToLog(item)">
+                                                        <md-icon md-font-icon="material-icons md-24"
+                                                                 style="margin-right: 6px">list
+                                                        </md-icon>
+                                                        {{'i18n_search_log' | translator:'查看日志'}}
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item class="f2c-menu-item" has-permission="MODULE:READ+DELETE"
+                                                              ng-if="item.status === 'stopped' && item.id !== 'dashboard' && item.id !== 'management-center' && item.id !== 'gateway'">
+                                                    <md-button ng-click="deleteModule(item.id)">
+                                                        <md-icon md-font-icon="material-icons md-24"
+                                                                 style="margin-right: 6px">delete
+                                                        </md-icon>
+                                                         {{'i18n_delete' | translator}}
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    {{item.summary}}
+                                </div>
+                                <div flex="auto"></div>
+                                <div layout="row" layout-align="center center" class="footer">
+                                    <div flex="50" style="margin: 16px 0">
+                                        <div ng-if="item.auth ">
+                                            <span ng-switch="item.status">
+                                                <span ng-switch-when="stopped" md-colors="{color: 'red'}"
+                                                      style=""> {{'i18n_not_running' | translator}}</span>
+                                                <span ng-switch-when="running" md-colors="{color: 'green'}"> {{'i18n_running' | translator}}</span>
+                                                <span ng-switch-when="section_running"
+                                                      style="color: #2B415A"> {{'i18n_part_run' | translator}}</span>
+                                                <span ng-switch-default>N/A</span>
+                                            </span>
+                                            </span>
+                                        </div>
+                                        <div ng-if="!item.auth" md-colors="{color: 'red'}"> {{'i18n_module_unauthorized' |
+                                            translator:'未授权'}}
+                                        </div>
+                                    </div>
+                                    <div flex="50" layout-align="end" layout="row">
+                                        <div ng-if="item.auth && item.id !== 'dashboard' &&  item.id !== 'management-center' && item.id !== 'gateway'"
+                                             style="margin: 21px 5px;">
+                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_module_disable' | translator:'禁用'}}</span>
+                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_module_enable' | translator:'启用'}}</span>
+                                        </div>
+                                        <md-switch class="md-primary" ng-model="item.active"
+                                                   ng-change="changeActive(item)"
+                                                   has-permission="MODULE:READ+ACTIVE"
+                                                   ng-hide="!item.auth || item.id === 'dashboard' || item.id === 'management-center' || item.id === 'gateway'"></md-switch>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div flex="auto" class="module-content" ng-if="applicationList.length>0">
+                    <div class="category" layout-fill layout="row"
+                         style="height: 20px;min-height: 20px;max-height: 20px;">
+                        <div flex="50">{{'i18n_module_application' | translator:'应用模块'}}</div>
+                        <div flex="50" style="text-align: right;"><a target="_blank" style="margin-right: 30px"
+                                                                     class="md-primary"
+                                                                     href="https://support.fit2cloud.com">{{'i18n_module_available_application_modules'
+                            | translator:'可用应用模块'}}</a>
+                        </div>
+                    </div>
+                    <div layout="row" layout-wrap layout-padding>
+                        <div ng-repeat="item in applicationList" flex-gt-lg="25"
+                             flex-gt-md="33"
+                             flex-md="33" flex-gt-xs="50" flex-xs="100">
+                            <div class="module-card md-whiteframe-2dp" layout="column">
+                                <div class="header">
+                                    <div class="title">
+                                        {{item.name}}<span class="content">{{item.version}}</span>
+                                    </div>
+                                    <div style="float: right;display: inline;" layout="column"
+                                         has-permissions="SYSTEM_LOG:READ,MODULE:READ+DELETE">
+                                        <md-menu md-position-mode="target bottom">
+                                            <md-button class="md-icon-button f2c-icon-button"
+                                                       ng-click="$mdMenu.open()"
+                                                       style="padding: 0px;height: 24px;min-height: 0;width: 24px;margin: 0px">
+                                                <md-icon class="cursor" auto-open="false">more_vert</md-icon>
+                                            </md-button>
+                                            <md-menu-content width="2.5" style="background-color: white">
+                                                <md-menu-item>
+                                                    <md-button ng-click="goToLog(item)">
+                                                        <md-icon md-font-icon="material-icons md-24"
+                                                                 style="margin-right: 6px">list
+                                                        </md-icon>
+                                                         {{'i18n_search_log' | translator}}
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item class="f2c-menu-item" has-permission="MODULE:READ+DELETE">
+                                                    <md-button ng-click="deleteModule(item.id)">
+                                                        <md-icon md-font-icon="material-icons md-24"
+                                                                 style="margin-right: 6px">delete
+                                                        </md-icon>
+                                                         {{'i18n_delete' | translator}}
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    {{item.summary}}
+                                </div>
+                                <div flex="auto"></div>
+                                <div layout="row" layout-align="end center" class="footer">
+                                    <div flex="50" style="margin: 16px 0">
+                                        <div ng-if="item.auth ">
+                                            <span ng-if="item.active">
+                                                <span ng-switch="item.status">
+                                                    <span ng-switch-when="stopped" md-colors="{color: 'red'}"
+                                                          style=""> {{'i18n_not_running' | translator}}</span>
+                                                    <span ng-switch-when="running"
+                                                          md-colors="{color: 'green'}"> {{'i18n_running' | translator}}</span>
+                                                    <span ng-switch-when="section_running"
+                                                          style="color: #2B415A"> {{'i18n_part_run' | translator}}</span>
+                                                    <span ng-switch-default>N/A</span>
+                                                </span>
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                    <div flex="50" layout-align="end" layout="row">
+                                        <div ng-if="item.auth " style="margin: 21px 5px;">
+                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_module_disable' | translator:'禁用'}}</span>
+                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_module_enable' | translator:'启用'}}</span>
+
+                                        </div>
+                                        <md-switch class="md-primary" ng-model="item.active"
+                                                   ng-change="changeActive(item)"
+                                                   has-permission="MODULE:READ+ACTIVE"
+                                                   ng-hide="!item.auth ||item.id === 'dashboard' || item.id === 'management-center' || item.id === 'gateway'"></md-switch>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div flex="auto" class="module-content" ng-if="linkList.length>0">
+                    <div class="category">
+                        {{'i18n_module_external_link' | translator:'第三方链接'}}
+                    </div>
+                    <div layout="row" layout-wrap layout-padding>
+                        <div ng-repeat="item in linkList" flex-gt-lg="25" flex-gt-md="33"
+                             flex-md="33" flex-gt-xs="50" flex-xs="100">
+                            <div class="module-card md-whiteframe-2dp" layout="column">
+                                <div class="header">
+                                    <div class="title">
+                                        {{item.name}}
+                                    </div>
+                                    <div style="float: right;display: inline;" layout="column"
+                                         has-permissions="MODULE:READ+EDIT,MODULE:READ+DELETE">
+                                        <md-menu md-position-mode="target bottom">
+                                            <md-button class="md-icon-button f2c-icon-button"
+                                                       ng-click="$mdMenu.open()"
+                                                       style="padding: 0px;height: 24px;min-height: 0;width: 24px;margin: 0px">
+                                                <md-icon class="cursor" auto-open="false">more_vert</md-icon>
+                                            </md-button>
+                                            <md-menu-content width="2.5" style="background-color: white">
+                                                <md-menu-item class="f2c-menu-item" has-permission="MODULE:READ+EDIT">
+                                                    <md-button ng-click="edit(item)">
+                                                        <md-icon md-font-icon="material-icons md-24"
+                                                                 style="margin-right: 6px">edit
+                                                        </md-icon>
+                                                         {{'i18n_edit' | translator}}
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item class="f2c-menu-item" has-permission="MODULE:READ+DELETE">
+                                                    <md-button ng-click="deleteModule(item.id)">
+                                                        <md-icon md-font-icon="material-icons md-24"
+                                                                 style="margin-right: 6px">delete
+                                                        </md-icon>
+                                                         {{'i18n_delete' | translator}}
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                    </div>
+                                </div>
+
+                                <div class="content">
+                                    {{item.summary}}
+                                </div>
+                                <div flex="auto"></div>
+                                <div layout="row" layout-align="end center" class="footer">
+                                    <div flex="50">
+
+                                    </div>
+                                    <div flex="50" layout-align="end" layout="row">
+                                        <div ng-if="item.auth " style="margin: 21px 5px;">
+                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_module_disable' | translator:'禁用'}}</span>
+                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_module_enable' | translator:'启用'}}</span>
+                                        </div>
+                                        <md-switch class="md-primary" ng-model="item.active"
+                                                   has-permission="MODULE:READ+ACTIVE"
+                                                   ng-change="changeActive(item)"></md-switch>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </md-content>
+        </div>
+        <side-form></side-form>
+    </div>
+</div>
+

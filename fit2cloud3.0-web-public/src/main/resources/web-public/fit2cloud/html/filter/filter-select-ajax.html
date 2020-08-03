@@ -1,0 +1,29 @@
+<div>
+    <script type="text/ng-template" id="filter-select">
+        <md-content layout="column" class="md-whiteframe-2dp">
+            <input class="filter-select-search" type="search" ng-model="label" placeholder="{{'i18n_filter_quick_query' | translator:'快速查找'}}"
+                   ng-show="condition.search">
+
+            <div layout="column" class="filter-list">
+                <md-button ng-repeat="selected in condition.selects | filter:{label:label}"
+                           ng-click="selectResult(condition, selected);close()">
+                    <div>{{selected.label}}</div>
+                </md-button>
+                <div class="filter-error" ng-if="error">
+                    <p class="error">{{'i18n_filter_condition_error' | translator:'发生错误：'}}{{error}}</p>
+                </div>
+            </div>
+
+            <md-button class="md-accent" ng-click="remove();close()">
+                {{'i18n_filter_condition_cancel' | translator:'取消'}}
+            </md-button>
+        </md-content>
+    </script>
+
+    <span>{{condition.name}} : </span>
+    <input id="_input_" type="text" class="filter-input-text pointer" ng-model="condition.value" ng-click="open()"
+           placeholder="{{'i18n_filter_condition_select' | translator:'请选择'}}{{condition.name}}" readonly filter-popover popover-template="filter-select">
+</div>
+
+
+

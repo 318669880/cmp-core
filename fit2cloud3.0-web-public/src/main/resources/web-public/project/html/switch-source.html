@@ -1,0 +1,59 @@
+<div style="max-width: 80vw;pointer-events: auto;width: 600px;position: static;height: 50vh;background-color: white;overflow: hidden">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{'i18n_select_role' | translator}}</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="closeDialog()">
+                <md-icon>close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="content">
+            <table>
+                <tbody ng-repeat="item in userRoleList">
+                <tr ng-class="{'select-current-tr':item.current}">
+                    <td ng-class="{'select-td':item.selected && item.switchable}"
+                        ng-style="{'cursor':item.switchable && !item.current?'pointer':'auto'}"
+                        ng-click="select(item)">
+                        <md-icon ng-click="switchSHow(item)" style="cursor: pointer">
+                            <span ng-if="item.hasChild && !item.show">arrow_right</span>
+                            <span ng-if="item.hasChild && item.show">arrow_drop_down</span>
+                        </md-icon>
+
+                        <a ng-if="item.switchable && !item.current" ng-click="switchRole(item.id)">{{item.name}}
+                        </a>
+                        <span ng-if="!(item.switchable && !item.current)">{{item.name}}
+                    </span>
+                        <span ng-if="item.switchable">
+                        [{{item.desc}}]
+                    </span>
+                    </td>
+                </tr>
+
+                <tr ng-repeat="workspace in item.children" ng-show="item.hasChild && item.show"
+                    ng-class="{'select-current-tr':workspace.current}">
+                    <td ng-class="{'select-td' : workspace.selected }" ng-click="select(workspace)"
+                        ng-style="{'cursor':workspace.switchable && !workspace.current?'pointer':'auto'}">
+                        <a ng-click="switchRole(workspace.id)" style="margin-left: 55px" ng-if="!workspace.current">{{workspace.name}}</a>
+                        <span ng-if="workspace.current" style="margin-left: 55px">{{workspace.name}}</span>
+                        [{{workspace.desc}}]
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="center center" class="footer">
+        <md-button class="md-raised" ng-click="closeDialog();">
+            {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="!selectItemId"
+                   ng-click="changeSubmit()">
+            {{'i18n_save' | translator}}
+        </md-button>
+    </md-dialog-actions>
+
+</div>

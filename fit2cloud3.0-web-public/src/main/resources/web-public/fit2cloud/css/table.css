@@ -1,0 +1,156 @@
+/*动态表格*/
+.dynamic-table {
+    width: 100%;
+    overflow: auto;
+}
+
+.dynamic-table .table-resize {
+    table-layout: fixed;
+}
+
+.dynamic-table .table > thead > tr > th, .dynamic-table .table tbody > tr > td {
+    white-space: nowrap;
+}
+
+.dynamic-table .table-resize > thead > tr > th:not(.column-fixed), .dynamic-table .table-resize tbody > tr > td:not(.column-fixed) {
+    vertical-align: middle;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.dynamic-table .resize-th {
+    position: relative;
+}
+
+.dynamic-table .resize-handle {
+    position: absolute;
+    top: -9px;
+    bottom: -9px;
+    right: -10px;
+    width: 10px;
+    cursor: col-resize;
+}
+
+/*表格样式*/
+.table {
+    width: 100%;
+    outline: 0;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 0;
+    border: 0;
+}
+
+.table thead > tr, .table tbody > tr {
+    height: 44px;
+}
+
+.table thead > tr > th {
+    border: none;
+    padding: 0 10px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table tbody > tr > td {
+    padding: 0 10px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table tr md-checkbox {
+    width: 20px;
+    margin: 0;
+}
+
+.table thead > tr > th:first-child, .table tbody > tr > td:first-child {
+    padding-right: 0;
+}
+
+.table.table-hover tbody > tr:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.table > tbody > tr[ng-click]:not([disabled]) {
+    cursor: pointer;
+}
+
+.table > tbody > tr:focus:not([disabled]) {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.table > tbody > tr.tr-selected {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.table > tbody > tr > td a {
+    color: rgb(63, 81, 181);
+}
+
+.table > tbody > tr:nth-child(odd) {
+    background-color: #F4F4F4;
+}
+
+/* table menus */
+.table-menu {
+    min-width: 0;
+    margin: 0 8px;
+}
+
+.table-menu-content > md-menu-item {
+    min-height: 36px;
+    height: 36px;
+}
+
+.table-menu-content > md-menu-item > .md-button {
+    padding: 0 10px;
+}
+
+/* 分页 */
+.table-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap-reverse;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.54);
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.table-pagination > * {
+    display: flex;
+    align-items: center;
+    height: 56px;
+}
+
+.table-pagination .label {
+    margin: 0 10px;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.table-pagination md-input-container, .table-pagination md-select {
+    margin: 0;
+    justify-content: flex-end;
+    height: 30px;
+}
+
+.table-pagination md-input-container {
+    width: 50px;
+}
+
+.table-pagination md-input-container .md-input, .table-pagination md-select .md-select-value {
+    min-width: 0;
+    min-height: 24px;
+    padding: 0;
+    border-bottom: 0;
+    -webkit-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.table-pagination button.md-button.md-icon-button {
+    margin: 0;
+}

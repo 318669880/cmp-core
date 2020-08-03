@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtCloudServerMapper">
+
+    <resultMap id="BaseResultMap" type="com.fit2cloud.commons.server.model.CloudServerDTO"
+               extends="com.fit2cloud.commons.server.base.mapper.CloudServerMapper.BaseResultMap">
+        <result column="account_name" jdbcType="VARCHAR" property="accountName"/>
+        <result column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
+        <result column="workspace_name" jdbcType="VARCHAR" property="workspaceName"/>
+        <result column="cloud_provider_zh_name" jdbcType="VARCHAR" property="cloudProviderZHName"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+    </resultMap>
+
+    <select id="selectCloudServers" resultMap="BaseResultMap">
+        SELECT
+        cloud_server.*,
+        cloud_account.name AS account_name,
+        plugin.description AS cloud_provider_zh_name,
+        workspace.name AS workspace_name,
+        organization.name AS organization_name,
+        plugin.icon
+        FROM cloud_server
+        LEFT JOIN cloud_account ON cloud_account.id = cloud_server.account_id
+        LEFT JOIN plugin ON cloud_account.plugin_name = plugin.name
+        LEFT JOIN workspace ON cloud_server.workspace_id = workspace.id
+        LEFT JOIN organization ON workspace.organization_id = organization.id
+        <where>
+            <if test="params.instanceStatus!=null">
+                AND
+                cloud_server.instance_status IN
+                <foreach collection="params.instanceStatus" item="status" separator="," open="(" close=")">
+                    #{status, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="params.instanceName!=null">
+                AND cloud_server.instance_name LIKE CONCAT('%',#{params.instanceName},'%')
+            </if>
+            <if test="params.accountId!=null">
+                AND cloud_server.account_id=#{params.accountId}
+            </if>
+            <if test="params.region!=null">
+                AND cloud_server.region=#{params.region}
+            </if>
+            <if test="params.zone!=null">
+                AND cloud_server.zone=#{params.zone}
+            </if>
+            <if test="params.remoteIp!=null">
+                AND cloud_server.remote_ip LIKE CONCAT('%',#{params.remoteIp},'%')
+            </if>
+            <if test="params.ipAddress!=null">
+                AND cloud_server.ip_array LIKE CONCAT('%',#{params.ipAddress},'%')
+            </if>
+            <if test="params.workspaceId!=null">
+                AND cloud_server.workspace_id = #{params.workspaceId}
+            </if>
+            <if test="params.organizationId!=null">
+                AND workspace.organization_id = #{params.organizationId}
+            </if>
+            <if test="params.os!=null">
+                AND cloud_server.os like #{params.os}
+            </if>
+            <if test="params.ids != null and params.ids.size() > 0">
+                AND
+                cloud_server.id IN
+                <foreach collection="params.ids" item="id" separator="," open="(" close=")">
+                    #{id, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        <if test="params.sort != null">
+            <choose>
+                <when test="params.sort.contains('instance_type') and params.sort.contains('desc')">
+                    order by cpu desc, memory desc
+                </when>
+                <when test="params.sort.contains('instance_type') and params.sort.contains('asc')">
+                    order by cpu, memory
+                </when>
+                <otherwise>
+                    order by ${params.sort}
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+</mapper>

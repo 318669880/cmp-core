@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="timestamp" type="java.lang.Long"*/-->
+<!--/*@thymesVar id="IndexConstants" type="java.util.Map"*/-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          th:href="@{'/web-public/external/angular-material/angular-material.min.css?t='+${timestamp}}">
+    <link rel="stylesheet" th:href="@{'/web-public/external/material-icons/material-icons.css?t='+${timestamp}}">
+    <link rel="stylesheet" th:href="@{'/web-public/external/angular-busy/angular-busy.min.css?t='+${timestamp}}">
+    <link rel="stylesheet" th:href="@{'/web-public/project/css/menu.css?t='+${timestamp}}">
+</head>
+
+<body ng-app="MenuApp" ng-cloak>
+<div layout="column" layout-fill ng-controller="NotificationListCtrl">
+    <section layout="row" flex>
+        <div class="inbox-list" layout="column" cg-busy="{promise:loadingLayer, minDuration:500}">
+            <div class="inbox-search" layout="row" layout-align="space-between" layout-nowrap>
+                <md-select ng-model="type" placeholder="{{'i18n_notice' | translator}}" class="md-no-underline"
+                           ng-change="change()">
+                    <md-option ng-value="'all'">{{'i18n_all' | translator}}</md-option>
+                    <md-option ng-value="'unread'">{{'i18n_unread' | translator}}</md-option>
+                    <md-option ng-value="'read'">{{'i18n_read' | translator}}</md-option>
+                </md-select>
+                <div flex="auto" layout="column" layout-align="center">
+                    <input placeholder="{{'i18n_search' | translator}}" ng-model="search" ng-keypress="onKeyPress($event)">
+                    <md-button class="md-icon-button" ng-click="clear()" ng-if="search">
+                        <md-icon>clear</md-icon>
+                    </md-button>
+                </div>
+            </div>
+            <md-content flex="auto">
+                <div class="inbox" ng-repeat="item in items" ng-click="open(item.id)"
+                     ng-class="{'selected':id === item.id}">
+                    <div layout="row" layout-align="space-between" layout-nowrap>
+                        <div class="inbox-name inbox-ellipsis" ng-class="{'inbox-done':item.status === 'READ'}">
+                            <md-tooltip md-delay="300" md-direction="right">{{item.title}}</md-tooltip>
+                            {{item.title}}
+                        </div>
+                        <div class="inbox-time">{{item.createTime | date:'yyyy-MM-dd HH:mm'}}</div>
+                    </div>
+                </div>
+            </md-content>
+            <pagination pagination="pagination"></pagination>
+        </div>
+
+        <md-content flex ng-if="!notification" layout="column" layout-align="start start"
+                    cg-busy="{promise:loadingCount, minDuration:500}">
+            <div class="md-padding">
+                <label>{{'i18n_unread' | translator}}: </label>
+                <span>{{unread}}</span>
+            </div>
+            <div class="md-padding">
+                <label>{{'i18n_read' | translator}}: </label>
+                <span>{{read}}</span>
+            </div>
+            <md-button class="md-raised" ng-click="readAll()" ng-if="unread > 0">{{'i18n_all_marks_read' | translator}}
+            </md-button>
+        </md-content>
+        <md-content flex ng-if="notification" cg-busy="{promise:loadingGet, minDuration:500}">
+            <md-toolbar class="content-toolbar">
+                <div class="md-toolbar-tools" layout="row">
+                    <div flex="auto">{{notification.title}}</div>
+                </div>
+            </md-toolbar>
+            <md-content class="md-padding">
+                <div class="notification-time">{{notification.createTime | date:'yyyy-MM-dd HH:mm'}}</div>
+                <div ng-bind-html="notification.html"></div>
+            </md-content>
+        </md-content>
+    </section>
+</div>
+
+<!--必要JS-->
+<script th:src="@{'/web-public/external/external.min.js?t='+${timestamp}}"></script>
+<script th:src="@{'/web-public/external/angular/angular-sanitize.min.js?t='+${timestamp}}"></script>
+<script th:src="@{'/web-public/project/js/menu.js?t='+${timestamp}}"></script>
+<script th:inline="javascript" type="text/javascript">
+    window.appversion = [[${timestamp}]];
+    window.IndexConstants = [[${IndexConstants}]];
+</script>
+
+</body>
+</html>

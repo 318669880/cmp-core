@@ -1,0 +1,10 @@
+<md-content layout="column" class="filter-list md-whiteframe-2dp">
+    <input id="quick_search" type="search" class="filter-quick-search" placeholder="{{'i18n_fuzzy_query' | translator}}"
+           ng-if="quickSearch === 'true'"
+           ng-model="quick"
+           ng-keypress="addQuickResult(quick, $event)"
+           ng-blur="addQuickResult(quick, $event)">
+    <md-button ng-repeat="c in conditions" ng-click="add(c)">
+        {{c.name}}
+    </md-button>
+</md-content>

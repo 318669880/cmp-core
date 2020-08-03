@@ -1,0 +1,66 @@
+<div ng-cloak cg-busy="{promise:loadingLayer1,minDuration:500}">
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_account_cloud_create' | translator}}</div>
+        </div>
+    </md-toolbar>
+    <form name="AccountAddForm" class="md-padding">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label> {{'i18n_account_cloud_name' | translator}}</label>
+                <input md-maxlength="30" required name="name" ng-model="item.name">
+                <div ng-messages="AccountAddForm.name.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    <div ng-message="md-maxlength">{{'i18n_input_length_limit_30' | translator}}</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container class="md-block">
+                <label> {{'i18n_account_cloud_plugin' | translator}}</label>
+                <md-select ng-model="item.pluginName" ng-change="changePlugin(item.pluginName)" required>
+                    <md-option ng-repeat="plugin in pluginList"
+                               value="{{plugin.name}}">{{plugin.description}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <div ng-repeat="tmp in tmpList" layout="column">
+                <md-input-container class="md-block" ng-if="tmp.inputType === 'password'">
+                    <label>{{tmp.label}}</label>
+                    <i id="eye{{$index}}" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view($index)"></i>
+                    <input ng-required="tmp.required === true" name="name" ng-model="tmp.input" type="{{tmp.inputType}}"
+                           id="password{{$index}}" autocomplete="off">
+                    <div ng-messages="AccountAddForm.name.$error">
+                        <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block"
+                                    ng-if="tmp.inputType !== 'password' && tmp.inputType != 'boolean'">
+                    <label>{{tmp.label}}</label>
+                    <input ng-required="tmp.required === true" name="name" ng-model="tmp.input" type="{{tmp.inputType}}"
+                           autocomplete="off">
+                    <div ng-messages="AccountAddForm.name.$error">
+                        <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block" ng-if="tmp.inputType == 'boolean'">
+                    <label>{{tmp.label}}</label>
+                    <md-switch class="md-primary template-switch" ng-model="tmp.input">
+                    </md-switch>
+                    <div class="md-errors-spacer"></div>
+                    <div class="hint product-hint" ng-bind-html="tmp.description | toTrusted"
+                         ng-if="tmp.description"></div>
+                </md-input-container>
+            </div>
+        </div>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="toggleForm();">
+             {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="AccountAddForm.$invalid"
+                   ng-click="saveAccount(item,'add')">
+             {{'i18n_save' | translator}}
+        </md-button>
+    </div>
+</div>

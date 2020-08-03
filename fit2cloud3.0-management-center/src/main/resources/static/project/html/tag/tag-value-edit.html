@@ -1,0 +1,46 @@
+<div ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+<!--            <div>{{item.id?'编辑标签值':'添加标签值'}}</div>-->
+            <div ng-if="item.id">{{'i18n_label_value_edit' | translator:'编辑标签值'}}</div>
+            <div ng-if="!item.id">{{'i18n_label_value_add' | translator:'添加标签值'}}</div>
+        </div>
+    </md-toolbar>
+    <form name="tagEditForm" class="md-padding">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label>{{'i18n_label' | translator:'标签'}}</label>
+                <input md-maxlength="50" ng-disabled="true" required name="tagKey" ng-model="item.tagKey">
+                <div ng-messages="tagEditForm.tagKey.$error">
+                    <div ng-message="required">{{'i18n_required' | translator:'必填'}}.</div>
+                    <div ng-message="md-maxlength">{{'i18n_error_exceed_50_c' | translator:'不要超过50个字符'}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>{{'i18n_label_value' | translator:'值'}}</label>
+                <input required name="tagValue" ng-disabled="item.id" ng-model="item.tagValue" md-maxlength="50"/>
+                <div ng-messages="tagEditForm.tagValue.$error">
+                    <div ng-message="required">{{'i18n_required' | translator:'必填'}}.</div>
+                    <div ng-message="md-maxlength">{{'i18n_error_exceed_50_c' | translator:'不要超过50个字符'}}</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container class="md-block">
+                <label>{{'i18n_label_alias' | translator:'别名'}}</label>
+                <input required name="tagValueAlias" ng-model="item.tagValueAlias" md-maxlength="50"/>
+                <div ng-messages="tagEditForm.tagValueAlias.$error">
+                    <div ng-message="required">{{'i18n_required' | translator:'必填'}}.</div>
+                    <div ng-message="md-maxlength">{{'i18n_error_exceed_50_c' | translator:'不要超过50个字符'}}</div>
+                </div>
+            </md-input-container>
+        </div>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-click="toggleForm()">
+                {{'i18n_close' | translator:'关闭'}}
+            </md-button>
+            <md-button class="md-raised md-primary" ng-click="editTagValueSubmit(item)" ng-disabled="tagEditForm.$invalid">
+                {{'i18n_save' | translator:'保存'}}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</div>

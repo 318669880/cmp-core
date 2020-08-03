@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtOperationLogMapper">
+
+    <select id="getActivityLog"
+            resultMap="com.fit2cloud.commons.server.base.mapper.OperationLogMapper.ResultMapWithBLOBs">
+        select operation_log.id as id,
+        operation_log.workspace_id as workspace_id,
+        operation_log.workspace_name as workspace_name,
+        operation_log.resource_user_id as resource_user_id,
+        operation_log.resource_user_name as resource_user_name,
+        operation_log.resource_type as resource_type,
+        operation_log.resource_id as resource_id,
+        operation_log.resource_name as resource_name,
+        operation_log.operation as operation,
+        operation_log.time as time,
+        operation_log.module as module,
+        operation_log.source_ip as source_ip
+        from operation_log
+        <if test="map.username!=null">
+            left JOIN user ON user.id = operation_log.resource_user_id
+        </if>
+        <where>
+            <if test="map.workspaceId!=null">
+                and operation_log.workspace_id =#{map.workspaceId}
+            </if>
+            <if test="map.workspaceIds!=null">
+                and operation_log.workspace_id in
+                <foreach collection="map.workspaceIds" open="(" close=")" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="map.username!=null">
+                and (user.id like #{map.username} OR user.name like #{map.username}
+                OR user.email like #{map.username})
+            </if>
+            <if test="map.resourceName!=null">
+                and operation_log.resource_name = #{map.resourceName}
+            </if>
+            <if test="map.operation!=null">
+                and operation_log.operation = #{map.operation}
+            </if>
+            <if test="map.module != null">
+                and operation_log.module = #{map.module}
+            </if>
+        </where>
+        order by operation_log.time desc
+    </select>
+
+    <select id="getConditions" resultType="string">
+        SELECT DISTINCT ${key} FROM operation_log
+    </select>
+</mapper>

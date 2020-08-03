@@ -1,0 +1,17 @@
+<div class="filter-item">
+    <script type="text/ng-template" id="columns">
+        <md-content layout="column" layout-padding class="column-list md-whiteframe-2dp">
+            <div ng-repeat="c in columns" ng-if="!c.default">
+                <md-checkbox ng-model="c.checked" aria-label="{{c.key}}" class="md-primary select-columns">
+                    {{c.value}}
+                </md-checkbox>
+            </div>
+        </md-content>
+    </script>
+
+    <md-button class="md-icon-button md-whiteframe-1dp" filter-popover popover-template="columns" auto-open="false" ng-click="open()">
+        <md-tooltip md-delay="300">{{'i18n_select_columns' | translator:'选择列'}}</md-tooltip>
+        <md-icon>view_week</md-icon>
+    </md-button>
+</div>
+

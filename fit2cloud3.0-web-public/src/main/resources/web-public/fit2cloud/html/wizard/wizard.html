@@ -1,0 +1,42 @@
+<div class="wizard">
+    <div class="wizard-step-header" layout="row" layout-align="space-between">
+        <div ng-repeat="s in steps" class="wizard-step-container" ng-class="{'flex-auto':!$last}">
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        <div md-ink-ripple class="wizard-step" ng-class="style($index)" ng-click="select(s)" ng-disabled="isDisabled($index)">
+                            <md-button class="wizard-step-icon md-icon-button md-primary md-raised" ng-if="!isSelected($index)"
+                                       ng-disabled="isDisabled($index)">
+                                {{$index + 1}}
+                            </md-button>
+                            <md-button class="wizard-step-icon md-icon-button md-primary md-raised" ng-if="isSelected($index)">
+                                <md-icon>done</md-icon>
+                            </md-button>
+                            <div class="wizard-step-label" ng-bind="s.name">{{$index}}</div>
+                        </div>
+                    </td>
+                    <td class="wizard-horizontal-step-line">
+                        <div ng-if="!$last"></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <md-content class="wizard-step-content">
+        <ng-transclude></ng-transclude>
+    </md-content>
+    <div layout="row" ng-if="showButtons" class="wizard-step-footer">
+        <md-button class="md-accent md-raised" ng-click="close()" ng-bind="closeText" aria-label="close"></md-button>
+        <div flex></div>
+        <md-button class="md-raised" ng-click="prev()" ng-disabled="isFirst()" ng-bind="prevText" aria-label="prev"></md-button>
+        <md-button class="md-primary md-raised " ng-click="next()" ng-if="!isLast()" ng-bind="nextText" aria-label="next"
+                   ng-disabled="disable()"></md-button>
+        <md-button class="md-success md-raised" ng-click="submit()" ng-if="isLast() && buttons.length === 0" ng-bind="submitText" aria-label="submit"
+                   ng-disabled="disable()">
+        </md-button>
+        <md-button ng-repeat="btn in buttons" ng-class="btn.class" ng-click="btn.click()" ng-if="buttons.length > 0 && btn.show()"
+                   ng-disabled="btn.disabled()" ng-bind="btn.text" aria-label="{{btn.text}}}"></md-button>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<md-menu md-position-mode="target bottom">
+    <md-button class="md-icon-button f2c-icon-button" ng-class="{'md-accent':pagination.itemCount > 0}" ng-click="$mdMenu.open()"
+               aria-label="Task Menu">
+        <md-tooltip class="f2c-tooltip">{{'i18n_to_do_list' | translator}}
+            <span ng-if="pagination.itemCount > 99">(99+)</span>
+            <span ng-if="pagination.itemCount <= 99">({{pagination.itemCount}})</span>
+        </md-tooltip>
+        <md-icon class="md-18 md-light" ng-if="!pagination.itemCount || pagination.itemCount == 0">email</md-icon>
+        <md-icon class="md-18 md-light inbox-has" ng-if="pagination.itemCount > 0">email</md-icon>
+    </md-button>
+    <md-menu-content width="4">
+        <div class="inbox-menus">
+            <div class="inbox" ng-repeat="item in items" ng-click="open(item)" ng-class="{'selected':$root.selected === item.taskId}">
+                <div layout="row" layout-align="space-between" layout-nowrap>
+                    <div class="inbox-name inbox-ellipsis" ng-class="{'inbox-done':item.taskStatus !== 'PENDING'}">
+                        {{item.taskName}}
+                    </div>
+                    <div class="inbox-time">{{item.taskStartTime | date:'yyyy-MM-dd HH:mm'}}</div>
+                </div>
+                <div>
+                    {{item.processCreator}}{{'i18n_initiated' | translator}}{{item.processName}}
+                </div>
+            </div>
+        </div>
+        <div class="inbox-all" ng-click="show()">
+            {{'i18n_view_all' | translator}}
+        </div>
+    </md-menu-content>
+</md-menu>

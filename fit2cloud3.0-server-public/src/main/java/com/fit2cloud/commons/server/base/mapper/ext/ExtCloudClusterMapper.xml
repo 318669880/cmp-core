@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtCloudClusterMapper">
+    <resultMap id="BaseResultMap" type="com.fit2cloud.commons.server.model.CloudClusterDTO"
+               extends="com.fit2cloud.commons.server.base.mapper.CloudClusterMapper.BaseResultMap">
+        <result column="account_name" jdbcType="VARCHAR" property="accountName"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+    </resultMap>
+
+    <resultMap id="ClusterVmStatisticsMap" type="com.fit2cloud.commons.server.model.ClusterVmStatistics">
+        <result column="zone" jdbcType="VARCHAR" property="zone"/>
+        <result column="region" jdbcType="VARCHAR" property="region"/>
+        <result column="vm_count" jdbcType="INTEGER" property="vmCount"/>
+    </resultMap>
+
+    <select id="getHostStatisticsByAccountId" resultMap="BaseResultMap">
+         SELECT
+          region,
+          zone,
+          count(id)             AS host_count,
+          sum(cpu_total)        AS cpu_total,
+          sum(memory_total)     AS memory_total,
+          sum(memory_allocated) AS memory_allocated,
+          sum(cpu_allocated)    AS cpu_allocated
+        FROM cloud_host
+        WHERE account_id = #{accountId} AND zone IS NOT NULL
+        GROUP BY zone
+    </select>
+
+    <select id="getVmStatisticsByAccountIdAndStatus" resultMap="ClusterVmStatisticsMap">
+        SELECT
+          zone,
+          region,
+          count(*) AS vm_count
+        FROM cloud_server
+        WHERE account_id = #{accountId} AND
+              region IS NOT NULL AND
+              zone IS NOT NULL AND
+              instance_status = #{status}
+        GROUP BY zone
+    </select>
+
+    <select id="search" resultMap="BaseResultMap">
+        SELECT cloud_cluster.*, cloud_account.name as account_name, plugin.icon FROM cloud_cluster
+        LEFT JOIN cloud_account ON cloud_cluster.account_id = cloud_account.id
+        LEFT JOIN plugin ON cloud_account.plugin_name = plugin.name
+        <where>
+            <if test="request.accountId != null">
+                AND account_id = #{request.accountId}
+            </if>
+            <if test="request.region != null">
+                AND region = #{request.region}
+            </if>
+            <if test="request.name != null">
+                AND cloud_cluster.zone like CONCAT('%',#{request.name},'%')
+            </if>
+            <if test="request.hostCountStart != null">
+                AND cloud_cluster.host_count &gt;= ${request.hostCountStart}
+            </if>
+            <if test="request.hostCountEnd != null">
+                AND cloud_cluster.host_count &lt; ${request.hostCountEnd}
+            </if>
+            <if test="request.cpuTotalStart != null">
+                AND cloud_cluster.cpu_total &gt;= ${request.cpuTotalStart}
+            </if>
+            <if test="request.cpuTotalEnd != null">
+                AND cloud_cluster.cpu_total &lt; ${request.cpuTotalEnd}
+            </if>
+            <if test="request.memoryTotalStart != null">
+                AND cloud_cluster.memory_total &gt;= ${request.memoryTotalStart}
+            </if>
+            <if test="request.memoryTotalEnd != null">
+                AND cloud_cluster.memory_total &lt; ${request.memoryTotalEnd}
+            </if>
+            <if test="request.runningCountStart != null">
+                AND cloud_cluster.vm_running_count &gt;= ${request.runningCountStart}
+            </if>
+            <if test="request.runningCountEnd != null">
+                AND cloud_cluster.vm_running_count &lt; ${request.runningCountEnd}
+            </if>
+        </where>
+        <if test="request.sort != null">
+            ORDER BY ${request.sort}
+        </if>
+    </select>
+</mapper>

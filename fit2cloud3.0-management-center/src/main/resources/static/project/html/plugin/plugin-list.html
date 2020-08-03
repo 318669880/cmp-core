@@ -1,0 +1,68 @@
+<div layout-fill ng-controller="PluginListController" class="content-backdrop" ng-cloak>
+    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>{{'i18n_plugin_list' | translator:'插件列表'}}</div>
+            </div>
+        </md-toolbar>
+        <div layout="row" flex>
+            <div class="md-padding" layout="column" flex="100">
+                <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
+                    <select-columns columns="columns"></select-columns>
+                    <div class="filter-item">
+                        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
+                            <md-tooltip md-delay="300"> {{'i18n_refresh' | translator}}</md-tooltip>
+                            <md-icon>refresh</md-icon>
+                        </md-button>
+                    </div>
+                </filter-tools>
+                <div flex layout="column" layout-fill>
+                    <table dynamic-table columns="columns" execute="list({sql: sql})">
+                        <tbody>
+                        <tr ng-repeat="item in items">
+                            <td>
+                                <img ng-if="!item.documentUrl" ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">
+                                <img class="text-click" ng-if="item.documentUrl" ng-src="{{item.icon}}" ng-click="document(item)" height="16px" width="16px" style="vertical-align:middle">
+                                &nbsp;&nbsp;&nbsp;
+                                <span ng-if="!item.documentUrl" >
+                                    {{item.name}}
+                                </span>
+                                <a class="md-primary text-click"  ng-if="item.documentUrl" ng-click="document(item)">
+                                    {{item.name}}
+                                </a>
+                            </td>
+                            <td>{{item.description}}</td>
+                            <td ng-switch="item.pluginType">
+                                <span ng-switch-when="container"> {{'i18n_container_cloud' | translator}}</span>
+                                <span ng-switch-default> {{'i18n_infrastructure' | translator}}</span>
+                            </td>
+                            <td >
+                                <div ng-if="!item.pluginVersion">
+                                    {{item.version}}
+                                </div>
+                                <div ng-if="item.pluginVersion">
+                                    {{item.version}}_{{item.pluginVersion}}
+                                </div>
+                            </td>
+                            <td >
+                                <div ng-if="!item.buildTime">
+                                    {{item.updateTime | date:'yyyy-MM-dd HH:mm'}}
+                                </div>
+                                <div ng-if="item.buildTime">
+                                    {{item.buildTime | date:'yyyy-MM-dd HH:mm'}}
+                                </div>
+                            </td>
+                            <td>
+                                {{item.platformVersion}}
+                            </td>
+                        </tbody>
+                    </table>
+                    <table-pagination pagination="pagination"></table-pagination>
+                </div>
+            </div>
+        </div>
+        <side-form></side-form>
+    </div>
+</div>
+
+

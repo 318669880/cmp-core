@@ -1,0 +1,20 @@
+<div class="inbox-pagination" layout="row" layout-align="center center">
+    <div class="label text-center" flex="auto">{{'i18n_pagination_page' | translator:'页：'}} <strong>{{pagination.page}}/{{pages()}}</strong>
+    </div>
+
+    <div class="label text-center" flex="auto">
+        {{'i18n_pagination_per_page' | translator:'每页'}} <strong>{{pagination.limit}}</strong> {{'i18n_pagination_item' | translator:'条'}}
+    </div>
+
+    <md-button class="md-icon-button" ng-click="previous()" ng-disabled="!hasPrevious()" aria-label="Previous">
+        <md-icon>navigate_before</md-icon>
+    </md-button>
+
+    <md-button class="md-icon-button" ng-click="onPaginationChange()">
+        <md-icon>refresh</md-icon>
+    </md-button>
+
+    <md-button class="md-icon-button" ng-click="next()" ng-disabled="!hasNext()" aria-label="Next">
+        <md-icon>navigate_next</md-icon>
+    </md-button>
+</div>

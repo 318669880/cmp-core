@@ -1,0 +1,11 @@
+<div class="tree-node-file">
+    <div ng-if="hasChildren()" ng-click="select(node)" ng-class="{'tree-node-selected ':selected()}">
+        <md-icon ng-if="node.collapsed !== false">folder</md-icon>
+        <md-icon ng-if="node.collapsed === false">folder_open</md-icon>
+        {{node[option.label]}}
+    </div>
+    <div ng-if="!hasChildren()" ng-click="select(node)" ng-class="{'tree-node-selected ':selected()}">
+        <md-icon>list_alt</md-icon>
+        {{node[option.label]}}
+    </div>
+</div>

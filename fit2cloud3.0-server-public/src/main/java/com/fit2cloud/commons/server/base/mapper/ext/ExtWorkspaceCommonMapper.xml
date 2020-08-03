@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtWorkspaceCommonMapper">
+    <update id="resetWorkspace">
+        update ${tableName}
+        set workspace_id = #{fieldName}
+        where workspace_id = #{workspaceId}
+    </update>
+    <select id="getWorkspaceIdsByOrgIds" resultType="java.lang.String">
+        select id
+        from workspace
+        where organization_id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getWorkspaceOrganizationByWorkspaceId" parameterType="java.lang.String"
+            resultType="com.fit2cloud.commons.server.model.WorkspaceOrganization">
+        SELECT workspace.id AS workspaceId,workspace.name AS workspaceName,
+        workspace.organization_id AS organizationId,organization.`name` AS organizationName
+        FROM workspace
+        LEFT JOIN organization ON workspace.organization_id = organization.id
+        WHERE workspace.id = #{id}
+    </select>
+
+    <resultMap id="WorkspaceTreeNode" type="com.fit2cloud.commons.server.model.TreeNode">
+        <result property="id" column="organization_id"/>
+        <result property="name" column="organization_name"/>
+        <collection property="children" column="children" ofType="com.fit2cloud.commons.server.model.TreeNode">
+            <result property="id" column="id"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectWorkspaceTreeNode" resultMap="WorkspaceTreeNode">
+        SELECT
+        organization.name AS organization_name,
+        workspace.*
+        FROM workspace
+        JOIN organization ON organization_id = organization.id
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="organizationId != null">
+                and organization_id = #{organizationId}
+            </if>
+        </where>
+    </select>
+</mapper>

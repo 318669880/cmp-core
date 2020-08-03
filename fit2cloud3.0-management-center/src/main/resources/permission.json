@@ -1,0 +1,595 @@
+{
+  "version": "2.0",
+  "permissions": [
+    {
+      "id": "USER:READ",
+      "name": "i18n_permission_user_read",
+      "resourceId": "USER",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+IMPORT",
+      "name": "i18n_permission_user_read_import",
+      "resourceId": "USER",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+CREATE",
+      "name": "i18n_permission_user_read_create",
+      "resourceId": "USER",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+EDIT",
+      "name": "i18n_permission_user_read_edit",
+      "resourceId": "USER",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+DELETE",
+      "name": "i18n_permission_user_read_delete",
+      "resourceId": "USER",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+RESET_PASSWORD",
+      "name": "i18n_permission_user_read_reset_password",
+      "resourceId": "USER",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+ADD_ROLE",
+      "name": "i18n_permission_user_read_add_role",
+      "resourceId": "USER",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+DISABLED",
+      "name": "i18n_permission_user_read_disable",
+      "resourceId": "USER",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+USER_KEY:READ",
+      "name": "i18n_permission_user_read_user_key_read",
+      "resourceId": "USER:READ+USER_KEY",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "USER:READ+USER_KEY:READ+EDIT",
+      "name": "i18n_permission_user_read_user_key_read_edit",
+      "resourceId": "USER:READ+USER_KEY",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "ROLE:READ",
+      "name": "i18n_permission_role_read",
+      "resourceId": "ROLE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "ROLE:READ+CREATE",
+      "name": "i18n_permission_role_create",
+      "resourceId": "ROLE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "ROLE:READ+EDIT",
+      "name": "i18n_permission_role_edit",
+      "resourceId": "ROLE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "ROLE:READ+DELETE",
+      "name": "i18n_permission_role_delete",
+      "resourceId": "ROLE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "ORGANIZATION:READ",
+      "name": "i18n_permission_organization_read",
+      "resourceId": "ORGANIZATION",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "ORGANIZATION:READ+CREATE",
+      "name": "i18n_permission_organization_read_create",
+      "resourceId": "ORGANIZATION",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "ORGANIZATION:READ+EDIT",
+      "name": "i18n_permission_organization_read_edit",
+      "resourceId": "ORGANIZATION",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "ORGANIZATION:READ+DELETE",
+      "name": "i18n_permission_organization_read_delete",
+      "resourceId": "ORGANIZATION",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "WORKSPACE:READ",
+      "name": "i18n_permission_workspace_read",
+      "resourceId": "WORKSPACE",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "WORKSPACE:READ+CREATE",
+      "name": "i18n_permission_workspace_read_create",
+      "resourceId": "WORKSPACE",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "WORKSPACE:READ+EDIT",
+      "name": "i18n_permission_workspace_read_edit",
+      "resourceId": "WORKSPACE",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "WORKSPACE:READ+DELETE",
+      "name": "i18n_permission_workspace_read_delete",
+      "resourceId": "WORKSPACE",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "CLOUD_ACCOUNT:READ",
+      "name": "i18n_permission_cloud_account_read",
+      "resourceId": "CLOUD_ACCOUNT",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "CLOUD_ACCOUNT:READ+CREATE",
+      "name": "i18n_permission_cloud_account_read_create",
+      "resourceId": "CLOUD_ACCOUNT",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "CLOUD_ACCOUNT:READ+EDIT",
+      "name": "i18n_permission_cloud_account_read_edit",
+      "resourceId": "CLOUD_ACCOUNT",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "CLOUD_ACCOUNT:READ+VALIDATE",
+      "name": "i18n_permission_cloud_account_read_validate",
+      "resourceId": "CLOUD_ACCOUNT",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "CLOUD_ACCOUNT:READ+DELETE",
+      "name": "i18n_permission_cloud_account_read_delete",
+      "resourceId": "CLOUD_ACCOUNT",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "CLOUD_ACCOUNT:READ+SYNC",
+      "name": "i18n_permission_cloud_account_read_sync",
+      "resourceId": "CLOUD_ACCOUNT",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "CLOUD_ACCOUNT:READ+BATCH_DELETE",
+      "name": "i18n_permission_cloud_account_read_batch_delete",
+      "resourceId": "CLOUD_ACCOUNT",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "CLOUD_ACCOUNT:READ+BATCH_SYNC",
+      "name": "i18n_permission_cloud_account_read_batch_sync",
+      "resourceId": "CLOUD_ACCOUNT",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "MODULE:READ",
+      "name": "i18n_permission_module_read",
+      "resourceId": "MODULE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "MODULE:READ+ACTIVE",
+      "name": "i18n_permission_module_read_active",
+      "resourceId": "MODULE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "MODULE:READ+CREATE",
+      "name": "i18n_permission_module_read_create",
+      "resourceId": "MODULE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "MODULE:READ+EDIT",
+      "name": "i18n_permission_module_read_edit",
+      "resourceId": "MODULE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "MODULE:READ+DELETE",
+      "name": "i18n_permission_module_read_delete",
+      "resourceId": "MODULE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "PLUGIN:READ",
+      "name": "i18n_permission_plugin_read",
+      "resourceId": "PLUGIN",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ",
+      "name": "i18n_permission_tag_read",
+      "resourceId": "TAG",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ+CREATE",
+      "name": "i18n_permission_tag_read_create",
+      "resourceId": "TAG",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ+EDIT",
+      "name": "i18n_permission_tag_read_edit",
+      "resourceId": "TAG",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ+DELETE",
+      "name": "i18n_permission_tag_read_delete",
+      "resourceId": "TAG",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ+TAG_VALUE:READ",
+      "name": "i18n_permission_tag_value_read",
+      "resourceId": "TAG:READ+TAG_VALUE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ+TAG_VALUE:READ+CREATE",
+      "name": "i18n_permission_tag_value_read_create",
+      "resourceId": "TAG:READ+TAG_VALUE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ+TAG_VALUE:READ+EDIT",
+      "name": "i18n_permission_tag_value_read_edit",
+      "resourceId": "TAG:READ+TAG_VALUE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ+TAG_VALUE:READ+DELETE",
+      "name": "i18n_permission_tag_value_read_delete",
+      "resourceId": "TAG:READ+TAG_VALUE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "TAG:READ+TAG_VALUE:READ+IMPORT",
+      "name": "i18n_permission_tag_value_read_import",
+      "resourceId": "TAG:READ+TAG_VALUE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "DICTIONARY_OS:READ",
+      "name": "i18n_permission_os_read",
+      "resourceId": "DICTIONARY_OS",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "DICTIONARY_OS:READ+CREATE",
+      "name": "i18n_permission_os_read_create",
+      "resourceId": "DICTIONARY_OS",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "DICTIONARY_OS:READ+EDIT",
+      "name": "i18n_permission_os_read_edit",
+      "resourceId": "DICTIONARY_OS",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "DICTIONARY_OS:READ+DELETE",
+      "name": "i18n_permission_os_read_delete",
+      "resourceId": "DICTIONARY_OS",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "DICTIONARY_OS:READ+VERSION_CREATE",
+      "name": "i18n_permission_os_version_create",
+      "resourceId": "DICTIONARY_OS",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "KEYCLOAK_SETTING:READ",
+      "name": "i18n_permission_keycloak_settings_read",
+      "resourceId": "KEYCLOAK_SETTING",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "KEYCLOAK_SETTING:SYNC",
+      "name": "i18n_permission_keycloak_settings_sync",
+      "resourceId": "KEYCLOAK_SETTING",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "UI_SETTING:READ",
+      "name": "i18n_permission_ui_settings_read",
+      "resourceId": "UI_SETTING",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "UI_SETTING:READ+EDIT",
+      "name": "i18n_permission_ui_settings_read_edit",
+      "resourceId": "UI_SETTING",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "MAIL_SETTING:READ",
+      "name": "i18n_permission_mail_settings_read",
+      "resourceId": "MAIL_SETTING",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "MAIL_SETTING:READ+EDIT",
+      "name": "i18n_permission_mail_settings_read_edit",
+      "resourceId": "MAIL_SETTING",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "SYS_STATS_READ:READ",
+      "name": "i18n_permission_sys_state_read",
+      "resourceId": "SYS_STATS_READ",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "SYSTEM_LOG:READ",
+      "name": "i18n_permission_sys_log_read",
+      "resourceId": "SYSTEM_LOG",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "SYSTEM_LOG:READ+KEEP_MONTH_UPDATE",
+      "name": "i18n_permission_sys_log_read_edit",
+      "resourceId": "SYSTEM_LOG",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "LICENSE:READ",
+      "name": "i18n_permission_license_read",
+      "resourceId": "LICENSE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "LICENSE:READ+UPDATE",
+      "name": "i18n_permission_license_read_edit",
+      "resourceId": "LICENSE",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "DASHBOARD:ACCOUNT",
+      "name": "i18n_dashboard_mc_user_info",
+      "resourceId": "DASHBOARD",
+      "parentRoles": [
+        "ADMIN",
+        "ORGADMIN"
+      ]
+    },
+    {
+      "id": "DASHBOARD:CLOUD_ACCOUNT",
+      "name": "i18n_dashboard_mc_cloud_account_info",
+      "resourceId": "DASHBOARD",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "USER",
+      "name": "i18n_permission_resource_user"
+    },
+    {
+      "id": "USER:READ+USER_KEY",
+      "name": "i18n_permission_resource_user_key"
+    },
+    {
+      "id": "ROLE",
+      "name": "i18n_permission_resource_role"
+    },
+    {
+      "id": "ORGANIZATION",
+      "name": "i18n_permission_resource_organization"
+    },
+    {
+      "id": "WORKSPACE",
+      "name": "i18n_permission_resource_workspace"
+    },
+    {
+      "id": "CLOUD_ACCOUNT",
+      "name": "i18n_permission_resource_cloud_account"
+    },
+    {
+      "id": "MODULE",
+      "name": "i18n_permission_resource_module"
+    },
+    {
+      "id": "PLUGIN",
+      "name": "i18n_permission_resource_plugin"
+    },
+    {
+      "id": "TAG",
+      "name": "i18n_permission_resource_tag"
+    },
+    {
+      "id": "TAG:READ+TAG_VALUE",
+      "name": "i18n_permission_resource_tag_value"
+    },
+    {
+      "id": "DICTIONARY_OS",
+      "name": "i18n_permission_resource_os"
+    },
+    {
+      "id": "KEYCLOAK_SETTING",
+      "name": "i18n_permission_resource_keycloak"
+    },
+    {
+      "id": "UI_SETTING",
+      "name": "i18n_permission_resource_display"
+    },
+    {
+      "id": "MAIL_SETTING",
+      "name": "i18n_permission_resource_mail"
+    },
+    {
+      "id": "SYS_STATS_READ",
+      "name": "i18n_permission_resource_sys_state"
+    },
+    {
+      "id": "SYSTEM_LOG",
+      "name": "i18n_permission_resource_sys_log"
+    },
+    {
+      "id": "LICENSE",
+      "name": "i18n_permission_resource_about"
+    },
+    {
+      "id": "DASHBOARD",
+      "name": "i18n_permission_resource_overview"
+    }
+  ]
+}

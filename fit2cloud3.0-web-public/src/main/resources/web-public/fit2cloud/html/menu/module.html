@@ -1,0 +1,14 @@
+<md-sidenav class="md-sidenav-left" md-disable-backdrop md-is-locked-open="$mdMedia('gt-xs')" md-component-id="left">
+    <md-toolbar class="sidebar-toolbar">
+        <div class="md-toolbar-tools">
+            <div layout="row">
+                <div class="sidebar-toolbar-title" ng-bind="module.name"></div>
+            </div>
+        </div>
+    </md-toolbar>
+    <div class="sidebar-menu">
+        <div ng-repeat="menu in module.menus">
+            <menu-toggle layout="column" menu="menu"></menu-toggle>
+        </div>
+    </div>
+</md-sidenav>

@@ -1,0 +1,110 @@
+<div layout="row" layout-fill ng-controller="ModelEditCtrl" cg-busy="{promise:loadingLayer}" ng-cloak>
+    <div layout="column" flex="auto">
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button md-primary" ui-sref="{{parent}}">
+                    <md-tooltip md-delay="300" md-direction="left">{{'i18n_back' | translator}}</md-tooltip>
+                    <md-icon>arrow_back</md-icon>
+                </md-button>
+                <div>
+                    <span ng-if="type === 'add'">{{'i18n_process_model_create' | translator}}</span>
+                    <span ng-if="type !== 'add'">{{'i18n_process_model_edit' | translator}}</span>
+                </div>
+                <md-button class="md-primary" ng-click="save()">
+                    <md-icon>save</md-icon>
+                    {{'i18n_save' | translator}}
+                </md-button>
+                <md-button class="md-primary" ng-click="publish()" ng-disabled="model.deployId" ng-if="type === 'update'">
+                    <md-icon>publish</md-icon>
+                    {{'i18n_publish' | translator}}
+                </md-button>
+                <div flex="auto"></div>
+                <div>
+                    <md-tooltip md-direction="left">
+                        {{'i18n_process_model_tooltip_msg' | translator}}
+                    </md-tooltip>
+                    <md-icon class="pointer">help</md-icon>
+                </div>
+            </div>
+        </md-toolbar>
+        <md-content class="pointer" flex="auto" ng-click="open(model, $event)">
+            <div layout="row" layout-fill layout-align="center">
+                <div class="flow" flex="auto" layout="column" layout-align="start center">
+                    <div class="flow-start">{{'i18n_start_process' | translator}}</div>
+                    <div class="flow-line" layout="row" layout-align="start center">
+                        <div class="flow-add">
+                            <md-button class="md-icon-button md-raised md-primary" ng-click="add(-1, $event)">
+                                <md-tooltip md-delay="300" md-direction="right">{{'i18n_process_model_link_add' | translator}}</md-tooltip>
+                                <md-icon>add</md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                    <div layout="column" layout-align="center center" ng-repeat="act in activities" style="position:relative;">
+                        <div class="flow-node-ink-ripple" md-ink-ripple layout="row" layout-align="center center" ng-click="open(act, $event)">
+                            <div class="flow-node" layout="row" layout-align="center center" drag-repeat="activities" index="$index" mode="swap"
+                                 ng-class="{'flow-node-selected':item.activityId === act.activityId}">
+                                {{act.name}}
+                            </div>
+                        </div>
+                        <div class="flow-line" layout="row" layout-align="center center">
+                            <div class="flow-add">
+                                <md-button class="md-icon-button md-raised md-primary" ng-click="add($index, $event)">
+                                    <md-tooltip md-delay="300" md-direction="right">{{'i18n_process_model_link_add' | translator}}</md-tooltip>
+                                    <md-icon>add</md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                        <div class="flow-remove">
+                            <md-button class="md-icon-button md-raised md-accent" ng-click="remove($index, $event)">
+                                <md-tooltip md-delay="300" md-direction="right">{{'i18n_process_model_link_delete' | translator}}</md-tooltip>
+                                <md-icon class="md-light">remove</md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                    <div class="flow-end">{{'i18n_end' | translator}}</div>
+                </div>
+            </div>
+        </md-content>
+    </div>
+
+    <md-sidenav class="md-sidenav-right flow-info" md-disable-backdrop md-is-locked-open="toggle" md-component-id="sidenav_form">
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>{{title}}</div>
+                <div ng-if="item.modelName">[{{item.modelName}}]</div>
+                <div ng-if="item.name">[{{item.name}}]</div>
+                <div flex="auto"></div>
+                <md-button class="md-primary" ng-click="close()">{{'i18n_close' | translator}}</md-button>
+            </div>
+        </md-toolbar>
+        <md-content class="md-padding">
+            <md-tabs md-stretch-tabs="always" md-dynamic-height>
+                <md-tab label="{{'i18n_basic_information' | translator}}">
+                    <model-config model="model" activities="activities" api="list" item="item" type="type"></model-config>
+                </md-tab>
+                <md-tab ng-disabled="type !== 'update'">
+                    <md-tab-label>
+                        <md-tooltip ng-if="type !== 'update'">{{'i18n_process_available_save' | translator}}</md-tooltip>
+                        {{'i18n_process_event' | translator}}
+                    </md-tab-label>
+                    <md-tab-body>
+                        <event-list items="events" model-id="model.modelId" activity-id="item.activityId" step="step" list="list.event()"
+                                    cg-busy="{promise:loadingEvent}"></event-list>
+                    </md-tab-body>
+                </md-tab>
+                <md-tab ng-disabled="type !== 'update'">
+                    <md-tab-label>
+                        <md-tooltip ng-if="type !== 'update'">{{'i18n_process_available_save' | translator}}</md-tooltip>
+                        {{'i18n_process_message' | translator}}
+                    </md-tab-label>
+                    <md-tab-body>
+                        <message-list items="messages" model-id="model.modelId" activity-id="item.activityId" step="step" list="list.message()"
+                                      cg-busy="{promise:loadingMessage}" ng-cloak></message-list>
+                    </md-tab-body>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+
+    </md-sidenav>
+</div>
+

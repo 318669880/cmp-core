@@ -1,0 +1,508 @@
+/*!
+ * 产品CSS，项目CSS禁止修改或添加该CSS内容，否则被覆盖后果自负
+**/
+@import "../../external/web-fonts/roboto/roboto.css";
+@import "animate.css";
+@import "table.css";
+@import "filter.css";
+@import "file.css";
+@import "loading.css";
+@import "wizard.css";
+@import "cloud-metric.css";
+@import "chart.css";
+@import "notification.css";
+
+body {
+    font-size: 14px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body * {
+    font-family: Roboto, "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+* {
+    text-transform: none !important;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:hover, a:active, a:focus {
+    outline: 0;
+}
+
+:focus {
+    outline: none;
+}
+
+::-moz-focus-inner {
+    border: 0;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+/* 按钮 */
+.md-button {
+    text-transform: none;
+}
+
+.md-button.md-raised.md-success {
+    color: #FFF;
+    background-color: rgb(76, 175, 80);
+}
+
+.md-button.md-raised.md-success:not([disabled]):hover {
+    color: #fff;
+    background-color: rgb(76, 175, 80);
+}
+
+.md-button.md-raised.md-success[disabled] {
+    color: #fff;
+    background-color: rgb(76, 175, 80);
+    opacity: 0.5;
+}
+
+.md-button.md-success {
+    color: rgb(76, 175, 80);
+}
+
+.md-button.md-success:not([disabled]):hover {
+    color: rgb(76, 175, 80);
+}
+
+.md-button.md-success[disabled] {
+    color: rgba(0, 0, 0, 0.38);
+    cursor: default;
+}
+
+/* 图标 */
+.material-icons.md-18 {
+    line-height: 18px !important;
+    font-size: 18px;
+}
+
+.material-icons.md-24 {
+    font-size: 24px;
+}
+
+.material-icons.md-36 {
+    line-height: 24px !important;
+    margin-left: -6px;
+    margin-right: 6px;
+    font-size: 36px;
+}
+
+.material-icons.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+    color: rgba(0, 0, 0, 0.26);
+}
+
+.material-icons.md-light {
+    color: rgba(255, 255, 255, 1);
+}
+
+.material-icons.md-light.md-inactive {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+md-toolbar.md-default-theme:not(.md-menu-toolbar) md-icon, md-toolbar:not(.md-menu-toolbar) md-icon {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+/* 菜单 */
+.sidebar-menu {
+    overflow-y: auto;
+    padding-bottom: 10px;
+}
+
+.menu-toggle {
+    border-radius: 0;
+    font-weight: 400;
+    cursor: pointer;
+    -webkit-box-align: inherit;
+    -webkit-align-items: inherit;
+    align-items: inherit;
+    line-height: 40px;
+    max-height: 40px;
+    overflow: hidden;
+    margin: 0;
+    padding: 0 16px;
+    text-align: left;
+    text-decoration: none;
+    white-space: normal;
+    height: 40px;
+}
+
+.menu-icon {
+    width: 24px;
+    max-width: 24px;
+    margin-right: 10px;
+}
+
+.menu-toggle-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.menu-toggled {
+    background-color: rgba(158, 158, 158, 0.2);
+}
+
+.menu-toggle-list li a {
+    padding-left: 50px;
+    width: 100%;
+}
+
+.menu-toggle-list li.menu-toggled a {
+    font-weight: bold;
+}
+
+.menu-toggle-clip {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    width: 130px;
+}
+
+module .md-sidenav-left {
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    width: 220px;
+}
+
+module + md-content {
+    overflow-x: hidden;
+}
+
+/*toolbar*/
+md-toolbar {
+    min-height: 54px;
+    max-height: 54px;
+}
+
+md-toolbar .md-toolbar-tools {
+    min-height: 54px;
+    max-height: 54px;
+}
+
+.md-toolbar-tools .md-button md-icon {
+    font-size: 22px;
+}
+
+md-toolbar:not(.md-menu-toolbar) .md-toolbar-tools .md-button[disabled] md-icon {
+    color: rgba(0, 0, 0, 0.38);
+}
+
+md-toolbar.content-toolbar, md-toolbar.sidebar-toolbar {
+    color: rgba(0, 0, 0, 0.87);
+    background-color: transparent;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+/* 侧边栏表单 */
+md-sidenav.side-form {
+    min-width: 100%;
+    max-width: 100%;
+    background-color: white;
+
+}
+
+.content-backdrop {
+    overflow-x: hidden;
+    width: auto;
+}
+
+.content-backdrop md-sidenav.side-form {
+    min-width: 320px;
+    z-index: 62;
+}
+
+.content-backdrop md-backdrop.md-sidenav-backdrop {
+    position: fixed;
+    z-index: 61;
+}
+
+/* 树 */
+.tree {
+    overflow-y: auto;
+}
+
+.tree-node {
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.tree-node .tree-node {
+    margin-left: 24px;
+}
+
+.tree-node .tree-node-prefix {
+    margin-left: 40px;
+    min-height: 40px;
+}
+
+.tree-node .md-icon-button {
+    margin: 0;
+}
+
+.tree-node .tree-node-checkbox md-checkbox {
+    margin: 0;
+}
+
+.tree-node .tree-node-radio .tree-node-radio-child {
+    margin-left: -30px;
+}
+
+.tree-node .tree-node-radio md-radio-button {
+    margin: 0;
+}
+
+.tree-node .tree-node-file {
+    min-width: 100px;
+    line-height: 36px;
+    cursor: pointer;
+}
+
+.tree-node .tree-node-file:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.tree-node .tree-node-selected {
+    background-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
+}
+
+/*信息板*/
+.info-form {
+    max-width: 100%;
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+    overflow-y: hidden;
+}
+
+.side-form md-content {
+    background-color: transparent;
+}
+
+/* md-input-container 调整字体*/
+md-input-container.md-input-has-value label, md-input-container.md-input-has-placeholder label,
+md-input-container.md-input-focused label, md-input-container.md-input-focused .md-select-placeholder > span:first-child {
+    font-size: 18px;
+}
+
+md-select.md-default-theme[disabled] .md-select-value, md-select[disabled] .md-select-value, md-select.md-default-theme[disabled] .md-select-value.md-select-placeholder, md-select[disabled] .md-select-value.md-select-placeholder {
+    color: inherit;
+    cursor: not-allowed;
+}
+
+md-input-container .hint {
+    position: absolute;
+    left: 2px;
+    right: auto;
+    bottom: 7px;
+    font-size: 12px;
+    font-style: italic;
+    line-height: 14px;
+    color: grey;
+    overflow: hidden;
+}
+
+md-input-container:not(.md-input-invalid) .hint {
+    display: block;
+}
+
+md-input-container.md-input-invalid .md-input-messages-animation + .hint {
+    display: none;
+}
+
+[disabled] md-input-container.md-default-theme .md-input, [disabled] md-input-container .md-input, md-input-container.md-default-theme .md-input[disabled], md-input-container .md-input[disabled], md-input-container md-checkbox[disabled], md-input-container md-switch[disabled] .md-container {
+    color: inherit;
+    cursor: not-allowed;
+}
+
+md-radio-button[disabled], md-radio-button[disabled] .md-container {
+    cursor: not-allowed;
+}
+
+/*choose*/
+.choose {
+    border: 1px solid #d3d3d3;
+    min-width: 400px;
+    min-height: 300px;
+}
+
+.choose .choose-header {
+    border-bottom: 1px solid #d3d3d3;
+    min-height: 50px;
+}
+
+.choose .choose-header-title {
+    line-height: 50px;
+}
+
+.choose .choose-header-search {
+    outline: none;
+    height: 30px;
+    width: calc(100% - 30px);
+    padding: 0 10px;
+    margin: 0 10px;
+    background-color: #F1F3F4;
+    border-radius: 15px;
+    border: none;
+}
+
+.choose .choose-header-search:focus {
+    padding: 0 9px;
+    border: 1px solid #c5c5c5;
+    background-color: transparent;
+}
+
+.choose .choose-header-content {
+    min-height: 50px;
+}
+
+.choose .choose-header .md-subheader-inner {
+    padding: 0 16px;
+}
+
+.choose .choose-content {
+    padding: 0 0 10px 0;
+    overflow-y: auto;
+}
+
+.choose .choose-item {
+    padding: 0 16px;
+    height: 48px;
+}
+
+.choose .choose-content md-list-item:not([disabled]):hover, .choose .choose-item:not([disabled]):hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.choose .choose-display {
+    cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.choose .choose-button {
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.choose .choose-button:not([disabled]):hover {
+    background-color: rgba(0, 0, 0, 0.12);
+}
+
+/*拖拽*/
+.drag-able {
+    cursor: pointer;
+}
+
+.drag-able:not([disabled]):hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.drag-enter {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/*对话框*/
+/*不看内容直接设定位置*/
+md-dialog.md-transition-in {
+    position: absolute;
+    top: 20%;
+    transform: translate(0, 0px) scale(1)
+}
+
+md-dialog.md-transition-out {
+    position: absolute;
+    top: 20%;
+    transform: translate(0, 100%) scale(0.2)
+}
+
+md-dialog.md-default-dialog {
+    min-width: 480px;
+}
+
+/* tooltip */
+.f2c-tooltip-user {
+    height: auto;
+    padding: 4px 8px;
+    z-index: 1000;
+}
+
+.f2c-tooltip-user.md-origin-bottom {
+    margin-top: 2px;
+}
+
+.f2c-eye {
+    position: absolute;
+    right: 0;
+    line-height: 35px;
+    cursor: pointer;
+}
+
+/* virtual-select */
+.md-chips-messages {
+    color: rgb(221, 44, 0);
+    position: relative;
+    order: 4;
+    overflow: hidden;
+}
+
+.md-chips-messages [ng-message] {
+    font-size: 12px;
+    line-height: 14px;
+    overflow: hidden;
+    margin-top: 0;
+    padding-top: 5px;
+}
+
+.virtual-width {
+    width: 250px;
+}
+
+/* md-chips */
+.md-chips {
+    font-size: 14px;
+}
+
+.virtual-select .hint {
+    left: 2px;
+    padding-top: 2px;
+    right: auto;
+    bottom: 7px;
+    font-size: 12px;
+    font-style: italic;
+    line-height: 14px;
+    color: grey;
+    overflow: hidden;
+}
+
+.virtual-select md-chips.ng-untouched + div.hint {
+    display: block;
+}
+
+.virtual-select md-chips.ng-touched:not(.ng-invalid) + div.hint {
+    display: block;
+}
+
+.virtual-select md-chips.ng-touched:not(.ng-valid) + div.hint {
+    display: none;
+}
+
+/*!
+ * 产品CSS，项目CSS禁止修改或添加该CSS内容，否则被覆盖后果自负
+**/
+
+

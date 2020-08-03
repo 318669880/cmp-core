@@ -1,0 +1,17 @@
+<div layout-fill ng-cloak>
+    <div layout-fill class="cloud-server-info">
+        <md-tabs layout-fill md-dynamic-height md-border-bottom>
+            <md-button class="md-primary" ng-click="toggleInfoForm(false)">
+                <div> {{'i18n_close' | translator}}</div>
+            </md-button>
+            <md-tab label=" {{'i18n_monitor' | translator}}">
+                <md-content ng-controller="CloudResourceMetricController" class="cloud-server-info-content">
+                    <div layout-fill layout="column">
+                        <cloud-metric class="cloud-server-info-md-content" show-date-type="true"
+                                      request="request" time-type="six_hour" url="url"></cloud-metric>
+                    </div>
+                </md-content>
+            </md-tab>
+        </md-tabs>
+    </div>
+</div>

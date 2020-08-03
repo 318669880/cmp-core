@@ -1,0 +1,38 @@
+<div layout-fill ng-controller="LinkListCtrl" class="content-backdrop" ng-cloak cg-busy="{promise:loadingLayer, minDuration:200}">
+    <div layout="column" flex="auto">
+        <table dynamic-table columns="columns" execute="listLink({sql: sql})">
+            <tbody>
+            <tr ng-repeat="item in items">
+                <td>
+                    <a class="md-primary" href="" style="cursor:pointer; text-decoration: underline;" ng-click="editValues(item)">
+                        {{item.linkKey}}</a>
+                </td>
+                <td>{{item.linkAlias}}</td>
+                <td>
+                    <md-switch class="md-primary" aria-label="enable" ng-model="item.enable"
+                               ng-change="editLinkStatus(item)">
+                    </md-switch>
+                </td>
+                <td>
+                    <!--设置名成加op="'其他名称'"，默认的名称为"操作"；设置宽度加width="4 或其他整数"-->
+                    <table-menus>
+                        <md-menu-item>
+                            <md-button ng-click="edit(item)">
+                                <md-icon class="md-18">edit</md-icon>
+                                {{'i18n_edit' | translator:'编辑'}}
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="deleteLink(item)">
+                                <md-icon>delete</md-icon>
+                                {{'i18n_delete' | translator:'删除'}}
+                            </md-button>
+                        </md-menu-item>
+                    </table-menus>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table-pagination pagination="pagination"></table-pagination>
+    </div>
+</div>

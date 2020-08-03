@@ -1,0 +1,39 @@
+<div ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_os_version_add' | translator}}</div>
+        </div>
+    </md-toolbar>
+    <form name="DictionaryForm" class="md-padding">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label> {{'i18n_os_identification' | translator}}</label>
+                <input ng-model="versionItem.dictionaryKey"
+                       ng-disabled="true">
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label> {{'i18n_os_name' | translator}}</label>
+                <input ng-model="versionItem.dictionaryValue"
+                       ng-disabled="true">
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label> {{'i18n_os_version' | translator}}</label>
+                <input md-maxlength="30" required name="key" ng-model="versionItem.version"
+                >
+                <div ng-messages="DictionaryForm.key.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    <div ng-message="md-maxlength">{{'input_length_limit_30' | translator}}</div>
+                </div>
+            </md-input-container>
+        </div>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="toggleForm();">
+             {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="DictionaryForm.$invalid"
+                   ng-click="submitAddVersion(versionItem)">
+             {{'i18n_save' | translator}}
+        </md-button>
+    </div>
+</div>

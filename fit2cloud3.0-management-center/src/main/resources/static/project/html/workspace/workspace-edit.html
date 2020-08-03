@@ -1,0 +1,47 @@
+<div ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_workspace_edit' | translator}}</div>
+        </div>
+    </md-toolbar>
+    <form name="workspaceForm" class="md-padding">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label> {{'i18n_workspace_name' | translator}}</label>
+            <input minlength="2" md-maxlength="30" required name="name" ng-model="item.name">
+            <div ng-messages="workspaceForm.name.$error">
+                <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength">{{'i18n_input_length_limit_30' | translator}}</div>
+                <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                     {{'i18n_name_limit_msg' | translator}}
+                </div>
+            </div>
+        </md-input-container>
+
+        <div layout="row" layout-align="start" flex ng-if="currentRole===roleConst.admin">
+            <md-input-container flex="100">
+                <label> {{'i18n_organization' | translator}}</label>
+                <md-select name="roleId" ng-model="item.organizationId" required>
+                    <md-option ng-value="org.id" ng-repeat="org in orgs">{{org.name}}</md-option>
+                </md-select>
+                <div ng-messages="workspaceForm.roleId.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
+            </md-input-container>
+        </div>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label> {{'i18n_workspace_desc' | translator}}</label>
+            <input md-maxlength="50" name="description" ng-model="item.description">
+            <div ng-messages="workspaceForm.description.$error">
+                <div ng-message="md-maxlength">{{'i18n_error_exceed_50_c' | translator}}</div>
+            </div>
+        </md-input-container>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="closeToggleForm();">
+             {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="workspaceForm.$invalid" ng-click="submit('edit',item)">
+             {{'i18n_save' | translator}}
+        </md-button>
+    </div>
+</div>

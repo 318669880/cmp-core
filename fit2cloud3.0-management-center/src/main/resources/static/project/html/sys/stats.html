@@ -1,0 +1,48 @@
+<div layout-fill ng-controller="SysStatsController" class="content-backdrop license-panel" ng-cloak>
+    <div layout-fill ng-include="background" class="license-background" aria-hidden="true"></div>
+    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div> {{'i18n_system_status' | translator}}</div>
+            </div>
+        </md-toolbar>
+        <div layout-align="center center" layout="column">
+            <md-content layout="column" class="md-padding" style="overflow-y: auto;width: 100%;">
+
+                <div class="module-content" ng-repeat="item in items">
+                    <md-card class="md-whiteframe-1dp" flex="100" style="padding: 20px;"
+                             ng-style="{'height':item.status === 'running'? '280px':'50px'}">
+                        <div style="padding-bottom: 5px;" md-colors="{color: 'primary'}"
+                             ng-style="{'border-bottom':item.status === 'running'? '1px solid':'none'}">
+                             {{'i18n_node' | translator}}：<strong>{{item.statKey}}</strong>[
+                            <span ng-if="item.status === 'running'" md-colors="{color: 'green'}"> {{'i18n_sys_running' | translator}}</span>
+                            <span ng-if="item.status === 'stopped'" md-colors="{color: 'red'}"> {{'i18n_sys_stopped' | translator}}</span>
+                            ]
+                        </div>
+                        <div layout="row" ng-if="item.status === 'running'" style="margin-top: 25px">
+                            <div layout="row" flex="25" layout-align="center center">
+                                <div>
+                                    <div style=" color:#979595;"> {{'i18n_basic_information' | translator}}</div>
+                                    <div style="font-size: 12px;padding-top: 10px;">
+                                        CPU: {{item.content.core}} {{'i18n_sys_cpu_core' | translator}}<br>
+                                         {{'i18n_sys_memory' | translator}}: {{item.content.mem}}G<br>
+                                         {{'i18n_sys_disk' | translator}}: {{item.content.disk}}G
+                                    </div>
+                                </div>
+                            </div>
+                            <div flex="35" class="sys_metric">
+                                <pod-line-chart setting="item.metricSetting"></pod-line-chart>
+                            </div>
+                            <div flex="40" style="padding-left: 40px">
+                                <pod-pie-chart setting="item.setting"></pod-pie-chart>
+                            </div>
+                        </div>
+                    </md-card>
+                </div>
+            </md-content>
+        </div>
+    </div>
+    <info-form width="464"></info-form>
+    <side-form></side-form>
+</div>
+

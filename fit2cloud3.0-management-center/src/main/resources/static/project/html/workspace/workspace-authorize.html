@@ -1,0 +1,25 @@
+<div ng-cloak ng-controller="WorkspaceAuthorizeController">
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_workspace_authorized_user' | translator}}</div>
+            <div flex></div>
+            <md-button class="md-primary" ng-click="closeInformation()">
+                <div>{{'i18n_close' | translator}}</div>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <div layout="row" flex>
+        <div class="md-padding" layout-fill layout="column" flex="100">
+            <table dynamic-table columns="columns" class="overflow-custom-table">
+                <tbody>
+                <tr ng-repeat="item in items">
+                    <td>{{item.name}}</td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.phone}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <table-pagination pagination="pagination"></table-pagination>
+        </div>
+    </div>
+</div>

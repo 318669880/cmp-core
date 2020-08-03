@@ -1,0 +1,43 @@
+<div layout-fill ng-controller="LinkValueEditWorkspaceController" cg-busy="{promise:loadingLayer,minDuration:500}" ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div>{{'i18n_select_workspace' | translator:'选择工作空间'}}</div>
+        </div>
+    </md-toolbar>
+    <form name="linkValueFrom" class="side-content">
+        <md-radio-group ng-model="model.permissionMode" layout="row" layout-align="space-around center">
+            <div layout="row" layout-align="center center">
+                <md-radio-button class="md-primary" value="WHITELIST">{{'i18n_process_link_value_scope_whitelist'| translator:'白名单模式'}}</md-radio-button>
+                <div style="padding-left: 10px;">
+                    <md-button class="md-icon-button">
+                        <md-tooltip md-direction="bottom">
+                            {{'i18n_process_link_value_scope_whitelist_desc' | translator:'该环节项只对已选择的工作空间生效'}}
+                        </md-tooltip>
+                        <md-icon>info</md-icon>
+                    </md-button>
+                </div>
+            </div>
+            <div layout="row" layout-align="center center">
+                <md-radio-button class="md-primary" value="BLACKLIST">{{'i18n_process_link_value_scope_blacklist' | translator:'黑名单模式'}}</md-radio-button>
+                <div style="padding-left: 10px;">
+                    <md-button class="md-icon-button">
+                        <md-tooltip md-direction="bottom">
+                            {{'i18n_process_link_value_scope_blacklist_desc' | translator:'该环节项只对已选择的工作空间不生效'}}
+                        </md-tooltip>
+                        <md-icon>info</md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </md-radio-group>
+        <tree data="model.treeData" api="noroot" type="checkbox" class="f2c-tree"></tree>
+    </form>
+
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="closeToggleForm();">
+            {{'i18n_cancel' | translator:'取消'}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="commit || linkValueFrom.$invalid" ng-click="submit()">
+            {{'i18n_save' | translator:'保存'}}
+        </md-button>
+    </div>
+</div>

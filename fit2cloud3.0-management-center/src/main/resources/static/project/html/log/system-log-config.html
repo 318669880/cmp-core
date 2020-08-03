@@ -1,0 +1,27 @@
+<div ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_mc_log_save_policy' | translator:'日志保存策略'}}</div>
+        </div>
+    </md-toolbar>
+    <form name="tagEditForm" class="md-padding">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label>{{'i18n_mc_log_save_months' | translator:'日志保存月数'}}</label>
+                <input required type="number" step="1" name="months" ng-model="months" ng-min="1">
+                <div ng-messages="tagEditForm.months.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
+            </md-input-container>
+        </div>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised md-primary" ng-click="saveSystemLogConfig(months)"
+                   ng-disabled="tagEditForm.$invalid">
+             {{'i18n_save' | translator}}
+        </md-button>
+        <md-button class="md-raised" ng-click="toggleForm()">
+             {{'i18n_cancel' | translator}}
+        </md-button>
+    </div>
+</div>

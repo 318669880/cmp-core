@@ -1,0 +1,110 @@
+<div ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div ng-if="item.id">{{'i18n_edit' | translator:'编辑'}}</div>
+            <div ng-if="!item.id">{{'i18n_add' | translator:'添加'}}</div>
+        </div>
+    </md-toolbar>
+    <form name="linkValueEditForm" class="md-padding">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label>{{'i18n_process_link_value' | translator:'环节项值'}}</label>
+                <input md-maxlength="50" required name="linkValue"  ng-model="item.linkValue" ng-disabled="item.id">
+                <div ng-messages="linkValueEditForm.linkValue.$error">
+                    <div ng-message="required">{{'i18n_required' | translator:'必填'}}.</div>
+                    <div ng-message="md-maxlength">{{'i18n_error_exceed_50_c' | translator:'不要超过50个字符'}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>{{'i18n_process_link_value_alias' | translator:'环节项描述'}}</label>
+                <input required name="linkValueAlias" ng-model="item.linkValueAlias" md-maxlength="50"/>
+                <div ng-messages="linkValueEditForm.linkValueAlias.$error">
+                    <div ng-message="required">{{'i18n_required' | translator:'必填'}}.</div>
+                    <div ng-message="md-maxlength">{{'i18n_error_exceed_50_c' | translator:'不要超过50个字符'}}</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container class="md-block">
+                <label>{{'i18n_process_link_value_priority' | translator:'环节项优先级'}}</label>
+                <input type="number" required name="linkValuePriority" ng-model="item.linkValuePriority" />
+            </md-input-container>
+
+            <md-input-container flex="auto">
+                <label>{{'i18n_process_model_link_handler' | translator}}</label>
+                <md-select name="assigneeType" ng-model="item.assigneeType" required
+                           ng-change="selectType(item.assigneeType)">
+                    <md-option ng-value="'CREATOR'">{{'i18n_process_model_link_handler_creator' | translator}}</md-option>
+                    <md-option ng-value="'USER'">{{'i18n_process_model_link_handler_user' | translator}}</md-option>
+                    <md-option ng-value="'SYSTEM_ROLE'">{{'i18n_process_model_link_handler_system_role' | translator}}</md-option>
+                    <md-option ng-value="'PROCESS_ROLE'">{{'i18n_process_model_process_role' | translator}}</md-option>
+                    <md-option ng-value="'VARIABLES'">{{'i18n_process_model_process_variables' | translator}}</md-option>
+                </md-select>
+                <div ng-messages="linkValueEditForm.assigneeType.$error">
+                    <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+                </div>
+            </md-input-container>
+
+            <md-chips ng-model="item.assigneeValue" md-transform-chip="$chip" md-require-match="true"
+                      ng-if="item.assigneeType === 'USER'">
+                <md-autocomplete
+                        class="flow-auto"
+                        md-delay="300"
+                        md-selected-item="selectedItem"
+                        md-search-text="searchText"
+                        md-items="query in querySearch(searchText)"
+                        md-item-text="query.name"
+                        placeholder="{{'i18n_process_model_add_user' | translator}}">
+                    <span md-highlight-text="searchText">{{query.label}}</span>
+                </md-autocomplete>
+
+                <md-chip-template>
+                <span>
+                    <em>{{$chip.email}}</em>
+                </span>
+                </md-chip-template>
+            </md-chips>
+
+            <md-input-container flex="auto" ng-if="item.assigneeType === 'SYSTEM_ROLE'">
+                <label>{{'i18n_process_model_link_handler_select_system_role' | translator}}</label>
+                <md-select name="selectSystemRole" ng-model="item.assigneeValue" required>
+                    <md-option ng-repeat="role in systemRoles" ng-value="role.id">
+                        {{role.name}}
+                    </md-option>
+                </md-select>
+                <div ng-messages="activityForm.selectSystemRole.$error">
+                    <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container flex="auto" ng-if="item.assigneeType === 'PROCESS_ROLE'">
+                <label>{{'i18n_process_model_link_handler_select_process_role' | translator}}</label>
+                <md-select name="selectProcessRole" ng-model="item.assigneeValue" required>
+                    <md-option ng-repeat="role in roles" ng-value="role.roleKey">
+                        {{role.roleName}}
+                    </md-option>
+                </md-select>
+                <div ng-messages="activityForm.selectProcessRole.$error">
+                    <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container flex="auto" ng-if="item.assigneeType === 'VARIABLES'">
+                <label>{{'i18n_process_model_link_handler_add_process_variables' | translator}}</label>
+                <input md-maxlength="100" required name="variables" ng-model="item.assigneeValue" autocomplete="off">
+                <div ng-messages="activityForm.variables.$error">
+                    <div ng-message="required">{{'i18n_required' | translator}}</div>
+                    <div ng-message="md-maxlength">{{'i18n_input_length_limit_100' | translator}}</div>
+                </div>
+            </md-input-container>
+        </div>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="closeToggleForm()">
+            {{'i18n_cancel' | translator:'取消'}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="submit(item)" ng-disabled="linkValueEditForm.$invalid">
+            {{'i18n_save' | translator:'保存'}}
+        </md-button>
+    </div>
+</div>
+

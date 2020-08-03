@@ -1,0 +1,59 @@
+<div class="choose" layout="row" ng-style="{'width':width,'height':height}">
+    <div flex layout="column">
+        <md-subheader class="choose-header md-primary">
+            <div layout="row" layout-align="start center" class="choose-header-content">
+                <div class="choose-header-title">{{'i18n_candidate' | translator}}</div>
+                <div flex>
+                    <input type="search" class="choose-header-search" ng-model="search"
+                           placeholder="{{'i18n_search' | translator}}">
+                </div>
+                <md-button class="md-icon-button choose-button" ng-click="selectAll(true)"
+                           ng-if="selected.length !== items.length">
+                    <md-tooltip md-delay="300" md-direction="left">{{'i18n_select_all' | translator}}</md-tooltip>
+                    <md-icon>done</md-icon>
+                </md-button>
+            </div>
+        </md-subheader>
+        <md-list ng-cloak class="choose-content">
+            <md-list-item ng-repeat="item in filter(search)" ng-if="item._checked !== true">
+                <div class="choose-display">
+                    <md-tooltip md-delay="300">{{item[display]}}</md-tooltip>
+                    {{item[display]}}
+                </div>
+                <div flex></div>
+                <md-button class="md-accent md-icon-button choose-button" ng-click="select(item, true)">
+                    <md-tooltip md-delay="500" md-direction="left">{{'i18n_select' | translator}}</md-tooltip>
+                    <md-icon>done</md-icon>
+                </md-button>
+            </md-list-item>
+        </md-list>
+    </div>
+
+    <md-divider></md-divider>
+
+    <div flex layout="column">
+        <md-subheader class="choose-header md-accent">
+            <div layout="row" layout-align="start center" class="choose-header-content">
+                <md-button class="md-icon-button choose-button" ng-click="selectAll(false)" ng-if="selected.length > 0">
+                    <md-tooltip md-delay="300" md-direction="right">{{'i18n_cancel_all' | translator}}</md-tooltip>
+                    <md-icon>close</md-icon>
+                </md-button>
+                <div flex></div>
+                <div class="choose-header-title">{{'i18n_selected' | translator}}</div>
+            </div>
+        </md-subheader>
+        <md-list ng-cloak class="choose-content">
+            <md-list-item ng-repeat="item in selected" layout="row">
+                <md-button class="md-primary md-icon-button choose-button" ng-click="select(item, false)">
+                    <md-tooltip md-delay="500" md-direction="right">{{'i18n_filter_condition_cancel' | translator}}
+                    </md-tooltip>
+                    <md-icon>close</md-icon>
+                </md-button>
+                <div class="choose-display">
+                    <md-tooltip md-delay="300">{{item[display]}}</md-tooltip>
+                    {{item[display]}}
+                </div>
+            </md-list-item>
+        </md-list>
+    </div>
+</div>

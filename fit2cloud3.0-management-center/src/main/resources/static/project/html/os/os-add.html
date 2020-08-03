@@ -1,0 +1,42 @@
+<div ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div><span ng-if="item.id"> {{'i18n_edit' | translator}}</span><span
+                    ng-if="!item.id"> {{'i18n_create' | translator}}</span>&nbsp;&nbsp; {{'i18n_os' | translator}}
+            </div>
+        </div>
+    </md-toolbar>
+    <form name="DictionaryForm" class="md-padding">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label> {{'i18n_os_identification' | translator}}</label>
+                <input md-maxlength="30" required name="key" ng-model="item.dictionaryKey"
+                       ng-pattern="/^[a-z][a-z_]*$/" ng-disabled="item.id">
+                <div ng-messages="DictionaryForm.key.$error">
+                    <div ng-message-exp="['pattern']">
+                         {{'i18n_os_pattern' | translator}}
+                    </div>
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    <div ng-message="md-maxlength">{{'i18n_input_length_limit_30' | translator}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label> {{'i18n_os_name' | translator}}</label>
+                <input md-maxlength="255" required name="value" ng-model="item.dictionaryValue">
+                <div ng-messages="DictionaryForm.value.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    <div ng-message="md-maxlength">{{'i18n_input_length_limit_255' | translator}}</div>
+                </div>
+            </md-input-container>
+        </div>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="toggleForm();">
+             {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="DictionaryForm.$invalid"
+                   ng-click="submitOsCategory(item)">
+             {{'i18n_save' | translator}}
+        </md-button>
+    </div>
+</div>

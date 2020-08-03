@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.mc.dao.ext.ExtRoleMapper">
+
+    <resultMap id="roleDtoMap" type="com.fit2cloud.mc.dto.RoleDTO"
+               extends="com.fit2cloud.commons.server.base.mapper.RoleMapper.BaseResultMap">
+
+    </resultMap>
+
+    <select id="paging" resultMap="roleDtoMap">
+        select *
+        from role
+        WHERE 1= 1
+        <if test="map.id != null">
+            AND role.id = #{map.id}
+        </if>
+        <if test="(map.ids != null and map.ids.size>0) or map.name!=null">
+            AND (
+            <if test="map.ids != null and map.ids.size>0">
+                role.id IN
+                <foreach collection="map.ids" item="item" index="index" close=")" open="(" separator=",">
+                    #{item}
+                </foreach>
+                OR
+            </if>
+            <if test="map.name!=null">
+                role.name like #{map.name}
+            </if>)
+        </if>
+        order by type desc,parent_id asc,name
+    </select>
+
+    <select id="getRolesByResourceIds" resultMap="com.fit2cloud.commons.server.base.mapper.RoleMapper.BaseResultMap">
+        SELECT DISTINCT role.* FROM role LEFT JOIN user_role ON role.id = user_role.role_id
+        WHERE user_role.user_id = #{userId}
+        <if test="resourceIds!=null and resourceIds.size>0">
+            and user_role.source_id in
+            <foreach collection="resourceIds" item="resourceId" index="index" open="(" close=")" separator=",">
+                #{resourceId}
+            </foreach>
+        </if>
+        order by role.name
+    </select>
+</mapper>

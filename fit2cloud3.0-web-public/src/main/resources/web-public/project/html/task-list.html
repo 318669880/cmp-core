@@ -1,0 +1,37 @@
+<div class="inbox-list" layout="column" cg-busy="{promise:loadingLayer, minDuration:500}">
+    <div class="inbox-search" layout="row" layout-align="space-between" layout-nowrap>
+        <md-select ng-model="type" placeholder="{{'i18n_task' | translator}}" class="md-no-underline" ng-change="change()">
+            <md-option ng-value="'pending'">{{'i18n_task_wait' | translator}}</md-option>
+            <md-option ng-value="'end'">{{'i18n_task_done' | translator}}</md-option>
+        </md-select>
+        <div flex="auto" layout="column" layout-align="center">
+            <input placeholder="{{'i18n_search' | translator}}" ng-model="search" ng-keypress="onKeyPress($event)">
+            <md-button class="md-icon-button" ng-click="clear()" ng-if="search">
+                <md-icon>clear</md-icon>
+            </md-button>
+        </div>
+    </div>
+    <md-content flex="auto">
+        <div class="inbox" ng-repeat="item in items" ng-click="open(item)" layout="column"
+             ng-class="{'selected':$root.selected === item.taskId}">
+            <div layout="row" layout-align="space-between" layout-nowrap>
+                <div class="inbox-name inbox-ellipsis" ng-class="{'inbox-done':item.taskStatus !== 'PENDING'}">
+                    <md-tooltip md-delay="300" md-direction="right">{{item.taskName}}</md-tooltip>
+                    {{item.taskName}}
+                </div>
+                <div class="inbox-time">{{item.taskStartTime | date:'yyyy-MM-dd HH:mm'}}</div>
+            </div>
+            <div layout="row" layout-align="space-between" layout-nowrap>
+                <div class="inbox-ellipsis" ng-class="{'inbox-done':item.taskStatus !== 'PENDING'}">
+                    <md-tooltip md-delay="300" md-direction="right">
+                        {{item.processCreator}}{{'i18n_initiated' | translator}}{{item.processName}}
+                    </md-tooltip>
+                    {{item.processCreator}}{{'i18n_initiated' | translator}}{{item.processName}}
+                </div>
+                <div class="inbox-time">{{item.taskStatus | selects:status}}</div>
+            </div>
+
+        </div>
+    </md-content>
+    <pagination pagination="pagination"></pagination>
+</div>

@@ -1,0 +1,18 @@
+<div ng-controller="TranslateCtrl" class="content-backdrop" ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div>Select</div>
+        </div>
+    </md-toolbar>
+    <div class="md-padding">
+        单Key: {{'i18n_confirm' | translator:'默认值-确认'}}
+        <br>
+        单Key: {{singleKey | translator}}
+        <br>
+        多Key: {{multipleKey | translators}}
+        <br>
+        <user-info user-id="'dongbin'"></user-info>
+    </div>
+</div>
+
+

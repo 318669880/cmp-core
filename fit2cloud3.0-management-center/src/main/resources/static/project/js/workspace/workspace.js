@@ -1,0 +1,142 @@
+ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, FilterSearch, $http, Notification, $state, Translator) {
+    $scope.orgParam = angular.fromJson(sessionStorage.getItem("orgParam"));
+    sessionStorage.removeItem("orgParam");
+    // 定义搜索条件
+    $scope.conditions = [
+        {key: "name", name: Translator.get("i18n_workspace_name"), directive: "filter-contains"},
+    ];
+
+    if ($scope.currentRole === $scope.roleConst.admin) {
+        $scope.conditions.push({
+            key: "organizationId",
+            name: Translator.get("i18n_organization"),
+            directive: "filter-select-virtual",
+            url: "organization",
+            search: true,
+            convert: {value: "id", label: "name"}
+        })
+    }
+    $scope.filters = [];
+    if ($scope.orgParam && $scope.currentRole === $scope.roleConst.admin) {
+        $scope.filters = [{
+            key: "organizationId",
+            name: Translator.get("i18n_organization"),
+            label: $scope.orgParam.label,
+            value: $scope.orgParam.value
+        }];
+    }
+
+    $scope.columns = [
+        {value: Translator.get("i18n_workspace_name"), key: "name", sort: false},
+        {value: Translator.get("i18n_organization"), key: "organizationName", sort: false},// 不想排序的列，用sort: false
+        {value: Translator.get("i18n_workspace_authorized_user"), key: "countAuthorizedUser"},// 不想排序的列，用sort: false
+        {value: Translator.get("i18n_workspace_desc"), key: "description"}
+    ];
+
+    $scope.list = function (sortObj) {
+        const condition = FilterSearch.convert($scope.filters);
+        if (sortObj) {
+            $scope.sort = sortObj;
+        }
+        // 保留排序条件，用于分页
+        if ($scope.sort) {
+            condition.sort = $scope.sort.sql;
+        }
+        HttpUtils.paging($scope, "workspace", condition);
+    };
+    $scope.list();
+
+    $scope.create = function () {
+        $scope.acquisitionConditions();
+        $scope.formUrl = 'project/html/workspace/workspace-add.html' + '?_t=' + Math.random();
+        $scope.toggleForm();
+    };
+
+    $scope.edit = function (data) {
+        $scope.item = angular.copy(data);
+        $scope.acquisitionConditions();
+        $scope.formUrl = 'project/html/workspace/workspace-edit.html' + '?_t=' + Math.random();
+        $scope.toggleForm();
+    };
+
+    $scope.acquisitionConditions = function () {
+        HttpUtils.get("organization", function (rep) {
+            $scope.orgs = rep.data;
+        });
+    };
+
+
+    $scope.submit = function (type, data) {
+        if(!data.name){
+            Notification.danger(Translator.get("i18n_ex_workspace_name_no_empty"));
+            return;
+        }
+        if(!data.organizationId){
+            Notification.danger(Translator.get("i18n_ex_workspace_orgId_no_empty"));
+            return;
+        }
+        if (type === 'add') {
+            HttpUtils.post("workspace/add", data, function () {
+                $scope.list();
+                Notification.success(Translator.get("i18n_mc_create_success"));
+                $scope.closeToggleForm();
+            }, function (rep) {
+                Notification.danger(rep.message);
+            })
+        }
+        if (type === 'edit') {
+            $http.post('workspace/update', data).then(function () {
+                $scope.list();
+                Notification.success(Translator.get("i18n_mc_update_success"));
+                $scope.closeToggleForm();
+            }, function (rep) {
+                Notification.danger(rep.data.message);
+            });
+        }
+    };
+
+    $scope.delete = function (workspace) {
+        Notification.confirm(Translator.get("i18n_workspace_delete_pre") + workspace.name + Translator.get("i18n_workspace_delete_suffix"), function () {
+            $http.get("workspace/delete/" + workspace.id).then(function () {
+                Notification.success(Translator.get("i18n_mc_delete_success"));
+                $scope.list();
+            }, function (rep) {
+                Notification.danger(rep.message);
+            })
+        })
+    };
+
+    $scope.closeToggleForm = function () {
+        $scope.toggleForm();
+        $scope.item = {};
+    };
+
+    $scope.workspaceAuthorize = function (item) {
+        if ($scope.selected === item.$$hashKey) {
+            $scope.closeInformation();
+            return;
+        }
+        $scope.selected = item.$$hashKey;
+        $scope.selectWorkspaceId = item.id;
+        $scope.infoUrl = 'project/html/workspace/workspace-authorize.html' + '?_t=' + Math.random();
+        $scope.toggleInfoForm(true);
+    };
+
+    $scope.closeInformation = function () {
+        $scope.selected = "";
+        $scope.toggleInfoForm(false);
+    };
+});
+ProjectApp.controller('WorkspaceAuthorizeController', function ($scope, HttpUtils, Translator) {
+
+    $scope.columns = [
+        {value: Translator.get("i18n_username"), key: "name", sort: false},
+        {value: Translator.get("i18n_email"), key: "name", sort: false},
+        {value: Translator.get("i18n_phone"), key: "phone", sort: false},
+    ];
+
+    $scope.list = function () {
+        HttpUtils.paging($scope, "workspace/user/" + $scope.selectWorkspaceId, {})
+    };
+    $scope.list();
+});

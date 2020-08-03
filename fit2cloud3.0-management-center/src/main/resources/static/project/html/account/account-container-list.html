@@ -1,0 +1,107 @@
+<div layout-fill ng-controller="AccountListController" class="content-backdrop" ng-cloak ng-init="init('container')">
+    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div> {{'i18n_account_cloud_container' | translator}}</div>
+                <md-button class="md-primary" ng-click="add()" has-permission="CLOUD_ACCOUNT:READ+CREATE">
+                    <md-icon>add_circle_outline</md-icon>
+                     {{'i18n_create' | translator}}
+                </md-button>
+                <md-button class="md-primary" ng-click="sync()" has-permission="CLOUD_ACCOUNT:READ+BATCH_SYNC">
+                    <md-icon>sync</md-icon>
+                     {{'i18n_account_cloud_sync' | translator}}
+                </md-button>
+                <md-button class="md-primary" ng-click="delete()" has-permissions="CLOUD_ACCOUNT:READ+BATCH_DELETE">
+                    <md-icon>delete</md-icon>
+                     {{'i18n_delete' | translator}}
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div layout="row" flex>
+            <div class="md-padding" layout="column" flex="100">
+                <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
+                    <select-columns columns="columns"></select-columns>
+                    <div class="filter-item">
+                        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
+                            <md-tooltip md-delay="300"> {{'i18n_refresh' | translator}}</md-tooltip>
+                            <md-icon>refresh</md-icon>
+                        </md-button>
+                    </div>
+                </filter-tools>
+                <div flex layout="column" layout-fill>
+                    <table dynamic-table columns="columns" execute="list({sql: sql})">
+                        <tbody>
+                        <tr ng-repeat="item in items">
+                            <td has-permissions="CLOUD_ACCOUNT:READ+BATCH_SYNC,CLOUD_ACCOUNT:READ+BATCH_DELETE">
+                                <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
+                                             ng-model="item.enable"
+                                             class="md-primary"></md-checkbox>
+                            </td>
+                            <td>{{item.name}}</td>
+                            <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">&nbsp;&nbsp;&nbsp;{{item.pluginDesc}}
+                            </td>
+                            <td ng-switch="item.status">
+                                <span ng-switch-when="INVALID">
+                                    <a style="cursor: pointer;color: red;"
+                                       href="" ng-click="goSystemLog(item)"> {{'i18n_account_cloud_invalid' | translator}}</a>
+                                </span>
+                                <span ng-switch-when="VALID" md-colors="{color: 'green'}"> {{'i18n_account_cloud_valid' | translator}}</span>
+                                <span ng-switch-when="DELETE"> {{'i18n_delete' | translator}}</span>
+                                <span ng-switch-default>N/A</span>
+                            </td>
+                            <td ng-switch="item.syncStatus">
+
+                                <span ng-switch-when="success" md-colors="{color: 'green'}"> {{'i18n_account_cloud_success' | translator}}</span>
+                                <span ng-switch-when="error">
+                                     <a style="cursor: pointer;color: red;" href=""
+                                        ng-click="goSystemLog(item)"> {{'i18n_account_cloud_fail' | translator}}</a>
+                                </span>
+                                <span ng-switch-when="sync" md-colors="{color: 'blue'}"><i
+                                        class="fa fa-spinner fa-pulse fa-fw"
+                                        aria-hidden="true"></i>&nbsp; {{'i18n_account_cloud_synching' | translator}}</span>
+                                <span ng-switch-when="pending" style="color: #2B415A"> {{'i18n_account_cloud_pending' | translator}}</span>
+                                <span ng-switch-default>N/A</span>
+                            </td>
+                            <td>{{item.updateTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                            <td has-permissions="CLOUD_ACCOUNT:READ+EDIT,CLOUD_ACCOUNT:READ+VALIDATE,CLOUD_ACCOUNT:READ+SYNC,CLOUD_ACCOUNT:READ+DELETE">
+                                <table-menus>
+                                    <md-menu-item has-permission="CLOUD_ACCOUNT:READ+EDIT">
+                                        <md-button ng-click="edit(item)">
+                                            <md-icon class="md-18">edit</md-icon>
+                                             {{'i18n_edit' | translator}}
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item has-permission="CLOUD_ACCOUNT:READ+VALIDATE">
+                                        <md-button ng-click="validate(item)">
+                                            <md-icon class="md-18">lock</md-icon>
+                                             {{'i18n_account_cloud_check' | translator}}
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item ng-disabled="item.syncStatus === pending" has-permission="CLOUD_ACCOUNT:READ+SYNC">
+                                        <md-button ng-click="sync(item)">
+                                            <md-icon class="md-18">sync</md-icon>
+                                             {{'i18n_account_cloud_sync' | translator}}
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item has-permission="CLOUD_ACCOUNT:READ+DELETE">
+                                        <md-button ng-click="delete(item)">
+                                            <md-icon class="md-18">delete</md-icon>
+                                             {{'i18n_delete' | translator}}
+                                        </md-button>
+                                    </md-menu-item>
+                                </table-menus>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table-pagination pagination="pagination"></table-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <side-form></side-form>
+</div>
+

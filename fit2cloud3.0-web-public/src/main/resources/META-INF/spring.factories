@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.fit2cloud.common.web.WebPublicController,\
+  com.fit2cloud.common.web.IndexController,\
+  com.fit2cloud.common.web.template.WebPublicConfig
+
+

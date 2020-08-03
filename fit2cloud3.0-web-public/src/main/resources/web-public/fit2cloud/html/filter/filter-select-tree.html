@@ -1,0 +1,33 @@
+<div class="filter-condition">
+    <script type="text/ng-template" id="filter-select">
+        <md-content layout="column" class="md-whiteframe-2dp">
+            <input class="filter-select-search" type="search" ng-model="label" placeholder="{{'i18n_filter_quick_query' | translator:'快速查找'}}"
+                   ng-show="condition.search">
+
+            <div layout="column" class="filter-list">
+                <div class="md-padding">
+                    <div ng-repeat="selected in condition.selects | filter:{label:label}">
+                        <div><label>{{selected.label}}</label></div>
+                        <md-button layout="row" ng-repeat="item in selected.children" ng-click="check(item)" style="width: 100%;"
+                                   ng-class="{'selected': item.checked}">
+                            <div>{{item.label}}</div>
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <md-button class="md-accent" ng-click="remove();close()">
+                    {{'i18n_filter_condition_cancel' | translator:'取消'}}
+                </md-button>
+                <md-button class="md-primary" ng-click="add()">
+                    {{'i18n_filter_condition_ok' | translator:'确定'}}
+                </md-button>
+            </div>
+        </md-content>
+    </script>
+
+    <span>{{condition.name}} : </span>
+    <input id="_input_" type="text" class="filter-input-text pointer" ng-model="condition.value" ng-click="open()"
+           placeholder="{{'i18n_filter_condition_select' | translator:'请选择'}}{{condition.name}}" readonly filter-popover popover-template="filter-select">
+</div>

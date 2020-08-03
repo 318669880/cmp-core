@@ -1,0 +1,50 @@
+<div layout="row" layout-fill ng-controller="RoleEditCtrl" cg-busy="{promise:loadingLayer}" ng-cloak>
+    <div layout="column" flex="auto">
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button md-primary" ui-sref="{{parent}}">
+                    <md-tooltip md-delay="300" md-direction="left">{{'i18n_back' | translator}}</md-tooltip>
+                    <md-icon>arrow_back</md-icon>
+                </md-button>
+                <div>
+                    <span ng-if="type === 'add'">{{'i18n_process_role_create' | translator}}</span>
+                    <span ng-if="type === 'update'">{{'i18n_process_role_edit' | translator}}</span>
+                </div>
+                <md-button class="md-primary" ng-click="save()" ng-disabled="roleForm.$invalid">{{'i18n_save' |
+                    translator}}
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content class="md-padding" flex="auto">
+            <form name="roleForm" layout="column" flex="auto">
+                <div layout="row" layout-align="space-around">
+                    <md-input-container flex="auto">
+                        <label>{{'i18n_process_role_id' | translator}}</label>
+                        <input md-maxlength="100" required name="roleKey" ng-model="item.roleKey" autocomplete="off"
+                               ng-disabled="type === 'update'">
+                        <div ng-messages="roleForm.roleKey.$error">
+                            <div ng-message="required">{{'i18n_required' | translator}}</div>
+                            <div ng-message="md-maxlength">{{'i18n_input_length_limit_64' | translator}}</div>
+                        </div>
+                        <div class="hint">{{'i18n_process_role_cant_mod' | translator}}</div>
+                    </md-input-container>
+
+                    <md-input-container flex="auto">
+                        <label>{{'i18n_process_role_name' | translator}}</label>
+                        <input md-maxlength="100" required name="roleName" ng-model="item.roleName" autocomplete="off">
+                        <div ng-messages="roleForm.roleName.$error">
+                            <div ng-message="required">{{'i18n_required' | translator}}</div>
+                            <div ng-message="md-maxlength">{{'i18n_input_length_limit_100' | translator}}</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </form>
+            <h4>{{'i18n_process_role_select' | translator}}</h4>
+            <choose-paging url="flow/design/user/list" search-key="search" display="label" key="id" selected="selected"
+                           height="500px" type="object"
+                           ng-if="done">
+            </choose-paging>
+        </md-content>
+    </div>
+</div>
+

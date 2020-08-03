@@ -1,0 +1,23 @@
+<div class="dynamic-table">
+    <table id="_table_" class="table" ng-class="{'table-resize':resize === true}">
+        <thead ng-show="refresh()">
+        <tr>
+            <th id="{{c.$$hashKey}}" ng-repeat="c in columns" ng-if="c.checked !== false" style="width: {{c.width}}">
+                <div ng-switch="c.type" class="resize-th">
+                    <div ng-switch-when="checkbox">
+                        <md-checkbox md-no-ink aria-label="{{'check_box'| translator}}" class="md-primary"
+                                     ng-model="c.checkValue" ng-change="c.change(c.checkValue)">
+                        </md-checkbox>
+                    </div>
+                    <div ng-switch-default ng-class="{'pointer':c.sort !== false}" ng-click="sort(c)">
+                        {{c.value}}
+                        <i class="dynamic-table-sort fa" aria-hidden="true"
+                           ng-class="{'fa-sort-amount-down':c.key === sortCol && sortType === 'desc','fa-sort-amount-up':c.key === sortCol && sortType === 'asc'}">
+                        </i>
+                    </div>
+                </div>
+            </th>
+        </tr>
+        </thead>
+    </table>
+</div>

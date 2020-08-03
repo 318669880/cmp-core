@@ -1,0 +1,38 @@
+<div class="file-chips" layout="row" layout-align="start center" cg-busy="{promise:loadingLayer,minDuration:500}"
+     md-colors="{color: 'primary'}">
+    <div class="file-chips-container" flex="100" layout="row" layout-align="start center" layout-wrap>
+        <div class="file-chip" ng-repeat="file in files" layout="row" layout-align="start center">
+            <a href="" class="file-chip-name" flex="auto" ng-click="download(file)">{{file.name}}</a>
+            <md-button class="md-icon-button file-chip-remove" ng-click="remove(file)" ng-if="disabled !== true">
+                <md-tooltip md-delay="300">{{'i18n_delete' | translator}}</md-tooltip>
+                <md-icon>clear</md-icon>
+            </md-button>
+        </div>
+        <div class="file-chip-placeholder pointer" flex="auto" ngf-select="upload($files)" ng-model="file"
+             ngf-multiple="multiple"
+             accept="{{accept}}" name="file" ngf-max-size="{{maxSize}}" ngf-max-files="{{maxFiles}}"
+             ng-if="disabled !== true">{{placeholder}}
+        </div>
+    </div>
+    <div layout="row">
+        <md-button class="md-icon-button md-primary md-raised" ngf-select="upload($files)" ng-model="file"
+                   ngf-multiple="multiple"
+                   accept="{{accept}}" name="file" ngf-max-size="{{maxSize}}" ngf-max-files="{{maxFiles}}"
+                   ng-if="disabled !== true">
+            <md-tooltip md-delay="300">{{'i18n_upload_files' | translator}}</md-tooltip>
+            <md-icon>attach_file</md-icon>
+        </md-button>
+        <md-button class="md-icon-button md-accent md-raised" ng-click="clear()"
+                   ng-if="disabled !== true && businessKey">
+            <md-tooltip md-delay="300">{{'i18n_clear_files' | translator}}</md-tooltip>
+            <md-icon>clear</md-icon>
+        </md-button>
+    </div>
+    <div class="file-chips-msg">
+        <span class="file-chip-hint" ng-if="hint">{{hint}}</span>
+        <span md-colors="{color: 'warn'}"
+              ng-if="form.$error.maxFiles">{{'i18n_files_number_limit' | translator}}{{maxFiles}}</span>
+        <span md-colors="{color: 'warn'}"
+              ng-if="form.$error.maxSize">{{'i18n_file_size_limit' | translator}}{{maxSize}}</span>
+    </div>
+</div>

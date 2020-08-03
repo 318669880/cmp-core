@@ -1,0 +1,68 @@
+<md-dialog class="md-default-dialog" aria-label="Edit Javascript Form">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{title}}</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon class="md-light">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content" layout="column">
+            <form name="promptForm">
+                <md-input-container class="md-block" ng-show="showInput">
+                    <label>{{text}}</label>
+                    <input ng-required="required" name="name" ng-model="value">
+                    <div ng-messages="promptForm.name.$error">
+                        <div ng-message="required">{{'i18n_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block" ng-show="showSelect">
+                    <label>{{selectText}}</label>
+                    <md-select  ng-model="selected" ng-required="selectRequired">
+                        <md-select-header layout="column"  style="padding-left: 16px;" md-no-stretch="true">
+                            <md-input-container class="md-block"  style="height: 30px;">
+                                <input ng-model="searchTerm1" type="search" placeholder="Search..." ng-keydown="$event.stopPropagation()" >
+                            </md-input-container>
+                        </md-select-header>
+                        <md-option ng-value="item[selectValue]" ng-repeat="item in selectItems | filterItems:selectKey:searchTerm1">
+                            {{item[selectKey]}}
+                        </md-option>
+                    </md-select>
+                    <div ng-messages="promptForm.selected.$error">
+                        <div ng-message="selectRequired">{{'i18n_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block" ng-show="showMultiSelect">
+                    <label>{{multiSelectText}}</label>
+                    <md-select multiple  ng-model="multiSelected" ng-required="multiSelectRequired">
+                        <md-select-header layout="column"  style="padding-left: 16px;" md-no-stretch="true">
+                            <md-input-container class="md-block"  style="height: 30px;">
+                                <input ng-model="searchTerm2" type="search" placeholder="Search..." ng-keydown="$event.stopPropagation()" >
+                            </md-input-container>
+                        </md-select-header>
+                        <md-option ng-value="item[multiSelectValue]" ng-repeat="item in multiSelectItems | filterItems:multiSelectKey:searchTerm2">
+                            {{item[multiSelectKey]}}
+                        </md-option>
+                    </md-select>
+                    <div ng-messages="promptForm.multiSelected.$error">
+                        <div ng-message="multiSelectRequired">{{'i18n_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+            </form>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" layout-align="center center">
+        <md-button ng-click="close()">
+            {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-primary" ng-click="ok()" ng-disabled="promptForm.$invalid">
+            {{'i18n_confirm' | translator}}
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -1,0 +1,36 @@
+<div layout="row" class="filter" layout-align="start center" md-colors="{color:'primary'}">
+    <div flex="100" layout="row" layout-align="start center" layout-wrap class="filter-content">
+        <div layout="row" layout-align="start center" id="{{r.key}}" class="filter-result md-whiteframe-1dp" ng-repeat="r in results"
+             ng-if="r.display != false">
+            <div layout="row">
+                <div>{{r.name}}</div>
+                <div ng-if="r.operatorLabel">&nbsp;{{r.operatorLabel}}&nbsp;</div>
+                <div ng-if="!r.operatorLabel && r.operator">&nbsp;{{r.operator}}&nbsp;</div>
+                <div ng-if="!r.operatorLabel && !r.operator">&nbsp;:&nbsp;</div>
+                <em ng-if="r.label">{{r.label}}</em>
+                <em ng-if="!r.label">{{r.value}}</em>
+            </div>
+            <md-button class="md-icon-button filter-remove" ng-click="removeResult($index)" ng-if="!r.default">
+                <md-tooltip md-delay="300">{{'i18n_filter_remove' | translator:'清除'}}</md-tooltip>
+                <md-icon>clear</md-icon>
+            </md-button>
+        </div>
+        <filter-type ng-if="condition"></filter-type>
+        <div class="filter-add">
+            <input ng-if="!condition" ng-click="showConditions($event)" placeholder="{{'i18n_filter_add' | translator:'添加筛选条件'}}">
+        </div>
+    </div>
+
+    <div layout="row">
+        <div class="filter-item">
+            <md-button class="md-icon-button filter-clear md-whiteframe-1dp" ng-click="removeAllResult()" ng-if="isShowRemoveAll()">
+                <md-tooltip md-delay="300">{{'i18n_filter_clear' | translator:'清除'}}</md-tooltip>
+                <md-icon>highlight_off</md-icon>
+            </md-button>
+        </div>
+    </div>
+
+    <ng-transclude id="_tools_" layout="row" layout-align="start start">
+        <!-- 外部嵌入 -->
+    </ng-transclude>
+</div>

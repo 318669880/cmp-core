@@ -1,0 +1,177 @@
+<div layout-fill ng-controller="UIController" class="content-backdrop" ng-cloak
+     cg-busy="{promise:loadingLayer,minDuration:500}">
+    <div layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div> {{'i18n_page_style_settings' | translator}}</div>
+            </div>
+        </md-toolbar>
+        <md-content flex="100">
+            <form name="UIFrom" class="md-padding">
+                <div ng-repeat=" param in params">
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.logo">
+                        <!-- Use floating label instead of placeholder -->
+                        <label> {{'i18n_ui_system_logo' | translator}}</label>
+                        <input type="text" id="LogoIconURL"
+                               placeholder=" {{'i18n_ui_system_logo_size' | translator}}：135px * 30px"
+                               ng-model="param.fileName"
+                               ng-disabled="true" style="width: calc(100% - 120px);">
+                        <md-button class="md-fab md-mini md-primary" style="bottom: 15px"
+                                   ngf-select ng-model="param.file"
+                                   accept="image/*"
+                                   ng-change="upload(param.file,param.paramKey)"
+                                   ng-disabled="!isSave" ngf-validate="{size: {min:'1KB', max:'1MB'}}">
+                            <md-icon class="material-icons">attach_file</md-icon>
+                        </md-button>
+                        <md-button class="md-fab md-mini" style="bottom: 15px"
+                                   ng-click="cancelUpload(param.paramKey)"
+                                   ng-disabled="!isSave">
+                            <md-icon class="material-icons">highlight_off</md-icon>
+                        </md-button>
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.login_img">
+                        <!-- Use floating label instead of placeholder -->
+                        <label> {{'i18n_ui_system_login_image' | translator}}</label>
+                        <input type="text"
+                               placeholder=" {{'i18n_ui_system_logo_size' | translator}}：500px * 450px"
+                               ng-model="param.fileName"
+                               ng-disabled="true" style="width: calc(100% - 120px);">
+                        <md-button class="md-fab md-mini md-primary" style="bottom: 15px"
+                                   ngf-select ng-model="param.file"
+                                   accept="image/*"
+                                   ng-change="upload(param.file,param.paramKey)"
+                                   ng-disabled="!isSave">
+                            <md-icon class="material-icons">attach_file</md-icon>
+                        </md-button>
+                        <md-button class="md-fab md-mini" style="bottom: 15px"
+                                   ng-click="cancelUpload(param.paramKey)"
+                                   ng-disabled="!isSave">
+                            <md-icon class="material-icons">highlight_off</md-icon>
+                        </md-button>
+
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.system_name">
+                        <!-- Use floating label instead of placeholder -->
+                        <label> {{'i18n_ui_system_name' | translator}}</label>
+                        <input type="text"
+                               ng-model="param.paramValue"
+                               placeholder="eg：FIT2CLOUD CMP"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password">
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.login_title">
+                        <!-- Use floating label instead of placeholder -->
+                        <label> {{'i18n_ui_system_login_name' | translator}}</label>
+                        <input type="text"
+                               ng-model="param.paramValue"
+                               placeholder="eg：FIT2CLOUD"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password">
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.theme_primary">
+                        <!-- Use floating label instead of placeholder -->
+                        <label for="color"> {{'i18n_ui_system_theme_color' | translator}}</label>
+                        <input id="color"
+                               color-picker
+                               style="height: 30px !important;width: 100% !important"
+                               type="text"
+                               ng-model="param.paramValue"
+                               placeholder="eg：#004A71"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password" ng-pattern="/^#([0-9a-fA-F]{6}|[A-Fa-f0-9]{3})$/">
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.theme_accent">
+                        <!-- Use floating label instead of placeholder -->
+                        <label for="color"> {{'i18n_ui_system_sub_color' | translator}}</label>
+                        <input id="sub_color"
+                               color-picker
+                               style="height: 30px !important;width: 100% !important"
+                               type="text"
+                               ng-model="param.paramValue"
+                               placeholder="eg：#FF4081"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password" ng-pattern="/^#([0-9a-fA-F]{6}|[A-Fa-f0-9]{3})$/">
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.favicon">
+                        <!-- Use floating label instead of placeholder -->
+                        <label> {{'i18n_ui_system_favicon' | translator}}</label>
+                        <input type="text"
+                               placeholder=" {{'i18n_ui_system_logo_size' | translator}}：16px * 16px"
+                               ng-model="param.fileName"
+                               ng-disabled="true" style="width: calc(100% - 120px);">
+                        <md-button class="md-fab md-mini md-primary" style="bottom: 15px"
+                                   ngf-select ng-model="param.file"
+                                   accept="image/x-icon"
+                                   ng-change="upload(param.file,param.paramKey)"
+                                   ng-disabled="!isSave">
+                            <md-icon class="material-icons">attach_file</md-icon>
+                        </md-button>
+                        <md-button class="md-fab md-mini" style="bottom: 15px"
+                                   ng-click="cancelUpload(param.paramKey)"
+                                   ng-disabled="!isSave">
+                            <md-icon class="material-icons">highlight_off</md-icon>
+                        </md-button>
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.title">
+                        <!-- Use floating label instead of placeholder -->
+                        <label> {{'i18n_ui_system_title' | translator}}</label>
+                        <input type="text"
+                               ng-model="param.paramValue"
+                               placeholder="eg：FIT2CLOUD CMP"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password">
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.support_name">
+                        <!-- Use floating label instead of placeholder -->
+                        <label> {{'i18n_ui_system_login_help_word' | translator}}</label>
+                        <input type="text"
+                               ng-model="param.paramValue"
+                               placeholder="eg： {{'i18n_ui_system_login_help_placeholder' | translator}}"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password">
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.support_url">
+                        <!-- Use floating label instead of placeholder -->
+                        <label> {{'i18n_ui_system_login_help_link' | translator}}</label>
+                        <input type="text"
+                               ng-model="param.paramValue"
+                               placeholder="eg：mailto:support@fit2cloud.com"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password">
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block" ng-if="param.paramKey===ui.language">
+                        <label>{{'i18n_language_setting' | translator }}</label>
+                        <md-select ng-model="param.paramValue" ng-disabled="!isSave" required>
+                            <md-option ng-repeat="language in languages"
+                                       value="{{language.id}}">{{language.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+            </form>
+            <div layout="row" layout-align="center" layout-margin has-permission="UI_SETTING:READ+EDIT">
+                <md-button class="md-raised md-primary"
+                           ng-click="submit(params)" ng-if="isSave">
+                     {{'i18n_save' | translator}}
+                </md-button>
+                <md-button class="md-raised" ng-click="clickSave()" ng-if="isSave">
+                     {{'i18n_cancel' | translator}}
+                </md-button>
+                <md-button class="md-raised md-primary"
+                           ng-click="edit()" ng-if="!isSave">
+                     {{'i18n_edit' | translator}}
+                </md-button>
+            </div>
+        </md-content>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="tree-node">
+    <div layout="row" layout-align="start center">
+        <md-button class="md-icon-button" ng-click="toggle()" aria-label="collapsed:{{collapsed}}"
+                   ng-if="hasChildren()">
+            <md-icon ng-if="collapsed" ng-bind="option.icon.collapsed"></md-icon>
+            <md-icon ng-if="!collapsed" ng-bind="option.icon.expand"></md-icon>
+        </md-button>
+        <div class="tree-node-prefix" ng-if="!hasChildren()"></div>
+        <div class="tree-node-content">
+            <tree-type></tree-type>
+        </div>
+    </div>
+    <div ng-if="!collapsed && hasChildren()" slide>
+        <tree-node ng-if="node.children.length <= 100"
+                   ng-repeat="child in node.children"
+                   data="data"
+                   node="child"
+                   api="api"
+                   option="option"
+                   type="{{type}}">
+        </tree-node>
+        <md-virtual-repeat-container ng-if="node.children.length > 100" style="min-height: 320px;">
+            <div md-virtual-repeat="child in node.children" style="min-height: 40px">
+                <tree-node data="data" node="child" api="api" option="option" type="{{type}}"></tree-node>
+            </div>
+        </md-virtual-repeat-container>
+    </div>
+
+</div>

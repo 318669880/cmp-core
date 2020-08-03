@@ -1,0 +1,593 @@
+@import "../../fit2cloud/css/loading.css";
+
+@font-face {
+url('Roboto-Regular-webfont.woff') format('woff'), font-weight: normal;
+    font-family: 'Roboto';
+    font-style: normal;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    text-transform: none !important;
+}
+
+/* 图标 */
+.material-icons.md-18 {
+    line-height: 24px !important;
+    font-size: 18px;
+}
+
+.material-icons.md-24 {
+    font-size: 24px;
+}
+
+.material-icons.md-20 {
+    font-size: 20px;
+}
+
+.material-icons.md-36 {
+    line-height: 24px !important;
+    margin-left: -6px;
+    margin-right: 6px;
+    font-size: 36px;
+}
+
+.material-icons.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+    color: rgba(0, 0, 0, 0.26);
+}
+
+.material-icons.md-light {
+    color: rgba(255, 255, 255, 1);
+}
+
+.material-icons.md-light.md-inactive {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+md-toast.md-center {
+    margin-left: auto;
+    margin-right: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    padding: 0;
+}
+
+md-toolbar {
+    min-height: 48px;
+    max-height: 48px;
+}
+
+md-toolbar .md-toolbar-tools {
+    min-height: 48px;
+    max-height: 48px;
+}
+
+md-toolbar .md-toolbar-tools > * {
+    line-height: 48px;
+}
+
+.md-button.f2c-icon-button {
+    margin: 0;
+}
+
+.md-button:not([disabled]).f2c-icon-button:hover {
+    background: rgba(255, 255, 255, .2);
+}
+
+.f2c-tooltip {
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+.f2c-tooltip.md-origin-bottom {
+    margin-top: 5px;
+}
+
+.f2c-frame {
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.f2c-logo {
+    height: 30px;
+    vertical-align: middle;
+    line-height: normal;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.f2c-logo img {
+    height: 100%;
+}
+
+.f2c-sub-header {
+    color: rgba(0, 0, 0, 0.87);
+    background-color: transparent;
+    margin-top: 20px;
+}
+
+.f2c-sub-header * {
+    font-size: 16px;
+}
+
+.f2c-sub-header .md-subheader-inner {
+    padding: 0;
+}
+
+.f2c-sub-header .md-subheader-inner .md-subheader-content > div {
+    padding: 10px 16px;
+    line-height: 16px;
+}
+
+.menu-home {
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.87);
+    background-color: transparent;
+    padding: 0 16px;
+    font-size: 16px;
+    height: 54px;
+    min-height: 54px;
+    cursor: pointer;
+}
+
+.menu-home:hover {
+    background-color: rgba(158, 158, 158, 0.2);
+}
+
+.menu-home-icon {
+    margin-right: 32px;
+}
+
+.f2c-list-item, .f2c-list-item.md-no-proxy {
+    min-height: 40px;
+    height: 40px;
+    padding-left: 30px;
+}
+
+.f2c-list-item .md-button:not([disabled]):hover {
+    background-color: transparent;
+}
+
+.f2c-list-item:not([disabled]):hover {
+    background-color: rgba(158, 158, 158, 0.2);
+}
+
+.f2c-list-item .md-list-item-inner {
+    min-height: 40px;
+    height: 40px;
+    padding-right: 8px;
+}
+
+.f2c-favorite {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
+}
+
+.f2c-list-item-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 136px;
+    max-width: 136px;
+}
+
+.f2c-list-item .md-list-item-inner > md-icon:first-child:not(.md-avatar-icon) {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.f2c-menu-content {
+    max-height: 600px;
+}
+
+.f2c-menu-item {
+    min-height: 36px;
+    height: 36px;
+}
+
+.f2c-menu-item .md-button {
+    font-size: 14px;
+}
+
+md-dialog.md-transition-in {
+    position: absolute;
+    top: 20%;
+    transform: translate(0, 0px) scale(1)
+}
+
+md-dialog.md-transition-out {
+    position: absolute;
+    top: 20%;
+    transform: translate(0, 100%) scale(0.2)
+}
+
+table {
+    outline: 0;
+    border-spacing: 0;
+    border-radius: 0;
+    border: 0;
+    width: 100%;
+}
+
+thead > tr > th {
+    margin-top: 5px;
+    padding: 10px 10px;
+}
+
+tbody > tr:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+tbody > tr > td {
+    padding: 5px 10px;
+}
+
+a:link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    outline: 0;
+    text-decoration: underline;
+}
+
+.select-td {
+    background-color: #f0f5fe !important;
+}
+
+.select-current-tr {
+    color: #3c77e7 !important;
+}
+
+a:active, a:focus {
+    outline: 0;
+}
+
+:focus {
+    outline: none;
+}
+
+.footer {
+    width: 100%;
+    bottom: 0;
+}
+
+.content {
+    overflow: auto;
+    height: -moz-calc(50vh - 116px);
+    height: -webkit-calc(50vh - 116px);
+    height: calc(50vh - 116px);
+}
+
+.additional {
+    position: relative;
+    cursor: pointer;
+}
+
+.switch-btn {
+    padding: 0 5px 0 10px;
+    text-transform: none
+}
+
+.generate-btn {
+    text-align: center;
+    width: 100%;
+    height: 26px;
+    margin: 15px;
+    border: 1px solid;
+    min-height: 0;
+    line-height: 0;
+    min-width: 0;
+    border-radius: 2px;
+}
+
+md-toast.notice-menu-success .md-toast-content {
+    background-color: green;
+}
+
+md-toast.notice-menu-danger .md-toast-content {
+    background-color: red;
+}
+
+/* Inbox*/
+.inbox-list {
+    width: 320px;
+    height: 100%;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    background-color: rgb(250, 250, 250);
+}
+
+.inbox-menus {
+    width: 320px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgb(250, 250, 250);
+}
+
+@keyframes inbox-notice {
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.inbox-has {
+    animation: inbox-notice .25s infinite alternate;
+}
+
+.inbox {
+    position: relative;
+    cursor: pointer;
+    padding: 8px 16px;
+}
+
+.inbox:hover {
+    background-color: rgba(0, 0, 0, .04);
+}
+
+.inbox + .inbox {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.inbox:last-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.inbox.selected {
+    background-color: rgba(158, 158, 158, 0.2);
+}
+
+.inbox-name {
+    font-weight: bold;
+}
+
+.inbox-done {
+    font-weight: normal;
+    font-style: italic;
+}
+
+.inbox-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 4px;
+}
+
+.inbox-time {
+    white-space: nowrap;
+    font-size: 13px;
+    color: #777;
+    text-align: right;
+}
+
+.inbox-all {
+    cursor: pointer;
+    padding: 8px 10px;
+    text-align: center;
+}
+
+.inbox-all:hover {
+    background-color: rgba(0, 0, 0, .04);
+}
+
+.inbox-search {
+    position: relative;
+    background-color: #FFF;
+    padding: 0 16px;
+    height: 53px;
+    min-height: 53px;
+    border-bottom: 1px solid #c5c5c5;
+}
+
+.inbox-search md-select {
+    margin: 0;
+    display: inline-flex;
+    font-weight: bold;
+    line-height: 53px;
+}
+
+.inbox-search md-select .md-select-icon {
+    text-align: start;
+}
+
+.inbox-search input {
+    height: 30px;
+    padding: 0 10px;
+    background-color: #F1F3F4;
+    border-radius: 15px;
+    border: none;
+}
+
+.inbox-search input:focus {
+    padding: 0 9px;
+    border: 1px solid #c5c5c5;
+    background-color: transparent;
+}
+
+.inbox-search .md-button.md-icon-button {
+    position: absolute;
+    right: 20px;
+    min-height: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+}
+
+.inbox-search .md-button.md-icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.inbox-pagination {
+    padding: 0 10px;
+    height: 48px;
+    border-top: 1px solid #d3d3d3;
+}
+
+.inbox-pagination .label {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.inbox-pagination > .md-icon-button {
+    margin: 0;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+}
+
+.language {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    height: 32px;
+}
+
+.language:hover {
+    background-color: rgba(0, 0, 0, .04);
+}
+
+md-toolbar.content-toolbar, md-toolbar.sidebar-toolbar {
+    color: rgba(0, 0, 0, 0.87);
+    background-color: transparent;
+    border-bottom: 1px solid #d3d3d3;
+    min-height: 54px;
+    max-height: 54px;
+}
+
+.notification-time {
+    font-style: italic;
+    font-size: 12px;
+    color: #777;
+    padding-bottom: 10px;
+}
+
+/*frame加载进度条*/
+.frame-loading-process {
+    margin-bottom: -5px !important;
+    display: none;
+}
+
+md-input-container .hint {
+    position: absolute;
+    left: 2px;
+    right: auto;
+    bottom: 7px;
+    font-size: 12px;
+    line-height: 14px;
+    color: grey;
+    overflow: hidden;
+}
+
+md-input-container:not(.md-input-invalid) .hint {
+    display: block;
+}
+
+md-input-container.md-input-invalid .md-input-messages-animation + .hint {
+    display: none;
+}
+
+.f2c-eye {
+    position: absolute;
+    right: 0;
+    line-height: 35px;
+    cursor: pointer;
+}
+
+.f2c-tooltip-user {
+    height: auto;
+    padding: 4px 8px;
+    z-index: 1000;
+}
+
+.f2c-tooltip-user.md-origin-bottom {
+    margin-top: 2px;
+}
+
+.f2c-menu-sidenav {
+    min-width: 810px;
+    width: 810px;
+    max-width: 100%;
+}
+
+.f2c-menu-sidenav .inbox-search {
+    min-height: 40px;
+    height: 40px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.f2c-menu-sidenav .inbox-search > input {
+    width: 98%;
+    margin: 5px 0;
+}
+
+.f2c-module-column + .f2c-module-column {
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.f2c-module-box + .f2c-module-box {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.menu-search-input {
+    padding: 0 16px;
+    margin-top: 15px;
+}
+
+.menu-search-input input {
+    background-color: transparent;
+    border-width: 0;
+    border-bottom: 1px solid #c5c5c5;
+    width: 100%;
+}
+
+.f2c-home-header {
+    font-weight: 400;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 7px 8px 0 0;
+    line-height: 24px;
+    position: relative;
+    padding-bottom: 5px;
+    padding-top: 8px;
+    padding-left: 6px;
+    width: 100%;
+}
+
+.f2c-home-header:hover {
+    background-color: rgba(158, 158, 158, 0.2);
+}
+
+.f2c-sc-header {
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 16px;
+    padding: 8px 8px 8px 6px;
+    line-height: 24px;
+    position: relative
+}
+
+.text-center {
+    text-align: center
+}
+
+.hideContent * {
+    display: none
+}
+

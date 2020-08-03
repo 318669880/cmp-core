@@ -1,0 +1,16 @@
+<div ng-cloak>
+    <form name="tagEditForm" class="md-padding">
+        <div class="md-dialog-content">
+            <md-choose-file layout="row" file="file" accept="*/*" placeholder="{{'i18n_license_select_file' | translator:'请选择 License 文件'}}"
+                            required="true"></md-choose-file>
+        </div>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-click="toggleForm()">
+                {{'i18n_cancel' | translator:'取消'}}
+            </md-button>
+            <md-button class="md-raised md-primary" ng-click="uploadFile(file)" ng-disabled="!file || file.length == 0">
+                {{'i18n_save' | translator:'保存'}}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</div>

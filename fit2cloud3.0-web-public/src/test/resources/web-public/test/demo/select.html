@@ -1,0 +1,35 @@
+<div ng-controller="SelectCtrl" class="content-backdrop" ng-cloak>
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div>Select</div>
+        </div>
+    </md-toolbar>
+    <div layout="row" flex>
+        <form class="md-padding" layout="column" flex="100" name="searchForm">
+            <!-- 外层必须有form-->
+            <virtual-select-multiple name="result1" value="id" label="name" items="items" placeholder="测试虚拟select1"
+                                     change="change1" results="obj.result1"
+                                     required="true"></virtual-select-multiple>
+            <virtual-select-multiple name="result2" value="id" label="name" items="items" placeholder="测试虚拟select2"
+                                     change="change2" results="obj.result2" virtual-width="700px"
+                                     required="true"></virtual-select-multiple>
+
+            <virtual-select name="result3" value="id" label="name" items="items" placeholder="测试虚拟"
+                            change="change2" result="obj.result3"
+                            required="true">
+            </virtual-select>
+
+        </form>
+    </div>
+    <md-button class="md-raised" ng-click="addItems()">增加1000个</md-button>
+    <md-button class="md-raised" ng-click="removeItems()">减少1000个</md-button>
+    <div class="md-padding">
+        结果: {{obj.result1}}<br>
+        结果: {{obj.result2}}<br>
+        结果: {{obj.result3}}
+
+        {{searchForm.autocompleteField.$touched}}
+    </div>
+</div>
+
+

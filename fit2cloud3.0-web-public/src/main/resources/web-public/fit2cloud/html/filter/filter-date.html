@@ -1,0 +1,30 @@
+<div class="filter-condition">
+    <script type="text/ng-template" id="filter-date">
+        <md-content layout="column" class="md-whiteframe-2dp">
+            <div class="filter-title">{{'i18n_filter_condition_date_range' | translator:'日期范围:'}}</div>
+            <div>
+                <md-datepicker ng-model="start" md-placeholder="{{'i18n_filter_condition_from' | translator:'从'}}" md-open-on-focus></md-datepicker>
+            </div>
+            <div>
+                <md-datepicker ng-model="end" md-placeholder="{{'i18n_filter_condition_to' | translator:'到'}}" md-open-on-focus></md-datepicker>
+            </div>
+            <div class="filter-error" ng-if="error">
+                <p class="error">{{error}}</p>
+            </div>
+
+            <div>
+                <md-button class="md-accent" ng-click="remove();close()">
+                    {{'i18n_filter_condition_cancel' | translator:'取消'}}
+                </md-button>
+                <md-button class="md-primary" ng-click="add(start, end)">
+                    {{'i18n_filter_condition_ok' | translator:'确定'}}
+                </md-button>
+            </div>
+        </md-content>
+    </script>
+
+    <span>{{condition.name}} : </span>
+    <input id="_input_" type="text" class="filter-input-text pointer" ng-model="condition.value" ng-click="open()"
+           placeholder="{{'i18n_filter_condition_date_range_select' | translator:'请选择日期范围'}}" readonly filter-popover popover-template="filter-date">
+</div>
+

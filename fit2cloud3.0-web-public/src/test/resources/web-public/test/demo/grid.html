@@ -1,0 +1,106 @@
+<div layout-fill ng-controller="TableCtrl" class="content-backdrop" ng-cloak>
+    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>Grid</div>
+                <md-button class="md-primary" ng-click="create()">创建</md-button>
+            </div>
+        </md-toolbar>
+        <div layout="row" flex>
+            <div class="md-padding" layout="column" flex="100">
+                <filter-tools conditions="conditions" results="filters" quick-search="true" execute="list()">
+                    <select-columns columns="columns"></select-columns>
+                    <div class="filter-item">
+                        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
+                            <md-tooltip md-delay="300">刷新</md-tooltip>
+                            <md-icon>refresh</md-icon>
+                        </md-button>
+                    </div>
+                    <div class="filter-item">
+                        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="help()">
+                            <md-tooltip md-delay="300">帮助</md-tooltip>
+                            <md-icon>help</md-icon>
+                        </md-button>
+                    </div>
+                </filter-tools>
+
+                <div layout="row">
+                    <div flex="auto" layout="column">
+                        <div flex="auto" layout="row">
+                            <div flex="25" style="margin: auto;">
+                                组织
+                            </div>
+                            <div flex="25" style="margin: auto;">
+                                费用(元)
+                            </div>
+                            <div flex="auto" layout="column">
+                                <div flex="auto" layout="row">
+                                    <div flex="33">工作空间</div>
+                                    <div flex="33">费用(元)</div>
+                                    <div flex="33">资源数量</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div flex="auto" layout="row">
+                            <div flex="25" style="margin: auto;">
+                                组织1
+                            </div>
+                            <div flex="25" style="margin: auto;">
+                                组织1费用
+                            </div>
+                            <div flex="auto" layout="column">
+                                <div flex="auto" layout="row">
+                                    <div flex="33">工作空间1</div>
+                                    <div flex="33">工作空间1费用</div>
+                                    <div flex="33">工作空间1资源数量</div>
+                                </div>
+                                <div flex="auto" layout="row">
+                                    <div flex="33">工作空间2</div>
+                                    <div flex="33">工作空间2费用</div>
+                                    <div flex="33">工作空间2资源数量</div>
+                                </div>
+                                <div flex="auto" layout="row">
+                                    <div flex="33">工作空间3</div>
+                                    <div flex="33">工作空间3费用</div>
+                                    <div flex="33">工作空间3资源数量</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div flex="auto" layout="row">
+                            <div flex="25" style="margin: auto;">
+                                组织2
+                            </div>
+                            <div flex="25" style="margin: auto;">
+                                组织2费用
+                            </div>
+                            <div flex="auto" layout="column">
+                                <div flex="auto" layout="row">
+                                    <div flex="33">工作空间1</div>
+                                    <div flex="33">工作空间1费用</div>
+                                    <div flex="33">工作空间1资源数量</div>
+                                </div>
+                                <div flex="auto" layout="row">
+                                    <div flex="33">工作空间2</div>
+                                    <div flex="33">工作空间2费用</div>
+                                    <div flex="33">工作空间2资源数量</div>
+                                </div>
+                                <div flex="auto" layout="row">
+                                    <div flex="33">工作空间3</div>
+                                    <div flex="33">工作空间3费用</div>
+                                    <div flex="33">工作空间3资源数量</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--必须定义$scope.infoUrl,width不设默认400px-->
+            <info-form></info-form>
+        </div>
+    </div>
+    <!--必须定义$scope.formUrl,width不设默认70%-->
+    <side-form width="80%"></side-form>
+</div>
+
+

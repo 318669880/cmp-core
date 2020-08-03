@@ -1,0 +1,43 @@
+<div class="dynamic-table flow-tab-content">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{'i18n_process_event_name' | translator}}</th>
+            <th>{{'i18n_process_trigger' | translator}}</th>
+            <th>{{'i18n_process_actuator' | translator}}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in items">
+            <td>{{item.name}}</td>
+            <td>{{item.operation | selects:operations}}</td>
+            <td>{{item.executor}}</td>
+            <td>
+                <table-menus>
+                    <md-menu-item>
+                        <md-button ng-click="edit(item)">
+                            <md-icon>edit</md-icon>
+                            {{'i18n_process_btn_edit' | translator}}
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="delete(item)">
+                            <md-icon>delete</md-icon>
+                            {{'i18n_process_btn_delete' | translator}}
+                        </md-button>
+                    </md-menu-item>
+                </table-menus>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <md-button class="long-button md-primary" ng-click="add()">
+                    <md-icon>add</md-icon>
+                    {{'i18n_process_btn_add' | translator}}
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

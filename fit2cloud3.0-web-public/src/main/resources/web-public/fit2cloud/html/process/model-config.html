@@ -1,0 +1,143 @@
+<div class="flow-tab-content">
+    <!--流程信息-->
+    <form id="modelForm" name="modelForm" layout="column" ng-if="item.step === undefined">
+        <md-input-container flex="auto">
+            <label>{{'i18n_process_model_id' | translator}}</label>
+            <input md-maxlength="64" required name="id" ng-model="model.modelId" autocomplete="off"
+                   ng-disabled="type === 'update'">
+            <div ng-messages="modelForm.id.$error">
+                <div ng-message="required">{{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength">{{'i18n_input_length_limit_64' | translator}}</div>
+            </div>
+            <div class="hint">{{'i18n_process_model_unique_id_cant_mod' | translator}}</div>
+        </md-input-container>
+
+        <md-input-container flex="auto">
+            <label>{{'i18n_process_model_name' | translator}}</label>
+            <input md-maxlength="100" required name="name" ng-model="model.modelName" autocomplete="off">
+            <div ng-messages="modelForm.name.$error">
+                <div ng-message="required">{{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength">{{'i18n_input_length_limit_100' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container flex="auto" ng-if="type === 'update'">
+            <label>{{'i18n_process_model_version' | translator}}</label>
+            <input ng-model="model.modelVersion" ng-disabled="true">
+        </md-input-container>
+
+        <md-input-container flex="auto" ng-if="type === 'update'">
+            <label>{{'i18n_process_model_update_time' | translator}}</label>
+            <input ng-value="model.modelTime | date:'yyyy-MM-dd HH:mm:ss'" ng-disabled="true">
+        </md-input-container>
+    </form>
+
+    <!--环节信息-->
+    <form name="activityForm" layout="column" ng-if="item.step !== undefined">
+
+        <md-input-container flex="auto">
+            <label>{{'i18n_process_model_link_type' | translator}}</label>
+            <md-select name="linkType" ng-model="item.linkType" required ng-change="changeLinkType(item.linkType)">
+                <md-option ng-value="'CUSTOMIZE'">{{'i18n_process_model_link_customize' | translator}}</md-option>
+                <md-option ng-value="'PREDEFINE'">{{'i18n_process_model_link_predefine' | translator}}</md-option>
+            </md-select>
+            <div ng-messages="activityForm.linkType.$error">
+                <div ng-message="required">{{'i18n_required' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container flex="auto" ng-show="item.linkType === 'PREDEFINE'">
+            <label>{{'i18n_process_model_link_name' | translator}}</label>
+            <md-select name="name" ng-model="item.linkKey" required  ng-change="changeLinkKey(item.linkKey)">
+                <md-option ng-repeat="preDefineLink in preDefineLinks" ng-disabled="!preDefineLink.enable" ng-value="preDefineLink.linkKey">
+                    {{preDefineLink.linkAlias}}
+                </md-option>
+            </md-select>
+            <div ng-messages="activityForm.link.$error">
+                <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+            </div>
+        </md-input-container>
+
+
+        <md-input-container flex="auto" ng-show="item.linkType !== 'PREDEFINE'">
+            <label>{{'i18n_process_model_link_name' | translator}}</label>
+            <input md-maxlength="30" required name="name" ng-model="item.name" autocomplete="off">
+            <div ng-messages="activityForm.name.$error">
+                <div ng-message="required">{{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength">{{'i18n_input_length_limit_30' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container flex="auto" ng-show="item.linkType !== 'PREDEFINE'">
+            <label>{{'i18n_process_model_link_handler' | translator}}</label>
+            <md-select name="assigneeType" ng-model="item.assigneeType" required
+                       ng-change="selectType(item.assigneeType)" ng-disabled="item.linkType == 'PREDEFINE'">
+                <md-option ng-value="'CREATOR'">{{'i18n_process_model_link_handler_creator' | translator}}</md-option>
+                <md-option ng-value="'USER'">{{'i18n_process_model_link_handler_user' | translator}}</md-option>
+                <md-option ng-value="'SYSTEM_ROLE'">{{'i18n_process_model_link_handler_system_role' | translator}}</md-option>
+                <md-option ng-value="'PROCESS_ROLE'">{{'i18n_process_model_process_role' | translator}}</md-option>
+                <md-option ng-value="'VARIABLES'">{{'i18n_process_model_process_variables' | translator}}</md-option>
+            </md-select>
+            <div ng-messages="activityForm.assigneeType.$error">
+                <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <md-chips ng-model="item.assigneeValue" md-transform-chip="$chip" md-require-match="true"
+                  ng-if="item.assigneeType === 'USER'" ng-show="item.linkType !== 'PREDEFINE'">
+            <md-autocomplete
+                    class="flow-auto"
+                    md-delay="300"
+                    md-selected-item="selectedItem"
+                    md-search-text="searchText"
+                    md-items="query in querySearch(searchText)"
+                    md-item-text="query.name"
+                    placeholder="{{'i18n_process_model_add_user' | translator}}">
+                <span md-highlight-text="searchText">{{query.label}}</span>
+            </md-autocomplete>
+
+            <md-chip-template>
+                <span>
+                    <em>{{$chip.email}}</em>
+                </span>
+            </md-chip-template>
+        </md-chips>
+
+        <md-input-container flex="auto" ng-if="item.assigneeType === 'SYSTEM_ROLE'" ng-show="item.linkType !== 'PREDEFINE'">
+            <label>{{'i18n_process_model_link_handler_select_system_role' | translator}}</label>
+            <md-select name="selectSystemRole" ng-model="item.assigneeValue" required>
+                <md-option ng-repeat="role in systemRoles" ng-value="role.id">
+                    {{role.name}}
+                </md-option>
+            </md-select>
+            <div ng-messages="activityForm.selectSystemRole.$error">
+                <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container flex="auto" ng-if="item.assigneeType === 'PROCESS_ROLE'" ng-show="item.linkType !== 'PREDEFINE'">
+            <label>{{'i18n_process_model_link_handler_select_process_role' | translator}}</label>
+            <md-select name="selectProcessRole" ng-model="item.assigneeValue" required>
+                <md-option ng-repeat="role in roles" ng-value="role.roleKey">
+                    {{role.roleName}}
+                </md-option>
+            </md-select>
+            <div ng-messages="activityForm.selectProcessRole.$error">
+                <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container flex="auto" ng-if="item.assigneeType === 'VARIABLES'" ng-show="item.linkType !== 'PREDEFINE'">
+            <label>{{'i18n_process_model_link_handler_add_process_variables' | translator}}</label>
+            <input md-maxlength="100" required name="variables" ng-model="item.assigneeValue" autocomplete="off">
+            <div ng-messages="activityForm.variables.$error">
+                <div ng-message="required">{{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength">{{'i18n_input_length_limit_100' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <md-switch class="md-primary" ng-model="item.jump" aria-label="Is Auto Jump" ng-if="item.step > 0">
+            {{'i18n_process_model_handler_empty' | translator}}
+        </md-switch>
+    </form>
+</div>

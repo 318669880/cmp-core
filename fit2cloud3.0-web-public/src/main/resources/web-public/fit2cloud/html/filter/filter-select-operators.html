@@ -1,0 +1,44 @@
+<div class="filter-condition">
+    <script type="text/ng-template" id="filter-select">
+        <md-content layout="column" class="md-whiteframe-2dp">
+            <input class="filter-select-search" type="search" ng-model="label" placeholder="{{'i18n_filter_quick_query' | translator:'快速查找'}}"
+                   ng-show="condition.search">
+
+            <div layout="column" class="filter-list">
+                <md-select ng-model="condition.operator" placeholder="{{'i18n_filter_condition_operator' | translator:'运算符'}}" style="padding: 0 12px">
+                    <md-option ng-repeat="o in operators" ng-value="o.key">{{o.value}}</md-option>
+                </md-select>
+                <md-button ng-repeat="selected in condition.selects | filter:{label:label}" ng-click="check(selected)"
+                           ng-class="{'selected': selected.checked}" ng-if="condition.operator === 'IN' || condition.operator === 'NOT IN'">
+                    <div>{{selected.label}}</div>
+                </md-button>
+                <md-button ng-repeat="selected in condition.selects | filter:{label:label}"
+                           ng-if="condition.operator === '=' || condition.operator === '!='"
+                           ng-click="selectResult(condition, selected);close()">
+                    <div>{{selected.label}}</div>
+                </md-button>
+                <div class="filter-error" ng-if="error">
+                    <p class="error">{{'i18n_filter_condition_error' | translator:'发生错误：'}}{{error}}</p>
+                </div>
+            </div>
+
+            <md-button class="md-accent" ng-click="remove();close()"  ng-if="condition.operator === '=' || condition.operator === '!='">
+                {{'i18n_filter_condition_cancel' | translator:'取消'}}
+            </md-button>
+
+            <div ng-if="condition.operator === 'IN' || condition.operator === 'NOT IN'">
+                <md-button class="md-accent" ng-click="remove();close()">
+                    {{'i18n_filter_condition_cancel' | translator:'取消'}}
+                </md-button>
+                <md-button class="md-primary" ng-click="addResults()">
+                    {{'i18n_filter_condition_ok' | translator:'确定'}}
+                </md-button>
+            </div>
+        </md-content>
+    </script>
+
+    <span>{{condition.name}} : </span>
+    <input id="_input_" type="text" class="filter-input-text pointer" ng-model="condition.value" ng-click="open()"
+           placeholder="{{'i18n_filter_condition_select' | translator:'请选择'}}{{condition.name}}" readonly filter-popover popover-template="filter-select">
+</div>
+

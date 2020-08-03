@@ -1,0 +1,12 @@
+<div class="module-content" ng-repeat="item in items">
+    <div style="margin-left: 20px" md-colors="{color: 'primary'}">
+         {{'i18n_node' | translator}}：<strong>{{item.statKey}}</strong>[
+        <span ng-if="item.status === 'running'" md-colors="{color: 'green'}"> {{'i18n_sys_running' | translator}}</span>
+        <span ng-if="item.status === 'stopped'" md-colors="{color: 'red'}"> {{'i18n_sys_stopped' | translator}}</span>
+        ]
+    </div>
+    <div style="margin-left: 20px">
+        <pod-pie-chart setting="item.setting"></pod-pie-chart>
+    </div>
+</div>
+

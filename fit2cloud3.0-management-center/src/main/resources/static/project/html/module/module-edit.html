@@ -1,0 +1,60 @@
+<div ng-cloak cg-busy="{promise:loadingLayer1,minDuration:500}">
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div>
+                {{'i18n_module_external_link_edit' | translator:'编辑第三方链接'}}
+            </div>
+        </div>
+    </md-toolbar>
+    <form name="ModuleAddForm" class="md-padding">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label> {{'i18n_module_id' | translator}}</label>
+                <input md-maxlength="30" required name="id" ng-model="item.id" disabled>
+                <div ng-messages="ModuleAddForm.id.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    <div ng-message="md-maxlength"> {{'i18n_input_length_limit_30' | translator}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label> {{'i18n_module_name' | translator}}</label>
+                <input md-maxlength="30" required name="name" ng-model="item.name">
+                <div ng-messages="ModuleAddForm.name.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    <div ng-message="md-maxlength"> {{'i18n_input_length_limit_30' | translator}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label> {{'i18n_module_summary' | translator}}</label>
+                <input required name="summary" ng-model="item.summary">
+                <div ng-messages="ModuleAddForm.summary.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label> {{'i18n_module_open_mode' | translator}}</label>
+                <md-select ng-model="item.open" required>
+                    <md-option value="current"> {{'i18n_module_open_mode_current' | translator}}</md-option>
+                    <md-option value="new"> {{'i18n_module_open_mode_new' | translator}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label> {{'i18n_module_link' | translator}}</label>
+                <input md-maxlength="255" required name="moduleUrl" ng-model="item.moduleUrl">
+                <div ng-messages="ModuleAddForm.moduleUrl.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                    <div ng-message="md-maxlength">{{'i18n_input_length_limit_255' | translator}}</div>
+                </div>
+            </md-input-container>
+        </div>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="toggleForm();">
+             {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="ModuleAddForm.$invalid"
+                   ng-click="saveModule(item,'edit')">
+             {{'i18n_save' | translator}}
+        </md-button>
+    </div>
+</div>

@@ -1,0 +1,316 @@
+{
+  "version": "2.0",
+  "menu": [
+    {
+      "id": "user",
+      "order": 1,
+      "title": "i18n_menu_user_management",
+      "icon": "account_box",
+      "children": [
+        {
+          "order": 1,
+          "title": "i18n_menu_user",
+          "name": "user",
+          "url": "/user",
+          "templateUrl": "project/html/user/user-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "USER:READ"
+              ]
+            },
+            {
+              "role": "ORGADMIN",
+              "logical": "OR",
+              "permissions": [
+                "USER:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "title": "i18n_menu_role",
+          "name": "role",
+          "url": "/role",
+          "templateUrl": "project/html/role/role-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "ROLE:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "title": "i18n_menu_organization",
+          "name": "organization",
+          "url": "/organization",
+          "templateUrl": "project/html/organization/organization-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "ORGANIZATION:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "title": "i18n_menu_workspace",
+          "name": "workspace",
+          "url": "/workspace",
+          "templateUrl": "project/html/workspace/workspace-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "WORKSPACE:READ"
+              ]
+            },
+            {
+              "role": "ORGADMIN",
+              "logical": "OR",
+              "permissions": [
+                "WORKSPACE:READ"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cloud_account",
+      "order": 2,
+      "title": "i18n_menu_cloud_account_management",
+      "icon": "cloud_queue",
+      "children": [
+        {
+          "order": 1,
+          "title": "i18n_menu_infrastructure",
+          "name": "account/infra",
+          "url": "/account/infra",
+          "templateUrl": "project/html/account/account-infra-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "CLOUD_ACCOUNT:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "title": "i18n_menu_container",
+          "name": "account/container",
+          "url": "/account/container",
+          "templateUrl": "project/html/account/account-container-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "CLOUD_ACCOUNT:READ"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "system",
+      "order": 3,
+      "title": "i18n_menu_module_plugin",
+      "icon": "apps",
+      "children": [
+        {
+          "order": 1,
+          "title": "i18n_menu_module",
+          "name": "module",
+          "url": "/module",
+          "templateUrl": "project/html/module/module-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "MODULE:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "title": "i18n_menu_plugin",
+          "name": "plugin",
+          "url": "/plugin",
+          "templateUrl": "project/html/plugin/plugin-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "PLUGIN:READ"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "order": 4,
+      "title": "i18n_menu_metadata_management",
+      "icon": "bookmark",
+      "children": [
+        {
+          "order": 1,
+          "title": "i18n_menu_tag",
+          "name": "tag",
+          "url": "/tag",
+          "templateUrl": "project/html/tag/tag-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "TAG:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "title": "i18n_menu_os",
+          "name": "os",
+          "url": "/os",
+          "templateUrl": "project/html/os/os-list.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "DICTIONARY_OS:READ"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "setting",
+      "order": 6,
+      "title": "i18n_menu_management_settings",
+      "icon": "build",
+      "children": [
+        {
+          "order": 1,
+          "title": "i18n_menu_idp_settings",
+          "name": "keycloak",
+          "url": "/keycloak",
+          "templateUrl": "project/html/keycloak/keycloak.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "KEYCLOAK_SETTING:READ",
+                "KEYCLOAK_SETTING:SYNC"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "title": "i18n_menu_display_settings",
+          "name": "ui",
+          "url": "/ui",
+          "templateUrl": "project/html/ui/ui.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "UI_SETTING:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "title": "i18n_menu_email_settings",
+          "name": "mail",
+          "url": "/mail",
+          "templateUrl": "project/html/mail/mail.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "MAIL_SETTING:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "title": "i18n_menu_sys_state",
+          "name": "sys",
+          "url": "/sys",
+          "templateUrl": "project/html/sys/stats.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "SYS_STATS_READ:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 5,
+          "title": "i18n_menu_sys_log",
+          "name": "log/system",
+          "url": "/log/system",
+          "templateUrl": "project/html/log/system-log.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "SYSTEM_LOG:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 6,
+          "title": "i18n_menu_about",
+          "name": "about",
+          "url": "/about",
+          "templateUrl": "project/html/about/about.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "LICENSE:READ"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

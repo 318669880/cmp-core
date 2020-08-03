@@ -1,0 +1,72 @@
+<md-dialog aria-label="Change Password Dialog" ng-controller="UserInfoController">
+    <form ng-cloak name="userForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2> {{'i18n_basic_information' | translator}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="closeDialog()">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content style="width: 800px">
+            <div class="md-dialog-content">
+                <md-input-container class="md-block">
+                    <label>ID</label>
+                    <input autocomplete="off" minlength="2" md-maxlength="30" required name="id" ng-model="itemUser.id"
+                           disabled>
+                    <div ng-messages="userForm.id.$error">
+                        <div ng-message="required">{{'i18n_required' | translator}}</div>
+                        <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                            {{'i18n_name_limit_msg' | translator}}
+                        </div>
+                    </div>
+                    <div class="hint">{{'i18n_login_identifier' | translator}}</div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>{{'i18n_username' | translator}}</label>
+                    <input autocomplete="off" minlength="2" md-maxlength="30" required name="name"
+                           ng-model="itemUser.name">
+                    <div ng-messages="userForm.name.$error">
+                        <div ng-message="required">{{'i18n_required' | translator}}</div>
+                        <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                            {{'i18n_name_limit_msg' | translator}}
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Email</label>
+                    <input autocomplete="off" required type="text" name="email" ng-model="itemUser.email"
+                           minlength="5" maxlength="50" md-maxlength="50"
+                           ng-pattern="/[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/"/>
+
+                    <div ng-messages="userForm.email.$error" role="alert">
+                        <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                            {{'i18n_email_limit_msg' | translator}}
+                        </div>
+                    </div>
+                    <div class="hint">{{'i18n_login_identifier' | translator}}</div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>{{'i18n_phone' | translator}}</label>
+                    <input name="phone" ng-model="itemUser.phone" ng-pattern="/^(1[0-9][0-9])\d{8}$/"
+                           autocomplete="off"/>
+                    <div ng-messages="userForm.phone.$error">
+                        <div ng-message="pattern">{{'i18n_phone_limit_msg' | translator}}</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row" layout-align="center center" style="margin-bottom: 15px;">
+            <md-button class="md-raised" ng-click="closeDialog();">
+                {{'i18n_cancel' | translator}}
+            </md-button>
+            <md-button class="md-raised md-primary"
+                       ng-disabled="userForm.$invalid" ng-click="submitUser(itemUser)">
+                {{'i18n_save' | translator}}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

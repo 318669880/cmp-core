@@ -1,0 +1,15 @@
+src/main/resources/web-public/external/utils/md5.min.js
+src/main/resources/web-public/external/jquery/jquery.min.js
+src/main/resources/web-public/external/moment/moment.min.js
+src/main/resources/web-public/external/angular/angular.min.js
+src/main/resources/web-public/external/angular/angular-ui-router.min.js
+src/main/resources/web-public/external/angular/angular-animate.min.js
+src/main/resources/web-public/external/angular/angular-aria.min.js
+src/main/resources/web-public/external/angular/angular-messages.min.js
+src/main/resources/web-public/external/angular/angular-translate.min.js
+src/main/resources/web-public/external/angular/angular-translate-loader-static-files.min.js
+src/main/resources/web-public/external/angular-busy/angular-busy.min.js
+src/main/resources/web-public/external/angular-material/angular-material.min.js
+src/main/resources/web-public/external/file/FileSaver.js
+src/main/resources/web-public/external/file/ng-file-upload-all.min.js
+src/main/resources/web-public/external/palette/palette-generator.js

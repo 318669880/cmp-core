@@ -1,0 +1,57 @@
+<div layout-fill ng-controller="OSController" class="content-backdrop" ng-cloak>
+    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div> {{"i18n_os_list" | translator: '操作系统列表'}}</div>
+                <md-button class="md-primary" ng-click="add()" has-permission="DICTIONARY_OS:READ+CREATE">
+                    <md-icon>add_circle_outline</md-icon>
+                     {{'i18n_create' | translator}}
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div layout="row" flex style="overflow-y: auto;">
+            <div class="md-padding" layout="column" flex="100" style="overflow-y: auto">
+                <div flex layout="column" layout-fill>
+                    <table class="tree-table" style="margin-bottom: 20px">
+                        <thead>
+                        <tr>
+                            <th width="35%">{{'i18n_os_identification' | translator:'标识'}}</th>
+                            <th width="35%">{{'i18n_os_name' | translator:'名称'}}</th>
+                            <th width="30%">{{'i18n_os_version' | translator:'版本'}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="node in osTreeNode">
+                            <td rowspan="{{node.rowSpan}}" ng-if="node.rowSpan>0">
+                                {{node.dictionaryKey}}
+                            </td>
+                            <td rowspan="{{node.rowSpan}}" ng-if="node.rowSpan>0">
+                                {{node.dictionaryValue}}
+                                <span class="hide-content"
+                                      has-permissions="DICTIONARY_OS:READ+EDIT,DICTIONARY_OS:READ+DELETE,DICTIONARY_OS:READ+VERSION_CREATE">
+                                    <md-icon ng-click="edit(node)"
+                                             has-permission="DICTIONARY_OS:READ+EDIT">edit</md-icon>
+                                    <md-icon ng-click="deleteOsCategory(node.id)"
+                                             has-permission="DICTIONARY_OS:READ+DELETE">remove_circle</md-icon>
+                                    <md-icon ng-click="addVersion(node)"
+                                             has-permission="DICTIONARY_OS:READ+VERSION_CREATE">add_circle</md-icon>
+                                </span>
+                            </td>
+                            <td>
+                                {{node.version}}
+                                <span class="hide-content" ng-if="node.version"
+                                      has-permission="DICTIONARY_OS:READ+VERSION_DELETE">
+                                    <md-icon ng-click="submitDeleteVersion(node.versionId)">remove_circle</md-icon>
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <side-form></side-form>
+    </div>
+</div>
+
+

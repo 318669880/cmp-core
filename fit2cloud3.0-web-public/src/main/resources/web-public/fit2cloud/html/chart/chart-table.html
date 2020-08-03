@@ -1,0 +1,26 @@
+<div>
+    <section layout="row" layout-align="end center" style="box-shadow: 0 1px rgba(0, 0, 0, 0.12); padding-bottom: 5px;">
+        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="export(table)" ng-disabled="table == null || table.length == 0">
+            <md-tooltip md-delay="300">{{'i18n_export' | translator}} Excel</md-tooltip>
+            <md-icon>cloud_download</md-icon>
+        </md-button>
+    </section>
+
+    <table class="dynamic-table">
+        <table class="table">
+            <thead>
+            <tr>
+                <th ng-repeat="c in columns">
+                    <div class="resize-th">
+                        <div>
+                            {{c.value}}
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="chart-table-tbody">
+            </tbody>
+        </table>
+    </table>
+</div>

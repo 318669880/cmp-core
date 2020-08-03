@@ -1,0 +1,96 @@
+<div class="f2c-cloud-metric">
+    <section ng-show="showDateType" layout="row" layout-align="space-between center" layout-wrap>
+        <div>
+            <md-button class="f2c-cloud-metric-button"
+                       style="margin-bottom: 10px; border-radius: 2px; border: 1px solid #d3d3d3;" ng-click="refresh()">
+                {{'i18n_refresh' | translator}}
+            </md-button>
+        </div>
+        <div class="f2c-cloud-metric-button-group">
+            <!-- 错开的写md-button是为了解决inline-block元素的空白间距，不要执行代码格式优化 -->
+            <!-- 错开的写md-button是为了解决inline-block元素的空白间距，不要执行代码格式优化 -->
+            <!-- 错开的写md-button是为了解决inline-block元素的空白间距，不要执行代码格式优化 -->
+            <md-button ng-class="{'md-primary f2c-cloud-metric-button-primary': timeType === 'six_hour'}"
+                       class="f2c-cloud-metric-button" ng-click="changeTime('six_hour')">
+                6{{'i18n_hour' | translator}}
+            </md-button>
+            <md-button ng-class="{'md-primary f2c-cloud-metric-button-primary': timeType === 'day'}"
+                       class="f2c-cloud-metric-button" ng-click="changeTime('day')">
+                1{{'i18n_day' | translator}}
+            </md-button>
+            <md-button ng-class="{'md-primary f2c-cloud-metric-button-primary': timeType === 'seven_day'}"
+                       class="f2c-cloud-metric-button" ng-click="changeTime('seven_day')">
+                7{{'i18n_day' | translator}}
+            </md-button>
+            <md-button ng-class="{'md-primary f2c-cloud-metric-button-primary': timeType === 'thirty_day'}"
+                       class="f2c-cloud-metric-button" ng-click="changeTime('thirty_day')">
+                30{{'i18n_day' | translator}}
+            </md-button>
+        </div>
+    </section>
+    <div id="echart_container">
+        <div ng-show="metricMap['SERVER_CPU_USAGE'].show" class="f2c-cloud-metric-chart" id="SERVER_CPU_USAGE"></div>
+        <div ng-show="metricMap['SERVER_CPU_USAGE_IN_MHZ'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_CPU_USAGE_IN_MHZ"></div>
+        <div ng-show="metricMap['SERVER_MEMORY_USAGE'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_MEMORY_USAGE"></div>
+        <div ng-show="metricMap['SERVER_MEMORY_USAGE_IN_MB'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_MEMORY_USAGE_IN_MB"></div>
+        <div ng-show="metricMap['SERVER_MEMORY_ALLOCATED_SIZE'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_MEMORY_ALLOCATED_SIZE"></div>
+        <div ng-show="metricMap['SERVER_DISK_ALLOCATED_SIZE'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_DISK_ALLOCATED_SIZE"></div>
+        <div ng-show="metricMap['SERVER_CPU_ALLOCATED_SIZE'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_CPU_ALLOCATED_SIZE"></div>
+        <div ng-show="metricMap['SERVER_BYTES_RECEIVED_PER_SECOND'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_BYTES_RECEIVED_PER_SECOND"></div>
+        <div ng-show="metricMap['SERVER_BYTES_TRANSMITTED_PER_SECOND'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_BYTES_TRANSMITTED_PER_SECOND"></div>
+        <div ng-show="metricMap['SERVER_DISK_READ_AVERAGE'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_DISK_READ_AVERAGE"></div>
+        <div ng-show="metricMap['SERVER_DISK_WRITE_AVERAGE'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_DISK_WRITE_AVERAGE"></div>
+        <div ng-show="metricMap['SERVER_VIRTUAL_DISK_READ_LATENCY_AVERAGE'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_VIRTUAL_DISK_READ_LATENCY_AVERAGE"></div>
+        <div ng-show="metricMap['SERVER_VIRTUAL_DISK_WRITE_LATENCY_AVERAGE'].show" class="f2c-cloud-metric-chart"
+             id="SERVER_VIRTUAL_DISK_WRITE_LATENCY_AVERAGE"></div>
+        <div ng-show="metricMap['SERVER_DISK_USAGE'].show" class="f2c-cloud-metric-chart" id="SERVER_DISK_USAGE"></div>
+        <div ng-show="metricMap['HOST_CPU_USAGE'].show" class="f2c-cloud-metric-chart" id="HOST_CPU_USAGE"></div>
+        <div ng-show="metricMap['HOST_CPU_USAGE_IN_MHZ'].show" class="f2c-cloud-metric-chart"
+             id="HOST_CPU_USAGE_IN_MHZ"></div>
+        <div ng-show="metricMap['HOST_CPU_TOTAL_IN_MHZ'].show" class="f2c-cloud-metric-chart"
+             id="HOST_CPU_TOTAL_IN_MHZ"></div>
+        <div ng-show="metricMap['HOST_MEMORY_USAGE'].show" class="f2c-cloud-metric-chart" id="HOST_MEMORY_USAGE"></div>
+        <div ng-show="metricMap['HOST_MEMORY_USAGE_IN_MB'].show" class="f2c-cloud-metric-chart"
+             id="HOST_MEMORY_USAGE_IN_MB"></div>
+        <div ng-show="metricMap['HOST_MEMORY_TOTAL_IN_MB'].show" class="f2c-cloud-metric-chart"
+             id="HOST_MEMORY_TOTAL_IN_MB"></div>
+        <div ng-show="metricMap['DISK_IOPS_READ'].show" class="f2c-cloud-metric-chart" id="DISK_IOPS_READ"></div>
+        <div ng-show="metricMap['DISK_IOPS_WRITE'].show" class="f2c-cloud-metric-chart" id="DISK_IOPS_WRITE"></div>
+        <div ng-show="metricMap['DISK_BPS_READ'].show" class="f2c-cloud-metric-chart" id="DISK_BPS_READ"></div>
+        <div ng-show="metricMap['DISK_BPS_WRITE'].show" class="f2c-cloud-metric-chart" id="DISK_BPS_WRITE"></div>
+        <div ng-show="metricMap['PHYSICAL_MACHINE_CPU_USAGE'].show" class="f2c-cloud-metric-chart"
+             id="PHYSICAL_MACHINE_CPU_USAGE"></div>
+        <div ng-show="metricMap['PHYSICAL_MACHINE_MEMORY_USAGE'].show" class="f2c-cloud-metric-chart"
+             id="PHYSICAL_MACHINE_MEMORY_USAGE"></div>
+        <div ng-show="metricMap['PHYSICAL_MACHINE_DISK_USAGE'].show" class="f2c-cloud-metric-chart"
+             id="PHYSICAL_MACHINE_DISK_USAGE"></div>
+        <div ng-show="metricMap['DATASTORE_PROVISIONED'].show" class="f2c-cloud-metric-chart"
+             id="DATASTORE_PROVISIONED"></div>
+        <div ng-show="metricMap['DATASTORE_SPACE_USED'].show" class="f2c-cloud-metric-chart"
+             id="DATASTORE_SPACE_USED"></div>
+        <div ng-show="metricMap['DATASTORE_FREE_SIZE'].show" class="f2c-cloud-metric-chart"
+             id="DATASTORE_FREE_SIZE"></div>
+        <div ng-show="metricMap['DATASTORE_TOTAL_SPACE'].show" class="f2c-cloud-metric-chart"
+             id="DATASTORE_TOTAL_SPACE"></div>
+        <div ng-show="metricMap['SYS_CPU_USAGE'].show" class="f2c-cloud-metric-chart" id="SYS_CPU_USAGE"></div>
+        <div ng-show="metricMap['SYS_MEMORY_USAGE'].show" class="f2c-cloud-metric-chart" id="SYS_MEMORY_USAGE"></div>
+        <div ng-show="metricMap['SYS_DISK_USAGE'].show" class="f2c-cloud-metric-chart" id="SYS_DISK_USAGE"></div>
+    </div>
+    <div class="f2c-cloud-metric-info" ng-if="chartCount === 0 && !isLoading" layout-align="center center"
+         layout="column">{{'i18n_no_data' | translator}}
+    </div>
+    <div class="f2c-cloud-metric-info" ng-if="isLoading" layout-align="center center" layout="column">{{'i18n_querying' |
+        translator}}...
+    </div>
+</div>

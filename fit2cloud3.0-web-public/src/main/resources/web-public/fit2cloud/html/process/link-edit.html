@@ -1,0 +1,36 @@
+<div ng-cloak >
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div ng-if="linkItem.linkId">{{'i18n_edit' | translator:'编辑'}}</div>
+            <div ng-if="!linkItem.linkId">{{'i18n_add' | translator:'添加'}}</div>
+        </div>
+    </md-toolbar>
+    <form name="linkEditForm" class="md-padding">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label>{{'i18n_process_link_id' | translator:'环节ID'}}</label>
+                <input md-maxlength="50" required name="linkKey" ng-disabled="linkItem.linkId" ng-model="linkItem.linkKey">
+                <div ng-messages="linkEditForm.linkKey.$error">
+                    <div ng-message="required">{{'i18n_required' | translator:'必填'}}.</div>
+                    <div ng-message="md-maxlength">{{'i18n_error_exceed_50_c' | translator:'不要超过50个字符'}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>{{'i18n_process_link_name' | translator:'环节名称'}}</label>
+                <input required name="linkAlias" ng-model="linkItem.linkAlias" md-maxlength="50"/>
+                <div ng-messages="linkEditForm.linkAlias.$error">
+                    <div ng-message="required">{{'i18n_required' | translator:'必填'}}.</div>
+                    <div ng-message="md-maxlength">{{'i18n_error_exceed_50_c' | translator:'不要超过50个字符'}}</div>
+                </div>
+            </md-input-container>
+        </div>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="toggleForm()">
+            {{'i18n_cancel' | translator:'取消'}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="submit()" ng-disabled="linkEditForm.$invalid">
+            {{'i18n_save' | translator:'保存'}}
+        </md-button>
+    </div>
+</div>

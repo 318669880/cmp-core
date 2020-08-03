@@ -1,0 +1,120 @@
+<div layout-fill ng-controller="MailController" class="content-backdrop" ng-cloak
+     cg-busy="{promise:loadingLayer,minDuration:500}">
+    <div layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>{{'i18n_mail_settings' | translator:'邮件服务设置'}}</div>
+            </div>
+        </md-toolbar>
+        <md-content flex="100">
+            <form name="UIFrom" class="md-padding">
+                <div ng-repeat=" param in params">
+                    <md-input-container class="md-icon-float md-block"
+                                        ng-if="param.paramKey===mail.server">
+                        <!-- Use floating label instead of placeholder -->
+                        <label>{{'i18n_mail_smtp_host' | translator:'SMTP主机'}}</label>
+                        <input type="text"
+                               ng-model="param.paramValue"
+                               placeholder="{{'i18n_mail_smtp_host' | translator:'SMTP主机'}}"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password"
+                               required>
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block"
+                                        ng-if="param.paramKey===mail.port">
+                        <!-- Use floating label instead of placeholder -->
+                        <label>{{'i18n_mail_smtp_port' | translator:'SMTP端口'}}</label>
+                        <input type="text"
+                               ng-model="param.paramValue"
+                               placeholder="{{'i18n_mail_smtp_port' | translator:'SMTP端口'}}"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password"
+                               required>
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block"
+                                        ng-if="param.paramKey===mail.account">
+                        <!-- Use floating label instead of placeholder -->
+                        <label>{{'i18n_mail_smtp_account' | translator:'SMTP账户'}}</label>
+                        <input type="text"
+                               ng-model="param.paramValue"
+                               placeholder="{{'i18n_mail_smtp_account' | translator:'SMTP账户'}}"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password"
+                               required>
+                    </md-input-container>
+
+                    <md-input-container class="md-icon-float md-block"
+                                        ng-if="param.paramKey===mail.password" style="margin-bottom: 0px;">
+                        <!-- Use floating label instead of placeholder -->
+                        <label>{{'i18n_mail_smtp_password' | translator:'SMTP密码'}}</label>
+
+                        <i layout-gt-xs id="eye" class="fa fa-eye f2c-eye" aria-hidden="true"
+                           ng-click="view('password','eye')"
+                           ng-if="isSave"></i>
+                        <input type="password" id="password"
+                               ng-model="param.paramValue"
+                               placeholder="{{'i18n_mail_smtp_password' | translator:'SMTP密码'}}"
+                               ng-disabled="!isSave"
+                               autocomplete="new-password"
+                               >
+                    </md-input-container>
+
+                    <md-input-container class="md-block"
+                                        ng-if="param.paramKey===mail.ssl" ng-style="addressInputMargin()"
+                                        style="margin-top: 0px;margin-bottom: 0px;">
+                        <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
+                                     ng-init="param.paramValue = transform(param.paramValue)"
+                                     ng-model="param.paramValue"
+                                     ng-disabled="!isSave"
+                                     class="md-primary">{{'i18n_mail_ssl' | translator:'开启SSL(如果SMTP端口是465，通常需要启用SSL)'}}
+                        </md-checkbox>
+                    </md-input-container>
+
+                    <md-input-container
+                            ng-if="param.paramKey===mail.tls"
+                            style="margin-top: 0px;margin-bottom: 0px;">
+                        <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
+                                     ng-init="param.paramValue = transform(param.paramValue)"
+                                     ng-model="param.paramValue"
+                                     ng-disabled="!isSave"
+                                     class="md-primary">{{'i18n_mail_tls' | translator:'开启TLS(如果SMTP端口是587，通常需要启用TLS)'}}
+                        </md-checkbox>
+                    </md-input-container>
+
+                    <md-input-container
+                            ng-if="param.paramKey===mail.anon"
+                            style="margin-top: 0px;margin-bottom: 0px;">
+                        <md-checkbox md-no-ink aria-label="是否启用"
+                                     ng-init="param.paramValue = transform(param.paramValue)"
+                                     ng-model="param.paramValue"
+                                     ng-disabled="!isSave"
+                                     class="md-primary"
+                                     ng-change="isAnonEmail(param.paramValue)">{{'i18n_is_anon' | translator:'是否免密'}}&nbsp;SMTP
+                        </md-checkbox>
+                    </md-input-container>
+                </div>
+            </form>
+            <div layout="row" layout-align="center" layout-margin has-permission="MAIL_SETTING:READ+EDIT">
+
+                <md-button class="md-raised md-primary" ng-disabled="!connectionEnable || UIFrom.$invalid"
+                           ng-click="testConnection()">
+                    {{'i18n_test_connection' | translator:'测试连接'}}
+                </md-button>
+
+                <md-button class="md-raised md-primary" ng-disabled="UIFrom.$invalid"
+                           ng-click="submit(params)" ng-if="isSave">
+                    {{'i18n_save' | translator:'保存'}}
+                </md-button>
+                <md-button class="md-raised" ng-click="clickSave()" ng-if="isSave">
+                    {{'i18n_cancel' | translator:'取消'}}
+                </md-button>
+                <md-button class="md-raised md-primary"
+                           ng-click="edit()" ng-if="!isSave">
+                    {{'i18n_edit' | translator:'编辑'}}
+                </md-button>
+            </div>
+        </md-content>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+.wizard {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.wizard-step-header {
+    width: 100%;
+    height: 80px;
+    max-height: 80px;
+    overflow-x: auto;
+}
+
+.wizard-step-content {
+    padding: 16px;
+    min-height: 120px;
+    height: 100%; /* for IE*/
+    max-height: calc(100% - 176px);
+    overflow: auto;
+}
+
+.wizard-step-footer {
+    padding: 8px;
+}
+
+.wizard-step-container {
+    position: relative;
+    white-space: nowrap;
+}
+
+.wizard-step-container:last-child {
+    width: auto;
+}
+
+.wizard-step-container > table td {
+    padding: 0;
+}
+
+.wizard-step {
+    overflow: hidden;
+    outline: 0;
+    position: relative;
+    display: inline-block;
+    height: 72px;
+    line-height: 72px;
+    padding: 0 12px;
+    min-width: 100px;
+}
+
+.wizard-step.wizard-selected, .wizard-step.wizard-current {
+    cursor: pointer;
+}
+
+.wizard-step.wizard-unselected, .wizard-step.wizard-unselected .wizard-step-icon {
+    cursor: not-allowed;
+}
+
+.wizard-step:hover {
+    background-color: rgba(0, 0, 0, .04);
+}
+
+.wizard-step .wizard-step-icon {
+    min-width: 40px;
+    font-size: 18px;
+}
+
+.wizard-step .wizard-step-label {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 50px;
+    width: auto;
+    vertical-align: middle;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, .65);
+}
+
+.wizard-step.wizard-current .wizard-step-icon {
+    font-size: 20px;
+}
+
+.wizard-step.wizard-current .wizard-step-label, .wizard-step.wizard-selected .wizard-step-label {
+    color: rgba(0, 0, 0, .87);
+}
+
+.wizard-horizontal-step-line {
+    width: 100%;
+    position: relative;
+}
+
+.wizard-horizontal-step-line > div {
+    position: absolute;
+    top: 38px;
+    left: -16px;
+    right: -16px;
+    height: 1px;
+    background-color: rgba(0, 0, 0, .12);
+}

@@ -1,0 +1,164 @@
+.filter {
+    width: 100%;
+    border-bottom: 1px solid;
+}
+
+.filter-logo {
+    padding: 0 8px 0 0;
+}
+
+.filter-content {
+    min-height: 48px;
+    padding: 0 0 8px 10px;
+}
+
+.filter-result {
+    position: relative;
+    box-sizing: border-box;
+    min-width: 100px;
+    height: 32px;
+    line-height: 32px;
+    margin: 8px 8px 0 0;
+    padding: 0 12px;
+    cursor: default;
+    border-radius: 16px;
+    background-color: rgb(230, 230, 230);
+    color: rgb(66, 66, 66);
+}
+
+.filter-add {
+    height: 32px;
+    line-height: 32px;
+    margin: 8px 8px 0 0;
+}
+
+.filter-add input {
+    margin: 8px 8px 0 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}
+
+.filter-remove.md-button.md-icon-button {
+    min-height: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0 -8px 0 0;
+}
+
+.filter-remove.md-button.md-icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.filter-list {
+    min-height: 30px;
+    max-height: 600px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.filter-list .md-button {
+    text-align: left;
+    margin: 0;
+    padding: 0 12px;
+    min-width: 200px;
+}
+
+.filter-list .md-button.selected {
+    background-color: rgba(0, 0, 0, 0.12);
+}
+
+.filter-virtual {
+    min-width: 200px;
+}
+
+.filter-virtual.md-virtual-repeat-container .md-virtual-repeat-scroller {
+    height: 360px;
+    overflow-x: auto;
+}
+
+.filter-quick-search {
+    height: 36px;
+    margin: 0;
+    padding: 0 12px;
+    border: none;
+    background-color: transparent;
+}
+
+.filter-condition {
+    margin: 8px 8px 0 0;
+}
+
+.filler-input > * {
+    height: 32px;
+    line-height: 32px;
+}
+
+.filter-input-text {
+    padding: 0 10px;
+    border: none;
+    background-color: transparent;
+}
+
+.filter-input-number {
+    border: none;
+}
+
+.filter-number {
+    color: #2B415C;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.filter-select-search {
+    min-width: 120px;
+    height: auto;
+    line-height: 20px;
+    border: none;
+    margin: 0 6px -1px 6px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 5px 0 5px 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.filter-select-search:focus {
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.filter-error {
+    color: #FF521B;
+    max-width: 400px;
+    padding: 5px 10px 5px 10px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+.filter-title {
+    line-height: 28px;
+    font-size: 16px;
+    border: none;
+    margin: 0 6px -1px 6px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 5px 0 5px 0;
+}
+
+.filter-item .md-button.md-icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.12);
+}
+
+.column-list {
+    min-height: 30px;
+    max-height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+md-checkbox.select-columns {
+    margin: 0;
+}

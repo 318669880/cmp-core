@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtCloudAccountMapper">
+
+    <resultMap id="BaseResultMap" type="com.fit2cloud.commons.server.model.CloudAccountDTO"
+               extends="com.fit2cloud.commons.server.base.mapper.CloudAccountMapper.BaseResultMap">
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="plugin_desc" property="pluginDesc" jdbcType="VARCHAR"/>
+        <result column="plugin_type" property="pluginType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ImageSyncResultMap" type="com.fit2cloud.commons.server.model.CloudAccountImageSyncDTO"
+               extends="BaseResultMap">
+        <result column="details" property="details" jdbcType="LONGVARCHAR"/>
+        <result column="setting_time" property="settingTime" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="NetworkSyncResultMap" type="com.fit2cloud.commons.server.model.CloudAccountNetworkDTO"
+               extends="BaseResultMap">
+        <result column="network_sync_status" property="networkSyncStatus" jdbcType="LONGVARCHAR"/>
+        <result column="sync_time" property="syncTime" jdbcType="BIGINT"/>
+        <result column="settings" property="settings" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getAccountList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        cloud_account.*,
+        plugin.icon AS icon,
+        plugin.description AS plugin_desc
+        from cloud_account
+        left join plugin on cloud_account.plugin_name = plugin.name
+        <where>
+            <if test="name !=null">
+                and cloud_account.name like #{name}
+            </if>
+            <if test="pluginName != null">
+                and cloud_account.plugin_name = #{pluginName}
+            </if>
+
+            <if test="status != null">
+                and cloud_account.status = #{status}
+            </if>
+            <if test="syncStatus!=null">
+                and cloud_account.sync_status = #{syncStatus}
+            </if>
+            <if test="pluginType != null">
+                and plugin.plugin_type = #{pluginType}
+            </if>
+            <if test="id != null">
+                and cloud_account.id = #{id}
+            </if>
+        </where>
+        <if test="sort != null">
+            order by ${sort}
+        </if>
+        <if test="sort == null">
+            order by cloud_account.create_time DESC
+        </if>
+    </select>
+
+    <select id="getAccountListWithImageSync" parameterType="java.util.Map" resultMap="ImageSyncResultMap">
+        select
+        cloud_account.*,
+        plugin.icon AS icon,
+        plugin.description AS plugin_desc,
+        cloud_image_sync_setting.details AS details,
+        cloud_image_sync_setting.setting_time AS setting_time
+        from cloud_account
+        left join plugin on cloud_account.plugin_name = plugin.name
+        left join cloud_image_sync_setting on cloud_account.id = cloud_image_sync_setting.cloud_account_id
+        <where>
+            <if test="name !=null">
+                and cloud_account.name like #{name}
+            </if>
+            <if test="pluginName != null">
+                and cloud_account.plugin_name = #{pluginName}
+            </if>
+
+            <if test="status != null">
+                and cloud_account.status = #{status}
+            </if>
+            <if test="syncStatus!=null">
+                and cloud_account.sync_status = #{syncStatus}
+            </if>
+            <if test="pluginType != null">
+                and plugin.plugin_type = #{pluginType}
+            </if>
+            <if test="id != null">
+                and cloud_account.id = #{id}
+            </if>
+        </where>
+        <if test="sort != null">
+            order by ${sort}
+        </if>
+        <if test="sort == null">
+            order by cloud_image_sync_setting.setting_time DESC
+        </if>
+    </select>
+
+    <select id="getAccountListNetwork" parameterType="java.util.Map" resultMap="NetworkSyncResultMap">
+        select
+        cloud_account.*,
+        plugin.icon AS icon,
+        plugin.description AS plugin_desc,
+        network_account_sync.status AS network_sync_status,
+        network_account_sync.sync_time AS sync_time,
+        network_account_sync.settings AS settings
+        from cloud_account
+        left join plugin on cloud_account.plugin_name = plugin.name
+        left join network_account_sync on cloud_account.id = network_account_sync.account_id
+        <where>
+            <if test="name !=null">
+                and cloud_account.name like #{name}
+            </if>
+            <if test="pluginName != null">
+                and cloud_account.plugin_name = #{pluginName}
+            </if>
+
+            <if test="status != null">
+                and cloud_account.status = #{status}
+            </if>
+            <if test="syncStatus!=null">
+                and cloud_account.sync_status = #{syncStatus}
+            </if>
+            <if test="pluginType != null">
+                and plugin.plugin_type = #{pluginType}
+            </if>
+            <if test="id != null">
+                and cloud_account.id = #{id}
+            </if>
+            <if test="accountIds != null">
+                and cloud_account.plugin_name in
+                <foreach item="item" index="index" collection="accountIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="networkSyncStatus != null">
+                and network_account_sync.status = #{networkSyncStatus}
+            </if>
+        </where>
+        <if test="sort != null">
+            order by ${sort}
+        </if>
+        <if test="sort == null">
+            order by cloud_account.create_time DESC
+        </if>
+    </select>
+</mapper>

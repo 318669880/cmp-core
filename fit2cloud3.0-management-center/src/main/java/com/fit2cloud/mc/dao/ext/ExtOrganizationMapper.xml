@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.mc.dao.ext.ExtOrganizationMapper">
+
+    <resultMap id="OrganizationDtoMap" type="com.fit2cloud.mc.dto.OrganizationDTO"
+               extends="com.fit2cloud.commons.server.base.mapper.OrganizationMapper.BaseResultMap">
+        <result column="countOrgAdmin" jdbcType="BIGINT" property="countOrgAdmin"/>
+        <result column="countWorkspace" jdbcType="BIGINT" property="countWorkspace"/>
+    </resultMap>
+
+    <select id="paging" resultMap="OrganizationDtoMap">
+        select
+            organization.*,
+            (select count(user_role.id)
+             from user_role
+             where organization.id = user_role.source_id)       as countOrgAdmin,
+            (select count(workspace.id)
+             from workspace
+             where workspace.organization_id = organization.id) as countWorkspace
+        from organization
+        where 1=1
+        <if test="map.id!=null">
+            and organization.id = #{map.id}
+        </if>
+        <if test="map.name!=null">
+            and organization.name like #{map.name}
+        </if>
+        <if test="map.sort!=null">
+            order by ${map.sort}
+        </if>
+        <if test="map.sort == null">
+            order by name
+        </if>
+    </select>
+</mapper>

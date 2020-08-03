@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="timestamp" type="java.lang.Long"*/-->
+<!--/*@thymesVar id="IndexConstants" type="java.util.Map"*/-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" th:href="${IndexConstants['ui.favicon']}" sizes="16x16 32x32">
+    <title>FIT2CLOUD CMP</title>
+    <link rel="stylesheet" th:href="@{'web-public/external/angular-material/angular-material.min.css'}">
+    <link rel="stylesheet" th:href="@{'web-public/external/angular-busy/angular-busy.min.css'}">
+    <link rel="stylesheet" th:href="@{'web-public/external/font-awesome/web-fonts-with-css/css/fontawesome-all.css'}">
+    <link rel="stylesheet" th:href="@{'web-public/external/material-icons/material-icons.css'}">
+    <link rel="stylesheet" th:href="@{'web-public/fit2cloud/css/fit2cloud-style.css?t='+${timestamp}}">
+    <link rel="stylesheet" th:href="@{'web-public/fit2cloud/css/process-design.css?t='+${timestamp}}">
+</head>
+
+<body ng-app="TestApp">
+<div layout="column" layout-fill ng-controller="TestCtrl" ng-cloak>
+    <section layout="row" flex>
+        <module layout="row" dev="module"></module>
+        <md-content layout="column" flex ui-view=""></md-content>
+    </section>
+</div>
+
+<script th:inline="javascript" type="text/javascript">
+    window.appversion = [[${timestamp}]];
+</script>
+<script th:src="@{'web-public/external/external.min.js?t='+${timestamp}}"></script>
+<script th:src="@{'web-public/fit2cloud/js/fit2cloud-common.js?t='+${timestamp}}"></script>
+<script th:src="@{'web-public/fit2cloud/js/process-design.js?t='+${timestamp}}"></script>
+<script th:src="@{'web-public/test/test.js?t='+${timestamp}}"></script>
+<script th:src="@{'web-public/external/echarts/echarts.min.js'}"></script>
+<script th:src="@{'web-public/external/echarts/fit2cloud-echarts-theme.js?t='+${timestamp}}"></script>
+
+</body>
+</html>

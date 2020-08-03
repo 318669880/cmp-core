@@ -1,0 +1,48 @@
+[
+  {
+    "id": "1",
+    "title": "i18n_dashboard_mc_user_info",
+    "directive": "card-content-text",
+    "position": "left",
+    "order": 1,
+    "url": "/management-center/?banner=false#!/user",
+    "desc": "i18n_go_to_management_center",
+    "minHeight": "100px",
+    "permissions": [
+      "DASHBOARD:ACCOUNT"
+    ],
+    "setting": {
+      "url": "/management-center/dashboard/tenant"
+    }
+  },
+  {
+    "id": "3",
+    "title": "i18n_dashboard_mc_cloud_account_info",
+    "directive": "card-content-text",
+    "position": "left",
+    "order": 2,
+    "url": "/management-center/?banner=false#!/account/infra",
+    "desc": "i18n_go_to_management_center",
+    "minHeight": "50px",
+    "permissions": [
+      "DASHBOARD:CLOUD_ACCOUNT"
+    ],
+    "setting": {
+      "url": "/management-center/dashboard/cloud"
+    }
+  },
+  {
+    "id": "4",
+    "title": "i18n_dashboard_mc_sys_status",
+    "directive": "mc-pod-pie-chart",
+    "position": "right",
+    "order": 2,
+    "templateJs": "/management-center/project/js/dashboard.js",
+    "url": "/management-center/?banner=false#!/sys",
+    "desc": "i18n_go_to_management_center",
+    "minHeight": "200px",
+    "permissions": [
+      "SYS_STATS_READ:READ"
+    ]
+  }
+]

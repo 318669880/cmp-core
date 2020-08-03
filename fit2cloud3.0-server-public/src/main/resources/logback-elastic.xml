@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <appender name="elasticAppender" class="com.fit2cloud.commons.server.elastic.log.ElasticsearchAppender">
+    </appender>
+
+    <appender name="elasticAsyncAppender" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>10000</queueSize>
+        <appender-ref ref="elasticAppender"/>
+    </appender>
+
+    <logger name="com.netflix" additivity="false" level="${com.netflix.logger.level:WARN}"/>
+
+    <include file="/opt/fit2cloud/conf/logger.xml"/>
+
+</included>

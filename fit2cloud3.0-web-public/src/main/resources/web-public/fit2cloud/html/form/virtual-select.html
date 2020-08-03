@@ -1,0 +1,27 @@
+<md-autocomplete flex
+                 md-no-cache="true"
+                 ng-required="required"
+                 md-input-name="{{name}}"
+                 md-delay="300"
+                 md-selected-item="selectedItem"
+                 md-search-text="searchText"
+                 md-require-match="true"
+                 md-min-length="0"
+                 md-items="item in querySearch(items, searchText)"
+                 md-item-text="item[label]"
+                 md-floating-label="{{placeholder}}"
+                 md-selected-item-change="changeFunc()"
+                 md-clear-button="!disabledShow"
+                 ng-disabled="disabledShow">
+    <md-item-template>
+        <span md-highlight-text="searchText">{{item[label]}}</span>
+    </md-item-template>
+    <div class="md-chips-messages" ng-show="form[name].$touched || form.$submitted"
+         ng-messages="form[name].$error">
+        <div ng-message="required">{{'i18n_required' | translator}}</div>
+        <div ng-message="md-require-match">{{'i18n_select_a_match' | translator}}</div>
+    </div>
+</md-autocomplete>
+
+
+

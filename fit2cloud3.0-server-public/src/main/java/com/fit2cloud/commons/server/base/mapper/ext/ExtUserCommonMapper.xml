@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtUserCommonMapper">
+
+    <select id="getUserTooltip" parameterType="java.util.List"
+            resultType="com.fit2cloud.commons.server.model.UserTooltip">
+        SELECT user.id AS id,user.`name` AS name, user.email AS email FROM `user`
+        WHERE user.id IN
+        <foreach collection="idList" separator="," item="item" index="index" open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="searchUser" parameterType="com.fit2cloud.commons.server.base.domain.UserExample"
+            resultType="com.fit2cloud.commons.server.model.UserTooltip">
+        SELECT user.id AS id,user.`name` AS name, user.email AS email FROM `user`
+        <if test="_parameter != null" >
+            <include refid="com.fit2cloud.commons.server.base.mapper.UserMapper.Example_Where_Clause" />
+        </if>
+    </select>
+</mapper>

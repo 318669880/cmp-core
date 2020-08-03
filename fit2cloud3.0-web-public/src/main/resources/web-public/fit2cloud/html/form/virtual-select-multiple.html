@@ -1,0 +1,29 @@
+<div class="virtual-select">
+    <md-chips name="{{name}}" ng-model="selected" md-require-match="true" md-add-on-blur="true"
+              ng-change="changeFunc(selected)"
+              ng-required="required">
+        <md-autocomplete
+                ng-style="{'width':virtualWidth}"
+                class="virtual-width"
+                md-delay="300"
+                md-selected-item="selectedItem"
+                md-search-text="searchText"
+                md-items="item in querySearch(items, searchText)"
+                md-item-text="item[label]"
+                md-min-length="0"
+                placeholder="{{placeholder}}">
+            <span md-highlight-text="searchText">{{item[label]}}</span>
+        </md-autocomplete>
+
+        <md-chip-template>
+            <span>
+                <em>{{$chip[label]}}</em>
+            </span>
+        </md-chip-template>
+    </md-chips>
+    <div class="hint">{{hint}}</div>
+    <div class="md-chips-messages" ng-show="form[name].$touched || form.$submitted"
+         ng-messages="form[name].$error">
+        <div ng-message="required">{{'i18n_required' | translator}}</div>
+    </div>
+</div>

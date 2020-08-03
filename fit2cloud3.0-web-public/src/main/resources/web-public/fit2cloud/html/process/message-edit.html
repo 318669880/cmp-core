@@ -1,0 +1,104 @@
+<md-dialog class="md-default-dialog" aria-label="Message Form">
+    <form name="messageForm" ng-cloak autocomplete="off">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{'i18n_process_edit_msg' | translator}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <md-input-container>
+                    <label>{{'i18n_process_title' | translator}}</label>
+                    <input ng-model="item.json.title" name="title" md-maxlength="255" required>
+                    <div ng-messages="messageForm.title.$error">
+                        <div ng-message="required">{{'i18n_required' | translator}}</div>
+                        <div ng-message="md-maxlength">{{'i18n_input_length_limit_255' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-input-has-value">
+                    <label>{{'i18n_process_addressee' | translator}}</label>
+                    <md-checkbox class="md-primary" md-no-ink ng-repeat="x in item.json.receivers" ng-model="x.checked"
+                                 ng-change="checkOther(x)"
+                                 ng-init="checkOther(x)">
+                        {{x.name}}
+                    </md-checkbox>
+                </md-input-container>
+
+                <md-chips ng-model="item.json.others" md-add-on-blur="true" md-transform-chip="transform($chip)"
+                          ng-if="other">
+                    <md-autocomplete
+                            class="flow-auto"
+                            md-delay="300"
+                            md-selected-item="selectedItem"
+                            md-search-text="searchText"
+                            md-items="query in querySearch(searchText)"
+                            md-item-text="query.name"
+                            placeholder="{{'i18n_process_addressee' | translator}}">
+                        <span md-highlight-text="searchText">{{query.label}}</span>
+                    </md-autocomplete>
+
+                    <md-chip-template>
+                        <span>
+                            <em>{{$chip}}</em>
+                        </span>
+                    </md-chip-template>
+                </md-chips>
+
+                <md-input-container>
+                    <label>{{'i18n_process_mail_content' | translator}}</label>
+                    <textarea md-no-autogrow ng-model="item.json.content" name="content" rows="5" required></textarea>
+                    <div ng-messages="messageForm.content.$error">
+                        <div ng-message="required">{{'i18n_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>{{'i18n_process_message_type' | translator}}</label>
+                    <md-select ng-model="item.smsTypes" name="smsTypes" required multiple>
+                        <md-option ng-repeat="option in smsTypes" ng-value="option.key">{{option.name}}</md-option>
+                    </md-select>
+                    <div ng-messages="messageForm.smsTypes.$error">
+                        <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container ng-if="step === -1">
+                    <label>{{'i18n_process_trigger' | translator}}</label>
+                    <md-select ng-model="item.operation" name="operation" required>
+                        <md-option ng-repeat="option in processOperations" ng-value="option.key">{{option.name}}
+                        </md-option>
+                    </md-select>
+                    <div ng-messages="messageForm.operation.$error">
+                        <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container ng-if="step > -1">
+                    <label>{{'i18n_process_trigger' | translator}}</label>
+                    <md-select ng-model="item.operation" name="operation" required>
+                        <md-option ng-value="'PENDING'" ng-if="step > 0">{{'i18n_process_pending' | translator}}</md-option>
+                        <md-option ng-value="'COMPLETE'">{{'i18n_process_complete' | translator}}</md-option>
+                    </md-select>
+                    <div ng-messages="messageForm.operation.$error">
+                        <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row" layout-align="center center">
+            <md-button ng-click="close()">
+                {{'i18n_cancel' | translator}}
+            </md-button>
+            <md-button class="md-primary" ng-click="save()" ng-disabled="messageForm.$invalid">
+                {{'i18n_confirm' | translator}}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

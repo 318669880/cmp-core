@@ -1,0 +1,76 @@
+<div layout-fill class="content-backdrop" ng-controller="OrganizationController" ng-cloak>
+    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>{{'i18n_organization_list' | translator:'组织列表'}}</div>
+                <md-button class="md-primary" ng-click="create()" has-permission="ORGANIZATION:READ+CREATE">
+                    <md-icon>add_circle_outline</md-icon>
+                     {{'i18n_create' | translator}}
+                </md-button>
+                <md-button class="md-primary" ng-click="delete()" has-permission="ORGANIZATION:READ+DELETE">
+                    <md-icon>delete</md-icon>
+                     {{'i18n_delete' | translator}}
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div layout="row" flex>
+            <div class="md-padding" layout-fill layout="column" flex="100">
+                <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
+                    <select-columns columns="columns"></select-columns>
+                    <div class="filter-item">
+                        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
+                            <md-tooltip md-delay="300"> {{'i18n_refresh' | translator}}</md-tooltip>
+                            <md-icon>refresh</md-icon>
+                        </md-button>
+                    </div>
+                </filter-tools>
+
+                <table dynamic-table columns="columns" execute="list({sql: sql})"
+                       ng-class="{'tr-selected':selected === item.$$hashKey}">
+                    <tbody>
+                    <tr ng-repeat="item in items">
+                        <td>
+                            <md-checkbox md-no-ink aria-label=" {{'i18n_module_enable' | translator}}" ng-model="item.enable"
+                                         ng-click="clickChecked(!item.enable,item,false)"
+                                         ng-disabled="item.countWorkspace>0"
+                                         class="md-primary"></md-checkbox>
+                        </td>
+                        <td>{{item.name}}</td>
+                        <td>
+                            <a href="" style="cursor:pointer" ng-if="item.countWorkspace>0" md-no-ink class="md-primary"
+                               ng-click="linkWorkspace(item)">
+                                {{item.countWorkspace}}
+                            </a>
+                            <span ng-if="item.countWorkspace===0">-</span>
+                        </td>
+                        <td>
+                            <a style="cursor:pointer" href="" ng-if="item.countOrgAdmin>0" md-no-ink class="md-primary"
+                               ng-click="linkOrgAdmin(item)">
+                                {{item.countOrgAdmin}}
+                            </a>
+                            <span ng-if="item.countOrgAdmin===0">-</span>
+                        </td>
+                        <td>{{item.description}}</td>
+                        <td>{{item.createTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                        <td has-permissions="ORGANIZATION:READ+EDIT">
+                            <!--设置名成加op="'其他名称'"，默认的名称为"操作"；设置宽度加width="4 或其他整数"-->
+                            <table-menus>
+                                <md-menu-item>
+                                    <md-button has-permission="ORGANIZATION:READ+EDIT" ng-click="edit(item)">
+                                        <md-icon class="md-18">edit</md-icon>
+                                         {{'i18n_edit' | translator}}
+                                    </md-button>
+                                </md-menu-item>
+                            </table-menus>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table-pagination pagination="pagination"></table-pagination>
+            </div>
+        </div>
+        <info-form width="50%"></info-form>
+        <side-form></side-form>
+    </div>
+</div>
+

@@ -1,0 +1,24 @@
+<div class="dynamic-table">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{'i18n_process_model_link_name' | translator}}</th>
+            <th>{{'i18n_process_model_link_handler' | translator}}</th>
+            <th>{{'i18n_process_start_time' | translator}}</th>
+            <th>{{'i18n_process_end_time' | translator}}</th>
+            <th>{{'i18n_process_remark' | translator}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="log in logs">
+            <td>{{log.taskName}}</td>
+            <td>
+                <user-info user-ids="log.executors"></user-info>
+            </td>
+            <td>{{log.taskStartTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>{{log.taskEndTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>{{log.taskRemarks}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.mc.dao.ext.ExtPluginMapper">
+
+
+    <select id="getPluginList" parameterType="java.util.Map"
+            resultMap="com.fit2cloud.commons.server.base.mapper.PluginMapper.ResultMapWithBLOBs">
+        SELECT * FROM plugin
+        <where>
+            <if test="name != null">
+                AND name like #{name}
+            </if>
+            <if test="description != null">
+                AND description like #{description}
+            </if>
+            <if test="pluginType != null">
+                AND plugin_type = #{pluginType}
+            </if>
+            <if test="owner != null">
+                AND owner like #{owner}
+            </if>
+
+        </where>
+        <if test="sort != null">
+            order by ${sort}
+        </if>
+        <if test="sort == null">
+            order by plugin_type ASC
+        </if>
+    </select>
+
+</mapper>

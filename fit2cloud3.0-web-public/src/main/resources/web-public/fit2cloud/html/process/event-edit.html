@@ -1,0 +1,67 @@
+<md-dialog class="md-default-dialog" aria-label="Event Form">
+    <form name="eventForm" ng-cloak autocomplete="off">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{'i18n_process_edit_event' | translator}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <md-input-container>
+                    <label>{{'i18n_process_event_name' | translator}}</label>
+                    <input ng-model="item.name" name="name" md-maxlength="100" required>
+                    <div ng-messages="eventForm.name.$error">
+                        <div ng-message="required">{{'i18n_required' | translator}}</div>
+                        <div ng-message="md-maxlength">{{'i18n_input_length_limit_100' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>{{'i18n_process_actuator' | translator}}</label>
+                    <md-select ng-model="item.executor" name="executor" required>
+                        <md-option ng-repeat="option in executors" ng-value="option.key">{{option.value}}</md-option>
+                    </md-select>
+                    <div ng-messages="eventForm.executor.$error">
+                        <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>{{'i18n_parameter' | translator}}</label>
+                    <textarea ng-model="item.arguments" name="arguments" rows="1" md-select-on-focus></textarea>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>{{'i18n_process_trigger' | translator}}</label>
+                    <md-select ng-model="item.operation" name="operation" required>
+                        <md-option ng-value="'CANCEL'" ng-if="item.type === 'PROCESS'">{{'i18n_process_cancel' |
+                            translator}}
+                        </md-option>
+                        <md-option ng-value="'PENDING'" ng-if="item.type === 'TASK' && step > 0">{{'i18n_process_pending' |
+                            translator}}
+                        </md-option>
+                        <md-option ng-value="'COMPLETE'">{{'i18n_process_complete' | translator}}</md-option>
+                        <md-option ng-value="'TERMINATE'">{{'i18n_process_terminal' | translator}}</md-option>
+                    </md-select>
+                    <div ng-messages="eventForm.operation.$error">
+                        <div ng-message="required">{{'i18n_select_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row" layout-align="center center">
+            <md-button ng-click="close()">
+                {{'i18n_cancel' | translator}}
+            </md-button>
+            <md-button class="md-primary" ng-click="save()" ng-disabled="eventForm.$invalid">
+                {{'i18n_confirm' | translator}}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

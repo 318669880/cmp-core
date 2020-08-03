@@ -1,0 +1,16 @@
+<div layout="row">
+    <md-input-container>
+        <label ng-if="!disableLabel">{{'i18n_filter_condition_date_range' | translator:'日期范围:'}}</label>
+        <md-select class="md-no-underline" ng-model="period"
+                   ng-change="dateChange();">
+            <md-option ng-value="box.key" ng-repeat="box in select">{{box.value}}</md-option>
+        </md-select>
+    </md-input-container>
+
+    <div ng-if="period == 'RANGE'" style="padding-top: 15px;">
+        <md-datepicker ng-model="result.startDate" md-placeholder="{{'i18n_filter_condition_from' | translator:'从'}}"
+                       md-open-on-focus ng-change="dateChange();"></md-datepicker>
+        <md-datepicker ng-model="result.endDate" md-placeholder="{{'i18n_filter_condition_to' | translator:'到'}}"
+                       md-open-on-focus ng-change="dateChange();"></md-datepicker>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+/* 滑动动画效果 */
+.slide {
+    overflow: hidden;
+}
+
+/*-----------ng-if-----------*/
+.slide.ng-enter {
+    -webkit-transition: 0.3s ease-in all;
+    transition: 0.3s ease-in all;
+}
+
+.slide.ng-enter-active {
+    -webkit-transition: 0.3s ease-in all;
+    transition: 0.3s ease-in all;
+}
+
+.slide.ng-leave {
+    -webkit-transition: 0.25s ease-out all;
+    transition: 0.25s ease-out all;
+}
+
+.slide.ng-leave-active {
+    -webkit-transition: 0.25s ease-out all;
+    transition: 0.25s ease-out all;
+}
+
+/*上下滑动*/
+.slide.slide-vertical.ng-enter, .slide.slide-vertical.ng-leave.ng-leave-active {
+    max-height: 0;
+}
+
+.slide.slide-vertical.ng-leave, .slide.slide-vertical.ng-enter.ng-enter-active {
+    max-height: 100vh;
+}
+
+/*左右滑动*/
+.slide.slide-horizontal.ng-enter, .slide.slide-horizontal.ng-leave.ng-leave-active {
+    max-width: 0;
+}
+
+.slide.slide-horizontal.ng-leave, .slide.slide-horizontal.ng-enter.ng-enter-active {
+    max-width: 100vh;
+}
+
+/*向左滑动*/
+.slide.slide-left.ng-enter {
+    transform: translateX(100%);
+}
+
+.slide.slide-left.ng-enter.ng-enter-active {
+    transform: translateX(0);
+}
+
+.slide.slide-left.ng-leave, .slide.slide-left.ng-leave-active {
+    display: none;
+}
+
+/*向右滑动*/
+.slide.slide-right.ng-enter {
+    transform: translateX(-100%);
+}
+
+.slide.slide-right.ng-enter.ng-enter-active {
+    transform: translateX(0);
+}
+
+.slide.slide-right.ng-leave, .slide.slide-right.ng-leave-active {
+    display: none;
+}
+
+/*-----------ng-show-----------*/
+/*向左滑动*/
+.slide.slide-left.ng-hide-remove {
+    transform: translateX(100%);
+    transition:all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+}
+
+.slide.slide-left.ng-hide-remove.ng-hide-remove-active {
+    transform: translateX(0);
+}
+
+.slide.slide-left.ng-hide-add, .slide.slide-left.ng-hide-add-active {
+    display: none;
+}
+
+/*向右滑动*/
+.slide.slide-right.ng-hide-remove {
+    transform: translateX(-100%);
+    transition:all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+}
+
+.slide.slide-right.ng-hide-remove.ng-hide-remove-active {
+    transform: translateX(0);
+}
+
+.slide.slide-right.ng-hide-add, .slide.slide-right.ng-hide-add-active {
+    display: none;
+}
+

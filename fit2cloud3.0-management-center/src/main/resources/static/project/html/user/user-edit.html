@@ -1,0 +1,113 @@
+<div ng-cloak cg-busy="{promise:editLoadingLayer,minDuration:500}">
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_user_edit' | translator}}</div>
+        </div>
+    </md-toolbar>
+    <form name="editUserForm" class="md-padding" autocomplete="off">
+        <md-input-container class="md-block">
+            <label>ID</label>
+            <input autocomplete="off" minlength="2" md-maxlength="30" required name="id" ng-model="item.id" disabled>
+            <div ng-messages="editUserForm.id.$error">
+                <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength"> {{'i18n_input_length_limit_30' | translator}}</div>
+                <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                     {{'i18n_name_limit_msg' | translator}}
+                </div>
+            </div>
+            <div class="hint"> {{'i18n_login_identifier' | translator}}</div>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label> {{'i18n_user_name_' | translator}}</label>
+            <input autocomplete="off" minlength="2" md-maxlength="30" required name="name" ng-model="item.name"
+                   ng-disabled="item.source !== 'local'">
+            <div ng-messages="editUserForm.name.$error">
+                <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                <div ng-message="md-maxlength"> {{'i18n_input_length_limit_30' | translator}}</div>
+                <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                     {{'i18n_name_limit_msg' | translator}}
+                </div>
+            </div>
+        </md-input-container>
+
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Email</label>
+            <input autocomplete="off" required type="text" name="email" ng-model="item.email" ng-required="true"
+                   minlength="5" maxlength="50" md-maxlength="50"
+                   ng-pattern="/[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/"
+                   ng-disabled="item.source !== 'local'"/>
+            <div ng-messages="editUserForm.email.$error" role="alert">
+                <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                     {{'i18n_email_limit_msg' | translator}}
+                </div>
+            </div>
+            <div class="hint"> {{'i18n_login_identifier' | translator}}</div>
+        </md-input-container>
+
+        <md-input-container class="md-block" flex-gt-sm>
+            <label> {{'i18n_phone' | translator}}</label>
+            <input name="phone" ng-model="item.phone" ng-pattern="/^(1[0-9][0-9])\d{8}$/" autocomplete="off"/>
+            <div ng-messages="editUserForm.phone.$error">
+                <div ng-message="pattern"> {{'i18n_phone_limit_msg' | translator}}</div>
+            </div>
+        </md-input-container>
+
+        <div ng-repeat="roleInfo in item.roleInfoList" style="margin-bottom: 60px">
+            <md-input-container class="md-block" layout-gt-xs="row">
+                <label> {{'i18n_user_type' | translator}}</label>
+                <md-select name="adminRoleId" ng-model="roleInfo.roleId" required
+                           ng-change="changeRole(roleInfo,roleInfo.roleId)">
+                    <md-option ng-value="role.id" ng-repeat="role in roles"
+                               ng-if="filterRole(role,roleInfo)">
+                        {{role.name}}
+                    </md-option>
+                </md-select>
+                <div ng-messages="editUserForm.adminRoleId.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
+                <md-icon style="cursor:pointer;"
+                         ng-if="item.roleInfoList.length>1"
+                         ng-click="subtractLine(roleInfo)">clear
+                </md-icon>
+                <md-icon ng-if="item.roleInfoList.length <= 1">
+                </md-icon>
+            </md-input-container>
+
+            <virtual-select-multiple
+                    name="workspaceIds"
+                    value="id"
+                    label="name"
+                    items="workspaces"
+                    placeholder=" {{'i18n_workspace_add' | translator}}"
+                    results="roleInfo.workspaceIds"
+                    required="true"
+                    ng-if="roleInfo.roleType===roleConst.user"
+            ></virtual-select-multiple>
+
+
+            <virtual-select-multiple
+                    name="organizationIds"
+                    value="id"
+                    label="name"
+                    items="orgs"
+                    placeholder=" {{'i18n_organization_add' | translator}}"
+                    results="roleInfo.organizationIds"
+                    required="true"
+                    ng-if="roleInfo.roleType===roleConst.orgAdmin"
+            ></virtual-select-multiple>
+        </div>
+        <md-button layout="row" layout-align="center" class="md-raised md-success"
+                   ng-disabled="editUserForm.$invalid || !isAddLineAble" ng-click="addLine()"
+                   style="width: 100%;">
+             {{'i18n_role_add' | translator}}
+        </md-button>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="closeToggleForm()">
+             {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="submitFlag || editUserForm.$invalid" ng-click="submit('edit',item)">
+             {{'i18n_save' | translator}}
+        </md-button>
+    </div>
+</div>

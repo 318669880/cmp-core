@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.fit2cloud.commons.utils.CommonsAutoConfiguration
+

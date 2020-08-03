@@ -1,0 +1,33 @@
+<md-button layout="row" ui-sref="{{menu.name}}" ng-if="!menu.children" ng-class="{'md-primary menu-toggled':$root.state.name == menu.name}"
+           class="menu-toggle" oncontextmenu="return false">
+    <div class="menu-icon">
+        <md-icon class="md-24" ng-bind="menu.icon" ng-if="iconType === 'icon'"></md-icon>
+        <md-icon class="md-24" ng-if="iconType !== 'icon'">
+            <img ng-src="{{menu.icon}}" style="width: 24px;height: 24px">
+        </md-icon>
+    </div>
+    <div ng-bind="menu.title" class="menu-toggle-clip"></div>
+    <span flex></span>
+</md-button>
+<md-button layout="row" class="menu-toggle" ng-click="toggle()" ng-if="menu.children">
+    <div class="menu-icon">
+        <md-icon class="md-24" ng-bind="menu.icon" ng-if="iconType === 'icon'"></md-icon>
+        <md-icon class="md-24" ng-if="iconType !== 'icon'">
+            <img ng-src="{{menu.icon}}" style="width: 24px;height: 24px">
+        </md-icon>
+    </div>
+    <div ng-bind="menu.title" class="menu-toggle-clip"></div>
+    <span flex></span>
+    <md-icon class="md-24" ng-bind="'keyboard_arrow_down'" ng-if="!toggled"></md-icon>
+    <md-icon class="md-24" ng-bind="'keyboard_arrow_up'" ng-if="toggled"></md-icon>
+</md-button>
+<ul class="menu-toggle-list" slide ng-if="menu.children && toggled">
+    <li ng-repeat="child in menu.children" layout="row" layout-align="start center" ng-class="{'menu-toggled':$root.state.name == child.name}">
+        <div flex>
+            <md-button class="md-no-style" ui-sref="{{child.name}}" aria-label="{{child.title}}" oncontextmenu="return false"
+                       ng-class="{'md-primary':$root.state.name == child.name}" ng-click="open(child)">
+                {{child.title}}
+            </md-button>
+        </div>
+    </li>
+</ul>

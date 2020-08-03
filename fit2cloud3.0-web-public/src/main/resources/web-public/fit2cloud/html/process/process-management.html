@@ -1,0 +1,37 @@
+<div layout-fill ng-controller="ManagementCtrl" class="content-backdrop" ng-cloak>
+    <div layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>{{'i18n_process_management' | translator}}</div>
+                <md-button class="md-primary" ng-click="addModel()" ng-if="selected === 'model'">
+                    <md-icon>add_circle_outline</md-icon>
+                    {{'i18n_process_model_create' | translator}}
+                </md-button>
+                <md-button class="md-primary" ng-click="addRole()" ng-if="selected === 'role'">
+                    <md-icon>add_circle_outline</md-icon>
+                    {{'i18n_process_role_create' | translator}}
+                </md-button>
+                <md-button class="md-primary" ng-click="addLink()" ng-if="selected === 'link'">
+                    <md-icon>add_circle_outline</md-icon>
+                    {{'创建流程环节' | translator}}
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content class="md-padding">
+            <md-tabs md-dynamic-height>
+                <md-tab label="{{'i18n_process_model_management' | translator}}" md-on-select="select('model')" md-active="selected === 'model'">
+                    <div ng-include="model"></div>
+                </md-tab>
+                <md-tab label="{{'i18n_process_role_management' | translator}}" md-on-select="select('role')" md-active="selected === 'role'">
+                    <div ng-include="role"></div>
+                </md-tab>
+                <md-tab label="{{'i18n_process_link_management' | translator}}" md-on-select="select('link')" md-active="selected === 'link'">
+                    <div ng-include="link"></div>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
+    <side-form></side-form>
+</div>
+
+

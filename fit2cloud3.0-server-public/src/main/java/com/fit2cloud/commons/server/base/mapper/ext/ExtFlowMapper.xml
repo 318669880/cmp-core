@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtFlowMapper">
+
+    <select id="getProcessByBusinessKey" resultMap="com.fit2cloud.commons.server.base.mapper.FlowProcessMapper.BaseResultMap">
+        SELECT * FROM flow_process
+        WHERE business_key = #{businessKey} limit 1
+    </select>
+
+    <select id="getLastVersionDeploy" resultMap="com.fit2cloud.commons.server.base.mapper.FlowDeployMapper.ResultMapWithBLOBs">
+        SELECT flow_deploy.*
+        FROM flow_deploy, (
+            SELECT MAX(deploy_version) AS max_version
+            FROM flow_deploy
+            WHERE model_id = #{modelId}
+        ) as temp
+        WHERE deploy_version = max_version
+        AND model_id = #{modelId}
+        LIMIT 1
+    </select>
+
+    <select id="getDeployByProcessId" resultMap="com.fit2cloud.commons.server.base.mapper.FlowDeployMapper.ResultMapWithBLOBs">
+        SELECT	*
+        FROM flow_deploy
+        WHERE deploy_id =
+        (
+        	SELECT deploy_id
+        	FROM flow_process
+        	WHERE process_id = #{processId}
+        )
+    </select>
+
+    <select id="listUser" resultType="com.fit2cloud.commons.server.process.dto.UserDTO">
+        SELECT id, name, email, CONCAT(name, ' [ ', email, ' ]') as label FROM user
+        WHERE active = '1'
+        <if test='search !=null and search != ""'>
+            and (name like #{search} or email like #{search})
+        </if>
+    </select>
+
+    <select id="listRoleUser" resultType="com.fit2cloud.commons.server.process.dto.UserDTO">
+        SELECT `user`.id , name , email , CONCAT(name , ' [ ' , email , ' ]') as label from `user` , flow_role_user
+        WHERE active = '1' and flow_role_user.user_id = `user`.id and role_key = #{roleKey}
+    </select>
+
+    <select id="getProcessDataValue" resultMap="com.fit2cloud.commons.server.base.mapper.FlowProcessDataMapper.ResultMapWithBLOBs">
+        SELECT * FROM flow_process_data
+        WHERE process_id = #{processId} and data_name = #{dataName}
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <select id="listProcessEvent" parameterType="java.util.Map"
+            resultMap="com.fit2cloud.commons.server.base.mapper.FlowEventMapper.ResultMapWithBLOBs">
+        SELECT *
+        FROM flow_event
+        WHERE model_id = #{modelId}
+        <if test='activityId !=null and activityId != ""'>
+            AND activity_id = #{activityId}
+        </if>
+        <if test='type !=null and type != ""'>
+            AND type = #{type}
+        </if>
+        <if test='operation !=null and operation != ""'>
+            AND operation = #{operation}
+        </if>
+        <if test='position !=null and position != ""'>
+            AND position = #{position}
+        </if>
+        <if test='module !=null and module != ""'>
+            AND module = #{module}
+        </if>
+    </select>
+
+    <select id="listNotificationConfig" parameterType="java.util.Map"
+            resultMap="com.fit2cloud.commons.server.base.mapper.FlowNotificationConfigMapper.ResultMapWithBLOBs">
+        SELECT * FROM flow_notification_config
+        WHERE model_id = #{modelId}
+        <if test='activityId !=null and activityId != ""'>
+            AND activity_id = #{activityId}
+        </if>
+        <if test='processType !=null and processType != ""'>
+            AND process_type = #{processType}
+        </if>
+        <if test='smsType !=null and smsType != ""'>
+            AND sms_type = #{smsType}
+        </if>
+        <if test='operation !=null and operation != ""'>
+            AND operation = #{operation}
+        </if>
+        <if test='position !=null and position != ""'>
+            AND position = #{position}
+        </if>
+        <if test='module !=null and module != ""'>
+            AND module = #{module}
+        </if>
+    </select>
+
+    <resultMap id="BaseResultMap" type="com.fit2cloud.commons.server.process.dto.TaskDTO"
+               extends="com.fit2cloud.commons.server.base.mapper.FlowTaskMapper.BaseResultMap">
+        <result column="process_name" property="processName" jdbcType="VARCHAR"/>
+        <result column="process_creator" property="processCreator" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getLastTask" resultMap="com.fit2cloud.commons.server.base.mapper.FlowTaskMapper.BaseResultMap">
+        SELECT * FROM flow_task
+        WHERE process_id = #{processId}
+        ORDER BY flow_task.task_step
+        LIMIT 1
+    </select>
+
+    <select id="listPendingTask" resultMap="BaseResultMap">
+        SELECT flow_task.*, flow_process.process_name, (SELECT name FROM `user` WHERE id = flow_process.process_creator) as process_creator
+        FROM flow_task, flow_process
+        WHERE flow_task.process_id = flow_process.process_id
+        AND task_assignee = #{assignee}
+        AND task_status = 'PENDING'
+        <if test='search !=null and search != ""'>
+            AND ( flow_process.process_name like #{search} or flow_task.task_name like #{search} )
+        </if>
+        ORDER BY flow_task.task_start_time DESC
+    </select>
+
+    <select id="listEndTask" resultMap="BaseResultMap">
+        SELECT flow_task.*, flow_process.process_name, (SELECT name FROM `user` WHERE id = flow_process.process_creator) as process_creator
+        FROM flow_task, flow_process
+        WHERE flow_task.process_id = flow_process.process_id
+        AND task_step > 0
+        AND task_assignee = #{assignee}
+        AND task_status != 'PENDING'
+        <if test='search !=null and search != ""'>
+            AND ( flow_process.process_name like #{search} or flow_task.task_name like #{search} )
+        </if>
+        ORDER BY flow_task.task_start_time desc
+    </select>
+
+    <select id="listTaskLog" resultMap="com.fit2cloud.commons.server.base.mapper.FlowTaskMapper.ResultMapWithBLOBs">
+        SELECT task_name, GROUP_CONCAT(task_assignee) as task_assignee, task_executor, task_start_time, task_end_time, task_remarks, task_step
+        FROM flow_task
+        WHERE process_id = #{processId}
+        AND task_status = 'PENDING'
+        AND task_assignee NOT LIKE 'ROLE:%'
+        GROUP BY task_step
+        ORDER BY task_step DESC
+    </select>
+
+    <insert id="insertTaskBatch" parameterType="java.util.List">
+        insert into flow_task (task_id, task_step, task_name, task_status, task_assignee, task_executor,
+        task_start_time, task_end_time, process_id, workspace_id, business_type, business_key, task_form_url,
+        task_activity, task_remarks, module) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.taskId,jdbcType=VARCHAR}, #{item.taskStep,jdbcType=INTEGER}, #{item.taskName,jdbcType=VARCHAR},
+            #{item.taskStatus,jdbcType=VARCHAR}, #{item.taskAssignee,jdbcType=VARCHAR}, #{item.taskExecutor,jdbcType=VARCHAR},
+            #{item.taskStartTime,jdbcType=BIGINT}, #{item.taskEndTime,jdbcType=BIGINT}, #{item.processId,jdbcType=VARCHAR},
+            #{item.workspaceId,jdbcType=VARCHAR}, #{item.businessType,jdbcType=VARCHAR}, #{item.businessKey,jdbcType=VARCHAR},
+            #{item.taskFormUrl,jdbcType=VARCHAR}, #{item.taskActivity,jdbcType=VARCHAR}, #{item.taskRemarks,jdbcType=LONGVARCHAR},
+            #{item.module,jdbcType=LONGVARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <select id="listTaskExecutor" resultType="string">
+        SELECT task_executor
+        FROM flow_task
+        WHERE process_id = #{processId}
+        AND task_step != 0
+        GROUP BY task_executor;
+    </select>
+
+
+</mapper>

@@ -1,0 +1,11 @@
+<div ng-cloak>
+    <md-menu>
+        <md-button class="table-menu" aria-label="{{name}}" ng-click="$mdMenu.open($event)" ng-disabled="disabled">
+            {{name}}
+            <md-icon>arrow_drop_down</md-icon>
+        </md-button>
+        <md-menu-content class="table-menu-content" width="{{w}}" ng-transclude>
+            <!--指令外定义-->
+        </md-menu-content>
+    </md-menu>
+</div>

@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<title>NOT SUPPORTED BROWSER</title>
+<body>
+<div>
+    Your browser is not supported: <span id="ua"></span>
+</div>
+<br>
+<div>
+    For now below browsers are supported.
+</div>
+<table>
+    <tbody>
+    <tr>
+        <th style="text-align:  left;width: 100px;">
+            Browser
+        </th>
+        <th style="text-align:  left;">
+            Supported versions
+        </th>
+    </tr>
+    <tr>
+        <td>
+            Chrome
+        </td>
+        <td>
+            >= 62
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Firefox
+        </td>
+        <td>
+            >= 56
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Edge
+        </td>
+        <td>
+            >= 15
+        </td>
+    </tr>
+    <tr>
+        <td>
+            IE
+        </td>
+        <td>
+            >= 11
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Safari
+        </td>
+        <td>
+            >= 10.1
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Opera
+        </td>
+        <td>
+            >= 58
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+<script type="text/javascript">
+    document.getElementById("ua").innerHTML = navigator.userAgent;
+</script>
+</html>

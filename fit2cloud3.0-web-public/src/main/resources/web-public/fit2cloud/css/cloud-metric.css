@@ -1,0 +1,43 @@
+.f2c-cloud-metric {
+    min-width: 400px;
+    min-height: 400px;
+    height: 100%;
+}
+
+.f2c-cloud-metric .f2c-cloud-metric-info {
+    height: 400px;
+}
+
+.f2c-cloud-metric .f2c-cloud-metric-button-group {
+    margin-left: 10px;
+    margin-right: 1px;
+    margin-bottom: 10px;
+    border-radius: 2px;
+    border: 1px solid #d3d3d3;
+    border-right: 0;
+}
+
+.f2c-cloud-metric button.f2c-cloud-metric-button {
+    margin: -1px;
+    padding: 0 7px;
+    border: 1px solid #d3d3d3;
+    border-left-width: 0;
+    font-size: 12px;
+    min-height: 24px;
+    min-width: 47px;
+    line-height: 24px;
+}
+
+.f2c-cloud-metric button.f2c-cloud-metric-button-primary {
+    border-bottom-color: #3367d6;
+}
+
+.f2c-cloud-metric button.f2c-cloud-metric-reset-button {
+    border-radius: 2px;
+    border: 1px solid #d3d3d3;
+    margin-bottom: 10px;
+}
+
+.f2c-cloud-metric-chart {
+    height: 250px;
+}

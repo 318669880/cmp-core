@@ -1,0 +1,12 @@
+<div class="tree-node-radio">
+    <div ng-if="!show()">
+        {{node[option.label]}}
+    </div>
+    <div ng-if="show()" ng-class="{'tree-node-radio-child':option.radio !== 'any'}">
+        <md-radio-group ng-model="api.selected" ng-change="api.onChange(node)">
+            <md-radio-button class="md-primary" aria-label="{{node[option.label]}}" ng-value="node[[option.key]]">
+                {{node[option.label]}}
+            </md-radio-button>
+        </md-radio-group>
+    </div>
+</div>

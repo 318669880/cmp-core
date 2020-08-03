@@ -1,0 +1,66 @@
+<div ng-controller="AboutController" layout-fill class="content-backdrop license-panel" ng-cloak>
+    <div layout-fill ng-include="background" class="license-background" aria-hidden="true"></div>
+    <div>
+        <md-content class="form-top md-padding" layout-sm="row" layout="row" layout-align="center">
+            <form id="login-form" layout="row" layout-margin>
+                <md-card class="md-whiteframe-8dp" layout="column">
+                    <div class="license-container">
+                        <div class="license-header">
+                            <img src="/web-public/fit2cloud/img/fit2cloud/white-logo.png" style="height: 80px;width: 400px; padding-top:15px;">
+                        </div>
+                        <div class="license-content">
+                            <div ng-if="license.status !== 'Fail'">
+                                <table>
+                                    <tr>
+                                        <th>{{'i18n_license_to' | translator:'授权给'}}</th>
+                                        <td>{{license.corporation}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{'i18n_license_expire' | translator:'过期时间'}}</th>
+                                        <td>
+                                            <label ng-if="license.status === 'Expired'" style="color: red">{{license.expired}} (已过期)</label>
+                                            <label ng-if="license.status === 'Success'">{{license.expired}}</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{'i18n_license_count' | translator:'授权数量'}}</th>
+                                        <td>{{license.count}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{'i18n_version' | translator:'版本'}}</th>
+                                        <td>
+                                            <span ng-switch="license.edition">
+                                                <span ng-switch-when="Standard">{{'i18n_version_standard' | translator:'标准版'}}</span>
+                                                <span ng-switch-when="Enterprise">{{'i18n_version_enterprise' | translator:'企业版'}}</span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{'i18n_version_build' | translator:'版本号'}}</th>
+                                        <td>
+                                            <span>{{build}}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div ng-if="license.status === 'Fail'">{{'i18n_license_failed' | translator:'License 无效'}}</div>
+                            <div class="md-padding"></div>
+                            <div layout="row" layout-align="space-between center">
+                                <a class="md-primary pointer" ng-click="import()">
+                                   {{'i18n_license_update' | translator:'更新 License'}}
+                                </a>
+                                <a class="md-primary pointer" ng-click="support()">
+                                    {{'i18n_license_support' | translator:'获取技术支持'}}
+                                </a>
+                            </div>
+                            <!--<div layout="row" layout-align="center center" style="font-size: small">
+                                © 2014 - 2018, FIT2CLOUD. All rights reserved.
+                            </div>-->
+                        </div>
+                    </div>
+                </md-card>
+            </form>
+        </md-content>
+    </div>
+    <side-form></side-form>
+</div>

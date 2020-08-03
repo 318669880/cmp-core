@@ -1,0 +1,119 @@
+<div layout-fill class="content-backdrop" ng-cloak ng-controller="KeycloakController">
+    <div layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>{{'i18n_keycloak_settings' | translator:'Keycloak 设置'}}</div>
+                <md-button class="md-primary" ng-click="syncExtraUser()"
+                           ng-if="tagStatus===1">
+                    <md-icon>sync</md-icon>
+                    {{'i18n_mc_synchronize_users' | translator:'同步用户'}}
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div layout="row" flex>
+            <md-content flex="100">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="{{'i18n_mc_parameter_settings' | translator:'参数设置'}}" ng-click="changeStatus(0)"
+                            has-permission="KEYCLOAK_SETTING:READ">
+                        <div ng-controller="KeycloakParamController">
+                            <form name="keyCloakFrom" class="md-padding"
+                                  cg-busy="{promise:loadingLayer,minDuration:500}">
+                                <div ng-repeat="param in params">
+                                    <md-input-container class="md-icon-float md-block"
+                                                        ng-if="param.paramKey == username">
+                                        <!-- Use floating label instead of placeholder -->
+                                        <label>{{'i18n_username' | translator:'用户名'}}</label>
+                                        <md-icon class="name" style="font-size: 32px">person</md-icon>
+                                        <input ng-model="param.paramValue" type="text"
+                                               placeholder="{{'i18n_username' | translator:'用户名'}}"
+                                               ng-disabled="!isSave"
+                                               autocomplete="new-password"
+                                               required>
+                                    </md-input-container>
+
+                                    <md-input-container md-no-float class="md-block" ng-if="param.paramKey == password"
+                                                        layout-gt-xs="row">
+                                        <label layout-gt-xs>{{'i18n_password' | translator:'密码'}}</label>
+                                        <i layout-gt-xs id="eye" class="fa fa-eye f2c-eye" aria-hidden="true"
+                                           ng-click="view('password','eye')" ng-if="isSave"></i>
+                                        <md-icon layout-gt-xs md-svg-src="project/icons/password.svg"
+                                                 class="s36"></md-icon>
+                                        <input layout-gt-xs ng-model="param.paramValue" type="password" id="password"
+                                               placeholder="{{'i18n_password' | translator:'密码'}}"
+                                               ng-disabled="!isSave"
+                                               autocomplete="new-password"
+                                               required>
+
+                                    </md-input-container>
+
+                                    <md-input-container md-no-float class="md-block"
+                                                        ng-click="jump2KeyCloak(param.paramValue)"
+                                                        layout-gt-xs="row"
+                                                        ng-style="addressInputMargin()"
+                                                        style="margin-bottom: 0px"
+                                                        ng-if="param.paramKey ==address"
+                                                        ng-init="addressInit(param.paramValue)">
+                                        <label>{{'i18n_mc_authentication_address' | translator:'认证地址'}}</label>
+                                        <md-icon>link</md-icon>
+                                        <input style="cursor:pointer;" ng-model="addressURL"
+                                               type="text"
+                                               disabled="disabled"
+                                               placeholder="{{'i18n_mc_authentication_address' | translator:'认证地址'}}:{{'mc_profile_settings' | translator:'配置文件设置'}}">
+                                    </md-input-container>
+                                </div>
+                                <md-content class="md-block" flex="100" style="margin-left: 30px">
+                                    <label>{{'i18n_mc_explain' | translator:'认证地址'}}：</label>
+                                    <span> {{'i18n_mc_keycloak_explain' | translator:'此设置的目的是为了从Keycloak中同步用户' }}</span>
+                                </md-content>
+                            </form>
+                            <div layout="row" layout-align="center" layout-margin>
+                                <md-button class="md-raised md-primary" ng-disabled="keyCloakFrom.$invalid"
+                                           ng-click="submit(params)" ng-if="isSave">
+                                    {{'i18n_save' | translator:'保存'}}
+                                </md-button>
+                                <md-button class="md-raised" ng-click="clickSave()" ng-if="isSave">
+                                    {{'i18n_cancel' | translator:'取消'}}
+                                </md-button>
+                                <md-button class="md-raised md-primary"
+                                           ng-click="clickSave()" ng-if="!isSave">
+                                    {{'i18n_edit' | translator:'编辑'}}
+                                </md-button>
+                            </div>
+                        </div>
+                    </md-tab>
+                    <md-tab label="{{'i18n_mc_synchronize_users' | translator:'同步用户'}}" ng-click="changeStatus(1)"
+                            has-permission="KEYCLOAK_SETTING:SYNC">
+                        <div ng-controller="ExtraUserController">
+                            <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
+                                <filter-tools conditions="conditions" results="filters" search="'true'"
+                                              execute="list()">
+                                    <select-columns columns="columns"></select-columns>
+                                    <div class="filter-item">
+                                        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
+                                            <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
+                                            <md-icon>refresh</md-icon>
+                                        </md-button>
+                                    </div>
+                                </filter-tools>
+
+                                <table dynamic-table columns="columns" execute="list({sql: sql})">
+                                    <tbody>
+                                    <tr ng-repeat="item in items">
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.displayName}}</td>
+                                        <td>{{item.email}}</td>
+                                        <td>{{item.phone}}</td>
+                                        <td>{{item.syncTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table-pagination pagination="pagination"></table-pagination>
+                            </md-content>
+                        </div>
+                    </md-tab>
+                </md-tabs>
+            </md-content>
+        </div>
+    </div>
+</div>
+

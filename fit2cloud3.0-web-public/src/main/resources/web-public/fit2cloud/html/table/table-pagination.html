@@ -1,0 +1,39 @@
+<div ng-if="pagination.show" class="table-pagination">
+    <div>
+        <md-button class="md-icon-button" ng-click="first()" ng-disabled="!hasPrevious()" aria-label="First">
+            <md-icon>first_page</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" ng-click="previous()" ng-disabled="!hasPrevious()" aria-label="Previous">
+            <md-icon>navigate_before</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" ng-click="next()" ng-disabled="!hasNext()" aria-label="Next">
+            <md-icon>navigate_next</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" ng-click="last()" ng-disabled="!hasNext()" aria-label="Last">
+            <md-icon>last_page</md-icon>
+        </md-button>
+    </div>
+
+    <div>
+        <div class="label">
+            {{'i18n_pagination_total' | translator:'共'}} {{pages()}} {{'i18n_pagination_table_page' | translator:'页'}} {{pagination.itemCount}} {{'i18n_pagination_unit' | translator:'条'}}
+        </div>
+        <div class="label">{{'i18n_pagination_pages' | translator:'页数: '}}</div>
+
+        <md-input-container class="md-block" md-no-float>
+            <input type="number" step="1" ng-model="pagination.page" aria-label="Page" ng-keypress="onKeyPress($event)"
+                   ng-blur="onPaginationChange()" min="1">
+        </md-input-container>
+    </div>
+
+    <div>
+        <div class="label">{{'i18n_pagination_row_page' | translator:'每页行数: '}}</div>
+
+        <md-select flex ng-model="pagination.limit" aria-label="Rows" ng-change="onPaginationChange()">
+            <md-option ng-repeat="option in pagination.limitOptions" ng-value="option">{{option}}</md-option>
+        </md-select>
+    </div>
+</div>

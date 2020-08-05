@@ -1,12 +1,12 @@
-FROM registry.fit2cloud.com/fit2cloud2/fabric8-java-alpine-openjdk8-jre
+FROM registry.fit2cloud.com/fit2cloud2/fabric8-java-alpine-openjdk8-jre:glibc
 
 MAINTAINER FIT2CLOUD <support@fit2cloud.com>
 
 RUN mkdir -p /opt/apps
 
-ADD target/fit2cloud2.0-management-center-2.0.0.jar /opt/apps
+ADD target/fit2cloud3.0-management-center-3.0.0.jar /opt/apps
 
-ENV JAVA_APP_JAR=/opt/apps/fit2cloud2.0-management-center-2.0.0.jar
+ENV JAVA_APP_JAR=/opt/apps/fit2cloud3.0-management-center-3.0.0.jar
 
 ENV AB_OFF=true
 

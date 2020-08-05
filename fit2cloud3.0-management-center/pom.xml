@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.fit2cloud</groupId>
-    <artifactId>fit2cloud2.0-management-center</artifactId>
+    <artifactId>fit2cloud3.0-management-center</artifactId>
     <version>3.0.0</version>
     <packaging>jar</packaging>
 
-    <name>fit2cloud2.0-management-center</name>
-    <description>fit2cloud2.0-management-center</description>
+    <name>fit2cloud3.0-management-center</name>
+    <description>fit2cloud3.0-management-center</description>
 
     <parent>
         <artifactId>commons-parent</artifactId>

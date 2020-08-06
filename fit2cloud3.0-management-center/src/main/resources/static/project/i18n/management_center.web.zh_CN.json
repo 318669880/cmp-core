@@ -36,6 +36,14 @@
   "i18n_label_import_failed": "导入失败. ",
   "i18n_keycloak_settings": "Keycloak 设置",
   "i18n_mc_parameter_settings": "参数设置",
+  "i18n_index_server_online": "在线索引服务",
+  "i18n_index_server_offline": "离线索引服务",
+
+  "i18n_index_server_addr": "在线索引服务地址",
+  "i18n_index_server_local_files": "本地索引文件",
+  "i18n_index_server_online_explain": "此设置的目的是为了从索引服务器拉取镜像",
+  "i18n_index_server_offline_explain": "此设置的目的是为了从本地索引文件拉取镜像",
+
   "i18n_mc_synchronize_users": "同步用户",
   "i18n_mc_authentication_address": "认证地址",
   "i18n_mc_profile_settings": "配置文件设置",
@@ -55,6 +63,7 @@
   "i18n_mail_ssl": "开启SSL(如果SMTP端口是465，通常需要启用SSL)",
   "i18n_mail_tls": "开启TLS(如果SMTP端口是587，通常需要启用TLS)",
   "i18n_module_list": "模块列表",
+  "i18n_model_manager": "模块管理",
   "i18n_module_disable": "禁用",
   "i18n_module_enable": "启用",
   "i18n_module_name": "模块名称",

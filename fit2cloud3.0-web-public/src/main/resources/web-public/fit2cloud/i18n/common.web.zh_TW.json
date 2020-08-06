@@ -318,5 +318,8 @@
   "i18n_flow_used_link": "個流程使用此環節, ",
   "i18n_process_role_used": "流程角色使用中, ",
   "i18n_confirm_forbidden": "確認禁用？",
+  "i18n_index_server": "索引服務",
+  "i18n_model_installer": "模塊安裝",
+  "i18n_model_runner": "模塊運行",
   "i18n_delete_after_reconfig": "请修改配置后删除!"
 }

@@ -324,5 +324,8 @@
   "i18n_next_step": "下一步",
   "i18n_prev_step": "上一步",
   "i18n_base_info": "基本信息",
+  "i18n_index_server": "索引服务",
+  "i18n_model_installer": "模块安装",
+  "i18n_model_runner": "模块运行",
   "i18n_no_empty": "不能为空"
 }

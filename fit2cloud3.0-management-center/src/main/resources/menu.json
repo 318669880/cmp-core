@@ -309,6 +309,22 @@
               ]
             }
           ]
+        },
+        {
+          "order": 7,
+          "title": "i18n_model_manager",
+          "name": "model_manage",
+          "url": "/model_manage",
+          "templateUrl": "project/html/model_manager/model_manager.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "MODEL_MANAGER:READ"
+              ]
+            }
+          ]
         }
       ]
     }

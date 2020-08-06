@@ -516,6 +516,22 @@
       "parentRoles": [
         "ADMIN"
       ]
+    },
+    {
+      "id": "MODEL_MANAGER:READ",
+      "name": "i18n_permission_model_manager_read",
+      "resourceId": "MODEL_MANAGER",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "MODEL_MANAGER:READ+UPDATE",
+      "name": "i18n_permission_model_manager_read_edit",
+      "resourceId": "MODEL_MANAGER",
+      "parentRoles": [
+        "ADMIN"
+      ]
     }
   ],
   "resources": [
@@ -590,6 +606,10 @@
     {
       "id": "DASHBOARD",
       "name": "i18n_permission_resource_overview"
+    },
+    {
+      "id": "MODEL_MANAGER",
+      "name": "i18n_permission_model_manager"
     }
   ]
 }

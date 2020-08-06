@@ -318,5 +318,8 @@
   "i18n_flow_used_link": "processes use this link, ",
   "i18n_process_role_used": "Process role in use, ",
   "i18n_confirm_forbidden": "Confirm forbidden？",
+  "i18n_index_server": "Index Server",
+  "i18n_model_installer": "Mudule Installer",
+  "i18n_model_runner": "Mudule Runner",
   "i18n_delete_after_reconfig": "Please delete after modifying the configuration!"
 }

@@ -1,0 +1,203 @@
+<div layout-fill ng-controller="ModelManagerController" class="content-backdrop license-panel" >
+    <div layout-fill ng-include="background" class="license-background" aria-hidden="true"></div>
+    <div layout="column" layout-fill class="model_manager_container">
+        <!--<md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div>{{'i18n_model_manager' | translator:'模块管理'}}</div>
+            </div>
+        </md-toolbar>-->
+        <md-content flex="auto">
+            <div wizard="wizard" ng-if="show" class="model_class">
+                <wizard-step id="1">
+                    <md-content flex="100">
+                        <!--<md-tabs md-dynamic-height md-border-bottom>
+                            <md-tab label="{{'i18n_index_server_online' | translator:'在线索引服务'}}" ng-click="changeStatus(0)"
+                                    has-permission="KEYCLOAK_SETTING:READ">
+                                <div ng-controller="KeycloakParamController">
+                                    <form name="keyCloakFrom" class="md-padding"
+                                          cg-busy="{promise:loadingLayer,minDuration:500}">
+
+                                        <md-input-container md-no-float class="md-block"
+                                                            layout-gt-xs="row"
+                                                            ng-style="addressInputMargin()"
+                                                            style="margin-bottom: 0px"
+                                                            ng-init="addressInit()">
+                                            &lt;!&ndash;<label>{{'i18n_mc_authentication_address' | translator:'认证地址'}}</label>&ndash;&gt;
+                                            <md-icon>link</md-icon>
+                                            <input style="cursor:pointer;" ng-model="addressURL"
+                                                   type="text"
+                                                   placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}">
+                                        </md-input-container>
+
+                                        <md-content class="md-block" flex="100" style="margin-left: 30px">
+                                            <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
+                                            <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
+                                        </md-content>
+                                    </form>
+
+                                </div>
+                            </md-tab>
+                            <md-tab label="{{'i18n_index_server_offline' | translator:'离线索引服务'}}" ng-click="changeStatus(1)"
+                                    has-permission="KEYCLOAK_SETTING:SYNC">
+                                <div ng-controller="ExtraUserController">
+                                    <form name="tagEditForm" class="md-padding">
+                                        <div class="md-dialog-content">
+
+                                            <md-choose-file layout="row" file="file" accept="text/csv" placeholder="{{'i18n_index_server_local_files' | translator:'本地索引文件'}}" required="true"></md-choose-file>
+
+                                        </div>
+                                        <md-content class="md-block" flex="100" style="margin-left: 30px">
+                                            <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
+                                            <span> {{'i18n_index_server_offline_explain' | translator:'此设置的目的是为了从本地索引文件获取镜像' }}</span>
+                                        </md-content>
+
+                                    </form>
+                                </div>
+                            </md-tab>
+                        </md-tabs>-->
+                        <div >
+                            <form name="keyCloakFrom" class="md-padding"
+                                  cg-busy="{promise:loadingLayer,minDuration:500}">
+
+                                <md-input-container md-no-float class="md-block"
+                                                    layout-gt-xs="row"
+                                                    style="margin-bottom: 0px" >
+                                    <md-icon>link</md-icon>
+                                    <input style="cursor:pointer;" ng-model="indexServer.address"
+                                           type="text"
+                                           placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}">
+                                </md-input-container>
+
+                                <md-content class="md-block" flex="100" style="margin-left: 30px">
+                                    <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
+                                    <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
+                                </md-content>
+                            </form>
+                        </div>
+                    </md-content>
+                </wizard-step>
+                <wizard-step id="2">
+                    <md-content flex="100">
+                        <md-tabs md-dynamic-height md-border-bottom>
+                            <md-tab label="可安装" has-permission="KEYCLOAK_SETTING:SYNC">
+                                <div>
+                                    <md-button class="md-primary" ng-click="modelInstaller.executeInstall()" >
+                                        <md-icon>build</md-icon>
+                                        安装
+                                    </md-button>
+                                </div>
+                                <div ng-controller="ModelManagerController">
+                                    <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
+                                        <table dynamic-table columns="modelInstaller.installableColumns" execute="modelInstaller.loadInstallable()">
+                                            <tbody>
+                                            <tr ng-repeat="item in installableItems">
+                                                <td has-permissions="KEYCLOAK_SETTING:SYNC">
+                                                    <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
+                                                                 ng-model="item.enable"
+                                                                 class="md-primary"></md-checkbox>
+                                                </td>
+                                                <td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                                <td>{{item.module}}</td>
+                                                <td>{{item.lastRevision}}</td>
+                                                <td>{{item.overview}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--<table-pagination pagination="pagination"></table-pagination>-->
+                                    </md-content>
+                                </div>
+
+                            </md-tab>
+                            <md-tab label="可更新" has-permission="KEYCLOAK_SETTING:SYNC">
+                                <div >
+                                    <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
+                                        <table dynamic-table columns="modelInstaller.installupdateColumns" execute="modelInstaller.loadUpdates()">
+                                            <tbody>
+                                            <tr ng-repeat="item in installupdateItems">
+                                                <td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                                <td>{{item.module}}</td>
+                                                <td>{{item.current_version}}</td>
+                                                <td>{{item.lastRevision}}</td>
+                                                <td>{{item.overview}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--<table-pagination pagination="pagination"></table-pagination>-->
+                                    </md-content>
+                                </div>
+                            </md-tab>
+                            <md-tab label="已安装" has-permission="KEYCLOAK_SETTING:SYNC">
+
+                                <div>
+                                    <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
+                                        <filter-tools conditions="modelInstaller.conditions" results="modelInstaller.filters" search="'true'" execute="modelInstaller.loadInstalled()">
+
+                                            <select-columns columns="modelInstaller.installedColumns"></select-columns>
+                                            <div class="filter-item">
+                                                <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.loadInstalled()">
+                                                    <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
+                                                    <md-icon>refresh</md-icon>
+                                                </md-button>
+                                            </div>
+                                        </filter-tools>
+
+                                        <table dynamic-table columns="modelInstaller.installedColumns" execute="modelInstaller.loadInstalled()">
+                                            <tbody>
+                                            <tr ng-repeat="item in installedItems">
+                                                <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                                <td>{{item.module}}</td>
+                                                <td>{{item.lastRevision}}</td>
+                                                <td>{{item.overview}}</td>
+                                                <!--<td>{{item.syncTime | date:'yyyy-MM-dd HH:mm'}}</td>-->
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--<table-pagination pagination="pagination"></table-pagination>-->
+                                    </md-content>
+                                </div>
+                            </md-tab>
+                            <md-tab label="自定义" has-permission="KEYCLOAK_SETTING:SYNC">
+                                <h1>玩命开发中。。。。。。</h1>
+                            </md-tab>
+                        </md-tabs>
+                    </md-content>
+                </wizard-step>
+                <wizard-step id="3">
+                    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+
+                        <div ng-controller="ExtraUserController">
+                            <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
+                                <filter-tools conditions="conditions" results="filters" search="'true'"
+                                              execute="list()">
+                                    <select-columns columns="columns"></select-columns>
+                                    <div class="filter-item">
+                                        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
+                                            <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
+                                            <md-icon>refresh</md-icon>
+                                        </md-button>
+                                    </div>
+                                </filter-tools>
+
+                                <table dynamic-table columns="columns" execute="list({sql: sql})">
+                                    <tbody>
+                                    <tr ng-repeat="item in items">
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.displayName}}</td>
+                                        <td>{{item.email}}</td>
+                                        <td>{{item.phone}}</td>
+                                        <td>{{item.syncTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table-pagination pagination="pagination"></table-pagination>
+                            </md-content>
+                        </div>
+                        <side-form></side-form>
+                    </div>
+                </wizard-step>
+            </div>
+        </md-content>
+
+    </div>
+</div>
+

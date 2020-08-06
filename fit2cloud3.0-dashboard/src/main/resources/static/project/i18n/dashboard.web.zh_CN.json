@@ -1,0 +1,19 @@
+{
+  "i18n_custom": "自定义",
+  "i18n_dashboard_complete": "完成",
+  "i18n_dashboard_information": "信息中心",
+  "i18n_dashboard_activity": "活动",
+  "i18n_dashboard_module": "模块",
+  "i18n_dashboard_hide": "隐藏",
+  "i18n_dashboard_ip": "操作 IP",
+  "i18n_dashboard_time": "时间",
+  "i18n_dashboard_resource_type": "资源类型",
+  "i18n_dashboard_resource_name": "资源名称",
+  "i18n_dashboard_operator": "操作人",
+  "i18n_dashboard_owner": "所有者",
+  "i18n_overview": "概览",
+  "i18n_dashboard_module_name": "首页",
+  "i18n_dashboard_module_desc": "可定制的信息中心门户",
+  "i18n_dashboard_swagger_activity_tag": "活动",
+  "i18n_dashboard_swagger_activity_list": "查看活动"
+}

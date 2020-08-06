@@ -1,0 +1,48 @@
+<md-card class="md-whiteframe-2dp" style="margin: 0" ng-mouseover="mouseover(data.id)"
+         ng-mouseleave="mouseleave(data.id)" ng-style="{'opacity':data.hide?'0.5':'1'}" id="{{data.id}}">
+    <div class="dashboard-header" ng-style="{'cursor':itemStatus.isCustomize?'move':'auto'}">
+        <div class="title">
+            {{data.title}}
+        </div>
+
+        <div class="float-right-line" ng-if="itemStatus.isCustomize">
+            <md-switch ng-model="data.display" class="md-primary no-margin"></md-switch>
+        </div>
+
+        <div class="float-right-line" ng-if="!itemStatus.isCustomize">
+
+            <md-menu md-position-mode="target bottom">
+                <md-button class="md-icon-button f2c-icon-button more-vert-btn"
+                           ng-click="$mdMenu.open()">
+                    <md-icon class="cursor" auto-open="false">more_vert</md-icon>
+                </md-button>
+                <md-menu-content width="2.5" style="background-color: white">
+                    <md-menu-item class="f2c-menu-item">
+                        <md-button ng-click="hideCard(data)">
+                            <md-icon md-font-icon="material-icons md-24" style="margin-right: 6px">delete</md-icon>
+                            {{'i18n_dashboard_hide' | translator}}
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+        </div>
+    </div>
+
+    <div class="content" ng-if="!itemStatus.isHidden" id="{{data.id}}body"
+         ng-style="{'height':data.height,'min-height':data.minHeight}">
+        <card-type data="data"></card-type>
+    </div>
+
+
+    <div id="{{data.id}}footer" class="footer-border" ng-if="!itemStatus.isHidden"
+         ng-mouseover="footMouseover(data.id)"
+         ng-mouseleave="footMouseleave(data.id)">
+        <div class="footer cursor" ng-click="turnOn(data.url)">
+            <div class="float-left-line">
+                <md-icon class="cursor" auto-open="false">arrow_forward</md-icon>
+            </div>
+            <div class="title" ng-bind="data.desc"></div>
+        </div>
+    </div>
+</md-card>

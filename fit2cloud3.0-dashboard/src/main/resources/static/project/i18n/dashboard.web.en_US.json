@@ -1,0 +1,19 @@
+{
+  "i18n_custom": "Custom",
+  "i18n_dashboard_complete": "Complete",
+  "i18n_dashboard_information": "Information",
+  "i18n_dashboard_activity": "Activities",
+  "i18n_dashboard_module": "Module",
+  "i18n_dashboard_hide": "Hide",
+  "i18n_dashboard_ip": "IP",
+  "i18n_dashboard_time": "Time",
+  "i18n_dashboard_resource_type": "Resource Type",
+  "i18n_dashboard_resource_name": "Resource Name",
+  "i18n_dashboard_operator": "Operator",
+  "i18n_dashboard_owner": "Owner",
+  "i18n_overview": "Overview",
+  "i18n_dashboard_module_name": "Dashboard",
+  "i18n_dashboard_module_desc": "Customizable information center portal",
+  "i18n_dashboard_swagger_activity_tag": "Activities",
+  "i18n_dashboard_swagger_activity_list": "List"
+}

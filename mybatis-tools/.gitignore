@@ -1,7 +1,0 @@
-.idea
-tools.iml
-target/
-/src/main/resources/generatorConfig.xml
-.classpath
-.project
-.settings/

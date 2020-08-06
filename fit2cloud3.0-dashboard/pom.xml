@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.fit2cloud</groupId>
-    <artifactId>fit2cloud2.0-dashboard</artifactId>
+    <artifactId>fit2cloud3.0-dashboard</artifactId>
     <version>3.0.0</version>
     <packaging>jar</packaging>
 

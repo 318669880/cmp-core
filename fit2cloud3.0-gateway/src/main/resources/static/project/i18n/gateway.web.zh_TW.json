@@ -1,0 +1,4 @@
+{
+  "i18n_gateway_module_name": "網關",
+  "i18n_gateway_module_desc": "微服務網關，平臺入口，用以鑒權和處理請求路由"
+}

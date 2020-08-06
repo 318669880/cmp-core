@@ -1,0 +1,52 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="webjars/springfox-swagger-ui/springfox.css?v=2.9.0">
+    <link rel="stylesheet" type="text/css" href="webjars/springfox-swagger-ui/swagger-ui.css?v=2.9.0">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="${IndexConstants['ui.favicon']}">
+    <title th:text="${IndexConstants['ui.system.name']} + ' API Doc'"></title>
+    <style>
+        html {
+            box-sizing: border-box;
+            overflow: -moz-scrollbars-vertical;
+            overflow-y: scroll;
+        }
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            margin: 0;
+            background: #fafafa;
+        }
+
+        .swagger-ui .topbar {
+            background-color: [[${IndexConstants['ui.theme.primary']}]] !important;
+        }
+
+        .swagger-ui .topbar a {
+            display: none !important;
+        }
+
+        .select-label span {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="swagger-ui"></div>
+
+<script src="webjars/springfox-swagger-ui/swagger-ui-bundle.js?v=2.9.0"></script>
+<script src="webjars/springfox-swagger-ui/swagger-ui-standalone-preset.js?v=2.9.0"></script>
+<script src="webjars/springfox-swagger-ui/springfox.js?v=2.9.0"></script>
+<script th:src="@{'/web-public/external/jquery/jquery.min.js'}"></script>
+</body>
+
+</html>

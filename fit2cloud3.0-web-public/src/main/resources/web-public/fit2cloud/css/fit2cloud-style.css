@@ -445,6 +445,16 @@ md-dialog.md-default-dialog {
     margin-top: 2px;
 }
 
+.f2c-tooltip-version {
+    height: auto;
+    padding: 4px 8px;
+    z-index: 1000;
+}
+
+.f2c-tooltip-version.md-origin-bottom {
+    margin-top: 2px;
+}
+
 .f2c-eye {
     position: absolute;
     right: 0;

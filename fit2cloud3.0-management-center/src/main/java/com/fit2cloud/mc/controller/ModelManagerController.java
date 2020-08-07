@@ -52,7 +52,7 @@ public class ModelManagerController {
     }
 
     @PostMapping("/indexInstaller/unUninstall")
-    public void modelUninstall(@RequestBody ModelInstalledDto modelInstalledDto) {
-
+    public void modelUninstall(@RequestBody List<String> model_uuid_array) {
+        model_uuid_array.forEach(model_uuid -> modelManagerService.deleteInstaller(model_uuid));
     }
 }

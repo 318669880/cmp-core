@@ -1,5 +1,7 @@
 
 
+
+
 ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $document, $mdBottomSheet, HttpUtils, FilterSearch, Notification, $interval, AuthService, $state, $filter,Translator) {
     $scope.background = "/web-public/fit2cloud/html/background/background.html?_t" + window.appversion;
     $scope.indexServer = new IndexServer($scope);
@@ -126,6 +128,9 @@ IndexServer.prototype = {
                 if(!!text && text.indexOf('let templateDate') !=-1){
                     let json = text.substr(text.indexOf("{"));
                     this.$scope.model_version_info = JSON.parse(json);
+                    for (let x in this.$scope.model_version_info) {
+                        this.$scope.model_version_info[x].forEach(basicModel => basicModel.lastRevision = null)
+                    }
                     this.validateSave();
                 }
             }catch (e) {
@@ -162,7 +167,9 @@ IndexServer.prototype = {
         })
         this.validate = false;
         return false;
-    }
+    },
+
+
 };
 /**
  * 模块安装工具
@@ -172,6 +179,7 @@ let ModelInstaller = function() {
     this.$scope = null;
     this._loadLocalDatasUrl = 'modelManager/indexInstaller/modelBasics';
     this._batchInstallUrl = 'modelManager/indexInstaller/install';
+    this._batchUninstallUrl = 'modelManager/indexInstaller/unUninstall';
     this._localData = null; //本地数据集合
     this.initialize.apply(this , arguments);
 }
@@ -203,8 +211,8 @@ ModelInstaller.prototype = {
             {value: '名称', key: "name", sort: false},
             {value: '模块', key: "module", sort: false},
             {value: '版本', key: "lastRevision", sort: false},
-            {value: '概诉', key: "overview", sort: false}
-            // {value: '总结', key: "summary", sort: false}
+            {value: '概诉', key: "overview", sort: false},
+            // {value: '操作', key: "name", sort: false}
         ];
 
 
@@ -225,12 +233,22 @@ ModelInstaller.prototype = {
             {value: '名称', key: "name", sort: false},
             {value: '模块', key: "module", sort: false},
             {value: '当前版本', key: "current_version", sort: false},
-            {value: '最新版本', key: "lastRevision", sort: false},
+            {value: '可选版本', key: "lastRevision", sort: false},
             {value: '概诉', key: "overview", sort: false}
         ];
     },
 
+    _clearData: function () {
+        this._localData = Object.create({});
+        this.$scope.installableItems = null;
+        this.$scope.installupdateItems = null;
+        this.$scope.installedItems = null;
+        this.$scope.currentRevisions = null;
+        this.$scope.currentUpdateRevisions = null;
+    },
+
     loadData: function () {
+        this._clearData();
         // 获取json文件中模块数据与本地数据库对比
         let _self = this;
         this.$scope.executeAjax(this._loadLocalDatasUrl,'GET',null,(res) => {
@@ -243,13 +261,73 @@ ModelInstaller.prototype = {
         // 存储到本地数据库
     },
 
-    // 加载已安装数据
-    loadInstalled: function () {
-        this.$scope.installedItems = [];
-        for (let localDataKey in this._localData) {
-            this.$scope.installedItems.push(this._localData[localDataKey])
+
+    // 加载可安装数据
+    loadInstallable: function () {
+        let _self = this;
+        let models = []
+        for (let modelVersionInfoKey in this.$scope.model_version_info) {
+            let item = this.$scope.model_version_info[modelVersionInfoKey];
+            (item instanceof Array) && (models = models.concat(item));
         }
+        this.$scope.installableItems = models.filter(model => {
+            return !_self._localData.hasOwnProperty(model.module);
+        }).map(model => {
+            model.lastRevision = null;
+            model.remoteImageUrl = model.icon.indexOf(_self.$scope.indexServer.address)==-1 ? (_self.$scope.indexServer.address+ "/" + model.icon) : model.icon;
+            model.enable = false;
+            model.lastRevision = _self._lastVersion(model);
+            model._versionEdit = false;//默认是非编辑状态
+            return model;
+        });
+        console.log('------');
     },
+
+    editVersion: function (item) {
+        this.endEditAll();
+        if(item._versionEdit) return;
+        item.last_select_value = item.last_select_value  || item.lastRevision;
+        this.$scope.currentRevisions = item.revisions.concat([{
+            "revision": "取消",
+            "description": "selectcancel",
+            "created": "cancel",
+            "downloadUrl": "cancel"
+        }]);
+        item._versionEdit = true;
+    },
+
+    doneEditVersion: function (item) {
+        if(item.lastRevision === '取消'){
+            item.lastRevision = item.last_select_value
+        }
+        item.last_version = this.getVersionInfo(item.module,item.lastRevision);
+
+        item._versionEdit = false;
+    },
+
+    endEditAll: function () {
+        this.$scope.installableItems.forEach( item => item._versionEdit = false);
+    },
+
+    //  执行安装
+    executeInstall: function () {
+        let _self = this;
+        let param = this.$scope.installableItems.filter(model => model.enable === true).map(model => {
+            let dto = Object.create({});
+            model.lastRevision = model.lastRevision || _self._lastVersion(model);
+            dto.modelBasic = model;
+            dto.modelBasic.icon = model.remoteImageUrl;
+            let modelVersion = model.last_version;
+            modelVersion.created = new Date(modelVersion.created).getTime();
+            dto.modelVersion = modelVersion
+            return dto;
+        });
+        this.$scope.executeAjax(this._batchInstallUrl,'POST',param, (resp) => {
+            _self.loadData();
+        })
+
+    },
+
     // 加载可更新数据
     loadUpdates: function () {
         let _self = this;
@@ -266,48 +344,72 @@ ModelInstaller.prototype = {
         }).map(model => {
             model.current_version = _self._localData[model.module].lastRevision;
             model.lastRevision = model.last_version.revision;
+            model._versionEdit = false;
+            model.icon = _self._localData[model.module].icon;
+            model._update_options = model.revisions.filter(revision => {
+                let tempTime = new Date(revision.created).getTime();
+                let itemVersionTime = new Date(_self.getVersionInfo(model.module,model.current_version).created).getTime()
+                return tempTime > itemVersionTime;
+            });
             return model;
         });
 
     },
-    // 加载可安装数据
-    loadInstallable: function () {
-        let _self = this;
-        let models = []
-        for (let modelVersionInfoKey in this.$scope.model_version_info) {
-            let item = this.$scope.model_version_info[modelVersionInfoKey];
-            (item instanceof Array) && (models = models.concat(item));
-        }
-        this.$scope.installableItems = models.filter(model => {
-            return !_self._localData.hasOwnProperty(model.module);
-        }).map(model => {
-            model.lastRevision = null;
-            model.remoteImageUrl = _self.$scope.indexServer.address+ "/" + model.icon;
-            model.enable = false;
-            model.lastRevision = _self._lastVersion(model);
-            return model;
-        });
-        console.log('------');
+    editUpdateVersion: function(item) {
+        this.endEditAllUpdate();
+        if(item._versionEdit) return;
+        item.last_select_value = item.last_select_value  || item.lastRevision;
+        this.$scope.currentUpdateRevisions = item._update_options.concat([{
+            "revision": "取消",
+            "description": "selectcancel",
+            "created": "cancel",
+            "downloadUrl": "cancel"
+        }]);
+        item._versionEdit = true;
     },
 
-    //  执行安装
-    executeInstall: function () {
+
+    endEditAllUpdate: function() {
+        this.$scope.installupdateItems.forEach( item => item._versionEdit = false);
+    },
+
+
+    //  执行更新
+    executeUpdate: function () {
         let _self = this;
-        let param = this.$scope.installableItems.filter(model => model.enable === true).map(model => {
+        let opmodel = null;
+        let param = this.$scope.installupdateItems.filter(model => model.enable === true).map(model => {
+            opmodel = model;
             let dto = Object.create({});
-            let lastRevision = _self._lastVersion(model);
-            model.lastRevision = lastRevision;
+            model.lastRevision = model.lastRevision || _self._lastVersion(model);
             dto.modelBasic = model;
-            dto.modelBasic.icon = model.remoteImageUrl;
             let modelVersion = model.last_version;
             modelVersion.created = new Date(modelVersion.created).getTime();
             dto.modelVersion = modelVersion
             return dto;
         });
         this.$scope.executeAjax(this._batchInstallUrl,'POST',param, (resp) => {
+            opmodel.enable = false;
             _self.loadData();
         })
+        opmodel.enable = false;
+    },
 
+    // 加载已安装数据
+    loadInstalled: function () {
+        this.$scope.installedItems = [];
+        for (let localDataKey in this._localData) {
+            this.$scope.installedItems.push(this._localData[localDataKey])
+        }
+    },
+
+    //卸载模块
+    unInstall: function () {
+        let _self = this;
+        let model_uuid_array = this.$scope.installedItems.filter(model => model.enable === true).map(model =>  model.modelUuid);
+        this.$scope.executeAjax(this._batchUninstallUrl,'POST',model_uuid_array, (resp) => {
+            _self.loadData();
+        })
     },
 
     _lastVersion: function(model) {
@@ -321,7 +423,26 @@ ModelInstaller.prototype = {
         })
         model.last_version = last_version;
         return last_version.revision;
-    }
+    },
+
+    getVersionInfo: function (module,versionNum) {
+        let result = null;
+        let models = []
+        let cmodel = null;
+        for (let modelVersionInfoKey in this.$scope.model_version_info) {
+            let item = this.$scope.model_version_info[modelVersionInfoKey];
+            (item instanceof Array) && (models = models.concat(item));
+        }
+        models.some(model => {
+            cmodel = model;
+            return model.module === module
+        }) && cmodel.revisions.some(versionInfo => {
+            result = versionInfo;
+            return versionInfo.revision === versionNum
+        })
+        return result;
+    },
+
 
 
 };

@@ -1,3 +1,4 @@
+
 <div layout-fill ng-controller="ModelManagerController" class="content-backdrop license-panel" >
     <div layout-fill ng-include="background" class="license-background" aria-hidden="true"></div>
     <div layout="column" layout-fill class="model_manager_container">
@@ -88,7 +89,7 @@
                                 </div>
                                 <div ng-controller="ModelManagerController">
                                     <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
-                                        <table dynamic-table columns="modelInstaller.installableColumns" execute="modelInstaller.loadInstallable()">
+                                        <table class="edit-table" dynamic-table columns="modelInstaller.installableColumns" execute="modelInstaller.loadInstallable()">
                                             <tbody>
                                             <tr ng-repeat="item in installableItems">
                                                 <td has-permissions="KEYCLOAK_SETTING:SYNC">
@@ -98,8 +99,36 @@
                                                 </td>
                                                 <td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
                                                 <td>{{item.module}}</td>
-                                                <td>{{item.lastRevision}}</td>
+                                                <td class="edit-td">
+                                                    <div layout="row">
+                                                        <a class="edit-span" class="md-primary" style="cursor:pointer" href=""
+                                                           ng-if="!!item.lastRevision" ng-hide="item._versionEdit" >
+                                                            {{item.lastRevision}}
+                                                            <md-tooltip md-direction="top" class="f2c-tooltip-version">
+                                                                版本信息：{{item.last_version.revision}}<br>
+                                                                创建时间：{{item.last_version.created}}<br>
+                                                                下载地址：{{item.last_version.downloadUrl}}<br>
+                                                                <span class="auto-break">描述信息：{{item.last_version.description}}</span>
+                                                            </md-tooltip>
+                                                        </a>
+                                                        <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
+                                                        <md-select ng-show="item._versionEdit" ng-model="item.lastRevision" ng-change="modelInstaller.doneEditVersion(item)">
+                                                            <md-option ng-repeat="vitem in currentRevisions" value="{{vitem.revision}}">{{vitem.revision}}
+                                                            </md-option>
+                                                        </md-select>
+                                                        <span ng-if="item.revisions.length > 1" class="hide-content" >
+                                                            <md-icon ng-if="!item._versionEdit" ng-click="modelInstaller.editVersion(item)" >edit</md-icon>
+                                                            <md-icon ng-if="item._versionEdit" ng-click="modelInstaller.doneEditVersion(item)" >done</md-icon>
+                                                        </span>
+                                                    </div>
+                                                </td>
                                                 <td>{{item.overview}}</td>
+                                                <td>
+                                                    <md-button ng-click="item.enable = true;modelInstaller.executeInstall()">
+                                                        <md-icon class="md-18">build</md-icon>
+                                                        安装
+                                                    </md-button>
+                                                </td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -109,16 +138,45 @@
 
                             </md-tab>
                             <md-tab label="可更新" has-permission="KEYCLOAK_SETTING:SYNC">
-                                <div >
+                                <div>
                                     <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
-                                        <table dynamic-table columns="modelInstaller.installupdateColumns" execute="modelInstaller.loadUpdates()">
+                                        <table class="edit-table" dynamic-table columns="modelInstaller.installupdateColumns" execute="modelInstaller.loadUpdates()">
                                             <tbody>
                                             <tr ng-repeat="item in installupdateItems">
-                                                <td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                                <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
                                                 <td>{{item.module}}</td>
                                                 <td>{{item.current_version}}</td>
-                                                <td>{{item.lastRevision}}</td>
+                                                <!--<td>{{item.lastRevision}}</td>-->
+                                                <td class="edit-td">
+                                                    <div layout="row">
+                                                        <a class="edit-span" class="md-primary" style="cursor:pointer" href=""
+                                                           ng-if="!!item.lastRevision" ng-hide="item._versionEdit" >
+                                                            {{item.lastRevision}}
+                                                            <md-tooltip md-direction="top" class="f2c-tooltip-version">
+                                                                版本信息：{{item.last_version.revision}}<br>
+                                                                创建时间：{{item.last_version.created}}<br>
+                                                                下载地址：{{item.last_version.downloadUrl}}<br>
+                                                                <span class="auto-break">描述信息：{{item.last_version.description}}</span>
+                                                            </md-tooltip>
+                                                        </a>
+                                                        <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
+                                                        <md-select ng-show="item._versionEdit" ng-model="item.lastRevision" ng-change="modelInstaller.doneEditVersion(item)">
+                                                            <md-option ng-repeat="vitem in currentUpdateRevisions" value="{{vitem.revision}}">{{vitem.revision}}
+                                                            </md-option>
+                                                        </md-select>
+                                                        <span class="hide-content" ng-if="item._update_options.length > 1">
+                                                            <md-icon ng-if="!item._versionEdit" ng-click="modelInstaller.editUpdateVersion(item)" >edit</md-icon>
+                                                            <md-icon ng-if="item._versionEdit" ng-click="modelInstaller.doneEditVersion(item)" >done</md-icon>
+                                                        </span>
+                                                    </div>
+                                                </td>
                                                 <td>{{item.overview}}</td>
+                                                <td>
+                                                    <md-button ng-click="item.enable = true;modelInstaller.executeUpdate()">
+                                                        <md-icon class="md-18">build</md-icon>
+                                                        更新
+                                                    </md-button>
+                                                </td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -148,6 +206,13 @@
                                                 <td>{{item.module}}</td>
                                                 <td>{{item.lastRevision}}</td>
                                                 <td>{{item.overview}}</td>
+                                                <td>
+                                                    <md-button ng-click="item.enable = true;modelInstaller.unInstall()">
+                                                        <md-icon class="md-18">build</md-icon>
+                                                        卸载
+                                                    </md-button>
+                                                </td>
+
                                                 <!--<td>{{item.syncTime | date:'yyyy-MM-dd HH:mm'}}</td>-->
                                             </tr>
                                             </tbody>

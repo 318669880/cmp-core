@@ -86,9 +86,13 @@ public class ModelManagerService {
         modelVersion.setModelBasicUuid(modelBasic.getModelUuid());
         modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
         modelVersionMapper.insert(modelVersion);
+    }
 
-
-
+    public void deleteInstaller(String model_basic_uuid) {
+        ModelVersionExample example = new ModelVersionExample();
+        example.createCriteria().andModelBasicUuidEqualTo(model_basic_uuid);
+        modelVersionMapper.deleteByExample(example);
+        modelBasicMapper.deleteByPrimaryKey(model_basic_uuid);
     }
 
 

@@ -255,6 +255,27 @@ table md-switch {
     display: inline-block;
 }
 
+/*.edit-table > table > tbody > tr > td:hover .hide-content * {
+    display: inline-block;
+}*/
+
+.edit-table > table > tbody > tr > td .hide-content * {
+    display: inline-block;
+}
+
+/*.edit-table > table > tbody > tr > td.edit-td {
+    cursor: pointer;
+}*/
+
+.edit-table > table > tbody > tr > td > div > md-select{
+    display: inline-block;
+    margin: 0 0;
+}
+.edit-span {
+    height: 24px;
+    line-height: 24px;
+    text-decoration:none;
+}
 .hide-content * {
     display: none;
 }
@@ -405,3 +426,11 @@ table md-switch {
 /*.model_manager_container {
     padding: 0 5% !important;
 }*/
+
+span.auto-break {
+    display: inline-block;
+    width: 200px;
+    margin-right: 10px;
+    word-break: break-all;
+    white-space: normal;
+}

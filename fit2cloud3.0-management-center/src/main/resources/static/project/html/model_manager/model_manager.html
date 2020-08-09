@@ -2,11 +2,7 @@
 <div layout-fill ng-controller="ModelManagerController" class="content-backdrop license-panel" >
     <div layout-fill ng-include="background" class="license-background" aria-hidden="true"></div>
     <div layout="column" layout-fill class="model_manager_container">
-        <!--<md-toolbar class="content-toolbar">
-            <div class="md-toolbar-tools">
-                <div>{{'i18n_model_manager' | translator:'模块管理'}}</div>
-            </div>
-        </md-toolbar>-->
+
         <md-content flex="auto">
             <div wizard="wizard" ng-if="show" class="model_class">
                 <wizard-step id="1">
@@ -78,7 +74,7 @@
                     </md-content>
                 </wizard-step>
                 <wizard-step id="2">
-                    <md-content flex="100">
+                    <md-content flex="100" >
                         <md-tabs md-dynamic-height md-border-bottom>
                             <md-tab label="可安装" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <div>
@@ -146,6 +142,7 @@
                                                 <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
                                                 <td>{{item.module}}</td>
                                                 <td>{{item.current_version}}</td>
+                                                <td>{{item.installTime | date:'yyyy-MM-dd HH:mm'}}</td>
                                                 <!--<td>{{item.lastRevision}}</td>-->
                                                 <td class="edit-td">
                                                     <div layout="row">
@@ -170,6 +167,7 @@
                                                         </span>
                                                     </div>
                                                 </td>
+
                                                 <td>{{item.overview}}</td>
                                                 <td>
                                                     <md-button ng-click="item.enable = true;modelInstaller.executeUpdate()">
@@ -186,40 +184,82 @@
                             </md-tab>
                             <md-tab label="已安装" has-permission="KEYCLOAK_SETTING:SYNC">
 
-                                <div>
-                                    <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
-                                        <filter-tools conditions="modelInstaller.conditions" results="modelInstaller.filters" search="'true'" execute="modelInstaller.loadInstalled()">
+                                <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}" >
+                                    <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
+                                        <select-columns columns="columns"></select-columns>
+                                        <div class="filter-item">
+                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="start()">
+                                                <md-tooltip md-delay="300">启动</md-tooltip>
+                                                <md-icon>touch_app</md-icon>
+                                            </md-button>
+                                        </div>
+                                        <div class="filter-item">
+                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="stop()">
+                                                <md-tooltip md-delay="300">停止</md-tooltip>
+                                                <md-icon>stop</md-icon>
+                                            </md-button>
+                                        </div>
+                                        <div class="filter-item">
+                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.unInstall()">
+                                                <md-tooltip md-delay="300">卸载</md-tooltip>
+                                                <md-icon>delete</md-icon>
+                                            </md-button>
+                                        </div>
+                                        <div class="filter-item">
+                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
+                                                <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
+                                                <md-icon>refresh</md-icon>
+                                            </md-button>
+                                        </div>
+                                    </filter-tools>
+                                    <table dynamic-table columns="columns" execute="list({sql :sql})">
+                                        <tbody>
+                                        <tr ng-repeat="item in items">
+                                            <td has-permissions="KEYCLOAK_SETTING:SYNC">
+                                                <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
+                                                             ng-model="item.enable"
+                                                             class="md-primary"></md-checkbox>
+                                            </td>
+                                            <td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                            <td>{{item.module}}</td>
+                                            <td>
+                                                <md-switch class="md-primary" aria-label="enable" ng-model="item.currentStatus" disabled>
+                                                </md-switch>
+                                            </td>
+                                            <td>{{item.lastRevision}}</td>
+                                            <td>{{item.installTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                            <td>{{item.overview}}</td>
+                                            <td >
 
-                                            <select-columns columns="modelInstaller.installedColumns"></select-columns>
-                                            <div class="filter-item">
-                                                <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.loadInstalled()">
-                                                    <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
-                                                    <md-icon>refresh</md-icon>
-                                                </md-button>
-                                            </div>
-                                        </filter-tools>
+                                                <table-menus>
+                                                    <md-menu-item ng-if="!item.currentStatus">
+                                                        <md-button ng-click="start(item)">
+                                                            <md-icon class="md-18">touch_app</md-icon>
+                                                            启动
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="!!item.currentStatus">
+                                                        <md-button ng-click="stop(item)">
+                                                            <md-icon class="md-18">stop</md-icon>
+                                                            停止
+                                                        </md-button>
+                                                    </md-menu-item>
 
-                                        <table dynamic-table columns="modelInstaller.installedColumns" execute="modelInstaller.loadInstalled()">
-                                            <tbody>
-                                            <tr ng-repeat="item in installedItems">
-                                                <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
-                                                <td>{{item.module}}</td>
-                                                <td>{{item.lastRevision}}</td>
-                                                <td>{{item.overview}}</td>
-                                                <td>
-                                                    <md-button ng-click="item.enable = true;modelInstaller.unInstall()">
-                                                        <md-icon class="md-18">build</md-icon>
-                                                        卸载
-                                                    </md-button>
-                                                </td>
+                                                    <md-menu-item >
+                                                        <md-button ng-click="modelInstaller.unInstall(item)">
+                                                            <md-icon class="md-18">delete</md-icon>
+                                                            卸载
+                                                        </md-button>
+                                                    </md-menu-item>
 
-                                                <!--<td>{{item.syncTime | date:'yyyy-MM-dd HH:mm'}}</td>-->
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        <!--<table-pagination pagination="pagination"></table-pagination>-->
-                                    </md-content>
-                                </div>
+                                                </table-menus>
+                                            </td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <table-pagination pagination="pagination"></table-pagination>
+                                </md-content>
                             </md-tab>
                             <md-tab label="自定义" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <h1>玩命开发中。。。。。。</h1>
@@ -227,39 +267,7 @@
                         </md-tabs>
                     </md-content>
                 </wizard-step>
-                <wizard-step id="3">
-                    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
 
-                        <div ng-controller="ExtraUserController">
-                            <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
-                                <filter-tools conditions="conditions" results="filters" search="'true'"
-                                              execute="list()">
-                                    <select-columns columns="columns"></select-columns>
-                                    <div class="filter-item">
-                                        <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
-                                            <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
-                                            <md-icon>refresh</md-icon>
-                                        </md-button>
-                                    </div>
-                                </filter-tools>
-
-                                <table dynamic-table columns="columns" execute="list({sql: sql})">
-                                    <tbody>
-                                    <tr ng-repeat="item in items">
-                                        <td>{{item.name}}</td>
-                                        <td>{{item.displayName}}</td>
-                                        <td>{{item.email}}</td>
-                                        <td>{{item.phone}}</td>
-                                        <td>{{item.syncTime | date:'yyyy-MM-dd HH:mm'}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table-pagination pagination="pagination"></table-pagination>
-                            </md-content>
-                        </div>
-                        <side-form></side-form>
-                    </div>
-                </wizard-step>
             </div>
         </md-content>
 

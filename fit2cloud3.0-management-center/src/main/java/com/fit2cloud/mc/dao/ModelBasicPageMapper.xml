@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.mc.dao.ModelBasicPageMapper">
+
+
+    <resultMap id="ModelInstallResult" extends="com.fit2cloud.mc.dao.ModelBasicMapper.BaseResultMap" type="com.fit2cloud.mc.model.ModelInstall">
+
+        <result column="install_time" jdbcType="BIGINT" property="installTime"/>
+        <result column="revision" jdbcType="VARCHAR" property="revision"/>
+    </resultMap>
+
+    <select id="paging" resultMap="com.fit2cloud.mc.dao.ModelBasicMapper.BaseResultMap">
+        select *
+        from model_basic
+        where 1=1
+        <if test="map.name!=null">
+            and model_basic.name like #{map.name}
+        </if>
+        <if test="map.module!=null">
+            and model_basic.module like #{map.module}
+        </if>
+
+    </select>
+
+
+    <select id="select" resultMap="ModelInstallResult">
+        select b.*,_v.install_time,revision
+        from model_basic b
+        left join
+        (select v.model_basic_uuid,max(v.install_time) as install_time,v.revision
+        from model_version v GROUP BY v.model_basic_uuid) _v
+        on _v.model_basic_uuid = b.model_uuid
+        where 1 = 1
+        <if test="map.name!=null">
+            and b.name like #{map.name}
+        </if>
+        <if test="map.module!=null">
+            and b.module like #{map.module}
+        </if>
+
+    </select>
+</mapper>

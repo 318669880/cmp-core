@@ -6,7 +6,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     $scope.background = "/web-public/fit2cloud/html/background/background.html?_t" + window.appversion;
     $scope.indexServer = new IndexServer($scope);
     $scope.modelInstaller = new ModelInstaller($scope);
-    $scope.modelRunner = new ModelRunner($scope);
+
     $scope.wizard = {
         setting: {
             title: $filter('translator')('i18n_title', '标题'),
@@ -23,6 +23,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 name: $filter('translator')('i18n_index_server', '索引服务'),
                 select: function () {
                     $scope.indexServer.loadData();
+
                 },
                 next: function () {
                     return $scope.indexServer.saveData();
@@ -33,21 +34,24 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 name: $filter('translator')('i18n_model_installer', '模块安装'),
                 select: function () {
                     $scope.modelInstaller.loadData();
+
                 },
                 next: function () {
+
                     return $scope.modelInstaller.saveData();
                 }
             },
-            {
+            /*{
                 id: "3",
                 name: $filter('translator')('i18n_model_runner', '模块运行'),
                 select: function () {
-                    $scope.modelRunner.loadData();
+                    $scope.currentIndex = 3;
+                    $scope.list();
                 },
                 next: function () {
-                    return $scope.modelRunner.saveData();
+                    return true;
                 }
-            }
+            }*/
         ],
         // 嵌入页面需要指定关闭方法
         close: function () {
@@ -81,6 +85,51 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
 
 
+    $scope.conditions = [
+        {key: "name", name: '名称', directive: "filter-contains"},
+        {key: "module", name: '模块', directive: "filter-contains"}
+    ];
+
+    // 用于传入后台的参数
+    $scope.filters = [];
+    $scope.columns = [
+        {
+            default: true,
+            sort: false,
+            type: "checkbox",
+            checkValue: false,
+            change: function (checked) {
+                $scope.items.forEach(function (item) {
+                    item.enable = checked;
+                });
+            }.bind(this),
+            width: "40px"
+        },
+        {value: '名称', key: "name", sort: false},
+        {value: '模块', key: "module", sort: false},
+        {value: '是否运行', key: "currentStatus", sort: false},
+        {value: '版本', key: "lastRevision", sort: false},
+        {value: '安装时间', key: "installTime", sort: false},
+        {value: '概诉', key: "overview", sort: false}
+    ];
+
+    $scope.list = function (sortObj) {
+        const condition = FilterSearch.convert($scope.filters);
+        if (sortObj) {
+            $scope.sort = sortObj;
+        }
+        // 保留排序条件，用于分页
+        if ($scope.sort) {
+            condition.sort = $scope.sort.sql;
+        }
+        HttpUtils.paging($scope, "modelManager/runner", condition, function (rep) {
+            //$scope.load = true;
+        });
+    };
+
+
+
+
 });
 
 
@@ -95,6 +144,7 @@ let IndexServer = function() {
     this.address = null;
     this.validate = false;
     this.$scope = null;
+    this.autoNext = true;
     this.initialize.apply(this , arguments);
 };
 IndexServer.prototype = {
@@ -106,8 +156,14 @@ IndexServer.prototype = {
     loadData: function() {
         let _self = this;
         this.$scope.executeAjax(this._loadDataUrl,'GET',{},response => {
+
             _self._init_address = response.modelAddress
             _self.address = response.modelAddress;
+            if (response.validate === 1 && _self.autoNext) {
+                _self.validate = true;
+                // 如果验证通过 默认展示第2页
+                _self.validateAddress(true);
+            }
         })
     },
 
@@ -116,7 +172,7 @@ IndexServer.prototype = {
         return this.validate;
     },
 
-    validateAddress: function() {
+    validateAddress: function(isvalidate) {
         let _self = this;
         if(!this.address){
             this.$scope.showError('i18n_name_require', '名称不能为空');
@@ -130,6 +186,11 @@ IndexServer.prototype = {
                     this.$scope.model_version_info = JSON.parse(json);
                     for (let x in this.$scope.model_version_info) {
                         this.$scope.model_version_info[x].forEach(basicModel => basicModel.lastRevision = null)
+                    }
+                    if(isvalidate){
+                        this.$scope.wizard.api.next();
+                        this.autoNext = false;
+                        return;
                     }
                     this.validateSave();
                 }
@@ -155,7 +216,7 @@ IndexServer.prototype = {
 
         let param = {
             modelAddress : this.address,             // 索引服务地址
-            validate : this.validate && 1 || 0,      // 验证结果
+            validate : 1,      // 验证结果
             type : 1,                                // 类型 1是在线 0是离线 此为备用字段
             status : 1                               // 状态 1是启用 0是废弃 此为备用字段
         }
@@ -163,7 +224,7 @@ IndexServer.prototype = {
             //saveSuccess = true;
             _self._init_address = _self.address;
             _self.validate = true;
-            $scope.wizard.continue();
+            _self.$scope.wizard.continue();
         })
         this.validate = false;
         return false;
@@ -177,10 +238,12 @@ IndexServer.prototype = {
  */
 let ModelInstaller = function() {
     this.$scope = null;
-    this._loadLocalDatasUrl = 'modelManager/indexInstaller/modelBasics';
+    // this._loadLocalDatasUrl = 'modelManager/indexInstaller/modelBasics';
+    this._loadLocalDatasUrl = 'modelManager/indexInstaller/modelInstallInfos';
     this._batchInstallUrl = 'modelManager/indexInstaller/install';
     this._batchUninstallUrl = 'modelManager/indexInstaller/unUninstall';
     this._localData = null; //本地数据集合
+    this._installValidate = false;
     this.initialize.apply(this , arguments);
 }
 ModelInstaller.prototype = {
@@ -220,6 +283,7 @@ ModelInstaller.prototype = {
             {value: '名称', key: "name", sort: false},
             {value: '模块', key: "module", sort: false},
             {value: '版本', key: "lastRevision", sort: false},
+            {value: '安装时间', key: "installTime", sort: false},
             {value: '概诉', key: "overview", sort: false}
         ];
         this.conditions = [
@@ -233,6 +297,7 @@ ModelInstaller.prototype = {
             {value: '名称', key: "name", sort: false},
             {value: '模块', key: "module", sort: false},
             {value: '当前版本', key: "current_version", sort: false},
+            {value: '安装时间', key: "installTime", sort: false},
             {value: '可选版本', key: "lastRevision", sort: false},
             {value: '概诉', key: "overview", sort: false}
         ];
@@ -245,6 +310,7 @@ ModelInstaller.prototype = {
         this.$scope.installedItems = null;
         this.$scope.currentRevisions = null;
         this.$scope.currentUpdateRevisions = null;
+        this._installValidate = false;
     },
 
     loadData: function () {
@@ -253,12 +319,19 @@ ModelInstaller.prototype = {
         let _self = this;
         this.$scope.executeAjax(this._loadLocalDatasUrl,'GET',null,(res) => {
             !!res && res.forEach(item => _self._localData[item.module] = item);
-            _self.loadInstallable();_self.loadInstalled();_self.loadUpdates();
+            _self.loadInstallable();_self.loadUpdates();
+            // _self.loadInstalled();
+            _self.$scope.list();
         });
     },
 
     saveData: function () {
         // 存储到本地数据库
+        if(!this._installValidate){
+            this.$scope.showError(null,'请先安装至少一个模块');
+            return false;
+        }
+        return true;
     },
 
 
@@ -345,6 +418,7 @@ ModelInstaller.prototype = {
             model.current_version = _self._localData[model.module].lastRevision;
             model.lastRevision = model.last_version.revision;
             model._versionEdit = false;
+            model.installTime = _self._localData[model.module].installTime;
             model.icon = _self._localData[model.module].icon;
             model._update_options = model.revisions.filter(revision => {
                 let tempTime = new Date(revision.created).getTime();
@@ -401,6 +475,7 @@ ModelInstaller.prototype = {
         for (let localDataKey in this._localData) {
             this.$scope.installedItems.push(this._localData[localDataKey])
         }
+        this._installValidate = !!this.$scope.installedItems && this.$scope.installedItems.length > 0;
     },
 
     //卸载模块
@@ -443,21 +518,9 @@ ModelInstaller.prototype = {
         return result;
     },
 
-
-
 };
-/**
- * 模块运行工具
- * @constructor
- */
-let ModelRunner = function() {
-    this.initialize.apply(this , arguments);
-}
-ModelRunner.prototype = {
-    initialize: function (arguments) {
 
-    },
-}
+
 
 
 

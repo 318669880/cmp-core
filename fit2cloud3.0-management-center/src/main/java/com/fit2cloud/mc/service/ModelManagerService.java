@@ -1,6 +1,7 @@
 package com.fit2cloud.mc.service;
 
 import com.fit2cloud.commons.server.exception.F2CException;
+import com.fit2cloud.commons.utils.CommonThreadPool;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.dao.ModelBasicMapper;
 import com.fit2cloud.mc.dao.ModelBasicPageMapper;
@@ -8,6 +9,7 @@ import com.fit2cloud.mc.dao.ModelManagerMapper;
 import com.fit2cloud.mc.dao.ModelVersionMapper;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.*;
+import com.fit2cloud.mc.utils.ModuleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
@@ -36,9 +38,11 @@ public class ModelManagerService {
     @Resource
     private ModelVersionMapper modelVersionMapper;
 
-
     @Resource
     private ModelBasicPageMapper modelBasicPageMapper;
+
+    @Resource
+    private CommonThreadPool commonThreadPool;
 
     public void add(ModelManager modelManager) {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
@@ -115,6 +119,18 @@ public class ModelManagerService {
     }
 
 
+    public void actionModule(String action, String module) throws Exception{
+        switch (action){
+            case "start":
+                ModuleUtil.startService(module);
+                break;
+            case "stop":
+                ModuleUtil.stopService(module);
+                break;
+            default:
+                break;
+        }
+    }
 
 
 

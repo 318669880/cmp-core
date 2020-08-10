@@ -79,4 +79,10 @@ public class ModelManagerController {
     public List<ModelInstall> modelInstallInfos() {
         return modelManagerService.installInfoquery();
     }
+
+    @GetMapping("/{action}/{module}")
+    public void actionModules(@PathVariable String action, @PathVariable String module) throws Exception{
+        modelManagerService.actionModule(action, module);
+    }
+
 }

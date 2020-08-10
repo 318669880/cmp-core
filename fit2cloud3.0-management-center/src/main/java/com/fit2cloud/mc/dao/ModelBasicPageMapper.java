@@ -21,4 +21,6 @@ public interface ModelBasicPageMapper {
 
 
     List<ModelInstall> select(@Param("map") Map<String, Object> map);
+
+
 }

@@ -13,6 +13,8 @@ public class ModelInstall extends ModelBasic{
 
     private String revision;
 
+    private String downloadUrl;
+
     public Long getInstallTime() {
         return installTime;
     }
@@ -27,5 +29,13 @@ public class ModelInstall extends ModelBasic{
 
     public void setRevision(String revision) {
         this.revision = revision;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 }

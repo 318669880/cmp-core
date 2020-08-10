@@ -9,10 +9,12 @@ import com.fit2cloud.mc.dao.ModelManagerMapper;
 import com.fit2cloud.mc.dao.ModelVersionMapper;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.*;
+import com.fit2cloud.mc.strategy.factory.ModelOperateServiceFactory;
 import com.fit2cloud.mc.utils.ModuleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -41,8 +43,6 @@ public class ModelManagerService {
     @Resource
     private ModelBasicPageMapper modelBasicPageMapper;
 
-    @Resource
-    private CommonThreadPool commonThreadPool;
 
     public void add(ModelManager modelManager) {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
@@ -79,35 +79,9 @@ public class ModelManagerService {
     }
 
 
-    public void addInstaller(ModelInstalledDto modelInstalledDto) {
-        ModelBasic modelBasic = modelInstalledDto.getModelBasic();
-        ModelVersion modelVersion = modelInstalledDto.getModelVersion();
-        ModelBasicExample example = new ModelBasicExample();
-        example.createCriteria().andModuleEqualTo(modelBasic.getModule());
-        List<ModelBasic> modelBasics = modelBasicMapper.selectByExample(example);
-        if(CollectionUtils.isNotEmpty(modelBasics)){
-            ModelBasic temp = modelBasics.get(0);
-            modelBasic.setModelUuid(temp.getModelUuid());
-            modelBasicMapper.updateByPrimaryKey(modelBasic);
-        }else{
-            modelBasic.setModelUuid(UUIDUtil.newUUID());
-            modelBasicMapper.insert(modelBasic);
-        }
-        modelVersion.setModelBasicUuid(modelBasic.getModelUuid());
-        modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
-        /*if(ObjectUtils.isEmpty(modelVersion.getInstallTime()) || 0 == modelVersion.getInstallTime()){
-            modelVersion.setInstallTime(new Date().getTime());
-        }*/
-        modelVersion.setInstallTime(new Date().getTime());
-        modelVersionMapper.insert(modelVersion);
-    }
 
-    public void deleteInstaller(String model_basic_uuid) {
-        ModelVersionExample example = new ModelVersionExample();
-        example.createCriteria().andModelBasicUuidEqualTo(model_basic_uuid);
-        modelVersionMapper.deleteByExample(example);
-        modelBasicMapper.deleteByPrimaryKey(model_basic_uuid);
-    }
+
+
 
     public List<ModelInstall> paging(Map<String, Object> map) {
         return modelBasicPageMapper.select(map);
@@ -117,6 +91,29 @@ public class ModelManagerService {
     public List<ModelInstall> installInfoquery() {
         return modelBasicPageMapper.select(new HashMap<>());
     }
+
+
+    public ModelBasic modelBasicInfo(String module){
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleEqualTo(module);
+        List<ModelBasic> modelBasics = modelBasicMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(modelBasics)){
+            ModelBasic modelBasic = modelBasics.get(0);
+            return modelBasic;
+        }
+        return null;
+    }
+
+    public void updateCurrentStatus(String module,String status) throws Exception{
+        ModelBasic modelBasic = modelBasicInfo(module);
+        if(ObjectUtils.isNotEmpty(modelBasic)){
+            modelBasic.setCurrentStatus(status);
+            modelBasicMapper.updateByPrimaryKey(modelBasic);
+            return;
+        }
+        throw new RuntimeException("模块不存在");
+    }
+
 
 
     public void actionModule(String action, String module) throws Exception{

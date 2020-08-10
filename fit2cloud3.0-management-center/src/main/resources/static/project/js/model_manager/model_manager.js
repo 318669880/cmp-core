@@ -127,6 +127,46 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         });
     };
 
+    $scope.start = function(item) {
+        let module_arr = [];
+        if(item){
+            module_arr.push(item.module);
+        }else{
+            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
+        }
+        $scope.executeAjax('model_manager/operate/start','POST',{module_arr:module_arr}, resp => {
+            $scope.list();
+        })
+    };
+
+    $scope.stop = function(item) {
+        let module_arr = [];
+        if(item){
+            module_arr.push(item.module);
+        }else{
+            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
+        }
+        $scope.executeAjax('model_manager/operate/stop','POST',{module_arr:module_arr}, resp => {
+            $scope.list();
+        })
+    };
+
+    $scope.envs = [
+        {
+            'value': 'single-vim',
+            'name': 'single-vim'
+        },{
+            'value': 'k8s',
+            'name': 'k8s'
+        }
+    ];
+
+    $scope.model_env = 'single-vim';
+
+    $scope.onLine = false;
+
+
+
 
 
 
@@ -159,6 +199,8 @@ IndexServer.prototype = {
 
             _self._init_address = response.modelAddress
             _self.address = response.modelAddress;
+            _self.$scope.onLine = !response.onLine;
+            _self.$scope.model_env = response.env;
             if (response.validate === 1 && _self.autoNext) {
                 _self.validate = true;
                 // 如果验证通过 默认展示第2页
@@ -216,9 +258,9 @@ IndexServer.prototype = {
 
         let param = {
             modelAddress : this.address,             // 索引服务地址
-            validate : 1,      // 验证结果
-            type : 1,                                // 类型 1是在线 0是离线 此为备用字段
-            status : 1                               // 状态 1是启用 0是废弃 此为备用字段
+            validate : 1,                            // 验证结果
+            onLine : this.$scope.onLine?0:1,                              // 类型 1是在线 0是离线 此为备用字段
+            env : 'single-vim'                   // 环境 默认是single-vim 可选 k8s
         }
         this.$scope.executeAjax(this._saveDataUrl,'POST',param,res => {
             //saveSuccess = true;
@@ -238,10 +280,9 @@ IndexServer.prototype = {
  */
 let ModelInstaller = function() {
     this.$scope = null;
-    // this._loadLocalDatasUrl = 'modelManager/indexInstaller/modelBasics';
     this._loadLocalDatasUrl = 'modelManager/indexInstaller/modelInstallInfos';
-    this._batchInstallUrl = 'modelManager/indexInstaller/install';
-    this._batchUninstallUrl = 'modelManager/indexInstaller/unUninstall';
+    this._batchInstallUrl = 'modelManager/operate/install';
+    this._batchUninstallUrl = 'modelManager/operate/unUninstall';
     this._localData = null; //本地数据集合
     this._installValidate = false;
     this.initialize.apply(this , arguments);
@@ -392,6 +433,7 @@ ModelInstaller.prototype = {
             dto.modelBasic.icon = model.remoteImageUrl;
             let modelVersion = model.last_version;
             modelVersion.created = new Date(modelVersion.created).getTime();
+
             dto.modelVersion = modelVersion
             return dto;
         });
@@ -481,7 +523,7 @@ ModelInstaller.prototype = {
     //卸载模块
     unInstall: function () {
         let _self = this;
-        let model_uuid_array = this.$scope.installedItems.filter(model => model.enable === true).map(model =>  model.modelUuid);
+        let model_uuid_array = this.$scope.items.filter(model => model.enable === true).map(model =>  model.modelUuid);
         this.$scope.executeAjax(this._batchUninstallUrl,'POST',model_uuid_array, (resp) => {
             _self.loadData();
         })

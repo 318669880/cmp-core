@@ -684,6 +684,76 @@ public class ModelBasicExample {
             return (Criteria) this;
         }
 
+        public Criteria andCurrentStatusIsNull() {
+            addCriterion("current_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusIsNotNull() {
+            addCriterion("current_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusEqualTo(String value) {
+            addCriterion("current_status =", value, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusNotEqualTo(String value) {
+            addCriterion("current_status <>", value, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusGreaterThan(String value) {
+            addCriterion("current_status >", value, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("current_status >=", value, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusLessThan(String value) {
+            addCriterion("current_status <", value, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusLessThanOrEqualTo(String value) {
+            addCriterion("current_status <=", value, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusLike(String value) {
+            addCriterion("current_status like", value, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusNotLike(String value) {
+            addCriterion("current_status not like", value, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusIn(List<String> values) {
+            addCriterion("current_status in", values, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusNotIn(List<String> values) {
+            addCriterion("current_status not in", values, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusBetween(String value1, String value2) {
+            addCriterion("current_status between", value1, value2, "currentStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentStatusNotBetween(String value1, String value2) {
+            addCriterion("current_status not between", value1, value2, "currentStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andSqlCriterion(String value) {
             addCriterion("(" + value + ")");
             return (Criteria) this;

@@ -7,56 +7,31 @@
             <div wizard="wizard" ng-if="show" class="model_class">
                 <wizard-step id="1">
                     <md-content flex="100">
-                        <!--<md-tabs md-dynamic-height md-border-bottom>
-                            <md-tab label="{{'i18n_index_server_online' | translator:'在线索引服务'}}" ng-click="changeStatus(0)"
-                                    has-permission="KEYCLOAK_SETTING:READ">
-                                <div ng-controller="KeycloakParamController">
-                                    <form name="keyCloakFrom" class="md-padding"
-                                          cg-busy="{promise:loadingLayer,minDuration:500}">
 
-                                        <md-input-container md-no-float class="md-block"
-                                                            layout-gt-xs="row"
-                                                            ng-style="addressInputMargin()"
-                                                            style="margin-bottom: 0px"
-                                                            ng-init="addressInit()">
-                                            &lt;!&ndash;<label>{{'i18n_mc_authentication_address' | translator:'认证地址'}}</label>&ndash;&gt;
-                                            <md-icon>link</md-icon>
-                                            <input style="cursor:pointer;" ng-model="addressURL"
-                                                   type="text"
-                                                   placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}">
-                                        </md-input-container>
-
-                                        <md-content class="md-block" flex="100" style="margin-left: 30px">
-                                            <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
-                                            <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
-                                        </md-content>
-                                    </form>
-
-                                </div>
-                            </md-tab>
-                            <md-tab label="{{'i18n_index_server_offline' | translator:'离线索引服务'}}" ng-click="changeStatus(1)"
-                                    has-permission="KEYCLOAK_SETTING:SYNC">
-                                <div ng-controller="ExtraUserController">
-                                    <form name="tagEditForm" class="md-padding">
-                                        <div class="md-dialog-content">
-
-                                            <md-choose-file layout="row" file="file" accept="text/csv" placeholder="{{'i18n_index_server_local_files' | translator:'本地索引文件'}}" required="true"></md-choose-file>
-
-                                        </div>
-                                        <md-content class="md-block" flex="100" style="margin-left: 30px">
-                                            <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
-                                            <span> {{'i18n_index_server_offline_explain' | translator:'此设置的目的是为了从本地索引文件获取镜像' }}</span>
-                                        </md-content>
-
-                                    </form>
-                                </div>
-                            </md-tab>
-                        </md-tabs>-->
                         <div >
-                            <form name="keyCloakFrom" class="md-padding"
+                            <form name="modelFrom" class="md-padding"
                                   cg-busy="{promise:loadingLayer,minDuration:500}">
-
                                 <md-input-container md-no-float class="md-block"
+                                                    layout-gt-xs="row"
+                                                    style="margin-bottom: 0px" >
+                                    <label>是否使用本地仓库</label>
+                                    <md-switch class="md-primary" aria-label="enable" ng-model="onLine" ></md-switch>
+
+                                </md-input-container>
+
+                                <md-input-container class="md-block" layout-gt-xs="row">
+                                    <label>运行环境</label>
+                                    <md-select ng-model="item.model_env" required ng-change="changeEnv()" >
+                                        <md-option ng-value="env.value" ng-repeat="env in envs">
+                                            {{env.name}}
+                                        </md-option>
+                                    </md-select>
+                                    <div ng-messages="modelFrom.parentId.$error">
+                                        <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container ng-hide="!!onLine" md-no-float class="md-block"
                                                     layout-gt-xs="row"
                                                     style="margin-bottom: 0px" >
                                     <md-icon>link</md-icon>
@@ -65,7 +40,7 @@
                                            placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}">
                                 </md-input-container>
 
-                                <md-content class="md-block" flex="100" style="margin-left: 30px">
+                                <md-content ng-hide="!!onLine" class="md-block" flex="100" style="margin-left: 30px">
                                     <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
                                     <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
                                 </md-content>
@@ -199,12 +174,12 @@
                                                 <md-icon>stop</md-icon>
                                             </md-button>
                                         </div>
-                                        <div class="filter-item">
+                                        <!--<div class="filter-item">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.unInstall()">
                                                 <md-tooltip md-delay="300">卸载</md-tooltip>
                                                 <md-icon>delete</md-icon>
                                             </md-button>
-                                        </div>
+                                        </div>-->
                                         <div class="filter-item">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
                                                 <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
@@ -223,7 +198,7 @@
                                             <td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
                                             <td>{{item.module}}</td>
                                             <td>
-                                                <md-switch class="md-primary" aria-label="enable" ng-model="item.currentStatus" disabled>
+                                                <md-switch class="md-primary" aria-label="enable" ng-model="item.currentStatus==='started'" disabled>
                                                 </md-switch>
                                             </td>
                                             <td>{{item.lastRevision}}</td>
@@ -245,12 +220,12 @@
                                                         </md-button>
                                                     </md-menu-item>
 
-                                                    <md-menu-item >
+                                                    <!--<md-menu-item >
                                                         <md-button ng-click="modelInstaller.unInstall(item)">
                                                             <md-icon class="md-18">delete</md-icon>
                                                             卸载
                                                         </md-button>
-                                                    </md-menu-item>
+                                                    </md-menu-item>-->
 
                                                 </table-menus>
                                             </td>

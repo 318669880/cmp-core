@@ -264,123 +264,133 @@ public class ModelManagerExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNull() {
-            addCriterion("status is null");
+        public Criteria andOnLineIsNull() {
+            addCriterion("on_line is null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNotNull() {
-            addCriterion("status is not null");
+        public Criteria andOnLineIsNotNull() {
+            addCriterion("on_line is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Integer value) {
-            addCriterion("status =", value, "status");
+        public Criteria andOnLineEqualTo(Integer value) {
+            addCriterion("on_line =", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Integer value) {
-            addCriterion("status <>", value, "status");
+        public Criteria andOnLineNotEqualTo(Integer value) {
+            addCriterion("on_line <>", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Integer value) {
-            addCriterion("status >", value, "status");
+        public Criteria andOnLineGreaterThan(Integer value) {
+            addCriterion("on_line >", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("status >=", value, "status");
+        public Criteria andOnLineGreaterThanOrEqualTo(Integer value) {
+            addCriterion("on_line >=", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Integer value) {
-            addCriterion("status <", value, "status");
+        public Criteria andOnLineLessThan(Integer value) {
+            addCriterion("on_line <", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("status <=", value, "status");
+        public Criteria andOnLineLessThanOrEqualTo(Integer value) {
+            addCriterion("on_line <=", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Integer> values) {
-            addCriterion("status in", values, "status");
+        public Criteria andOnLineIn(List<Integer> values) {
+            addCriterion("on_line in", values, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Integer> values) {
-            addCriterion("status not in", values, "status");
+        public Criteria andOnLineNotIn(List<Integer> values) {
+            addCriterion("on_line not in", values, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Integer value1, Integer value2) {
-            addCriterion("status between", value1, value2, "status");
+        public Criteria andOnLineBetween(Integer value1, Integer value2) {
+            addCriterion("on_line between", value1, value2, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("status not between", value1, value2, "status");
+        public Criteria andOnLineNotBetween(Integer value1, Integer value2) {
+            addCriterion("on_line not between", value1, value2, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNull() {
-            addCriterion("type is null");
+        public Criteria andEnvIsNull() {
+            addCriterion("env is null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNotNull() {
-            addCriterion("type is not null");
+        public Criteria andEnvIsNotNull() {
+            addCriterion("env is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeEqualTo(Integer value) {
-            addCriterion("type =", value, "type");
+        public Criteria andEnvEqualTo(String value) {
+            addCriterion("env =", value, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotEqualTo(Integer value) {
-            addCriterion("type <>", value, "type");
+        public Criteria andEnvNotEqualTo(String value) {
+            addCriterion("env <>", value, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThan(Integer value) {
-            addCriterion("type >", value, "type");
+        public Criteria andEnvGreaterThan(String value) {
+            addCriterion("env >", value, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("type >=", value, "type");
+        public Criteria andEnvGreaterThanOrEqualTo(String value) {
+            addCriterion("env >=", value, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThan(Integer value) {
-            addCriterion("type <", value, "type");
+        public Criteria andEnvLessThan(String value) {
+            addCriterion("env <", value, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThanOrEqualTo(Integer value) {
-            addCriterion("type <=", value, "type");
+        public Criteria andEnvLessThanOrEqualTo(String value) {
+            addCriterion("env <=", value, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIn(List<Integer> values) {
-            addCriterion("type in", values, "type");
+        public Criteria andEnvLike(String value) {
+            addCriterion("env like", value, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotIn(List<Integer> values) {
-            addCriterion("type not in", values, "type");
+        public Criteria andEnvNotLike(String value) {
+            addCriterion("env not like", value, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeBetween(Integer value1, Integer value2) {
-            addCriterion("type between", value1, value2, "type");
+        public Criteria andEnvIn(List<String> values) {
+            addCriterion("env in", values, "env");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
-            addCriterion("type not between", value1, value2, "type");
+        public Criteria andEnvNotIn(List<String> values) {
+            addCriterion("env not in", values, "env");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnvBetween(String value1, String value2) {
+            addCriterion("env between", value1, value2, "env");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnvNotBetween(String value1, String value2) {
+            addCriterion("env not between", value1, value2, "env");
             return (Criteria) this;
         }
 

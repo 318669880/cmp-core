@@ -7,6 +7,7 @@
 
         <result column="install_time" jdbcType="BIGINT" property="installTime"/>
         <result column="revision" jdbcType="VARCHAR" property="revision"/>
+        <result column="download_url" jdbcType="VARCHAR" property="downloadUrl"/>
     </resultMap>
 
     <select id="paging" resultMap="com.fit2cloud.mc.dao.ModelBasicMapper.BaseResultMap">
@@ -24,10 +25,10 @@
 
 
     <select id="select" resultMap="ModelInstallResult">
-        select b.*,_v.install_time,revision
+        select b.*,_v.install_time,_v.revision,_v.download_url
         from model_basic b
         left join
-        (select v.model_basic_uuid,max(v.install_time) as install_time,v.revision
+        (select v.model_basic_uuid,max(v.install_time) as install_time,v.revision,v.download_url
         from model_version v GROUP BY v.model_basic_uuid) _v
         on _v.model_basic_uuid = b.model_uuid
         where 1 = 1
@@ -39,4 +40,5 @@
         </if>
 
     </select>
+
 </mapper>

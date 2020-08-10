@@ -43,7 +43,7 @@
         </javaClientGenerator>
 
         <!-- 要生成的数据库表 -->
-        <table tableName="model_basic"/>
+        <table tableName="model_manager"/>
 
     </context>
 </generatorConfiguration>

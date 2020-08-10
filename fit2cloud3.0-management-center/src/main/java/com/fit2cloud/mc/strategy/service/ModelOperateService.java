@@ -13,13 +13,11 @@ import com.fit2cloud.mc.dto.ModelInstalledDto;
  */
 public interface ModelOperateService {
     //安装
-    public Object install(ModelInstalledDto modelInstalledDto);
+    public void installOrUpdate(ModelInstalledDto modelInstalledDto) throws Exception;
     //卸载
-    public Object unInstall(String model_basic_uuid);
-    //更新
-    public Object update(ModelInstalledDto modelInstalledDto);
+    public void unInstall(String modeule) throws Exception;
     //启动
-    public Object start(String model_basic_uuid);
+    public void start(String modeule) throws Exception;
     //停止
-    public Object stop(String model_basic_uuid);
+    public void stop(String modeule) throws Exception;
 }

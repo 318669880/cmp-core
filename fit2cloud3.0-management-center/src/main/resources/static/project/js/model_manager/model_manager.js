@@ -216,7 +216,7 @@ IndexServer.prototype = {
 
     validateAddress: function(isvalidate) {
         if( !this.onLine ){
-            this.address = "/";
+            this.address = window.location.origin + "/indexServer";
         }
         let _self = this;
         if(!this.address){
@@ -224,6 +224,7 @@ IndexServer.prototype = {
             this.validate = false;
             return;
         }
+
         this.$scope.executeAjax(this.address+"/json/data.js",'GET', {remarks: 'query_version_json'}, function(text){
             try {
                 if(!!text && text.indexOf('let templateDate') !=-1){
@@ -250,7 +251,7 @@ IndexServer.prototype = {
     },
 
     validateSave: function() {
-        if(this._init_address === this.address){
+        if(this._init_address === this.address && this._init_model_env === this.model_env && this._init_onLine === this.onLine){
             // 这说明 索引服务没有改过 为提升那么一点客户体验 那就不走后台了保存了
             this.validate = true;
             this.$scope.wizard.continue();
@@ -262,12 +263,14 @@ IndexServer.prototype = {
         let param = {
             modelAddress : this.address,             // 索引服务地址
             validate : 1,                            // 验证结果
-            onLine : this.onLine ? 1 : 0,                              // 类型 1是在线 0是离线 此为备用字段
+            onLine : this.onLine,                              // 是否使用在线索引服务
             env : (this.model_env || 'single-vim')                   // 环境 默认是single-vim 可选 k8s
         }
         this.$scope.executeAjax(this._saveDataUrl,'POST',param,res => {
             //saveSuccess = true;
             _self._init_address = _self.address;
+            _self._init_model_env = _self.model_env;
+            _self._init_onLine = _self.onLine;
             _self.validate = true;
             _self.$scope.wizard.continue();
         })

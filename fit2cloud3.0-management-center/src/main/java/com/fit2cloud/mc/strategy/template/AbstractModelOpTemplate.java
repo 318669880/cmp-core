@@ -6,6 +6,7 @@ import com.fit2cloud.mc.dao.ModelVersionMapper;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelBasicExample;
+import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.model.ModelVersion;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.strategy.entity.ResultInfo;
@@ -42,7 +43,7 @@ public abstract class AbstractModelOpTemplate implements ModelOperateService{
 
     @Transactional
     @Override
-    public void installOrUpdate(ModelInstalledDto modelInstalledDto) throws Exception{
+    public void installOrUpdate(ModelManager managerInfo, ModelInstalledDto modelInstalledDto) throws Exception{
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
         ModelVersion modelVersion = modelInstalledDto.getModelVersion();
         ModelBasicExample example = new ModelBasicExample();
@@ -63,7 +64,7 @@ public abstract class AbstractModelOpTemplate implements ModelOperateService{
         modelVersion.setInstallTime(new Date().getTime());
         modelVersionMapper.insert(modelVersion);
         String filePath = downLoad(modelInstalledDto);
-        executeInstall(modelInstalledDto, filePath);
+        executeInstall(managerInfo, modelInstalledDto, filePath);
     }
     private String downLoad (ModelInstalledDto modelInstalledDto) throws Exception{
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
@@ -73,11 +74,11 @@ public abstract class AbstractModelOpTemplate implements ModelOperateService{
         return resultInfo.getData();
     }
 
-    protected abstract void executeInstall(ModelInstalledDto modelInstalledDto, String filePath) throws Exception;
+    protected abstract void executeInstall(ModelManager managerInfo, ModelInstalledDto modelInstalledDto, String filePath) throws Exception;
 
     @Transactional
     @Override
-    public void start(String module) throws Exception {
+    public void start(ModelManager managerInfo, String module) throws Exception {
         modelManagerService.updateCurrentStatus(module,"starting");
         executeStart(module);
     }
@@ -85,14 +86,14 @@ public abstract class AbstractModelOpTemplate implements ModelOperateService{
 
     @Transactional
     @Override
-    public void stop(String module) throws Exception {
+    public void stop(ModelManager managerInfo, String module) throws Exception {
         modelManagerService.updateCurrentStatus(module,"stopping");
         executeStop(module);
     }
     protected abstract void executeStop(String modeule);
 
     @Override
-    public void unInstall(String modeule) throws Exception {
+    public void unInstall(ModelManager managerInfo, String modeule) throws Exception {
         modelManagerService.updateCurrentStatus(modeule,"unInstalling");
         executeDelete(modeule);
     }

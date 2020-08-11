@@ -8,7 +8,7 @@ public class ModelManager implements Serializable {
     private String modelAddress;
 
     @ApiModelProperty(value = "", required = true)
-    private Integer onLine;
+    private Boolean onLine;
 
     @ApiModelProperty(value = "", required = true)
     private String env;
@@ -56,7 +56,7 @@ public class ModelManager implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getOnLine() {
+    public Boolean getOnLine() {
         return onLine;
     }
 
@@ -68,7 +68,7 @@ public class ModelManager implements Serializable {
      *
      * @mbg.generated
      */
-    public void setOnLine(Integer onLine) {
+    public void setOnLine(Boolean onLine) {
         this.onLine = onLine;
     }
 

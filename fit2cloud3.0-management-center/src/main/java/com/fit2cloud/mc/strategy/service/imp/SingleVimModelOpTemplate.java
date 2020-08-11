@@ -2,6 +2,7 @@ package com.fit2cloud.mc.strategy.service.imp;
 
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
+import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.strategy.template.AbstractModelOpTemplate;
 import com.fit2cloud.mc.utils.ModuleUtil;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,9 @@ import org.springframework.stereotype.Service;
 public class SingleVimModelOpTemplate extends AbstractModelOpTemplate {
 
     @Override
-    protected void executeInstall(ModelInstalledDto modelInstalledDto, String filePath) {
+    protected void executeInstall(ModelManager modelManager, ModelInstalledDto modelInstalledDto, String filePath) {
         try{
-            ModuleUtil.installOrUpdateModule(filePath);
+            ModuleUtil.installOrUpdateModule(filePath, modelManager.getOnLine());
         }catch (Exception e){
             F2CException.throwException(e);
         }

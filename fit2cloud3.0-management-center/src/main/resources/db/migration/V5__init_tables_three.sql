@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `model_manager` (
   `model_address` varchar(255) NOT NULL,
-  `on_line` int(10) NOT NULL,
+  `on_line` tinyint(1) NOT NULL,
   `env` varchar(100) NOT NULL,
   `validate` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

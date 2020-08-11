@@ -51,14 +51,6 @@ public class ModelManagerController {
 
 
 
-    /*@PostMapping("/indexInstaller/modeVersion")
-    public ModelVersion modelVersion(String model_basic_uuid,String model_version){
-        return modelManagerService.modelVersionByBasic(model_basic_uuid,model_version);
-    }*/
-
-
-
-
     @PostMapping(value = "/runner/{goPage}/{pageSize}")
     public Pager<List<ModelInstall>> paging(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody ModelInstalledRequest request) {
         Page page = PageHelper.startPage(goPage, pageSize, true);
@@ -76,7 +68,6 @@ public class ModelManagerController {
 
     @PostMapping("/operate/install")
     public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos) {
-        /*modelInstalledDtos.forEach(modelInstalledDto -> modelManagerService.addInstaller(modelInstalledDto));*/
         ModelManager managerInfo = modelManagerService.select();
         String addr = managerInfo.getModelAddress();
         modelInstalledDtos.forEach(modelInstalledDto -> {
@@ -86,7 +77,7 @@ public class ModelManagerController {
                     url = (addr.endsWith("/")? addr : (addr+"/")) + url;
                     modelInstalledDto.getModelVersion().setDownloadUrl(url);
                 }
-                ModelOperateServiceFactory.build(managerInfo.getEnv()).installOrUpdate(modelInstalledDto);
+                ModelOperateServiceFactory.build(managerInfo.getEnv()).installOrUpdate(managerInfo,modelInstalledDto);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -98,7 +89,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                ModelOperateServiceFactory.build(managerInfo.getEnv()).unInstall(module);
+                ModelOperateServiceFactory.build(managerInfo.getEnv()).unInstall(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -110,7 +101,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                ModelOperateServiceFactory.build(managerInfo.getEnv()).start(module);
+                ModelOperateServiceFactory.build(managerInfo.getEnv()).start(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -122,7 +113,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                ModelOperateServiceFactory.build(managerInfo.getEnv()).stop(module);
+                ModelOperateServiceFactory.build(managerInfo.getEnv()).stop(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }

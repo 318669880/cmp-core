@@ -31,7 +31,6 @@ public class NetFileService extends ResultService{
     private final static String dirPath = "/opt/fit2cloud/install";
 
     public  ResultInfo<String> down(String url) throws Exception{
-//        ResultService<String> resultService = new ResultService<>();
         CloseableHttpClient client = HttpClients.createDefault();
         RequestConfig config = null;
         File dir = new File(dirPath);

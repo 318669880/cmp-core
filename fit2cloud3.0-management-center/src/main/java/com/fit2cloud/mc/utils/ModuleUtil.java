@@ -38,7 +38,7 @@ public class ModuleUtil {
     }
 
 
-    public static void installOrUpdateModule(String moduleFileName) throws Exception {
+    public static void installOrUpdateModule(String moduleFileName, boolean onLine) throws Exception {
         List<String> command = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
         String random_dir_name = UUID.randomUUID().toString();

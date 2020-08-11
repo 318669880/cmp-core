@@ -274,52 +274,52 @@ public class ModelManagerExample {
             return (Criteria) this;
         }
 
-        public Criteria andOnLineEqualTo(Integer value) {
+        public Criteria andOnLineEqualTo(Boolean value) {
             addCriterion("on_line =", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineNotEqualTo(Integer value) {
+        public Criteria andOnLineNotEqualTo(Boolean value) {
             addCriterion("on_line <>", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineGreaterThan(Integer value) {
+        public Criteria andOnLineGreaterThan(Boolean value) {
             addCriterion("on_line >", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineGreaterThanOrEqualTo(Integer value) {
+        public Criteria andOnLineGreaterThanOrEqualTo(Boolean value) {
             addCriterion("on_line >=", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineLessThan(Integer value) {
+        public Criteria andOnLineLessThan(Boolean value) {
             addCriterion("on_line <", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineLessThanOrEqualTo(Integer value) {
+        public Criteria andOnLineLessThanOrEqualTo(Boolean value) {
             addCriterion("on_line <=", value, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineIn(List<Integer> values) {
+        public Criteria andOnLineIn(List<Boolean> values) {
             addCriterion("on_line in", values, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineNotIn(List<Integer> values) {
+        public Criteria andOnLineNotIn(List<Boolean> values) {
             addCriterion("on_line not in", values, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineBetween(Integer value1, Integer value2) {
+        public Criteria andOnLineBetween(Boolean value1, Boolean value2) {
             addCriterion("on_line between", value1, value2, "onLine");
             return (Criteria) this;
         }
 
-        public Criteria andOnLineNotBetween(Integer value1, Integer value2) {
+        public Criteria andOnLineNotBetween(Boolean value1, Boolean value2) {
             addCriterion("on_line not between", value1, value2, "onLine");
             return (Criteria) this;
         }

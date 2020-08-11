@@ -31,7 +31,7 @@ public class SingleVimModelOpTemplate extends AbstractModelOpTemplate {
         try{
             ModuleUtil.startService(modeule);
         }catch (Exception e){
-            e.printStackTrace();
+            F2CException.throwException(e);
         }
     }
 
@@ -40,7 +40,7 @@ public class SingleVimModelOpTemplate extends AbstractModelOpTemplate {
         try{
             ModuleUtil.stopService(modeule);
         }catch (Exception e){
-            e.printStackTrace();
+            F2CException.throwException(e);
         }
     }
 

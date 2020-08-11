@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.strategy.service;
 
+import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.mc.strategy.entity.ResultInfo;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,12 +28,18 @@ import java.io.InputStream;
 @Service
 public class NetFileService extends ResultService{
 
-    private final static String filePath = "/Users/chenyawen/Downloads/menu-mix.zip";
+    private final static String dirPath = "/opt/fit2cloud/install";
 
     public  ResultInfo<String> down(String url) throws Exception{
 //        ResultService<String> resultService = new ResultService<>();
         CloseableHttpClient client = HttpClients.createDefault();
         RequestConfig config = null;
+        File dir = new File(dirPath);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+        String fileName = url.substring(url.lastIndexOf("/"));
+        String filePath = dirPath + fileName;
         //使用代理
         config = RequestConfig.custom().build();
         //目标文件url
@@ -57,7 +64,7 @@ public class NetFileService extends ResultService{
                 is.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            F2CException.throwException(e);
         }finally{
             try {
                 client.close();

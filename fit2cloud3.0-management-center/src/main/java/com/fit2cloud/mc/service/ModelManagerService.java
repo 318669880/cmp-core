@@ -1,6 +1,5 @@
 package com.fit2cloud.mc.service;
 
-import com.fit2cloud.commons.server.dcslock.annotation.DcsLock;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.mc.dao.ModelBasicMapper;
 import com.fit2cloud.mc.dao.ModelBasicPageMapper;
@@ -8,7 +7,7 @@ import com.fit2cloud.mc.dao.ModelManagerMapper;
 import com.fit2cloud.mc.dao.ModelVersionMapper;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.*;
-import com.fit2cloud.mc.strategy.factory.ModelOperateServiceFactory;
+import com.fit2cloud.mc.strategy.factory.ModelOperateStrategyFactory;
 import com.fit2cloud.mc.utils.ModuleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -56,27 +55,6 @@ public class ModelManagerService {
         List<ModelManager> modelManagerList = modelManagerMapper.selectByExample(modelManagerExample);
         return CollectionUtils.isEmpty(modelManagerList) ? null : modelManagerList.get(0);
     }
-
-
-    // 获取已安装模块
-    /*public List<ModelBasic> modelBasicSelect() {
-        ModelBasicExample example = new ModelBasicExample();
-        example.createCriteria().andModelUuidIsNotNull();
-        List<ModelBasic> modelBasics = modelBasicMapper.selectByExample(example);
-        return modelBasics;
-    }*/
-
-    // 获取版本信息
-    /*public ModelVersion modelVersionByBasic(String model_basic_uuid,String revision) {
-        ModelVersionExample example = new ModelVersionExample();
-        example.createCriteria().andModelBasicUuidEqualTo(model_basic_uuid).andRevisionEqualTo(revision);
-        List<ModelVersion> modelVersions = modelVersionMapper.selectByExample(example);
-        if (CollectionUtils.isEmpty(modelVersions)){
-            throw new RuntimeException("为查询到符合条件的版本信息");
-        }
-        return modelVersions.get(0);
-    }*/
-
 
 
 
@@ -127,29 +105,5 @@ public class ModelManagerService {
                 break;
         }
     }
-
-
-
-    @Transactional
-    @DcsLock(key = "model_install")
-    public void install(ModelManager modelManager, List<ModelInstalledDto> modelInstalledDtos){
-        String addr = modelManager.getModelAddress();
-        modelInstalledDtos.forEach(modelInstalledDto -> {
-            try{
-                String url = modelInstalledDto.getModelVersion().getDownloadUrl();
-                if(url.indexOf(addr) == -1){
-                    url = (addr.endsWith("/")? addr : (addr+"/")) + url;
-                    modelInstalledDto.getModelVersion().setDownloadUrl(url);
-                }
-                ModelOperateServiceFactory.build(modelManager.getEnv()).installOrUpdate(modelManager,modelInstalledDto);
-            }catch (Exception e){
-                F2CException.throwException(e);
-            }
-        });
-    }
-
-
-
-
 
 }

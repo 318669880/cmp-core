@@ -21,17 +21,18 @@ public @interface DcsLock {
      * 分布式锁key值
      * @return
      */
-    String key();
+    String key() default "";
 
     /**
-     * 超时时间 超过则释放锁 默认-1 永远不超时
+     * 超时时间 默认5s
      * @return
+     *
      */
-    long overtime() default -1;
+    long overtime() default 5000;
 
     /**
-     * 等待时间 超过则重试获取锁
+     * 等待时间 超过则重试获取锁 默认1.5s
      * @return
      */
-    long waitime() default -1;
+    long waitime() default 1500;
 }

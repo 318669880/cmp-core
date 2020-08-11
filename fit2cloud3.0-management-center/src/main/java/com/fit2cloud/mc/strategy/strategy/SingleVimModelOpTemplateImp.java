@@ -1,9 +1,9 @@
-package com.fit2cloud.mc.strategy.service.imp;
+package com.fit2cloud.mc.strategy.strategy;
 
+import com.fit2cloud.commons.server.dcslock.annotation.DcsLock;
 import com.fit2cloud.commons.server.exception.F2CException;
-import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.ModelManager;
-import com.fit2cloud.mc.strategy.template.AbstractModelOpTemplate;
+import com.fit2cloud.mc.strategy.service.ModelOperateStrategy;
 import com.fit2cloud.mc.utils.ModuleUtil;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +16,12 @@ import org.springframework.stereotype.Service;
  * 单机docker-compose操作模块
  */
 @Service("single-vim")
-public class SingleVimModelOpTemplate extends AbstractModelOpTemplate {
+public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
 
+    // 集群环境避免各节点同时执行
+    @DcsLock
     @Override
-    protected void executeInstall(ModelManager modelManager, ModelInstalledDto modelInstalledDto, String filePath) {
+    public void executeInstall(ModelManager modelManager,  String filePath) {
         try{
             ModuleUtil.installOrUpdateModule(filePath, modelManager.getOnLine());
         }catch (Exception e){
@@ -27,8 +29,9 @@ public class SingleVimModelOpTemplate extends AbstractModelOpTemplate {
         }
     }
 
+    @DcsLock
     @Override
-    protected void executeStart(String modeule) {
+    public void executeStart(String modeule) {
         try{
             ModuleUtil.startService(modeule);
         }catch (Exception e){
@@ -36,8 +39,9 @@ public class SingleVimModelOpTemplate extends AbstractModelOpTemplate {
         }
     }
 
+    @DcsLock
     @Override
-    protected void executeStop(String modeule) {
+    public void executeStop(String modeule) {
         try{
             ModuleUtil.stopService(modeule);
         }catch (Exception e){
@@ -45,8 +49,9 @@ public class SingleVimModelOpTemplate extends AbstractModelOpTemplate {
         }
     }
 
+    @DcsLock
     @Override
-    protected void executeDelete(String modeule) {
+    public void executeDelete(String modeule) {
 
     }
 }

@@ -1,23 +1,18 @@
 package com.fit2cloud.mc.controller;
 
-import com.fit2cloud.commons.server.base.domain.ExtraUser;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
-import com.fit2cloud.mc.common.constants.PermissionConstants;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
-import com.fit2cloud.mc.dto.request.ExtraUserRequest;
 import com.fit2cloud.mc.dto.request.ModelInstalledRequest;
-import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelInstall;
 import com.fit2cloud.mc.model.ModelManager;
-import com.fit2cloud.mc.model.ModelVersion;
 import com.fit2cloud.mc.service.ModelManagerService;
-import com.fit2cloud.mc.strategy.factory.ModelOperateServiceFactory;
+import com.fit2cloud.mc.strategy.factory.ModelOperateStrategyFactory;
+import com.fit2cloud.mc.strategy.service.ModelOperateService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,6 +32,9 @@ public class ModelManagerController {
 
     @Resource
     private ModelManagerService modelManagerService;
+
+    @Resource
+    private ModelOperateService modelOperateService;
 
     //  无敏感信息 无需使用dto
     @PostMapping("/indexServer/save")
@@ -68,8 +66,20 @@ public class ModelManagerController {
 
     @PostMapping("/operate/install")
     public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos) {
-        ModelManager managerInfo = modelManagerService.select();
-        modelManagerService.install(managerInfo,modelInstalledDtos);
+        ModelManager modelManager = modelManagerService.select();
+        String addr = modelManager.getModelAddress();
+        modelInstalledDtos.forEach(modelInstalledDto -> {
+            try{
+                String url = modelInstalledDto.getModelVersion().getDownloadUrl();
+                if(url.indexOf(addr) == -1){
+                    url = (addr.endsWith("/")? addr : (addr+"/")) + url;
+                    modelInstalledDto.getModelVersion().setDownloadUrl(url);
+                }
+                modelOperateService.installOrUpdate(modelManager,modelInstalledDto);
+            }catch (Exception e){
+                F2CException.throwException(e);
+            }
+        });
     }
 
     @PostMapping("/operate/unUninstall")
@@ -77,7 +87,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                ModelOperateServiceFactory.build(managerInfo.getEnv()).unInstall(managerInfo, module);
+                modelOperateService.unInstall(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -89,7 +99,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                ModelOperateServiceFactory.build(managerInfo.getEnv()).start(managerInfo, module);
+                modelOperateService.start(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -101,7 +111,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                ModelOperateServiceFactory.build(managerInfo.getEnv()).stop(managerInfo, module);
+                modelOperateService.stop(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }

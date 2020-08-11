@@ -1,5 +1,7 @@
-package com.fit2cloud.mc.strategy.template;
+package com.fit2cloud.mc.strategy.service.imp;
 
+import com.fit2cloud.commons.server.constants.RedisConstants;
+import com.fit2cloud.commons.server.redis.subscribe.RedisMessagePublisher;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.dao.ModelBasicMapper;
 import com.fit2cloud.mc.dao.ModelVersionMapper;
@@ -9,10 +11,12 @@ import com.fit2cloud.mc.model.ModelBasicExample;
 import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.model.ModelVersion;
 import com.fit2cloud.mc.service.ModelManagerService;
+import com.fit2cloud.mc.strategy.entity.ModuleMessageInfo;
 import com.fit2cloud.mc.strategy.entity.ResultInfo;
 import com.fit2cloud.mc.strategy.service.ModelOperateService;
 import com.fit2cloud.mc.strategy.service.NetFileService;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
@@ -26,7 +30,8 @@ import java.util.List;
  * @Description: Please Write notes scientifically
  */
 
-public abstract class AbstractModelOpTemplate implements ModelOperateService{
+@Service
+public class ModelOpServiceImp implements ModelOperateService{
 
     @Resource
     private NetFileService netFileService;
@@ -40,6 +45,9 @@ public abstract class AbstractModelOpTemplate implements ModelOperateService{
 
     @Resource
     private ModelManagerService modelManagerService;
+
+    @Resource
+    private RedisMessagePublisher redisMessagePublisher;
 
     @Transactional
     @Override
@@ -64,38 +72,52 @@ public abstract class AbstractModelOpTemplate implements ModelOperateService{
         modelVersion.setInstallTime(new Date().getTime());
         modelVersionMapper.insert(modelVersion);
         String filePath = downLoad(modelInstalledDto);
-        executeInstall(managerInfo, modelInstalledDto, filePath);
+
+        modelInstalledDto.getModelVersion().setDownloadUrl(filePath);
+        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeInstall",new Object[]{managerInfo,filePath});
+        //通过广播的方式 让每一个集群节点都执行安装
+        redisMessagePublisher.publish(RedisConstants.Topic.MODULE_OPERATE,moduleMessageInfo);
+        //executeInstall(managerInfo, modelInstalledDto, filePath);
     }
     private String downLoad (ModelInstalledDto modelInstalledDto) throws Exception{
-        ModelBasic modelBasic = modelInstalledDto.getModelBasic();
         ModelVersion modelVersion = modelInstalledDto.getModelVersion();
         String downloadUrl = modelVersion.getDownloadUrl();
         ResultInfo<String> resultInfo = netFileService.down(downloadUrl);
         return resultInfo.getData();
     }
 
-    protected abstract void executeInstall(ModelManager managerInfo, ModelInstalledDto modelInstalledDto, String filePath) throws Exception;
+
 
     @Transactional
     @Override
     public void start(ModelManager managerInfo, String module) throws Exception {
         modelManagerService.updateCurrentStatus(module,"starting");
-        executeStart(module);
+        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeStart",new Object[]{module});
+        redisMessagePublisher.publish(RedisConstants.Topic.MODULE_OPERATE,moduleMessageInfo);
+        //executeStart(module);
     }
-    protected abstract void executeStart(String modeule);
+
 
     @Transactional
     @Override
     public void stop(ModelManager managerInfo, String module) throws Exception {
         modelManagerService.updateCurrentStatus(module,"stopping");
-        executeStop(module);
+        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeStop",new Object[]{module});
+        redisMessagePublisher.publish(RedisConstants.Topic.MODULE_OPERATE,moduleMessageInfo);
+        //executeStop(module);
     }
-    protected abstract void executeStop(String modeule);
+
 
     @Override
-    public void unInstall(ModelManager managerInfo, String modeule) throws Exception {
-        modelManagerService.updateCurrentStatus(modeule,"unInstalling");
-        executeDelete(modeule);
+    public void unInstall(ModelManager managerInfo, String module) throws Exception {
+        modelManagerService.updateCurrentStatus(module,"unInstalling");
+        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeDelete",new Object[]{module});
+        redisMessagePublisher.publish(RedisConstants.Topic.MODULE_OPERATE,moduleMessageInfo);
+        //executeDelete(module);
     }
-    protected abstract void executeDelete(String modeule);
+
+
+
+
+
 }

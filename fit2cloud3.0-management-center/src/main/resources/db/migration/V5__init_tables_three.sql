@@ -27,3 +27,12 @@ CREATE TABLE IF NOT EXISTS `model_version` (
   `install_time` bigint(13) NOT NULL,
   PRIMARY KEY (`model_version_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `t_lock` (
+  `lock_key` varchar(200) NOT NULL COMMENT '锁唯一标志',
+  `request_id` varchar(64) NOT NULL DEFAULT '' COMMENT '用来标识请求对象的',
+  `lock_count` int(11) NOT NULL DEFAULT '0' COMMENT '当前上锁次数',
+  `timeout` bigint(20) NOT NULL DEFAULT '0' COMMENT '锁超时时间',
+  `version` int(11) NOT NULL DEFAULT '0' COMMENT '版本号，每次更新+1',
+  PRIMARY KEY (`lock_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='锁信息表';

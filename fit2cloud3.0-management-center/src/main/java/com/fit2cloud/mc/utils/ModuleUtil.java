@@ -1,6 +1,8 @@
 package com.fit2cloud.mc.utils;
 
+import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
+import com.fit2cloud.mc.config.InternalDockerRegistry;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -54,6 +56,10 @@ public class ModuleUtil {
         }
 
         checkFileExist(extensionTmpDir,  dockerCompose);
+
+        if(!onLine){
+            handleWithInternalDockerRegistry(extensionTmpDir);
+        }
 
         List<String> newModuleNameList = new ArrayList<>();
         List<String> newImageNameList = new ArrayList<>();
@@ -111,11 +117,33 @@ public class ModuleUtil {
             copyFile(command, result, extentionTmpConfFolder, fit2cloudModuleDir + "conf/");
         }
 
-        pullImages(command, result, newImageNameList);
+        pullImages(command, result, newImageNameList, onLine);
 
         startService(command, result, newModuleNameList, fit2cloudModuleDir);
 
         deleteFile(command, result, tmp_dir);
+    }
+
+    private static void handleWithInternalDockerRegistry(String extensionTmpDir) throws IOException {
+        InternalDockerRegistry internalDockerRegistry = CommonBeanFactory.getBean(InternalDockerRegistry.class);
+        String url = internalDockerRegistry.getUrl().contains("://") ? internalDockerRegistry.getUrl().split("://")[1] : internalDockerRegistry.getUrl();
+        if(url.endsWith("/")) url = url.substring(0, url.length() -1);
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader newDockerComposebufferedReader = new BufferedReader(new FileReader(extensionTmpDir + dockerCompose));
+        String line = null;
+        while ((line=newDockerComposebufferedReader.readLine()) != null){
+            if(line.contains("image:")){
+                String image = line.replace("image:", "").replace(" ", "");
+                line = line.replace(image.split("/")[0], url);
+            }
+            stringBuilder.append(line);
+            stringBuilder.append("\n");
+        }
+        newDockerComposebufferedReader.close();
+        BufferedWriter newDockerComposebufferedWriter = new BufferedWriter(new FileWriter(extensionTmpDir + dockerCompose));
+        newDockerComposebufferedWriter.write(stringBuilder.toString());
+        newDockerComposebufferedWriter.flush();
+        newDockerComposebufferedWriter.close();
     }
 
     private static void deleteFile(List<String> command, StringBuilder result, String tmp_dir) throws Exception {
@@ -169,8 +197,21 @@ public class ModuleUtil {
         result.setLength(0);
     }
 
-    private static void pullImages(List<String> command, StringBuilder result, List<String> newImageNameList) throws Exception {
+    private static void pullImages(List<String> command, StringBuilder result, List<String> newImageNameList, boolean onLine) throws Exception {
         LogUtil.info("Pull images" +  newImageNameList);
+        if(!onLine){
+            InternalDockerRegistry internalDockerRegistry = CommonBeanFactory.getBean(InternalDockerRegistry.class);
+            command.add(docker);
+            command.add("login");
+            command.add(internalDockerRegistry.getUrl());
+            command.add("-u");
+            command.add(internalDockerRegistry.getUser());
+            command.add("-p");
+            command.add(internalDockerRegistry.getPasswd());
+            execCommand(result, command);
+            command.clear();
+            result.setLength(0);
+        }
         command.add(docker);
         command.add("pull");
         command.addAll(newImageNameList);

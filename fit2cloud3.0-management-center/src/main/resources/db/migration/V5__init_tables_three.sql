@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `model_manager` (
   `model_address` varchar(255) NOT NULL,
-  `status` int(10) DEFAULT NULL,
-  `type` int(10) DEFAULT NULL,
+  `on_line` int(10) NOT NULL,
+  `env` varchar(100) NOT NULL,
   `validate` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS  `model_basic` (
   `module` varchar(100) DEFAULT NULL,
   `overview` varchar(255) DEFAULT NULL,
   `summary` varchar(255) DEFAULT NULL,
+  `current_status` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`model_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

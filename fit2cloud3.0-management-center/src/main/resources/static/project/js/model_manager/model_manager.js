@@ -154,10 +154,10 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     $scope.envs = [
         {
             'value': 'single-vim',
-            'name': 'single-vim'
+            'name': '虚拟化环境'
         },{
             'value': 'k8s',
-            'name': 'k8s'
+            'name': '容器环境'
         }
     ];
 

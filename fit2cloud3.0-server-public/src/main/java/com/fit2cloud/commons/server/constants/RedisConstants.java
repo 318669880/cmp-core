@@ -5,6 +5,8 @@ public class RedisConstants {
         public static final String CLOUD_ACCOUNT = "cloud_account";
         public static final String WORKSPACE_DELETE = "workspace_delete";
         public static final String CLOUD_ACCOUNT_IMAGE = "cloud_account_image";
+        public static final String MODULE_OPERATE = "dcs_module_operate";
+
     }
 
     public static class Queue {

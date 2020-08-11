@@ -3,6 +3,8 @@ package com.fit2cloud.mc.dto;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelVersion;
 
+import java.io.Serializable;
+
 /**
  * @Company: FIT2CLOUD 飞致云
  * @Author: Mr.cyw
@@ -10,7 +12,7 @@ import com.fit2cloud.mc.model.ModelVersion;
  * @Date: 2020/8/6 12:03 下午
  * @Description: Please Write notes scientifically
  */
-public class ModelInstalledDto {
+public class ModelInstalledDto implements Serializable {
 
     private ModelBasic modelBasic;
 

@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="de1f08c7-6449-45b2-9b06-2982b18d7f98" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/config/CommonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/config/CommonConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/controller/ModelManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/controller/ModelManagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/dto/ModelInstalledDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/dto/ModelInstalledDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/strategy/service/NetFileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/strategy/service/NetFileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/strategy/service/imp/SingleVimModelOpTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/strategy/service/imp/SingleVimModelOpTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/utils/ModuleUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/java/com/fit2cloud/mc/utils/ModuleUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/resources/static/project/js/model_manager/model_manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/../fit2cloud3.0-management-center/src/main/resources/static/project/js/model_manager/model_manager.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,10 +25,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
-  </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="1440" />
-    <option name="height" value="900" />
   </component>
   <component name="ProjectId" id="1fRIbkbYCtWTgi6ut4bvFJLu2xc" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -73,6 +76,9 @@
       <workItem from="1596529286859" duration="812000" />
       <workItem from="1596604934774" duration="1297000" />
       <workItem from="1596616090802" duration="688000" />
+      <workItem from="1597047486629" duration="1235000" />
+      <workItem from="1597050929793" duration="838000" />
+      <workItem from="1597116050639" duration="604000" />
     </task>
     <servers />
   </component>
@@ -90,10 +96,10 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="981" y="475" width="598" height="490" key="find.popup" timestamp="1596617269394">
+    <state x="981" y="475" width="598" height="490" key="find.popup" timestamp="1597048631503">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state x="981" y="475" width="598" height="490" key="find.popup/0.0.2560.1440@0.0.2560.1440" timestamp="1596617269394" />
+    <state x="981" y="475" width="598" height="490" key="find.popup/0.0.2560.1440@0.0.2560.1440" timestamp="1597048631503" />
   </component>
   <component name="masterDetails">
     <states>

@@ -69,19 +69,7 @@ public class ModelManagerController {
     @PostMapping("/operate/install")
     public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos) {
         ModelManager managerInfo = modelManagerService.select();
-        String addr = managerInfo.getModelAddress();
-        modelInstalledDtos.forEach(modelInstalledDto -> {
-            try{
-                String url = modelInstalledDto.getModelVersion().getDownloadUrl();
-                if(url.indexOf(addr) == -1){
-                    url = (addr.endsWith("/")? addr : (addr+"/")) + url;
-                    modelInstalledDto.getModelVersion().setDownloadUrl(url);
-                }
-                ModelOperateServiceFactory.build(managerInfo.getEnv()).installOrUpdate(managerInfo,modelInstalledDto);
-            }catch (Exception e){
-                F2CException.throwException(e);
-            }
-        });
+        modelManagerService.install(managerInfo,modelInstalledDtos);
     }
 
     @PostMapping("/operate/unUninstall")

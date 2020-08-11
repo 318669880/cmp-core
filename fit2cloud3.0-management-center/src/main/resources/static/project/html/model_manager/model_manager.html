@@ -4,7 +4,7 @@
     <div layout="column" layout-fill class="model_manager_container">
 
         <md-content flex="auto">
-            <div wizard="wizard" ng-if="show" class="model_class">
+            <div wizard="wizard" ng-if="show" class="model_class model_content_container">
                 <wizard-step id="1">
                     <md-content flex="100">
 
@@ -14,14 +14,14 @@
                                 <md-input-container md-no-float class="md-block"
                                                     layout-gt-xs="row"
                                                     style="margin-bottom: 0px" >
-                                    <label>是否使用本地仓库</label>
-                                    <md-switch class="md-primary" aria-label="enable" ng-model="onLine" ></md-switch>
+                                    <label>使用在线索引服务</label>
+                                    <md-switch class="md-primary" aria-label="enable" ng-change="indexServer.changeOnline()" ng-model="indexServer.onLine" ></md-switch>
 
                                 </md-input-container>
 
                                 <md-input-container class="md-block" layout-gt-xs="row">
                                     <label>运行环境</label>
-                                    <md-select ng-model="item.model_env" required ng-change="changeEnv()" >
+                                    <md-select ng-model="indexServer.model_env" required >
                                         <md-option ng-value="env.value" ng-repeat="env in envs">
                                             {{env.name}}
                                         </md-option>
@@ -31,7 +31,7 @@
                                     </div>
                                 </md-input-container>
 
-                                <md-input-container ng-hide="!!onLine" md-no-float class="md-block"
+                                <md-input-container ng-show="!!indexServer.onLine" md-no-float class="md-block"
                                                     layout-gt-xs="row"
                                                     style="margin-bottom: 0px" >
                                     <md-icon>link</md-icon>
@@ -40,7 +40,7 @@
                                            placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}">
                                 </md-input-container>
 
-                                <md-content ng-hide="!!onLine" class="md-block" flex="100" style="margin-left: 30px">
+                                <md-content ng-show="!!indexServer.onLine" class="md-block" flex="100" style="margin-left: 30px">
                                     <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
                                     <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
                                 </md-content>

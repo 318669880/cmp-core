@@ -161,13 +161,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }
     ];
 
-    $scope.model_env = 'single-vim';
-
-    $scope.onLine = false;
-
-
-
-
 
 
 });
@@ -185,6 +178,8 @@ let IndexServer = function() {
     this.validate = false;
     this.$scope = null;
     this.autoNext = true;
+    this.model_env = 'single-vim';
+    this.onLine = true;
     this.initialize.apply(this , arguments);
 };
 IndexServer.prototype = {
@@ -199,8 +194,13 @@ IndexServer.prototype = {
 
             _self._init_address = response.modelAddress
             _self.address = response.modelAddress;
-            _self.$scope.onLine = !response.onLine;
-            _self.$scope.model_env = response.env;
+
+            _self._init_onLine = !!response.onLine;
+            _self.onLine = !!response.onLine;
+
+            _self._init_model_env = response.env;
+            _self.model_env = response.env;
+
             if (response.validate === 1 && _self.autoNext) {
                 _self.validate = true;
                 // 如果验证通过 默认展示第2页
@@ -215,9 +215,12 @@ IndexServer.prototype = {
     },
 
     validateAddress: function(isvalidate) {
+        if( !this.onLine ){
+            this.address = "/";
+        }
         let _self = this;
         if(!this.address){
-            this.$scope.showError('i18n_name_require', '名称不能为空');
+            this.$scope.showError('i18n_name_require', '索引服务不能为空');
             this.validate = false;
             return;
         }
@@ -259,8 +262,8 @@ IndexServer.prototype = {
         let param = {
             modelAddress : this.address,             // 索引服务地址
             validate : 1,                            // 验证结果
-            onLine : this.$scope.onLine?0:1,                              // 类型 1是在线 0是离线 此为备用字段
-            env : 'single-vim'                   // 环境 默认是single-vim 可选 k8s
+            onLine : this.onLine ? 1 : 0,                              // 类型 1是在线 0是离线 此为备用字段
+            env : (this.model_env || 'single-vim')                   // 环境 默认是single-vim 可选 k8s
         }
         this.$scope.executeAjax(this._saveDataUrl,'POST',param,res => {
             //saveSuccess = true;
@@ -271,7 +274,13 @@ IndexServer.prototype = {
         this.validate = false;
         return false;
     },
-
+    changeOnline: function () {
+        if(this._init_onLine === this.onLine){
+            this.address = this._init_address;
+            return;
+        }
+        this.address = "";
+    }
 
 };
 /**

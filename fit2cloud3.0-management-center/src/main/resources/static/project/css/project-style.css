@@ -434,3 +434,11 @@ span.auto-break {
     word-break: break-all;
     white-space: normal;
 }
+
+.model_class.model_content_container > .wizard-step-footer > [aria-label = 'close']{
+    display: none;
+}
+.model_class.model_content_container > .wizard-step-footer > [aria-label = 'submit']{
+    display: none;
+}
+

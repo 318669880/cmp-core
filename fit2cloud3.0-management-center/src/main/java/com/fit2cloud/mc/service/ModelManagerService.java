@@ -169,4 +169,11 @@ public class ModelManagerService {
         return "http://"+client_ip+":"+port;
     }
 
+    public String prefix(String pre,String value ){
+        if(value.indexOf(pre) == -1){
+            value = (pre.endsWith("/")? pre : (pre+"/")) + value;
+        }
+        return value;
+    }
+
 }

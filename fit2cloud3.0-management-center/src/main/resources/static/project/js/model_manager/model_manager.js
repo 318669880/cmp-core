@@ -104,7 +104,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         },
         {value: '名称', key: "name", sort: false},
         {value: '模块', key: "module", sort: false},
-        {value: '是否运行', key: "currentStatus", sort: false},
+        {value: '状态', key: "currentStatus", sort: false},
         {value: '版本', key: "lastRevision", sort: false},
         {value: '安装时间', key: "installTime", sort: false},
         {value: '概诉', key: "overview", sort: false}
@@ -121,6 +121,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }
         HttpUtils.paging($scope, "modelManager/runner", condition, function (rep) {
             //$scope.load = true;
+            $scope.modelInstaller.loadNodeData();
         });
     };
 
@@ -228,7 +229,14 @@ IndexServer.prototype = {
                     let json = text.substr(text.indexOf("{"));
                     this.$scope.model_version_info = JSON.parse(json);
                     for (let x in this.$scope.model_version_info) {
-                        this.$scope.model_version_info[x].forEach(basicModel => basicModel.lastRevision = null)
+                        this.$scope.model_version_info[x].forEach(basicModel => {
+                            basicModel.lastRevision = null;
+                            let icon = basicModel.icon;
+                            if(icon.indexOf(this.address) == -1){
+                                icon = (this.address.endsWith("/")? this.address : (this.address+"/")) + icon;
+                                basicModel.icon = icon;
+                            }
+                        })
                     }
                     if(isvalidate){
                         this.$scope.wizard.api.next();
@@ -372,7 +380,7 @@ ModelInstaller.prototype = {
         let _self = this;
         this.$scope.executeAjax(this._loadLocalDatasUrl,'GET',null,(res) => {
             !!res && res.forEach(item => _self._localData[item.module] = item);
-            _self.loadInstallable();_self.loadUpdates();_self.loadNodeData();
+            _self.loadInstallable();_self.loadUpdates();
             // _self.loadInstalled();
             _self.$scope.list();
         });
@@ -411,7 +419,7 @@ ModelInstaller.prototype = {
             return !_self._localData.hasOwnProperty(model.module);
         }).map(model => {
             model.lastRevision = null;
-            model.remoteImageUrl = model.icon.indexOf(_self.$scope.indexServer.address)==-1 ? (_self.$scope.indexServer.address+ "/" + model.icon) : model.icon;
+            //model.remoteImageUrl = model.icon.indexOf(_self.$scope.indexServer.address)==-1 ? (_self.$scope.indexServer.address+ "/" + model.icon) : model.icon;
             model.enable = false;
             model.lastRevision = _self._lastVersion(model);
             model._versionEdit = false;//默认是非编辑状态
@@ -453,7 +461,7 @@ ModelInstaller.prototype = {
             let dto = Object.create({});
             model.lastRevision = model.lastRevision || _self._lastVersion(model);
             dto.modelBasic = model;
-            dto.modelBasic.icon = model.remoteImageUrl;
+            //dto.modelBasic.icon = model.remoteImageUrl;
             let modelVersion = model.last_version;
             modelVersion.created = new Date(modelVersion.created).getTime();
 

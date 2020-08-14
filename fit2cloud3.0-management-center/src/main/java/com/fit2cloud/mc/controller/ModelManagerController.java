@@ -72,10 +72,9 @@ public class ModelManagerController {
         modelInstalledDtos.forEach(modelInstalledDto -> {
             try{
                 String url = modelInstalledDto.getModelVersion().getDownloadUrl();
-                if(url.indexOf(addr) == -1){
-                    url = (addr.endsWith("/")? addr : (addr+"/")) + url;
-                    modelInstalledDto.getModelVersion().setDownloadUrl(url);
-                }
+                modelInstalledDto.getModelVersion().setDownloadUrl(modelManagerService.prefix(addr,url));
+                String icon = modelInstalledDto.getModelBasic().getIcon();
+                modelInstalledDto.getModelBasic().setIcon(modelManagerService.prefix(addr,icon));
                 modelOperateService.installOrUpdate(modelManager,modelInstalledDto);
             }catch (Exception e){
                 F2CException.throwException(e);
@@ -123,5 +122,7 @@ public class ModelManagerController {
     public List<ModelNode> modelNodes(){
         return modelManagerService.queryNodes(null);
     }
+
+
 
 }

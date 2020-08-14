@@ -174,12 +174,6 @@
                                                 <md-icon>stop</md-icon>
                                             </md-button>
                                         </div>
-                                        <!--<div class="filter-item">
-                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.unInstall()">
-                                                <md-tooltip md-delay="300">卸载</md-tooltip>
-                                                <md-icon>delete</md-icon>
-                                            </md-button>
-                                        </div>-->
                                         <div class="filter-item">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
                                                 <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
@@ -187,7 +181,7 @@
                                             </md-button>
                                         </div>
                                     </filter-tools>
-                                    <table dynamic-table columns="columns" execute="list({sql :sql})">
+                                    <table class="edit-table" dynamic-table columns="columns" execute="list({sql :sql})">
                                         <tbody>
                                         <tr ng-repeat="item in items">
                                             <td has-permissions="KEYCLOAK_SETTING:SYNC">
@@ -197,9 +191,26 @@
                                             </td>
                                             <td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
                                             <td>{{item.module}}</td>
-                                            <td>
-                                                <md-switch class="md-primary" aria-label="enable" ng-model="item.currentStatus==='started'" disabled>
-                                                </md-switch>
+                                            <td class="edit-td">
+                                                <a class="edit-span" class="md-primary" style="cursor:pointer" href="" >
+                                                    {{item.currentStatus}}
+                                                    <md-tooltip md-direction="top" class="f2c-tooltip-version">
+
+                                                        <table class="node_tip_table">
+                                                            <tr>
+                                                                <th align="left">节点</th>
+                                                                <th align="left">状态</th>
+                                                                <th align="left">安装时间</th>
+                                                            </tr>
+
+                                                            <tr ng-repeat="node in _nodeData[item.modelUuid]">
+                                                                <td>{{node.nodeHost}}</td>
+                                                                <td>{{node.nodeStatus}}</td>
+                                                                <td>{{node.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                                            </tr>
+                                                        </table>
+                                                    </md-tooltip>
+                                                </a>
                                             </td>
                                             <td>{{item.lastRevision}}</td>
                                             <td>{{item.installTime | date:'yyyy-MM-dd HH:mm'}}</td>

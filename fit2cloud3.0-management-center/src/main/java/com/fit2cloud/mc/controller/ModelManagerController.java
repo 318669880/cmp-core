@@ -8,6 +8,7 @@ import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.dto.request.ModelInstalledRequest;
 import com.fit2cloud.mc.model.ModelInstall;
 import com.fit2cloud.mc.model.ModelManager;
+import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.strategy.factory.ModelOperateStrategyFactory;
 import com.fit2cloud.mc.strategy.service.ModelOperateService;
@@ -94,7 +95,7 @@ public class ModelManagerController {
         });
     }
 
-    @GetMapping("/operate/start")
+    @PostMapping("/operate/start")
     public void start(@RequestBody List<String> module_arr){
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
@@ -106,7 +107,7 @@ public class ModelManagerController {
         });
     }
 
-    @GetMapping("/operate/stop")
+    @PostMapping("/operate/stop")
     public void stop(@RequestBody List<String> module_arr){
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
@@ -118,11 +119,9 @@ public class ModelManagerController {
         });
     }
 
-
-
-    @GetMapping("/{action}/{module}")
-    public void actionModules(@PathVariable String action, @PathVariable String module) throws Exception{
-        modelManagerService.actionModule(action, module);
+    @PostMapping("/model/nodes")
+    public List<ModelNode> modelNodes(){
+        return modelManagerService.queryNodes(null);
     }
 
 }

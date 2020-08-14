@@ -53,6 +53,7 @@ public class ModelOpServiceImp implements ModelOperateService{
     @Override
     public void installOrUpdate(ModelManager managerInfo, ModelInstalledDto modelInstalledDto) throws Exception{
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
+        String module = modelBasic.getModule();
         ModelVersion modelVersion = modelInstalledDto.getModelVersion();
         ModelBasicExample example = new ModelBasicExample();
         example.createCriteria().andModuleEqualTo(modelBasic.getModule());
@@ -60,11 +61,11 @@ public class ModelOpServiceImp implements ModelOperateService{
         if(CollectionUtils.isNotEmpty(modelBasics)){
             ModelBasic temp = modelBasics.get(0);
             modelBasic.setModelUuid(temp.getModelUuid());
-            modelBasic.setCurrentStatus("updating");//设置状态为更新中。。。
+            //modelBasic.setCurrentStatus("updating");//设置状态为更新中。。。
             modelBasicMapper.updateByPrimaryKey(modelBasic);
         }else{
             modelBasic.setModelUuid(UUIDUtil.newUUID());
-            modelBasic.setCurrentStatus("installing");//设置状态为安装中。。。
+            //modelBasic.setCurrentStatus("installing");//设置状态为安装中。。。
             modelBasicMapper.insert(modelBasic);
         }
         modelVersion.setModelBasicUuid(modelBasic.getModelUuid());
@@ -74,10 +75,10 @@ public class ModelOpServiceImp implements ModelOperateService{
         String filePath = downLoad(modelInstalledDto);
 
         modelInstalledDto.getModelVersion().setDownloadUrl(filePath);
-        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeInstall",new Object[]{managerInfo,filePath});
+        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeInstall",new Object[]{managerInfo,modelBasic.getModule(),filePath},module);
         //通过广播的方式 让每一个集群节点都执行安装
         redisMessagePublisher.publish(RedisConstants.Topic.MODULE_OPERATE,moduleMessageInfo);
-        //executeInstall(managerInfo, modelInstalledDto, filePath);
+
     }
     private String downLoad (ModelInstalledDto modelInstalledDto) throws Exception{
         ModelVersion modelVersion = modelInstalledDto.getModelVersion();
@@ -91,29 +92,29 @@ public class ModelOpServiceImp implements ModelOperateService{
     @Transactional
     @Override
     public void start(ModelManager managerInfo, String module) throws Exception {
-        modelManagerService.updateCurrentStatus(module,"starting");
-        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeStart",new Object[]{module});
+
+        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeStart",new Object[]{module},module);
         redisMessagePublisher.publish(RedisConstants.Topic.MODULE_OPERATE,moduleMessageInfo);
-        //executeStart(module);
+
     }
 
 
     @Transactional
     @Override
     public void stop(ModelManager managerInfo, String module) throws Exception {
-        modelManagerService.updateCurrentStatus(module,"stopping");
-        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeStop",new Object[]{module});
+
+        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeStop",new Object[]{module},module);
         redisMessagePublisher.publish(RedisConstants.Topic.MODULE_OPERATE,moduleMessageInfo);
-        //executeStop(module);
+
     }
 
 
     @Override
     public void unInstall(ModelManager managerInfo, String module) throws Exception {
-        modelManagerService.updateCurrentStatus(module,"unInstalling");
-        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeDelete",new Object[]{module});
+
+        ModuleMessageInfo moduleMessageInfo = new ModuleMessageInfo(managerInfo,"executeDelete",new Object[]{module},module);
         redisMessagePublisher.publish(RedisConstants.Topic.MODULE_OPERATE,moduleMessageInfo);
-        //executeDelete(module);
+
     }
 
 

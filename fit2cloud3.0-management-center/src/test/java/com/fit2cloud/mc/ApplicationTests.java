@@ -5,7 +5,6 @@ import com.fit2cloud.commons.server.model.Permission;
 import com.fit2cloud.commons.server.module.ServerInfo;
 import com.fit2cloud.mc.config.BeforeTest;
 import com.fit2cloud.mc.service.ModelManagerService;
-import com.fit2cloud.mc.strategy.factory.ModelOperateServiceFactory;
 import com.fit2cloud.mc.strategy.service.ModelOperateService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

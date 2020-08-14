@@ -18,7 +18,7 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
 
     @DcsLock
     @Override
-    public void executeInstall(ModelManager modelManager,  String filePath) {
+    public void executeInstall(ModelManager modelManager, String module, String filePath) {
 
     }
 

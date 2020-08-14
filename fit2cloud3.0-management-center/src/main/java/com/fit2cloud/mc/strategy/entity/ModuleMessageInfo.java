@@ -20,6 +20,8 @@ public class ModuleMessageInfo implements Serializable {
 
     private Object[] args;
 
+    private String module;
+
     public ModelManager getModelManager() {
         return modelManager;
     }
@@ -44,12 +46,22 @@ public class ModuleMessageInfo implements Serializable {
         this.args = args;
     }
 
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
     public ModuleMessageInfo() {
     }
 
-    public ModuleMessageInfo(ModelManager modelManager, String methodName, Object[] args) {
+
+    public ModuleMessageInfo(ModelManager modelManager, String methodName, Object[] args, String module) {
         this.modelManager = modelManager;
         this.methodName = methodName;
         this.args = args;
+        this.module = module;
     }
 }

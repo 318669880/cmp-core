@@ -442,3 +442,12 @@ span.auto-break {
     display: none;
 }
 
+.node_tip_table > tbody > tr > td {
+    padding: 0px 10px;
+}
+.node_tip_table > tbody > tr > th {
+    padding: 0px 10px;
+    font-weight: bold;
+    font-size: initial;
+}
+

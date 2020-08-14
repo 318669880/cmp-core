@@ -7,6 +7,8 @@ import com.fit2cloud.mc.strategy.service.ModelOperateStrategy;
 import com.fit2cloud.mc.utils.ModuleUtil;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * @Company: FIT2CLOUD 飞致云
  * @Author: Mr.cyw
@@ -21,20 +23,21 @@ public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
     // 集群环境避免各节点同时执行
     @DcsLock
     @Override
-    public void executeInstall(ModelManager modelManager,  String filePath) {
+    public void executeInstall(ModelManager modelManager, String module, String filePath) throws Exception{
         try{
             ModuleUtil.installOrUpdateModule(filePath, modelManager.getOnLine());
         }catch (Exception e){
-            F2CException.throwException(e);
+            throw new Exception(e);
         }
+
     }
 
     @DcsLock
     @Override
     public void executeStart(String modeule) {
-        try{
+        try {
             ModuleUtil.startService(modeule);
-        }catch (Exception e){
+        } catch (Exception e) {
             F2CException.throwException(e);
         }
     }
@@ -42,9 +45,9 @@ public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
     @DcsLock
     @Override
     public void executeStop(String modeule) {
-        try{
+        try {
             ModuleUtil.stopService(modeule);
-        }catch (Exception e){
+        } catch (Exception e) {
             F2CException.throwException(e);
         }
     }

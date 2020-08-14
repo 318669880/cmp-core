@@ -4,6 +4,7 @@ import com.fit2cloud.commons.server.dcslock.DcsLockFactory;
 import com.fit2cloud.commons.server.dcslock.annotation.DcsLock;
 import com.fit2cloud.commons.server.base.domain.MethodInfo;
 import com.fit2cloud.commons.server.dcslock.service.DcsLockService;
+import com.fit2cloud.commons.server.exception.F2CException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -57,7 +58,9 @@ public class DcsLockAspect {
                 return result;
             }
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            //throwable.printStackTrace();
+            throw new Exception(throwable);
+            //F2CException.throwException(new Exception(throwable));
         }
         return null;
     }

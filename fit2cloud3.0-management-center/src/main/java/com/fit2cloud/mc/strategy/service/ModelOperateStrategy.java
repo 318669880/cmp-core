@@ -11,7 +11,7 @@ import com.fit2cloud.mc.model.ModelManager;
  */
 public interface ModelOperateStrategy {
 
-    public void executeInstall(ModelManager modelManager, String filePath);
+    public void executeInstall(ModelManager modelManager, String modeule, String filePath) throws Exception;
 
     public void executeDelete(String modeule);
 

@@ -1,7 +1,4 @@
 
-
-
-
 ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $document, $mdBottomSheet, HttpUtils, FilterSearch, Notification, $interval, AuthService, $state, $filter,Translator) {
     $scope.background = "/web-public/fit2cloud/html/background/background.html?_t" + window.appversion;
     $scope.indexServer = new IndexServer($scope);
@@ -295,8 +292,10 @@ let ModelInstaller = function() {
     this._loadLocalDatasUrl = 'modelManager/indexInstaller/modelInstallInfos';
     this._batchInstallUrl = 'modelManager/operate/install';
     this._batchUninstallUrl = 'modelManager/operate/unUninstall';
+    this._loadNodeDataUrl = 'modelManager/model/nodes';
     this._localData = null; //本地数据集合
     this._installValidate = false;
+
     this.initialize.apply(this , arguments);
 }
 ModelInstaller.prototype = {
@@ -364,6 +363,7 @@ ModelInstaller.prototype = {
         this.$scope.currentRevisions = null;
         this.$scope.currentUpdateRevisions = null;
         this._installValidate = false;
+        this.$scope._nodeData = null;
     },
 
     loadData: function () {
@@ -372,10 +372,21 @@ ModelInstaller.prototype = {
         let _self = this;
         this.$scope.executeAjax(this._loadLocalDatasUrl,'GET',null,(res) => {
             !!res && res.forEach(item => _self._localData[item.module] = item);
-            _self.loadInstallable();_self.loadUpdates();
+            _self.loadInstallable();_self.loadUpdates();_self.loadNodeData();
             // _self.loadInstalled();
             _self.$scope.list();
         });
+    },
+
+    loadNodeData: function () {
+        this.$scope.executeAjax(this._loadNodeDataUrl,"POST",null,function(res) {
+            this.$scope._nodeData = Object.create({});
+            res.forEach(function(node){
+                let model_uuid = node.modelBasicUuid;
+                this.$scope._nodeData[model_uuid] = this.$scope._nodeData.hasOwnProperty(model_uuid) ? this.$scope._nodeData[model_uuid] : new Array();
+                this.$scope._nodeData[model_uuid].push(node);
+            }.bind(this));
+        }.bind(this));
     },
 
     saveData: function () {

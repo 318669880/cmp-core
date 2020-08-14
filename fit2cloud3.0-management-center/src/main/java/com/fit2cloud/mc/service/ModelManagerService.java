@@ -2,6 +2,7 @@ package com.fit2cloud.mc.service;
 
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.UUIDUtil;
+import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.*;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.*;
@@ -9,6 +10,7 @@ import com.fit2cloud.mc.strategy.factory.ModelOperateStrategyFactory;
 import com.fit2cloud.mc.utils.ModuleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,9 @@ public class ModelManagerService {
 
     @Resource
     private Environment environment;
+
+    @Value("${spring.cloud.client.ipaddress}")
+    private String client_ip;
 
 
     public void add(ModelManager modelManager) {
@@ -98,7 +103,7 @@ public class ModelManagerService {
      */
     public void addOrUpdateModelNode (String module,String node_status) throws Exception{
         Optional.ofNullable(modelBasicInfo(module)).ifPresent(model -> {
-            String hostName = environment.getProperty("HOST_HOSTNAME");
+            String hostName = domain_host();
             ModelNodeExample modelNodeExample = new ModelNodeExample();
             modelNodeExample.createCriteria().andModelBasicUuidEqualTo(model.getModelUuid()).andNodeHostEqualTo(hostName);
             List<ModelNode> modelNodes = modelNodeMapper.selectByExample(modelNodeExample);
@@ -148,12 +153,20 @@ public class ModelManagerService {
                 statusMap.put("key",node.getNodeStatus());
                 return !node.getNodeStatus().endsWith("Faild");
             });
+            if(modelNodes.stream().anyMatch(node -> node.getNodeStatus().equals(ModuleStatusConstants.running.value()))){
+                statusMap.put("key",ModuleStatusConstants.running.value());
+            }
             String status = statusMap.get("key");
             if(ObjectUtils.isNotEmpty(modelBasic)){
                 modelBasic.setCurrentStatus(status);
                 modelBasicMapper.updateByPrimaryKey(modelBasic);
             }
         });
+    }
+
+    public String domain_host(){
+        String port = environment.getProperty("local.server.port");
+        return "http://"+client_ip+":"+port;
     }
 
 }

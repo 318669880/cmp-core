@@ -26,8 +26,6 @@ public class ModuleDelayTaskManager implements ApplicationRunner {
 
     private DelayQueue<DelayTask> delayQueue = new DelayQueue<DelayTask>();
 
-
-
     public void addTask(long time,Consumer consumer,Object target){
         delayQueue.add(new DelayTask(time,consumer,target));
     }
@@ -39,7 +37,7 @@ public class ModuleDelayTaskManager implements ApplicationRunner {
 
     private void excuteThread() {
         while (true) {
-            if(delayQueue.size()==0) continue;
+            //if(delayQueue.size()==0) continue;
             try {
                 DelayTask task = delayQueue.take();
                 task.getConsumer().accept(task.getTarget());

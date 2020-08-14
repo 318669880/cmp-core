@@ -36,3 +36,14 @@ CREATE TABLE IF NOT EXISTS `t_lock` (
   `version` int(11) NOT NULL DEFAULT '0' COMMENT '版本号，每次更新+1',
   PRIMARY KEY (`lock_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='锁信息表';
+
+CREATE TABLE IF NOT EXISTS `model_node` (
+  `model_node_uuid` varchar(64) NOT NULL COMMENT '节点主键',
+  `model_basic_uuid` varchar(64) DEFAULT NULL COMMENT '所属模块',
+  `node_host` varchar(100) NOT NULL COMMENT '节点host',
+  `node_ip` varchar(200) DEFAULT NULL COMMENT '节点ip',
+  `node_status` varchar(50) DEFAULT NULL COMMENT '节点状态',
+  `node_create_time` bigint(13) DEFAULT NULL COMMENT '节点创建时间',
+  `is_mc` tinyint(1) NOT NULL COMMENT '是否管理中心',
+  PRIMARY KEY (`model_node_uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

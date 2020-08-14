@@ -8,16 +8,40 @@ package com.fit2cloud.mc.common.constants;
  * @Description: Please Write notes scientifically
  */
 public enum ModuleStatusConstants {
-    installing,
-    installFaild,
+    installing("installing","running","installFaild"),
+    installFaild("installFaild"),
+    running("running"),
 
-    running,
+    startting("startting","running","startFaild"),
+    startFaild("startFaild"),
 
-    startting,
-    startFaild,
+    stopping("stopping","stopped","running"),
+    stopFaild("stopFaild"),
+    stopped("stopped");
 
-    stopping,
-    stopFaild,
-    stopped;
+    private String value;
 
+    private String nextSuccess;
+
+    private String nextFaild;
+
+    ModuleStatusConstants(String value, String nextSuccess, String nextFaild) {
+        this.value = value;
+        this.nextSuccess = nextSuccess;
+        this.nextFaild = nextFaild;
+    }
+
+    ModuleStatusConstants(String value) {
+        this.value = value;
+    }
+
+    public String value(){
+        return this.value;
+    }
+    public String nextSuccess(){
+        return  this.nextSuccess;
+    }
+    public String nextFaild(){
+        return this.nextFaild;
+    }
 }

@@ -5,6 +5,7 @@ import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.service.ModelManagerService;
+import com.fit2cloud.mc.strategy.entity.ModelStatusParam;
 import com.fit2cloud.mc.strategy.entity.ModuleMessageInfo;
 import com.fit2cloud.mc.strategy.factory.ModelOperateStrategyFactory;
 import com.fit2cloud.mc.strategy.queue.ModuleDelayTaskManager;
@@ -120,31 +121,32 @@ public class ModuleOperateListener implements MessageListener {
     }
 
     private void afterExecute(ModuleMessageInfo moduleMessageInfo,boolean success){
-        String status = null;
+        ModuleStatusConstants status = null;
         switch (moduleMessageInfo.getMethodName()){
             case "executeInstall" :
-                status = success ? ModuleStatusConstants.installing.name() : ModuleStatusConstants.installFaild.name();
+                status = success ? ModuleStatusConstants.installing : ModuleStatusConstants.installFaild;
                 break;
             case "executeStart" :
-                status = success ? ModuleStatusConstants.startting.name() : ModuleStatusConstants.startFaild.name();
+                status = success ? ModuleStatusConstants.startting : ModuleStatusConstants.startFaild;
                 break;
             case "executeStop" :
-                status = success ? ModuleStatusConstants.stopping.name() : ModuleStatusConstants.stopFaild.name();
+                status = success ? ModuleStatusConstants.stopping : ModuleStatusConstants.stopFaild;
                 break;
             default: break;
         }
         try{
             String module = moduleMessageInfo.getModule();
-            modelManagerService.addOrUpdateModelNode(module, status);
+            modelManagerService.addOrUpdateModelNode(module, status.value());
             modelManagerService.modelStatu(module);//这里只是过度状态 真正的状态 在注册中心发现模块的服务后 才确定
             //这里设置2分钟后 检查状态 如果我们的注册中心 该模块仍然没有发生相应变化 那么判定为失败
-            moduleDelayTaskManager.addTask(check_eureka_delay_time, cmodule -> {
+            if(success)
+            moduleDelayTaskManager.addTask(check_eureka_delay_time, statusParam -> {
                 try {
-                    eurekaCheckService.checkModuleStatus(cmodule.toString());
+                    eurekaCheckService.checkModuleStatus((ModelStatusParam)statusParam);
                 } catch (Exception e) {
                     F2CException.throwException(e);
                 }
-            },module);
+            },new ModelStatusParam(module, status));
 
         }catch (Exception e){
             LogUtil.error(e);

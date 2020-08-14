@@ -12,7 +12,7 @@ import com.fit2cloud.mc.model.ModelManager;
  *
  * 执行模版管理 安装 卸载 升级 降级 启动 停止 脚本
  */
-public interface ModelOperateService {
+public interface NodeOperateService {
     //安装
     public void installOrUpdate(ModelManager managerInfo, ModelInstalledDto modelInstalledDto) throws Exception;
     //卸载

@@ -1,0 +1,49 @@
+<div ng-cloak ng-controller="ModelManagerNodeController" class="node-list-class">
+    <md-toolbar class="content-toolbar node-list-tool">
+        <div class="md-toolbar-tools" style="padding-right: 0">
+            <div>{{model_name}}</div>
+            <div flex></div>
+            <md-button class="md-primary" ng-click="closeInformation()" style="height: 100%;padding: 0;margin: 0">
+                <div> {{'i18n_close' | translator}}</div>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <table dynamic-table columns="columns">
+        <tbody>
+        <tr ng-repeat="item in items">
+            <td>{{item.nodeHost}}</td>
+            <td>{{item.nodeStatus}}</td>
+            <td>{{item.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>
+
+            <td>
+                <table-menus>
+                    <md-menu-item>
+
+                        <md-button ng-click="edit(item)">
+                            <md-icon class="md-18">build</md-icon>
+                            安装
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="edit(item)">
+                            <md-icon class="md-18">play_arrow</md-icon>
+                            启动
+                        </md-button>
+
+                    </md-menu-item>
+                    <md-menu-item>
+
+                        <md-button ng-click="edit(item)">
+                            <md-icon class="md-18">pause</md-icon>
+                            停止
+                        </md-button>
+
+                    </md-menu-item>
+                </table-menus>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <table-pagination pagination="pagination"></table-pagination>
+</div>

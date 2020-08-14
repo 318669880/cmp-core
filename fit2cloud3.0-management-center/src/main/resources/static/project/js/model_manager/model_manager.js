@@ -132,7 +132,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }else{
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
         }
-        $scope.executeAjax('model_manager/operate/start','POST',{module_arr:module_arr}, resp => {
+        $scope.executeAjax('modelManager/operate/start','POST',{module_arr:module_arr}, resp => {
             $scope.list();
         })
     };
@@ -144,7 +144,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }else{
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
         }
-        $scope.executeAjax('model_manager/operate/stop','POST',{module_arr:module_arr}, resp => {
+        $scope.executeAjax('modelManager/operate/stop','POST',{module_arr:module_arr}, resp => {
             $scope.list();
         })
     };
@@ -159,10 +159,47 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }
     ];
 
+    $scope.openNodeInfo = function (item) {
+        if ($scope.selected === item.$$hashKey) {
+            $scope.closeInformation();
+            return;
+        }
+        $scope.selected = item.$$hashKey;
+        $scope.model_basic_uuid = item.modelUuid;
+        $scope.model_name = item.name;
+        $scope.infoUrl = 'project/html/model_manager/node-list.html' + '?_t=' + Math.random();
+        $scope.toggleInfoForm(true);
+    };
+
+    $scope.closeInformation = function () {
+        $scope.item = {};
+        $scope.model_basic_uuid = null;
+        $scope.model_name = null;
+        $scope.selected = "";
+        $scope.toggleInfoForm(false);
+    };
+
+
+
+
 
 
 });
 
+ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils, Translator) {
+
+    $scope.columns = [
+        {value: '节点', key: "nodeHost", sort: false},
+        {value: '状态', key: "nodeStatus", sort: false},
+        {value: '安装时间', key: "nodeCreateTime", sort: false},
+    ];
+
+    $scope.list = function () {
+        if(!$scope.model_basic_uuid) return;
+        HttpUtils.paging($scope, "modelManager/node/" + $scope.model_basic_uuid, {})
+    };
+    $scope.list();
+});
 
 /**
  * 索引服务工具

@@ -10,15 +10,12 @@
         <result column="download_url" jdbcType="VARCHAR" property="downloadUrl"/>
     </resultMap>
 
-    <select id="paging" resultMap="com.fit2cloud.mc.dao.ModelBasicMapper.BaseResultMap">
+    <select id="nodePage" resultMap="com.fit2cloud.mc.dao.ModelNodeMapper.BaseResultMap">
         select *
-        from model_basic
+        from model_node
         where 1=1
-        <if test="map.name!=null">
-            and model_basic.name like #{map.name}
-        </if>
-        <if test="map.module!=null">
-            and model_basic.module like #{map.module}
+        <if test="map.model_basic_uuid!=null">
+            and model_node.model_basic_uuid = #{map.model_basic_uuid}
         </if>
 
     </select>

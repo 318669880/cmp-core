@@ -1,13 +1,10 @@
 package com.fit2cloud.mc.strategy.factory;
 
-import com.fit2cloud.mc.strategy.service.ModelOperateService;
 import com.fit2cloud.mc.strategy.service.ModelOperateStrategy;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * @Company: FIT2CLOUD 飞致云
@@ -18,7 +15,7 @@ import java.util.Map;
  */
 
 @Component
-public class ModelOperateStrategyFactory implements ApplicationContextAware {
+public class NodeOperateStrategyFactory implements ApplicationContextAware {
 
     private static ApplicationContext context;
 

@@ -3,6 +3,7 @@ package com.fit2cloud.mc.dao;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelInstall;
+import com.fit2cloud.mc.model.ModelNode;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public interface ModelBasicPageMapper {
 
-    List<ModelBasic> paging(@Param("map") Map<String, Object> map);
+    List<ModelNode> nodePage(@Param("map") Map<String, Object> map);
 
 
     List<ModelInstall> select(@Param("map") Map<String, Object> map);

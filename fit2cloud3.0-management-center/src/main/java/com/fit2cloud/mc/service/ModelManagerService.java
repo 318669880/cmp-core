@@ -1,19 +1,13 @@
 package com.fit2cloud.mc.service;
 
-import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.UUIDUtil;
-import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.*;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.*;
-import com.fit2cloud.mc.strategy.factory.ModelOperateStrategyFactory;
-import com.fit2cloud.mc.utils.ModuleUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -39,6 +33,11 @@ public class ModelManagerService {
 
     @Resource
     private ModelBasicPageMapper modelBasicPageMapper;
+
+
+
+    @Resource
+    private ModelVersionMapper modelVersionMapper;
 
 
     @Resource
@@ -84,85 +83,16 @@ public class ModelManagerService {
         return null;
     }
 
-
-    public void updateCurrentStatus(String module,String status) throws Exception{
-        ModelBasic modelBasic = modelBasicInfo(module);
-        if(ObjectUtils.isNotEmpty(modelBasic)){
-            modelBasic.setCurrentStatus(status);
-            modelBasicMapper.updateByPrimaryKey(modelBasic);
-            return;
+    public ModelVersion modelVersionInfo(String model_uuid,String lastVersion){
+        ModelVersionExample example = new ModelVersionExample();
+        example.createCriteria().andModelBasicUuidEqualTo(model_uuid).andRevisionEqualTo(lastVersion);
+        List<ModelVersion> modelVersions = modelVersionMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(modelVersions)) {
+            return  modelVersions.get(0);
         }
-        throw new RuntimeException("模块不存在");
+        return null;
     }
 
-
-    /**
-     * 新增或修改模块节点状态
-     * @param module 模块
-     * @param node_status 状态
-     */
-    public void addOrUpdateModelNode (String module,String node_status) throws Exception{
-        Optional.ofNullable(modelBasicInfo(module)).ifPresent(model -> {
-            String hostName = domain_host();
-            ModelNodeExample modelNodeExample = new ModelNodeExample();
-            modelNodeExample.createCriteria().andModelBasicUuidEqualTo(model.getModelUuid()).andNodeHostEqualTo(hostName);
-            List<ModelNode> modelNodes = modelNodeMapper.selectByExample(modelNodeExample);
-            if(CollectionUtils.isNotEmpty(modelNodes)){
-                ModelNode temp =modelNodes.get(0);
-                temp.setNodeStatus(node_status);
-                modelNodeMapper.updateByPrimaryKey(temp);
-            }else{
-                ModelNode modelNode = new ModelNode();
-                modelNode.setNodeHost(hostName);
-                modelNode.setModelNodeUuid(UUIDUtil.newUUID());
-                modelNode.setIsMc(false);
-                modelNode.setModelBasicUuid(model.getModelUuid());
-                modelNode.setNodeStatus(node_status);
-                modelNode.setNodeCreateTime(new Date().getTime());
-                modelNodeMapper.insert(modelNode);
-            }
-        });
-    }
-    public List<ModelNode> queryNodes(String model_uuid){
-        ModelNodeExample modelNodeExample = new ModelNodeExample();
-        ModelNodeExample.Criteria criteria = modelNodeExample.createCriteria();
-        Optional.ofNullable(model_uuid).ifPresent(uuid -> {
-            criteria.andModelBasicUuidEqualTo(model_uuid);
-        });
-        criteria.andIsMcEqualTo(false);
-        modelNodeExample.setOrderByClause("node_create_time desc");
-        return modelNodeMapper.selectByExample(modelNodeExample);
-    }
-
-
-
-    @Resource
-    private ModelNodeMapper modelNodeMapper;
-
-    /**
-     * 根据各个模块节点的状态设置模块状态
-     * 只要有一个节点操作是成功的 则认为 模块是成功的
-     * @param module
-     */
-    public void modelStatu(String module){
-        ModelBasic model = modelBasicInfo(module);
-        Optional.ofNullable(model).ifPresent(modelBasic -> {
-            List<ModelNode> modelNodes = queryNodes(modelBasic.getModelUuid());
-            final Map<String,String> statusMap = new HashMap<>();
-            modelNodes.stream().anyMatch(node -> {
-                statusMap.put("key",node.getNodeStatus());
-                return !node.getNodeStatus().endsWith("Faild");
-            });
-            if(modelNodes.stream().anyMatch(node -> node.getNodeStatus().equals(ModuleStatusConstants.running.value()))){
-                statusMap.put("key",ModuleStatusConstants.running.value());
-            }
-            String status = statusMap.get("key");
-            if(ObjectUtils.isNotEmpty(modelBasic)){
-                modelBasic.setCurrentStatus(status);
-                modelBasicMapper.updateByPrimaryKey(modelBasic);
-            }
-        });
-    }
 
     public String domain_host(){
         String port = environment.getProperty("local.server.port");
@@ -175,5 +105,34 @@ public class ModelManagerService {
         }
         return value;
     }
+
+    /**
+     * 模块安装
+     * @param modelInstalledDto
+     */
+    public void installModule(ModelInstalledDto modelInstalledDto){
+        ModelBasic modelBasic = modelInstalledDto.getModelBasic();
+        String module = modelBasic.getModule();
+        ModelVersion modelVersion = modelInstalledDto.getModelVersion();
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleEqualTo(modelBasic.getModule());
+        List<ModelBasic> modelBasics = modelBasicMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(modelBasics)){
+            ModelBasic temp = modelBasics.get(0);
+            modelBasic.setModelUuid(temp.getModelUuid());
+            //modelBasic.setCurrentStatus("updating");//设置状态为更新中。。。
+            modelBasicMapper.updateByPrimaryKey(modelBasic);
+        }else{
+            modelBasic.setModelUuid(UUIDUtil.newUUID());
+            //modelBasic.setCurrentStatus("installing");//设置状态为安装中。。。
+            modelBasicMapper.insert(modelBasic);
+        }
+        modelVersion.setModelBasicUuid(modelBasic.getModelUuid());
+        modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
+        modelVersion.setInstallTime(new Date().getTime());
+        modelVersionMapper.insert(modelVersion);
+    }
+
+
 
 }

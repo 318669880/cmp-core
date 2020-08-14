@@ -10,14 +10,16 @@ import com.fit2cloud.mc.model.ModelInstall;
 import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.service.ModelManagerService;
-import com.fit2cloud.mc.strategy.factory.ModelOperateStrategyFactory;
-import com.fit2cloud.mc.strategy.service.ModelOperateService;
+import com.fit2cloud.mc.service.ModuleNodeService;
+import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Company: FIT2CLOUD 飞致云
@@ -35,7 +37,10 @@ public class ModelManagerController {
     private ModelManagerService modelManagerService;
 
     @Resource
-    private ModelOperateService modelOperateService;
+    private NodeOperateService nodeOperateService;
+
+    @Resource
+    private ModuleNodeService moduleNodeService;
 
     //  无敏感信息 无需使用dto
     @PostMapping("/indexServer/save")
@@ -75,7 +80,8 @@ public class ModelManagerController {
                 modelInstalledDto.getModelVersion().setDownloadUrl(modelManagerService.prefix(addr,url));
                 String icon = modelInstalledDto.getModelBasic().getIcon();
                 modelInstalledDto.getModelBasic().setIcon(modelManagerService.prefix(addr,icon));
-                modelOperateService.installOrUpdate(modelManager,modelInstalledDto);
+                modelManagerService.installModule(modelInstalledDto);
+                //modelOperateService.installOrUpdate(modelManager,modelInstalledDto);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -87,7 +93,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                modelOperateService.unInstall(managerInfo, module);
+                nodeOperateService.unInstall(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -99,7 +105,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                modelOperateService.start(managerInfo, module);
+                nodeOperateService.start(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -111,7 +117,7 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                modelOperateService.stop(managerInfo, module);
+                nodeOperateService.stop(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -120,7 +126,16 @@ public class ModelManagerController {
 
     @PostMapping("/model/nodes")
     public List<ModelNode> modelNodes(){
-        return modelManagerService.queryNodes(null);
+        return moduleNodeService.queryNodes(null);
+    }
+
+    @PostMapping(value = "/node/{uuid}/{goPage}/{pageSize}")
+    public Pager<List<ModelNode>> paging(@PathVariable String uuid, @PathVariable int goPage, @PathVariable int pageSize) {
+        Page page = PageHelper.startPage(goPage, pageSize, true);
+        Map<String,Object> param = new HashMap<>();
+        param.put("model_basic_uuid",uuid);
+        List<ModelNode> paging = moduleNodeService.nodePage(param);
+        return PageUtils.setPageInfo(page, paging);
     }
 
 

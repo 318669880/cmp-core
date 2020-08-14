@@ -190,7 +190,7 @@
                                                              ng-model="item.enable"
                                                              class="md-primary"></md-checkbox>
                                             </td>
-                                            <td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                            <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
                                             <td>{{item.module}}</td>
                                             <td class="edit-td">
                                                 <a class="edit-span" class="md-primary" style="cursor:pointer" href="" >
@@ -218,28 +218,10 @@
                                             <td>{{item.overview}}</td>
                                             <td >
 
-                                                <table-menus>
-                                                    <md-menu-item ng-if="!item.currentStatus">
-                                                        <md-button ng-click="start(item)">
-                                                            <md-icon class="md-18">touch_app</md-icon>
-                                                            启动
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item ng-if="!!item.currentStatus">
-                                                        <md-button ng-click="stop(item)">
-                                                            <md-icon class="md-18">stop</md-icon>
-                                                            停止
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <!--<md-menu-item >
-                                                        <md-button ng-click="modelInstaller.unInstall(item)">
-                                                            <md-icon class="md-18">delete</md-icon>
-                                                            卸载
-                                                        </md-button>
-                                                    </md-menu-item>-->
-
-                                                </table-menus>
+                                                <md-button ng-click="openNodeInfo(item)">
+                                                    <md-icon class="md-18">apps</md-icon>
+                                                    节点
+                                                </md-button>
                                             </td>
 
                                         </tr>
@@ -259,5 +241,8 @@
         </md-content>
 
     </div>
+
+    <info-form width="50%"></info-form>
+    <side-form></side-form>
 </div>
 

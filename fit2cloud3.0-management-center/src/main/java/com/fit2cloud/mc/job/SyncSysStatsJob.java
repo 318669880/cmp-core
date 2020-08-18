@@ -1,5 +1,7 @@
 package com.fit2cloud.mc.job;
 
+import com.fit2cloud.commons.utils.CommonBeanFactory;
+import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.service.SysStatsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
@@ -20,7 +22,7 @@ public class SyncSysStatsJob {
     public void SyncStatsHostInfoJob() {
 
         String hostname = environment.getProperty("HOST_HOSTNAME");
-        if (!StringUtils.isBlank(hostname)) {
+        if (!StringUtils.isBlank(hostname) && !SyncEurekaServer.IS_KUBERNETES) {
             sysStatsService.SyncStatsHostInfoJob(hostname);
         }
     }
@@ -29,7 +31,7 @@ public class SyncSysStatsJob {
     public void SyncStatsHostMetricJob() {
 
         String hostname = environment.getProperty("HOST_HOSTNAME");
-        if (!StringUtils.isBlank(hostname)) {
+        if (!StringUtils.isBlank(hostname) && !SyncEurekaServer.IS_KUBERNETES) {
             sysStatsService.SyncStatsHostMetricJob(hostname);
         }
     }

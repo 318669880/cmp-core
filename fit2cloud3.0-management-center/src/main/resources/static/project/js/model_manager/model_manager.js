@@ -125,29 +125,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         });
     };
 
-    $scope.start = function(item) {
-        let module_arr = [];
-        if(item){
-            module_arr.push(item.module);
-        }else{
-            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
-        }
-        $scope.executeAjax('modelManager/operate/start','POST',{module_arr:module_arr}, resp => {
-            $scope.list();
-        })
-    };
 
-    $scope.stop = function(item) {
-        let module_arr = [];
-        if(item){
-            module_arr.push(item.module);
-        }else{
-            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
-        }
-        $scope.executeAjax('modelManager/operate/stop','POST',{module_arr:module_arr}, resp => {
-            $scope.list();
-        })
-    };
 
     $scope.envs = [
         {
@@ -199,6 +177,26 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
         HttpUtils.paging($scope, "modelManager/node/" + $scope.model_basic_uuid, {})
     };
     $scope.list();
+
+    $scope.install = function(item) {
+
+        $scope.executeAjax('modelManager/operate/node/install/'+item.modelNodeUuid,'POST',null, resp => {
+            $scope.list();
+        })
+    };
+
+    $scope.start = function(item) {
+
+        $scope.executeAjax('modelManager/operate/node/start/'+item.modelNodeUuid,'POST',null, resp => {
+            $scope.list();
+        })
+    };
+
+    $scope.stop = function(item) {
+        $scope.executeAjax('modelManager/operate/node/stop/'+item.modelNodeUuid,'POST',null, resp => {
+            $scope.list();
+        })
+    };
 });
 
 /**
@@ -335,7 +333,7 @@ IndexServer.prototype = {
 let ModelInstaller = function() {
     this.$scope = null;
     this._loadLocalDatasUrl = 'modelManager/indexInstaller/modelInstallInfos';
-    this._batchInstallUrl = 'modelManager/operate/install';
+    this._batchInstallUrl = 'modelManager/operate/readyInstall';
     this._batchUninstallUrl = 'modelManager/operate/unUninstall';
     this._loadNodeDataUrl = 'modelManager/model/nodes';
     this._localData = null; //本地数据集合

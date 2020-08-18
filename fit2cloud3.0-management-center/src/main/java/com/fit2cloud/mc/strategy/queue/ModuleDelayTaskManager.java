@@ -1,6 +1,7 @@
 package com.fit2cloud.mc.strategy.queue;
 
 import com.fit2cloud.mc.strategy.service.EurekaCheckService;
+import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -30,9 +31,14 @@ public class ModuleDelayTaskManager implements ApplicationRunner {
         delayQueue.add(new DelayTask(time,consumer,target));
     }
 
+    @Resource
+    private ModelNodeTask modelNodeTask;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Executors.newSingleThreadExecutor().execute(new Thread(this::excuteThread));
+        modelNodeTask.registerCurrentMc();
+        //modelNodeTask.joinEurekaCluster();
     }
 
     private void excuteThread() {

@@ -6,6 +6,7 @@ import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.dto.request.ModelInstalledRequest;
+import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelInstall;
 import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.model.ModelNode;
@@ -14,6 +15,7 @@ import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -36,11 +38,12 @@ public class ModelManagerController {
     @Resource
     private ModelManagerService modelManagerService;
 
-    @Resource
-    private NodeOperateService nodeOperateService;
+
 
     @Resource
     private ModuleNodeService moduleNodeService;
+
+
 
     //  无敏感信息 无需使用dto
     @PostMapping("/indexServer/save")
@@ -67,10 +70,7 @@ public class ModelManagerController {
         return modelManagerService.installInfoquery();
     }
 
-
-
-
-    @PostMapping("/operate/install")
+    @PostMapping("/operate/readyInstall")
     public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos) {
         ModelManager modelManager = modelManagerService.select();
         String addr = modelManager.getModelAddress();
@@ -80,8 +80,7 @@ public class ModelManagerController {
                 modelInstalledDto.getModelVersion().setDownloadUrl(modelManagerService.prefix(addr,url));
                 String icon = modelInstalledDto.getModelBasic().getIcon();
                 modelInstalledDto.getModelBasic().setIcon(modelManagerService.prefix(addr,icon));
-                modelManagerService.installModule(modelInstalledDto);
-                //modelOperateService.installOrUpdate(modelManager,modelInstalledDto);
+                modelManagerService.readyInstallModule(modelInstalledDto);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -93,35 +92,32 @@ public class ModelManagerController {
         ModelManager managerInfo = modelManagerService.select();
         module_arr.forEach(module-> {
             try{
-                nodeOperateService.unInstall(managerInfo, module);
+                //moduleNodeService.unInstall(managerInfo, module);
             }catch (Exception e){
                 F2CException.throwException(e);
             }
         });
     }
 
-    @PostMapping("/operate/start")
-    public void start(@RequestBody List<String> module_arr){
-        ModelManager managerInfo = modelManagerService.select();
-        module_arr.forEach(module-> {
-            try{
-                nodeOperateService.start(managerInfo, module);
-            }catch (Exception e){
-                F2CException.throwException(e);
-            }
-        });
+    @PostMapping("operate/node/install/{nodeId}")
+    public void nodeInstall(@PathVariable String nodeId) throws Exception {
+        ModelNode nodeInfo = moduleNodeService.nodeInfo(nodeId);
+        ModelBasic modelBasic = modelManagerService.basicByUuid(nodeInfo.getModelBasicUuid());
+        moduleNodeService.installNode(modelBasic.getModule());
     }
 
-    @PostMapping("/operate/stop")
-    public void stop(@RequestBody List<String> module_arr){
-        ModelManager managerInfo = modelManagerService.select();
-        module_arr.forEach(module-> {
-            try{
-                nodeOperateService.stop(managerInfo, module);
-            }catch (Exception e){
-                F2CException.throwException(e);
-            }
-        });
+    @PostMapping("/operate/node/start/{nodeId}")
+    public void start(@PathVariable String nodeId) throws Exception {
+        ModelNode nodeInfo = moduleNodeService.nodeInfo(nodeId);
+        ModelBasic modelBasic = modelManagerService.basicByUuid(nodeInfo.getModelBasicUuid());
+        moduleNodeService.startNode( modelBasic.getModule());
+    }
+
+    @PostMapping("/operate/node/stop/{nodeId}")
+    public void stop(@PathVariable String nodeId) throws Exception {
+        ModelNode nodeInfo = moduleNodeService.nodeInfo(nodeId);
+        ModelBasic modelBasic = modelManagerService.basicByUuid(nodeInfo.getModelBasicUuid());
+        moduleNodeService.stopNode( modelBasic.getModule());
     }
 
     @PostMapping("/model/nodes")

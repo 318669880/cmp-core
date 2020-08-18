@@ -1,6 +1,7 @@
 package com.fit2cloud.mc.strategy.entity;
 
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
+import com.fit2cloud.mc.model.ModelNode;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 public class ModelStatusParam implements Serializable {
 
+    private ModelNode modelNode;
     private String module;
     private ModuleStatusConstants status;
 
@@ -32,7 +34,16 @@ public class ModelStatusParam implements Serializable {
         this.status = status;
     }
 
-    public ModelStatusParam(String module, ModuleStatusConstants status) {
+    public ModelNode getModelNode() {
+        return modelNode;
+    }
+
+    public void setModelNode(ModelNode modelNode) {
+        this.modelNode = modelNode;
+    }
+
+    public ModelStatusParam(ModelNode modelNode, String module, ModuleStatusConstants status) {
+        this.modelNode = modelNode;
         this.module = module;
         this.status = status;
     }

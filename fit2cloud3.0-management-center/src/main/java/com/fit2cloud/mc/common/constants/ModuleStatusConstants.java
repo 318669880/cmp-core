@@ -8,6 +8,7 @@ package com.fit2cloud.mc.common.constants;
  * @Description: Please Write notes scientifically
  */
 public enum ModuleStatusConstants {
+    readyInstall("readyInstall"),
     installing("installing","running","installFaild"),
     installFaild("installFaild"),
     running("running"),

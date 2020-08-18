@@ -1,13 +1,16 @@
 package com.fit2cloud.mc.service;
 
+import com.fit2cloud.commons.server.handle.ResultResponseBodyAdvice;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.dao.*;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.*;
+import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -39,12 +42,14 @@ public class ModelManagerService {
     @Resource
     private ModelVersionMapper modelVersionMapper;
 
+    @Resource
+    private EurekaInstanceMonitor eurekaInstanceMonitor;
+
 
     @Resource
     private Environment environment;
 
-    @Value("${spring.cloud.client.ipaddress}")
-    private String client_ip;
+
 
 
     public void add(ModelManager modelManager) {
@@ -83,6 +88,10 @@ public class ModelManagerService {
         return null;
     }
 
+    public ModelBasic basicByUuid(String basic_uuid){
+        return modelBasicMapper.selectByPrimaryKey(basic_uuid);
+    }
+
     public ModelVersion modelVersionInfo(String model_uuid,String lastVersion){
         ModelVersionExample example = new ModelVersionExample();
         example.createCriteria().andModelBasicUuidEqualTo(model_uuid).andRevisionEqualTo(lastVersion);
@@ -94,10 +103,7 @@ public class ModelManagerService {
     }
 
 
-    public String domain_host(){
-        String port = environment.getProperty("local.server.port");
-        return "http://"+client_ip+":"+port;
-    }
+
 
     public String prefix(String pre,String value ){
         if(value.indexOf(pre) == -1){
@@ -110,7 +116,7 @@ public class ModelManagerService {
      * 模块安装
      * @param modelInstalledDto
      */
-    public void installModule(ModelInstalledDto modelInstalledDto){
+    public void readyInstallModule(ModelInstalledDto modelInstalledDto){
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
         String module = modelBasic.getModule();
         ModelVersion modelVersion = modelInstalledDto.getModelVersion();
@@ -131,7 +137,12 @@ public class ModelManagerService {
         modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
         modelVersion.setInstallTime(new Date().getTime());
         modelVersionMapper.insert(modelVersion);
+        eurekaInstanceMonitor.execute(module, "/modelNode/readyInstall",null);
     }
+
+
+
+
 
 
 

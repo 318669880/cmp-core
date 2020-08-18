@@ -714,6 +714,7 @@
                 placeholder: obj.placeholder,
                 init: obj.init,
                 required: obj.required,
+                type: obj.type || 'text',
 
                 selectValue: obj.selectValue,
                 selectKey: obj.selectKey,
@@ -731,14 +732,14 @@
                 multiple: true,
                 templateUrl: "/web-public/fit2cloud/html/notice/prompt.html" + '?_t=' + window.appversion,
                 parent: angular.element($document[0].body),
-                controller: function ($scope, $mdDialog, title, text, placeholder, init, required, selectRequired, selectValue, selectKey, selectItems, selectText, multiSelectRequired, multiSelectValue, multiSelectKey, multiSelectItems, multiSelectText) {
+                controller: function ($scope, $mdDialog, title, text, placeholder, init, required, type, selectRequired, selectValue, selectKey, selectItems, selectText, multiSelectRequired, multiSelectValue, multiSelectKey, multiSelectItems, multiSelectText) {
                     $scope.title = title;
                     $scope.text = text;
                     $scope.placeholder = placeholder;
-                    $scope.init = init;
                     $scope.required = required;
                     $scope.showInput = text? true : false;
-                    $scope.value = null;
+                    $scope.value = init || null;
+                    $scope.type = type;
 
                     $scope.selected = null;
                     $scope.selectValue =  selectValue;

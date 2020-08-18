@@ -22,20 +22,20 @@ public class ModuleUtil {
     private static String moduleActionUpdate = "update";
     private static String docker = "/usr/bin/docker";
     private static String docker_compose = "/usr/bin/docker-compose";
-    private static String dockerCompose = "docker-compose.yml";
+    private static String dockerComposeFile = "docker-compose.yml";
     private static String extensionDir = workDir + "/extensions/";
 
     public static void startService(String serviceName) throws Exception{
-        checkFileExist(extensionDir + serviceName + File.separator,  dockerCompose);
+        checkFileExist(extensionDir + serviceName + File.separator,  dockerComposeFile);
         List<String> moduleNameList = new ArrayList<>();
-        filterModuleInDockerCompose(extensionDir + serviceName + File.separator + dockerCompose, moduleNameList, new ArrayList<>());
+        filterModuleInDockerCompose(extensionDir + serviceName + File.separator + dockerComposeFile, moduleNameList, new ArrayList<>());
         startService(new ArrayList<>(), new StringBuilder(), moduleNameList, extensionDir + serviceName + File.separator);
     }
 
     public static void stopService(String serviceName)throws Exception{
-        checkFileExist(extensionDir + serviceName + File.separator,  dockerCompose);
+        checkFileExist(extensionDir + serviceName + File.separator,  dockerComposeFile);
         List<String> moduleNameList = new ArrayList<>();
-        filterModuleInDockerCompose(extensionDir + serviceName + File.separator + dockerCompose, moduleNameList, new ArrayList<>());
+        filterModuleInDockerCompose(extensionDir + serviceName + File.separator + dockerComposeFile, moduleNameList, new ArrayList<>());
         stopService(new ArrayList<>(), new StringBuilder(), extensionDir + serviceName + File.separator, moduleNameList);
     }
 
@@ -55,7 +55,7 @@ public class ModuleUtil {
             throw new Exception(e.getMessage());
         }
 
-        checkFileExist(extensionTmpDir,  dockerCompose);
+        checkFileExist(extensionTmpDir,  dockerComposeFile);
 
         if(!onLine){
             handleWithInternalDockerRegistry(extensionTmpDir);
@@ -63,7 +63,7 @@ public class ModuleUtil {
 
         List<String> newModuleNameList = new ArrayList<>();
         List<String> newImageNameList = new ArrayList<>();
-        String moduleName = filterModuleInDockerCompose(extensionTmpDir + dockerCompose, newModuleNameList, newImageNameList);
+        String moduleName = filterModuleInDockerCompose(extensionTmpDir + dockerComposeFile, newModuleNameList, newImageNameList);
 
         String fit2cloudModuleDir = extensionDir + moduleName + File.separatorChar ;
         String action = null;
@@ -85,13 +85,13 @@ public class ModuleUtil {
         }else {
             List<String> oldModuleNameList = new ArrayList<>();
             List<String> oldImageNameList = new ArrayList<>();
-            filterModuleInDockerCompose(fit2cloudModuleDir + dockerCompose, oldModuleNameList, oldImageNameList);
+            filterModuleInDockerCompose(fit2cloudModuleDir + dockerComposeFile, oldModuleNameList, oldImageNameList);
 
             if(CollectionUtils.isNotEmpty(oldModuleNameList)){
                 stopService(command, result, fit2cloudModuleDir, oldModuleNameList);
             }
 
-            copyFile(command, result, fit2cloudModuleDir + dockerCompose, fit2cloudModuleDir + dockerCompose  + "_bak");
+            copyFile(command, result, fit2cloudModuleDir + dockerComposeFile, fit2cloudModuleDir + dockerComposeFile  + "_bak");
 
             File extentionTmpInstallScripts = new File(extensionTmpDir + "scripts/upgrade.sh");
             if(extentionTmpInstallScripts.exists() && extentionTmpInstallScripts.isFile()){
@@ -110,7 +110,7 @@ public class ModuleUtil {
             }
         }
 
-        copyFile(command, result, extensionTmpDir + dockerCompose, fit2cloudModuleDir + dockerCompose);
+        copyFile(command, result, extensionTmpDir + dockerComposeFile, fit2cloudModuleDir + dockerComposeFile);
 
         File extentionTmpConfFolderFile = new File(extentionTmpConfFolder);
         if(extentionTmpConfFolderFile.exists()){
@@ -129,7 +129,7 @@ public class ModuleUtil {
         String url = internalDockerRegistry.getUrl().contains("://") ? internalDockerRegistry.getUrl().split("://")[1] : internalDockerRegistry.getUrl();
         if(url.endsWith("/")) url = url.substring(0, url.length() -1);
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader newDockerComposebufferedReader = new BufferedReader(new FileReader(extensionTmpDir + dockerCompose));
+        BufferedReader newDockerComposebufferedReader = new BufferedReader(new FileReader(extensionTmpDir + dockerComposeFile));
         String line = null;
         while ((line=newDockerComposebufferedReader.readLine()) != null){
             if(line.contains("image:")){
@@ -140,7 +140,7 @@ public class ModuleUtil {
             stringBuilder.append("\n");
         }
         newDockerComposebufferedReader.close();
-        BufferedWriter newDockerComposebufferedWriter = new BufferedWriter(new FileWriter(extensionTmpDir + dockerCompose));
+        BufferedWriter newDockerComposebufferedWriter = new BufferedWriter(new FileWriter(extensionTmpDir + dockerComposeFile));
         newDockerComposebufferedWriter.write(stringBuilder.toString());
         newDockerComposebufferedWriter.flush();
         newDockerComposebufferedWriter.close();
@@ -160,9 +160,9 @@ public class ModuleUtil {
         LogUtil.info("Begin start new application " +  newModuleNameList);
         command.add(docker_compose);
         command.add("-f");
-        command.add(workDir + File.separatorChar + dockerCompose);
+        command.add(workDir + File.separatorChar + dockerComposeFile);
         command.add("-f");
-        command.add(fit2cloudModuleDir + File.separatorChar + dockerCompose);
+        command.add(fit2cloudModuleDir + File.separatorChar + dockerComposeFile);
         command.add("up");
         command.add("--no-recreate");
         command.add("-d");
@@ -181,9 +181,9 @@ public class ModuleUtil {
         LogUtil.info("Begin stop old application " +  moduleNameList);
         command.add(docker_compose);
         command.add( "-f");
-        command.add(workDir + File.separator + dockerCompose);
+        command.add(workDir + File.separator + dockerComposeFile);
         command.add("-f");
-        command.add(fit2cloudModuleDir + File.separator +dockerCompose);
+        command.add(fit2cloudModuleDir + File.separator +dockerComposeFile);
         command.add("rm");
         command.add("-sf");
         command.addAll(moduleNameList);

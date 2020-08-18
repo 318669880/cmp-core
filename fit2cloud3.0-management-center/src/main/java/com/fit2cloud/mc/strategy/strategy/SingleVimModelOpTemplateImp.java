@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  * @Description: Please Write notes scientifically
  * 单机docker-compose操作模块
  */
-@Service("single-vim")
+@Service("host")
 public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
 
     // 集群环境避免各节点同时执行

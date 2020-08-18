@@ -4,6 +4,7 @@ import com.fit2cloud.commons.server.handle.ResultResponseBodyAdvice;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.dao.*;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
+import com.fit2cloud.mc.job.SyncEurekaServer;
 import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
 import org.apache.commons.collections.CollectionUtils;
@@ -56,6 +57,8 @@ public class ModelManagerService {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
         modelManagerExample.createCriteria().andModelAddressIsNotNull();
         modelManagerMapper.deleteByExample(modelManagerExample);
+
+        modelManager.setEnv(SyncEurekaServer.IS_KUBERNETES? "k8s" : "host");
         modelManagerMapper.insert(modelManager);
     }
 

@@ -32,7 +32,7 @@ public class SyncEurekaServer implements ApplicationRunner {
 
     private static String _localIp = StringUtils.EMPTY;
 
-    private static boolean IS_KUBERNETES = false;
+    public static boolean IS_KUBERNETES = false;
 
     @Resource
     private Environment environment;

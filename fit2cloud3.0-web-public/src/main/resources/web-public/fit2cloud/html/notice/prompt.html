@@ -13,7 +13,7 @@
             <form name="promptForm">
                 <md-input-container class="md-block" ng-show="showInput">
                     <label>{{text}}</label>
-                    <input ng-required="required" name="name" ng-model="value">
+                    <input type="{{type}}" ng-required="required" name="name" ng-model="value" >
                     <div ng-messages="promptForm.name.$error">
                         <div ng-message="required">{{'i18n_required' | translator}}</div>
                     </div>

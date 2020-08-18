@@ -129,7 +129,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
     $scope.envs = [
         {
-            'value': 'single-vim',
+            'value': 'host',
             'name': '虚拟化环境'
         },{
             'value': 'k8s',
@@ -158,8 +158,32 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     };
 
 
+    $scope.startModule = function (item) {
+        let module_arr = [];
+        if(item){
+            module_arr.push(item.module);
+        }else{
+            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
+        }
+        if (module_arr.length == 0 ){
+            Notification.warn("请选择模块！");
+            return;
+        }
+        let obj = {
+            title: $filter('translator')('i18n_apply_reason', 'Pod 数量'),
+            text: $filter('translator')('i18n_apply_reason', 'Pod 数量'),
+            required: true,
+            type:'number',
+            init: 1
+        };
 
+        Notification.prompt(obj, function (result) {
+            let pod_number = result;
 
+            //TODO
+        });
+
+    }
 
 
 });
@@ -211,7 +235,7 @@ let IndexServer = function() {
     this.validate = false;
     this.$scope = null;
     this.autoNext = true;
-    this.model_env = 'single-vim';
+    this.model_env = 'host';
     this.onLine = true;
     this.initialize.apply(this , arguments);
 };
@@ -304,7 +328,7 @@ IndexServer.prototype = {
             modelAddress : this.address,             // 索引服务地址
             validate : 1,                            // 验证结果
             onLine : this.onLine,                              // 是否使用在线索引服务
-            env : (this.model_env || 'single-vim')                   // 环境 默认是single-vim 可选 k8s
+            env : (this.model_env || 'host')                   // 环境 默认是host 可选 k8s
         }
         this.$scope.executeAjax(this._saveDataUrl,'POST',param,res => {
             //saveSuccess = true;

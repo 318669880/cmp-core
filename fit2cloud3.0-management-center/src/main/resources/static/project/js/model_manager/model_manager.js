@@ -111,6 +111,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     ];
 
     $scope.list = function (sortObj) {
+        $scope.items = [];
         const condition = FilterSearch.convert($scope.filters);
         if (sortObj) {
             $scope.sort = sortObj;
@@ -143,7 +144,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             return;
         }
         $scope.selected = item.$$hashKey;
-        $scope.model_basic_uuid = item.modelUuid;
+        $scope.current_module = item.module;
         $scope.model_name = item.name;
         $scope.infoUrl = 'project/html/model_manager/node-list.html' + '?_t=' + Math.random();
         $scope.toggleInfoForm(true);
@@ -151,7 +152,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
     $scope.closeInformation = function () {
         $scope.item = {};
-        $scope.model_basic_uuid = null;
+        $scope.current_module = null;
         $scope.model_name = null;
         $scope.selected = "";
         $scope.toggleInfoForm(false);
@@ -197,30 +198,33 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
     ];
 
     $scope.list = function () {
-        if(!$scope.model_basic_uuid) return;
-        HttpUtils.paging($scope, "modelManager/node/" + $scope.model_basic_uuid, {})
+        if(!$scope.model_name || !$scope.current_module) return;
+        HttpUtils.paging($scope, "modelManager/node/" + $scope.current_module, {})
     };
     $scope.list();
 
     $scope.install = function(item) {
-
-        $scope.executeAjax('modelManager/operate/node/install/'+item.modelNodeUuid,'POST',null, resp => {
+        $scope.loadingLayer = HttpUtils.post('modelManager/operate/node/install/' + $scope.current_module + "/" + item.modelNodeUuid, null, function (resp) {
             $scope.list();
-        })
+        }, function (resp) {
+            $scope.list();
+        });
     };
-
     $scope.start = function(item) {
-
-        $scope.executeAjax('modelManager/operate/node/start/'+item.modelNodeUuid,'POST',null, resp => {
+        $scope.loadingLayer = HttpUtils.post('modelManager/operate/node/start/'+$scope.current_module+"/"+item.modelNodeUuid, null, function (resp) {
             $scope.list();
-        })
+        }, function (resp) {
+            $scope.list();
+        });
     };
-
     $scope.stop = function(item) {
-        $scope.executeAjax('modelManager/operate/node/stop/'+item.modelNodeUuid,'POST',null, resp => {
+        $scope.loadingLayer = HttpUtils.post('modelManager/operate/node/stop/'+$scope.current_module+"/"+item.modelNodeUuid, null, function (resp) {
             $scope.list();
-        })
+        }, function (resp) {
+            $scope.list();
+        });
     };
+
 });
 
 /**
@@ -398,19 +402,6 @@ ModelInstaller.prototype = {
         ];
 
 
-        this.installedColumns = [
-            {value: '名称', key: "name", sort: false},
-            {value: '模块', key: "module", sort: false},
-            {value: '版本', key: "lastRevision", sort: false},
-            {value: '安装时间', key: "installTime", sort: false},
-            {value: '概诉', key: "overview", sort: false}
-        ];
-        this.conditions = [
-            {key: "name", name: "名称", directive: "filter-contains"},
-            {key: "module", name: "模块", directive: "filter-contains"}
-        ];
-        this.filters = [];
-
 
         this.installupdateColumns = [
             {value: '名称', key: "name", sort: false},
@@ -431,6 +422,7 @@ ModelInstaller.prototype = {
         this.$scope.currentUpdateRevisions = null;
         this._installValidate = false;
         this.$scope._nodeData = null;
+        this.$scope.items = [];
     },
 
     loadData: function () {
@@ -440,7 +432,6 @@ ModelInstaller.prototype = {
         this.$scope.executeAjax(this._loadLocalDatasUrl,'GET',null,(res) => {
             !!res && res.forEach(item => _self._localData[item.module] = item);
             _self.loadInstallable();_self.loadUpdates();
-            // _self.loadInstalled();
             _self.$scope.list();
         });
     },
@@ -520,10 +511,8 @@ ModelInstaller.prototype = {
             let dto = Object.create({});
             model.lastRevision = model.lastRevision || _self._lastVersion(model);
             dto.modelBasic = model;
-            //dto.modelBasic.icon = model.remoteImageUrl;
             let modelVersion = model.last_version;
             modelVersion.created = new Date(modelVersion.created).getTime();
-
             dto.modelVersion = modelVersion
             return dto;
         });
@@ -601,23 +590,8 @@ ModelInstaller.prototype = {
         opmodel.enable = false;
     },
 
-    // 加载已安装数据
-    loadInstalled: function () {
-        this.$scope.installedItems = [];
-        for (let localDataKey in this._localData) {
-            this.$scope.installedItems.push(this._localData[localDataKey])
-        }
-        this._installValidate = !!this.$scope.installedItems && this.$scope.installedItems.length > 0;
-    },
 
-    //卸载模块
-    unInstall: function () {
-        let _self = this;
-        let model_uuid_array = this.$scope.items.filter(model => model.enable === true).map(model =>  model.modelUuid);
-        this.$scope.executeAjax(this._batchUninstallUrl,'POST',model_uuid_array, (resp) => {
-            _self.loadData();
-        })
-    },
+
 
     _lastVersion: function(model) {
         let last_version = null;

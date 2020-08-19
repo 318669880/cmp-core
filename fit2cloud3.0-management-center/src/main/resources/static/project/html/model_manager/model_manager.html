@@ -51,7 +51,7 @@
                 <wizard-step id="2">
                     <md-content flex="100" >
                         <md-tabs md-dynamic-height md-border-bottom>
-                            <md-tab label="可安装" has-permission="KEYCLOAK_SETTING:SYNC">
+                            <md-tab ng-click="modelInstaller.loadInstallable()" label="可安装" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <div>
                                     <md-button class="md-primary" ng-click="modelInstaller.executeInstall()" >
                                         <md-icon>build</md-icon>
@@ -109,7 +109,7 @@
                                 </div>
 
                             </md-tab>
-                            <md-tab label="可更新" has-permission="KEYCLOAK_SETTING:SYNC">
+                            <md-tab ng-click="modelInstaller.loadUpdates()" label="可更新" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <div>
                                     <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
                                         <table class="edit-table" dynamic-table columns="modelInstaller.installupdateColumns" execute="modelInstaller.loadUpdates()">
@@ -158,23 +158,11 @@
                                     </md-content>
                                 </div>
                             </md-tab>
-                            <md-tab label="已安装" has-permission="KEYCLOAK_SETTING:SYNC">
+                            <md-tab ng-click="list()" label="已安装" has-permission="KEYCLOAK_SETTING:SYNC">
 
                                 <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}" >
                                     <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
                                         <select-columns columns="columns"></select-columns>
-                                        <!--<div class="filter-item">
-                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="start()">
-                                                <md-tooltip md-delay="300">启动</md-tooltip>
-                                                <md-icon>touch_app</md-icon>
-                                            </md-button>
-                                        </div>
-                                        <div class="filter-item">
-                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="stop()">
-                                                <md-tooltip md-delay="300">停止</md-tooltip>
-                                                <md-icon>stop</md-icon>
-                                            </md-button>
-                                        </div>-->
                                         <div class="filter-item">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
                                                 <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>

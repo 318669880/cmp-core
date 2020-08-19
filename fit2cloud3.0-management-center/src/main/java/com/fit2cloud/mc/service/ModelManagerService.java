@@ -47,11 +47,6 @@ public class ModelManagerService {
     private EurekaInstanceMonitor eurekaInstanceMonitor;
 
 
-    @Resource
-    private Environment environment;
-
-
-
 
     public void add(ModelManager modelManager) {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
@@ -91,9 +86,7 @@ public class ModelManagerService {
         return null;
     }
 
-    public ModelBasic basicByUuid(String basic_uuid){
-        return modelBasicMapper.selectByPrimaryKey(basic_uuid);
-    }
+
 
     public ModelVersion modelVersionInfo(String model_uuid,String lastVersion){
         ModelVersionExample example = new ModelVersionExample();
@@ -140,7 +133,7 @@ public class ModelManagerService {
         modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
         modelVersion.setInstallTime(new Date().getTime());
         modelVersionMapper.insert(modelVersion);
-        eurekaInstanceMonitor.execute(module, "/modelNode/readyInstall",null);
+        eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall",null);
     }
 
 

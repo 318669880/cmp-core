@@ -5,12 +5,15 @@ import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
+import com.fit2cloud.mc.model.ModelInstall;
 import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.model.ModelNodeExample;
+import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EurekaClientConfigBean;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,6 +25,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ModelNodeTask {
@@ -45,16 +49,51 @@ public class ModelNodeTask {
     @Resource
     private ModelNodeMapper modelNodeMapper;
 
+    @Resource
+    private ModelManagerService modelManagerService;
 
+    @Resource
+    private DiscoveryClient discoveryClient;
+
+
+    /**
+     * 注册当前服务到eureka集群
+     * @throws Exception
+     */
     public void registerCurrentMc() throws Exception{
         moduleNodeService.addOrUpdateMcNode(ModuleStatusConstants.running.value());
+        syncFromDb();
+    }
+
+    /**
+     * 从数据库中同步其他节点已经预安装的模块
+     * @throws Exception
+     */
+    private void syncFromDb() throws Exception {
+        List<ModelInstall> modelInstalls = modelManagerService.installInfoquery();
+        ModelNodeExample modelNodeExample = new ModelNodeExample();
+        String host = "http://"+environment.getProperty("eureka.instance.ip-address")+":"+port;
+        modelNodeExample.createCriteria().andIsMcEqualTo(false).andNodeHostEqualTo(host);
+        List<ModelNode> modelNodes = modelNodeMapper.selectByExample(modelNodeExample);
+        //  当前节点如果 没有包含预安装模块 那么这里自动执行预安装
+        modelInstalls.stream().filter(model -> !modelNodes.stream().anyMatch(node -> StringUtils.equals(node.getModelBasicUuid(),model.getModule()))).forEach(modelInstall -> {
+            ModelNode modelNode = new ModelNode();
+            modelNode.setNodeStatus(ModuleStatusConstants.readyInstall.value());
+            modelNode.setModelBasicUuid(modelInstall.getModule());
+            modelNode.setModelNodeUuid(UUIDUtil.newUUID());
+            try {
+                moduleNodeService.addOrUpdateModelNode(modelNode);
+            } catch (Exception e) {
+                F2CException.throwException(e);
+            }
+        });
     }
 
 
     /**
      * 加入eureka集群
      */
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 10000,initialDelay = 5000)
     public void joinEurekaCluster(){
         final String eureka_instance_ip_address = environment.getProperty("eureka.instance.ip-address");
         String host = "http://"+eureka_instance_ip_address+":"+port;
@@ -64,11 +103,11 @@ public class ModelNodeTask {
         modelNodes = modelNodes.stream().filter(node -> {
             try {
                 String nodeIp = node.getNodeIp();
-                //if(node.getNodeHost().indexOf(host) != -1)return false; //去除 本机地址 相互注册 无需注册自己
                 boolean isReachable = InetAddress.getByName(nodeIp).isReachable(3000) && isHostConnectable(node.getNodeHost());
                 if(!isReachable){
                     modelNodeMapper.deleteByPrimaryKey(node.getModelNodeUuid());
                 }
+                //if(node.getNodeHost().indexOf(host) != -1)return false; //去除 本机地址 相互注册 无需注册自己
                 return isReachable;
             } catch (Exception e) {
                 LogUtil.error(e.getMessage(),e);
@@ -77,14 +116,15 @@ public class ModelNodeTask {
             return false;
         }).collect(Collectors.toList());
         List<String> dbEurekaServers = modelNodes.stream().map(node -> node.getNodeHost()+"/eureka/").collect(Collectors.toList());
-        if(!CollectionUtils.isEmpty(dbEurekaServers))
-        eurekaClientConfigBean.getServiceUrl().put(EurekaClientConfigBean.DEFAULT_ZONE, StringUtils.join(dbEurekaServers, ","));
-
-       /* eurekaClientConfigBean.getServiceUrl().put("zone-0","");
-        eurekaClientConfigBean.getServiceUrl().put("zone-1","");
-        ArrayList<String> arrayList = new ArrayList<>();
-        eurekaClientConfigBean.getAvailabilityZones().put("us-east-1","zone-0,zone-1");
-        eurekaClientConfigBean.setRegion("us-east-1");*/
+        if(!CollectionUtils.isEmpty(dbEurekaServers)){
+            String[] servers = eurekaClientConfigBean.getServiceUrl().get(EurekaClientConfigBean.DEFAULT_ZONE).split(",");
+            List<String> currentServersLists = Arrays.asList(servers);
+            List<String> newServers = dbEurekaServers.stream().filter(server -> !currentServersLists.contains(server)).collect(Collectors.toList());
+            if(!CollectionUtils.isEmpty(newServers)){
+                List<String> realServers = Stream.of(newServers, currentServersLists).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+                eurekaClientConfigBean.getServiceUrl().put(EurekaClientConfigBean.DEFAULT_ZONE, StringUtils.join(realServers, ","));
+            }
+        }
     }
 
 

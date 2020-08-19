@@ -1,7 +1,10 @@
 package com.fit2cloud.mc.strategy.task;
 
 import com.fit2cloud.commons.server.exception.F2CException;
+import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.model.ModelNode;
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.EurekaClient;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.env.Environment;
@@ -35,13 +38,14 @@ public class EurekaInstanceMonitor {
     @Resource
     private Environment environment;
 
+    @Resource
+    private EurekaClient eurekaClient;
 
 
-    public List<Object> execute(String module,String urlSuffix, ModelNode modelNode){
+
+    public List<Object> execute(String module, String nodeId, String urlSuffix, ModelNode modelNode){
         String mc_module = environment.getProperty("spring.application.name");
         List<String> serverInfos = eurekaClusterIps(mc_module, modelNode);
-
-
         List<Object> results = serverInfos.stream().filter(info -> modelNodeTask.isHostConnectable(info)).map(serverInfo -> {
             String url = serverInfo + urlSuffix;
             Object result = null;
@@ -54,17 +58,15 @@ public class EurekaInstanceMonitor {
                 for (Cookie cookie : cookies) {
                     cookieLists.add(cookie.getName() + "=" + cookie.getValue());
                 }
-                //httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                 httpHeaders.put("Cookie", cookieLists);
                 MultiValueMap<String,Object> param = new LinkedMultiValueMap<>();
                 param.add("module",module);
+                param.add("nodeId",StringUtils.isEmpty(nodeId) ? UUIDUtil.newUUID() : nodeId);
                 HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(param,httpHeaders);
                 ResponseEntity<String> entity = restTemplate.postForEntity(url, request, String.class);
-                //String body = entity.getBody();
                 result = entity.getBody();
             }catch (Exception e){
                 F2CException.throwException(e);
-
             }
             return result;
         }).collect(Collectors.toList());
@@ -78,18 +80,19 @@ public class EurekaInstanceMonitor {
     private List<String> eurekaClusterIps(String module, ModelNode modelNode){
         Map<String,List<ServiceInstance>> sis = new HashMap<>();
         List<String> services = discoveryClient.getServices();
+
         if(CollectionUtils.isEmpty(services)) return new ArrayList<>();
         services.forEach(service -> {
+            List<InstanceInfo> instancesByVipAddressAndAppName = eurekaClient.getInstancesByVipAddressAndAppName(null, module.toUpperCase(), false);
             sis.put(service,discoveryClient.getInstances(service));
         });
         List<ServiceInstance> moduleInstances = sis.get(module);
         if(CollectionUtils.isEmpty(moduleInstances)) return new ArrayList<>();
         Stream<ServiceInstance> stream = moduleInstances.stream();
-
         if(!ObjectUtils.isEmpty(modelNode) && !StringUtils.isEmpty(modelNode.getNodeIp())){
             List<String> results = new ArrayList<>();
             stream.anyMatch(ins -> {
-                boolean current = ins.getHost().equals(modelNode.getNodeHost());
+                boolean current = ins.getUri().toString().indexOf(modelNode.getNodeHost()) != -1;
                 if(current){
                     results.add(ins.getUri().toString());
                 }

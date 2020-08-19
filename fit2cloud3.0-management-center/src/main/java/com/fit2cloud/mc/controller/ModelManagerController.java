@@ -87,37 +87,21 @@ public class ModelManagerController {
         });
     }
 
-    @PostMapping("/operate/unUninstall")
-    public void modelUninstall(@RequestBody List<String> module_arr) {
-        ModelManager managerInfo = modelManagerService.select();
-        module_arr.forEach(module-> {
-            try{
-                //moduleNodeService.unInstall(managerInfo, module);
-            }catch (Exception e){
-                F2CException.throwException(e);
-            }
-        });
+
+
+    @PostMapping("operate/node/install/{module}/{nodeId}")
+    public void nodeInstall(@PathVariable String module, @PathVariable String nodeId) throws Exception {
+        moduleNodeService.installNode(module, nodeId);
     }
 
-    @PostMapping("operate/node/install/{nodeId}")
-    public void nodeInstall(@PathVariable String nodeId) throws Exception {
-        ModelNode nodeInfo = moduleNodeService.nodeInfo(nodeId);
-        ModelBasic modelBasic = modelManagerService.basicByUuid(nodeInfo.getModelBasicUuid());
-        moduleNodeService.installNode(modelBasic.getModule());
+    @PostMapping("/operate/node/start/{module}/{nodeId}")
+    public void start(@PathVariable String module, @PathVariable String nodeId) throws Exception {
+        moduleNodeService.startNode( module, nodeId);
     }
 
-    @PostMapping("/operate/node/start/{nodeId}")
-    public void start(@PathVariable String nodeId) throws Exception {
-        ModelNode nodeInfo = moduleNodeService.nodeInfo(nodeId);
-        ModelBasic modelBasic = modelManagerService.basicByUuid(nodeInfo.getModelBasicUuid());
-        moduleNodeService.startNode( modelBasic.getModule());
-    }
-
-    @PostMapping("/operate/node/stop/{nodeId}")
-    public void stop(@PathVariable String nodeId) throws Exception {
-        ModelNode nodeInfo = moduleNodeService.nodeInfo(nodeId);
-        ModelBasic modelBasic = modelManagerService.basicByUuid(nodeInfo.getModelBasicUuid());
-        moduleNodeService.stopNode( modelBasic.getModule());
+    @PostMapping("/operate/node/stop/{module}/{nodeId}")
+    public void stop(@PathVariable String module, @PathVariable String nodeId) throws Exception {
+        moduleNodeService.stopNode( module, nodeId);
     }
 
     @PostMapping("/model/nodes")
@@ -125,11 +109,11 @@ public class ModelManagerController {
         return moduleNodeService.queryNodes(null);
     }
 
-    @PostMapping(value = "/node/{uuid}/{goPage}/{pageSize}")
-    public Pager<List<ModelNode>> paging(@PathVariable String uuid, @PathVariable int goPage, @PathVariable int pageSize) {
+    @PostMapping(value = "/node/{module}/{goPage}/{pageSize}")
+    public Pager<List<ModelNode>> paging(@PathVariable String module, @PathVariable int goPage, @PathVariable int pageSize) {
         Page page = PageHelper.startPage(goPage, pageSize, true);
         Map<String,Object> param = new HashMap<>();
-        param.put("model_basic_uuid",uuid);
+        param.put("model_basic_uuid",module);
         List<ModelNode> paging = moduleNodeService.nodePage(param);
         return PageUtils.setPageInfo(page, paging);
     }

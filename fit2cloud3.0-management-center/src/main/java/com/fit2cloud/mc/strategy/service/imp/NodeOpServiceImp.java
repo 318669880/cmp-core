@@ -5,6 +5,7 @@ import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.model.ModelVersion;
+import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.strategy.entity.ResultInfo;
 import com.fit2cloud.mc.strategy.factory.NodeOperateStrategyFactory;
@@ -29,18 +30,21 @@ public class NodeOpServiceImp implements NodeOperateService {
     @Resource
     private NetFileService netFileService;
 
+    @Resource
+    private ModelManagerService modelManagerService;
+
 
     @Transactional
     @Override
-    public void installOrUpdate(ModelManager managerInfo, ModelInstalledDto modelInstalledDto) throws Exception{
-        ModelBasic modelBasic = modelInstalledDto.getModelBasic();
-        String filePath = downLoad(modelInstalledDto);
+    public void installOrUpdate(ModelManager managerInfo, String module) throws Exception{
+        String filePath = downLoad(module);
         ModelOperateStrategy operateStrategy = NodeOperateStrategyFactory.build(managerInfo.getEnv());
-        operateStrategy.executeInstall(managerInfo,modelBasic.getModule(),filePath);
+        operateStrategy.executeInstall(managerInfo,module,filePath);
 
     }
-    private String downLoad (ModelInstalledDto modelInstalledDto) throws Exception{
-        ModelVersion modelVersion = modelInstalledDto.getModelVersion();
+    private String downLoad (String module) throws Exception{
+        ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
+        ModelVersion modelVersion = modelManagerService.modelVersionInfo(modelBasic.getModelUuid(), modelBasic.getLastRevision());
         String downloadUrl = modelVersion.getDownloadUrl();
         ResultInfo<String> resultInfo = netFileService.down(downloadUrl);
         return resultInfo.getData();

@@ -1,6 +1,7 @@
 package com.fit2cloud.mc.strategy.service;
 
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
+import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.strategy.entity.ModelStatusParam;
 import org.springframework.cloud.client.ServiceInstance;
@@ -37,15 +38,17 @@ public class EurekaCheckService {
     public void checkModuleStatus(ModelStatusParam modelStatusParam) throws Exception{
         String module = modelStatusParam.getModule();
         ModuleStatusConstants status = modelStatusParam.getStatus();
+        ModelNode modelNode = modelStatusParam.getModelNode();
         Map<String,List<ServiceInstance>> sis = new HashMap<>();
         List<String> services = discoveryClient.getServices();
         services.forEach(service -> {
             sis.put(service,discoveryClient.getInstances(service));
         });
         List<ServiceInstance> moduleInstances = sis.get(module);
-        String client_host = modelStatusParam.getModelNode().getNodeHost();
+        String client_host = modelNode.getNodeHost();
         String nextStatus = serviceAvailable(client_host,moduleInstances) ? status.nextSuccess() :status.nextFaild();
-        moduleNodeService.addOrUpdateModelNode(module, nextStatus, null, null);
+        modelNode.setNodeStatus(nextStatus);
+        moduleNodeService.addOrUpdateModelNode(modelNode);
         moduleNodeService.modelStatu(module);
     }
 

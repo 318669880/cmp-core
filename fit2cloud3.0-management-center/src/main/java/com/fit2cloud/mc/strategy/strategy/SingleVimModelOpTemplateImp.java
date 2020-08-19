@@ -27,7 +27,7 @@ public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
         try{
             ModuleUtil.installOrUpdateModule(filePath, modelManager.getOnLine());
         }catch (Exception e){
-            throw new Exception(e);
+            F2CException.throwException(e);
         }
 
     }

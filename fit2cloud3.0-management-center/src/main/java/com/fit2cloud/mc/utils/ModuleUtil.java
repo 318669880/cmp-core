@@ -25,22 +25,22 @@ public class ModuleUtil {
     private static String dockerComposeFile = "docker-compose.yml";
     private static String extensionDir = workDir + "/extensions/";
 
-    public static void startService(String serviceName) throws Exception{
-        checkFileExist(extensionDir + serviceName + File.separator,  dockerComposeFile);
+    public static void startService(String moduleName) throws Exception{
+        checkFileExist(extensionDir + moduleName + File.separator,  dockerComposeFile);
         List<String> moduleNameList = new ArrayList<>();
-        filterModuleInDockerCompose(extensionDir + serviceName + File.separator + dockerComposeFile, moduleNameList, new ArrayList<>());
-        startService(new ArrayList<>(), new StringBuilder(), moduleNameList, extensionDir + serviceName + File.separator);
+        filterModuleInDockerCompose(extensionDir + moduleName + File.separator + dockerComposeFile, moduleNameList, new ArrayList<>());
+        startService(new ArrayList<>(), new StringBuilder(), moduleNameList, extensionDir + moduleName + File.separator);
     }
 
-    public static void stopService(String serviceName)throws Exception{
-        checkFileExist(extensionDir + serviceName + File.separator,  dockerComposeFile);
+    public static void stopService(String moduleName)throws Exception{
+        checkFileExist(extensionDir + moduleName + File.separator,  dockerComposeFile);
         List<String> moduleNameList = new ArrayList<>();
-        filterModuleInDockerCompose(extensionDir + serviceName + File.separator + dockerComposeFile, moduleNameList, new ArrayList<>());
-        stopService(new ArrayList<>(), new StringBuilder(), extensionDir + serviceName + File.separator, moduleNameList);
+        filterModuleInDockerCompose(extensionDir + moduleName + File.separator + dockerComposeFile, moduleNameList, new ArrayList<>());
+        stopService(new ArrayList<>(), new StringBuilder(), extensionDir + moduleName + File.separator, moduleNameList);
     }
 
 
-    public static void installOrUpdateModule(String moduleFileName, boolean onLine) throws Exception {
+    public static void installOrUpdateModule(String moduleName, String moduleFileName, boolean onLine) throws Exception {
         List<String> command = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
         String random_dir_name = UUID.randomUUID().toString();
@@ -63,7 +63,7 @@ public class ModuleUtil {
 
         List<String> newModuleNameList = new ArrayList<>();
         List<String> newImageNameList = new ArrayList<>();
-        String moduleName = filterModuleInDockerCompose(extensionTmpDir + dockerComposeFile, newModuleNameList, newImageNameList);
+        filterModuleInDockerCompose(extensionTmpDir + dockerComposeFile, newModuleNameList, newImageNameList);
 
         String fit2cloudModuleDir = extensionDir + moduleName + File.separatorChar ;
         String action = null;

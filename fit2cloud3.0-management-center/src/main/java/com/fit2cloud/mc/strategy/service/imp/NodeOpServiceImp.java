@@ -15,6 +15,7 @@ import com.fit2cloud.mc.strategy.service.NetFileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 /**
  * @Company: FIT2CLOUD 飞致云
@@ -39,18 +40,9 @@ public class NodeOpServiceImp implements NodeOperateService {
     public void installOrUpdate(ModelManager managerInfo, String module) throws Exception{
         String filePath = downLoad(module);
         ModelOperateStrategy operateStrategy = NodeOperateStrategyFactory.build(managerInfo.getEnv());
-        operateStrategy.executeInstall(managerInfo,module,filePath);
+        operateStrategy.executeInstall(managerInfo, module, filePath, new HashMap<>());
 
     }
-    private String downLoad (String module) throws Exception{
-        ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
-        ModelVersion modelVersion = modelManagerService.modelVersionInfo(modelBasic.getModelUuid(), modelBasic.getLastRevision());
-        String downloadUrl = modelVersion.getDownloadUrl();
-        ResultInfo<String> resultInfo = netFileService.down(downloadUrl);
-        return resultInfo.getData();
-    }
-
-
 
     @Transactional
     @Override
@@ -78,8 +70,12 @@ public class NodeOpServiceImp implements NodeOperateService {
 
     }
 
-
-
-
+    private String downLoad (String module) throws Exception{
+        ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
+        ModelVersion modelVersion = modelManagerService.modelVersionInfo(modelBasic.getModelUuid(), modelBasic.getLastRevision());
+        String downloadUrl = modelVersion.getDownloadUrl();
+        ResultInfo<String> resultInfo = netFileService.down(downloadUrl);
+        return resultInfo.getData();
+    }
 
 }

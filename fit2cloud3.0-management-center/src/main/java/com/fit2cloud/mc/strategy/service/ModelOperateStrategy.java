@@ -2,6 +2,8 @@ package com.fit2cloud.mc.strategy.service;
 
 import com.fit2cloud.mc.model.ModelManager;
 
+import java.util.Map;
+
 /**
  * @Company: FIT2CLOUD 飞致云
  * @Author: Mr.cyw
@@ -11,11 +13,11 @@ import com.fit2cloud.mc.model.ModelManager;
  */
 public interface ModelOperateStrategy {
 
-    public void executeInstall(ModelManager modelManager, String modeule, String filePath) throws Exception;
+    public void executeInstall(ModelManager modelManager, String modeule, String filePath, Map<String, Object> params) throws Exception;
 
-    public void executeDelete(String modeule);
+    public void executeDelete(String modeule)throws Exception;
 
-    public void executeStart(String modeule);
+    public void executeStart(String modeule)throws Exception;
 
-    public void executeStop(String modeule);
+    public void executeStop(String modeule)throws Exception;
 }

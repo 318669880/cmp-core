@@ -128,15 +128,15 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
 
 
-    $scope.envs = [
-        {
-            'value': 'host',
-            'name': '虚拟化环境'
-        },{
-            'value': 'k8s',
-            'name': '容器环境'
-        }
-    ];
+    // $scope.envs = [
+    //     {
+    //         'value': 'host',
+    //         'name': '虚拟化环境'
+    //     },{
+    //         'value': 'k8s',
+    //         'name': '容器环境'
+    //     }
+    // ];
 
     $scope.openNodeInfo = function (item) {
         if ($scope.selected === item.$$hashKey) {
@@ -159,7 +159,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     };
 
 
-    $scope.startModule = function (item) {
+    $scope.startK8sModule = function (item) {
         let module_arr = [];
         if(item){
             module_arr.push(item.module);
@@ -180,10 +180,29 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
         Notification.prompt(obj, function (result) {
             let pod_number = result;
-
-            //TODO
+            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr}, function (resp) {
+                Notification.info("启动结果，请查看日志.") ;
+            }, function (resp) {
+            });
         });
+    }
 
+    $scope.stopK8sModule = function (item) {
+        let module_arr = [];
+        if(item){
+            module_arr.push(item.module);
+        }else{
+            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
+        }
+        if (module_arr.length == 0 ){
+            Notification.warn("请选择模块！");
+            return;
+        }
+
+        $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function (resp) {
+                Notification.info("启动结果，请查看日志.") ;
+            }, function (resp) {
+        });
     }
 
 
@@ -239,7 +258,7 @@ let IndexServer = function() {
     this.validate = false;
     this.$scope = null;
     this.autoNext = true;
-    this.model_env = 'host';
+    this.model_env = "";
     this.onLine = true;
     this.initialize.apply(this , arguments);
 };
@@ -259,7 +278,6 @@ IndexServer.prototype = {
             _self._init_onLine = !!response.onLine;
             _self.onLine = !!response.onLine;
 
-            _self._init_model_env = response.env;
             _self.model_env = response.env;
 
             if (response.validate === 1 && _self.autoNext) {
@@ -319,7 +337,7 @@ IndexServer.prototype = {
     },
 
     validateSave: function() {
-        if(this._init_address === this.address && this._init_model_env === this.model_env && this._init_onLine === this.onLine){
+        if(this._init_address === this.address && this._init_onLine === this.onLine){
             // 这说明 索引服务没有改过 为提升那么一点客户体验 那就不走后台了保存了
             this.validate = true;
             this.$scope.wizard.continue();
@@ -332,13 +350,12 @@ IndexServer.prototype = {
             modelAddress : this.address,             // 索引服务地址
             validate : 1,                            // 验证结果
             onLine : this.onLine,                              // 是否使用在线索引服务
-            env : (this.model_env || 'host')                   // 环境 默认是host 可选 k8s
         }
         this.$scope.executeAjax(this._saveDataUrl,'POST',param,res => {
             //saveSuccess = true;
-            _self._init_address = _self.address;
-            _self._init_model_env = _self.model_env;
-            _self._init_onLine = _self.onLine;
+            _self._init_address = res.address;
+            _self.model_env = res.env;
+            _self._init_onLine = res.onLine;
             _self.validate = true;
             _self.$scope.wizard.continue();
         })
@@ -475,7 +492,6 @@ ModelInstaller.prototype = {
             model._versionEdit = false;//默认是非编辑状态
             return model;
         });
-        console.log('------');
     },
 
     editVersion: function (item) {

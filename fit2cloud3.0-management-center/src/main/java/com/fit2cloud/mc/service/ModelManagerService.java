@@ -48,13 +48,14 @@ public class ModelManagerService {
 
 
 
-    public void add(ModelManager modelManager) {
+    public ModelManager add(ModelManager modelManager) {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
         modelManagerExample.createCriteria().andModelAddressIsNotNull();
         modelManagerMapper.deleteByExample(modelManagerExample);
 
         modelManager.setEnv(SyncEurekaServer.IS_KUBERNETES? "k8s" : "host");
         modelManagerMapper.insert(modelManager);
+        return modelManager;
     }
 
     public ModelManager select() {

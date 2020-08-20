@@ -14,6 +14,7 @@ local.properties
 .recommenders
 *.iml
 **/*.iml
+**/*.idea
 
 # External tool builders
 .externalToolBuilders/
@@ -64,6 +65,7 @@ local.properties
 .idea/**/tasks.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.*/.*idea
 
 # Sensitive or high-churn files
 .idea/**/dataSources/

@@ -47,8 +47,8 @@ public class ModelManagerController {
 
     //  无敏感信息 无需使用dto
     @PostMapping("/indexServer/save")
-    public void save (@RequestBody ModelManager modelManager){
-        modelManagerService.add(modelManager);
+    public ModelManager save (@RequestBody ModelManager modelManager){
+        return modelManagerService.add(modelManager);
     }
 
     @GetMapping("/indexServer/query")
@@ -86,7 +86,6 @@ public class ModelManagerController {
             }
         });
     }
-
 
 
     @PostMapping("operate/node/install/{module}/{nodeId}")

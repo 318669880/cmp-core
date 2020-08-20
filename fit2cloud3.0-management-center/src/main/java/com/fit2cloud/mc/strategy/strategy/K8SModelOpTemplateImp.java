@@ -7,21 +7,16 @@ import com.fit2cloud.mc.utils.HelmUtil;
 import com.fit2cloud.mc.utils.ModuleUtil;
 import org.springframework.stereotype.Service;
 
-/**
- * @Company: FIT2CLOUD 飞致云
- * @Author: Mr.cyw
- * @Machine: chenyawen
- * @Date: 2020/8/10 4:28 下午
- * @Description: Please Write notes scientifically
- * k8s环境基于API操作模块
- */
+import java.util.Map;
+
+
 @Service("k8s")
 public class K8SModelOpTemplateImp implements ModelOperateStrategy {
 
     @DcsLock
     @Override
-    public void executeInstall(ModelManager modelManager, String module, String filePath)throws Exception {
-        HelmUtil.installOrUpdateModule(filePath, modelManager.getOnLine());
+    public void executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params)throws Exception {
+        HelmUtil.installOrUpdateModule(module, filePath, modelManager.getOnLine(), params);
     }
 
     @DcsLock
@@ -32,8 +27,8 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
 
     @DcsLock
     @Override
-    public void executeStop(String modeule) {
-
+    public void executeStop(String modeule)throws Exception {
+        HelmUtil.stopService(modeule);
     }
 
     @DcsLock
@@ -41,4 +36,7 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
     public void executeDelete(String modeule) {
 
     }
+
+
+
 }

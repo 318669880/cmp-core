@@ -24,21 +24,23 @@ public class HelmUtil {
     }
 
     public static void stopService(String serviceName)throws Exception{
-
-    }
-
-    private static String filterChartName(String chartFile) throws Exception{
-        Map chart = new Yaml().load(new FileInputStream(new File("chartFile")));
-        Object serviceName =  chart.get("name");
-        if(serviceName == null){
-            LogUtil.error("Filed to judge service name from " + chartFile);
-            throw new Exception("Filed to judge service name from " + chartFile);
-        }else{
-            return serviceName.toString();
+        List<String> command = new ArrayList<String>();
+        StringBuilder result = new StringBuilder();
+        LogUtil.info("Begin stop service " +  serviceName);
+        command.add(helm);
+        command.add("uninstall");
+        command.add(serviceName);
+        int starCode = execCommand(result, command);
+        if(starCode != 0){
+            LogUtil.error("stop service failed: " + result.toString());
+            throw new Exception("stop service failed: " + result.toString());
+        }else {
+            LogUtil.info("Success to stop service: " + result.toString());
         }
+        result.setLength(0);
     }
 
-    public static void installOrUpdateModule(String moduleFileName, boolean onLine) throws Exception {
+    public static void installOrUpdateModule(String serviceName, String moduleFileName, boolean onLine, Map<String, Object> params) throws Exception {
         List<String> command = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
         String random_dir_name = UUID.randomUUID().toString();
@@ -48,13 +50,11 @@ public class HelmUtil {
         try{
             uncompress(moduleFileName, tmp_dir);
         }catch (Exception e) {
-            LogUtil.error("Filed to uncompress module file" + e.getMessage());
+            LogUtil.error("Filed to uncompress module file " + e.getMessage());
             throw new Exception(e.getMessage());
         }
 
         checkFileExist(chartsDir,  chartFile);
-
-        String serviceName = filterChartName(tmp_dir + chartFile);
 
         if(!onLine){
            //TODO
@@ -107,8 +107,8 @@ public class HelmUtil {
     }
 
     private static void checkFileExist(String path, String fileName) throws Exception{
-        File extensionTmpDockerCompose = new File(path + fileName);
-        if(!extensionTmpDockerCompose.exists() || !extensionTmpDockerCompose.isFile()){
+        File file = new File(path + fileName);
+        if(!file.exists() || !file.isFile()){
             LogUtil.error("Cannot find {} in {}." , fileName, path);
             throw new Exception("Cannot find " + path + fileName );
         }
@@ -125,6 +125,17 @@ public class HelmUtil {
         }
         int exitCode = process.waitFor();
         return exitCode;
+    }
+
+    private static String filterChartName(String chartFile) throws Exception{
+        Map chart = new Yaml().load(new FileInputStream(new File(chartFile)));
+        Object serviceName =  chart.get("name");
+        if(serviceName == null){
+            LogUtil.error("Filed to judge service name from " + chartFile);
+            throw new Exception("Filed to judge service name from " + chartFile);
+        }else{
+            return serviceName.toString();
+        }
     }
 
 }

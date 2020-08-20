@@ -33,8 +33,6 @@ public class ModelNodeTask {
     @Resource
     private Environment environment;
 
-    @Value("${spring.application.name}")
-    private String serverName;
 
     @Value("${server.port}")
     private String port;
@@ -52,8 +50,6 @@ public class ModelNodeTask {
     @Resource
     private ModelManagerService modelManagerService;
 
-    @Resource
-    private DiscoveryClient discoveryClient;
 
 
     /**
@@ -105,9 +101,16 @@ public class ModelNodeTask {
                 String nodeIp = node.getNodeIp();
                 boolean isReachable = InetAddress.getByName(nodeIp).isReachable(3000) && isHostConnectable(node.getNodeHost());
                 if(!isReachable){
-                    modelNodeMapper.deleteByPrimaryKey(node.getModelNodeUuid());
+                    String mc_modelNode_uuid = node.getModelNodeUuid();
+                    //不可用 删除mc节点记录
+                    modelNodeMapper.deleteByPrimaryKey(mc_modelNode_uuid);
+                    //再删除 mc节点挂接的所有业务模块节点记录
+                    modelNodeExample.clear();
+                    modelNodeExample.createCriteria().andIsMcEqualTo(false).andMcNodeUuidEqualTo(mc_modelNode_uuid);
+                    modelNodeMapper.deleteByExample(modelNodeExample);
+                    modelNodeExample.clear();
                 }
-                //if(node.getNodeHost().indexOf(host) != -1)return false; //去除 本机地址 相互注册 无需注册自己
+                if(node.getNodeHost().indexOf(host) != -1)return false; //去除 本机地址 相互注册 无需注册自己
                 return isReachable;
             } catch (Exception e) {
                 LogUtil.error(e.getMessage(),e);
@@ -128,7 +131,11 @@ public class ModelNodeTask {
     }
 
 
-
+    /**
+     * 测试端口是否可达
+     * @param nodeIp
+     * @return
+     */
     public boolean isHostConnectable(String nodeIp) {
         Socket socket = new Socket();
         try {

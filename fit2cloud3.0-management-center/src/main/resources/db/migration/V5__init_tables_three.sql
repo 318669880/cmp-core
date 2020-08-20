@@ -45,5 +45,6 @@ CREATE TABLE IF NOT EXISTS `model_node` (
   `node_status` varchar(50) DEFAULT NULL COMMENT '节点状态',
   `node_create_time` bigint(13) DEFAULT NULL COMMENT '节点创建时间',
   `is_mc` tinyint(1) NOT NULL COMMENT '是否管理中心',
+  `mc_node_uuid` varchar(64) DEFAULT NULL COMMENT '所属管理中心节点',
   PRIMARY KEY (`model_node_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

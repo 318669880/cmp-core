@@ -113,7 +113,7 @@ public class ModelManagerService {
      * 模块安装
      * @param modelInstalledDto
      */
-    public void readyInstallModule(ModelInstalledDto modelInstalledDto){
+    public void readyInstallModule(ModelInstalledDto modelInstalledDto, ModelNode node){
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
         String module = modelBasic.getModule();
         ModelVersion modelVersion = modelInstalledDto.getModelVersion();
@@ -134,7 +134,8 @@ public class ModelManagerService {
         modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
         modelVersion.setInstallTime(new Date().getTime());
         modelVersionMapper.insert(modelVersion);
-        eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall",null);
+
+        eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall", node);
     }
 
 

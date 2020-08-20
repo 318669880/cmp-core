@@ -22,12 +22,16 @@
 
 
     <select id="select" resultMap="ModelInstallResult">
-        select b.*,_v.install_time,_v.revision,_v.download_url
+        select b.*,_v.install_time,_v.revision,_v.download_url,_w.status
         from model_basic b
         left join
         (select v.model_basic_uuid,max(v.install_time) as install_time,v.revision,v.download_url
         from model_version v GROUP BY v.model_basic_uuid) _v
         on _v.model_basic_uuid = b.model_uuid
+        left join
+        (select model_basic_uuid as module,GROUP_CONCAT(n.node_status) as status
+        from model_node n GROUP BY n.model_basic_uuid) _w
+        on _w.module = b.module
         where 1 = 1
         <if test="map.name!=null">
             and b.name like #{map.name}

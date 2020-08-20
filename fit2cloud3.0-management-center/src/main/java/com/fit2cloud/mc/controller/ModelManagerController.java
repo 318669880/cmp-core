@@ -2,6 +2,7 @@ package com.fit2cloud.mc.controller;
 
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.BeanUtils;
+import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
@@ -15,6 +16,7 @@ import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,8 +72,8 @@ public class ModelManagerController {
         return modelManagerService.installInfoquery();
     }
 
-    @PostMapping("/operate/readyInstall")
-    public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos) {
+    @PostMapping("/operate/readyInstall/{mcNodeId}")
+    public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos, @PathVariable("mcNodeId") String mcNodeId) {
         ModelManager modelManager = modelManagerService.select();
         String addr = modelManager.getModelAddress();
         modelInstalledDtos.forEach(modelInstalledDto -> {
@@ -80,7 +82,7 @@ public class ModelManagerController {
                 modelInstalledDto.getModelVersion().setDownloadUrl(modelManagerService.prefix(addr,url));
                 String icon = modelInstalledDto.getModelBasic().getIcon();
                 modelInstalledDto.getModelBasic().setIcon(modelManagerService.prefix(addr,icon));
-                modelManagerService.readyInstallModule(modelInstalledDto);
+                modelManagerService.readyInstallModule(modelInstalledDto, StringUtils.equals("-1",mcNodeId) ? null : moduleNodeService.nodeInfo(mcNodeId));
             }catch (Exception e){
                 F2CException.throwException(e);
             }
@@ -100,7 +102,36 @@ public class ModelManagerController {
 
     @PostMapping("/operate/node/stop/{module}/{nodeId}")
     public void stop(@PathVariable String module, @PathVariable String nodeId) throws Exception {
+
         moduleNodeService.stopNode( module, nodeId);
+    }
+
+    @PostMapping("operate/module/start")
+    public void batchStart(@RequestBody List<String> modules){
+        modules.forEach(module -> {
+            moduleNodeService.queryNodes(module).forEach(node -> {
+                try {
+                    moduleNodeService.startNode( module, node.getMcNodeUuid());
+                } catch (Exception e) {
+                    LogUtil.error(e.getMessage(),e);
+                    F2CException.throwException(e);
+                }
+            });
+        });
+    }
+
+    @PostMapping("operate/module/stop")
+    public void batchStop(@RequestBody List<String> modules){
+        modules.forEach(module -> {
+            moduleNodeService.queryNodes(module).forEach(node -> {
+                try {
+                    moduleNodeService.stopNode( module, node.getMcNodeUuid());
+                } catch (Exception e) {
+                    LogUtil.error(e.getMessage(),e);
+                    F2CException.throwException(e);
+                }
+            });
+        });
     }
 
     @PostMapping("/model/nodes")

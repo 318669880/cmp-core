@@ -49,7 +49,7 @@ public class EurekaCheckService {
         String nextStatus = serviceAvailable(client_host,moduleInstances) ? status.nextSuccess() :status.nextFaild();
         modelNode.setNodeStatus(nextStatus);
         moduleNodeService.addOrUpdateModelNode(modelNode);
-        moduleNodeService.modelStatu(module);
+        //moduleNodeService.modelStatu(module);
     }
 
     private boolean serviceAvailable(String host,List<ServiceInstance> moduleInstances){

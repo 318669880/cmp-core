@@ -17,27 +17,28 @@
             <td>{{item.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>
 
             <td>
-                <table-menus>
-                    <md-menu-item>
-                        <md-button ng-click="install(item)">
-                            <md-icon class="md-18">build</md-icon>
-                            安装
-                        </md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button ng-click="start(item)">
-                            <md-icon class="md-18">play_arrow</md-icon>
-                            启动
-                        </md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button ng-click="stop(item)">
-                            <md-icon class="md-18">pause</md-icon>
-                            停止
-                        </md-button>
+                <md-button ng-click="modelInstaller.executeInstall(item.modelNodeUuid)" ng-if="!!is_mc" >
+                    <md-icon class="md-18">build</md-icon>
+                    安装
+                </md-button>
 
-                    </md-menu-item>
-                </table-menus>
+                <md-button ng-if="!is_mc && item.nodeStatus==='installFaild'" ng-click="install(item)">
+                    <md-icon class="md-18">build</md-icon>
+                    安装
+                </md-button>
+
+                <md-button ng-if="!is_mc && item.nodeStatus==='stopped'" ng-click="start(item)">
+                    <md-icon class="md-18">play_arrow</md-icon>
+                    启动
+                </md-button>
+
+                <md-button ng-if="!is_mc && item.nodeStatus==='running'" ng-click="stop(item)">
+                    <md-icon class="md-18">pause</md-icon>
+                    停止
+                </md-button>
+                <!--<table-menus ng-if="!is_mc">
+
+                </table-menus>-->
             </td>
         </tr>
         </tbody>

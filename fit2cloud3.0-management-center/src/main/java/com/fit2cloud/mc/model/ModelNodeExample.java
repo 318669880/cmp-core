@@ -664,6 +664,76 @@ public class ModelNodeExample {
             return (Criteria) this;
         }
 
+        public Criteria andMcNodeUuidIsNull() {
+            addCriterion("mc_node_uuid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidIsNotNull() {
+            addCriterion("mc_node_uuid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidEqualTo(String value) {
+            addCriterion("mc_node_uuid =", value, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidNotEqualTo(String value) {
+            addCriterion("mc_node_uuid <>", value, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidGreaterThan(String value) {
+            addCriterion("mc_node_uuid >", value, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidGreaterThanOrEqualTo(String value) {
+            addCriterion("mc_node_uuid >=", value, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidLessThan(String value) {
+            addCriterion("mc_node_uuid <", value, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidLessThanOrEqualTo(String value) {
+            addCriterion("mc_node_uuid <=", value, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidLike(String value) {
+            addCriterion("mc_node_uuid like", value, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidNotLike(String value) {
+            addCriterion("mc_node_uuid not like", value, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidIn(List<String> values) {
+            addCriterion("mc_node_uuid in", values, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidNotIn(List<String> values) {
+            addCriterion("mc_node_uuid not in", values, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidBetween(String value1, String value2) {
+            addCriterion("mc_node_uuid between", value1, value2, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMcNodeUuidNotBetween(String value1, String value2) {
+            addCriterion("mc_node_uuid not between", value1, value2, "mcNodeUuid");
+            return (Criteria) this;
+        }
+
         public Criteria andSqlCriterion(String value) {
             addCriterion("(" + value + ")");
             return (Criteria) this;

@@ -15,6 +15,8 @@ public class ModelInstall extends ModelBasic{
 
     private String downloadUrl;
 
+    private String status;
+
     public Long getInstallTime() {
         return installTime;
     }
@@ -37,5 +39,13 @@ public class ModelInstall extends ModelBasic{
 
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

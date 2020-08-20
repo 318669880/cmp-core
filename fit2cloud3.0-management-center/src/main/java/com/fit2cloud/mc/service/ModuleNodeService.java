@@ -6,21 +6,19 @@ import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelBasicMapper;
 import com.fit2cloud.mc.dao.ModelBasicPageMapper;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
-import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.strategy.entity.ModelStatusParam;
 import com.fit2cloud.mc.strategy.queue.ModuleDelayTaskManager;
 import com.fit2cloud.mc.strategy.service.EurekaCheckService;
-import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -75,6 +73,16 @@ public class ModuleNodeService {
         return modelNodeMapper.selectByExample(modelNodeExample);
     }
 
+    public ModelNode currentMcNode(){
+        String host = domain_host();
+        String module = environment.getProperty("spring.application.name");
+        ModelNodeExample modelNodeExample = new ModelNodeExample();
+        ModelNodeExample.Criteria criteria = modelNodeExample.createCriteria();
+        criteria.andNodeHostEqualTo(host).andIsMcEqualTo(true).andModelBasicUuidEqualTo(module);
+        List<ModelNode> nodes = modelNodeMapper.selectByExample(modelNodeExample);
+        return CollectionUtils.isEmpty(nodes) ? null : nodes.get(0);
+    }
+
 
     public ModelNode nodeInfo(String nodeId){
         return modelNodeMapper.selectByPrimaryKey(nodeId);
@@ -96,60 +104,41 @@ public class ModuleNodeService {
     public void addOrUpdateModelNode (ModelNode node) throws Exception{
         String mc_hostName = domain_host();
         String mc_ip = environment.getProperty("eureka.instance.ip-address");
-        ModelNode template = null;
         String modelNodeUuid = node.getModelNodeUuid();
-        if(!StringUtils.isEmpty(modelNodeUuid)){
-            template = modelNodeMapper.selectByPrimaryKey(modelNodeUuid);
-            if(ObjectUtils.isNotEmpty(template)){
+        Optional.ofNullable(modelNodeUuid).ifPresent(model_node_uuid -> {
+            AtomicBoolean is_new = new AtomicBoolean(true);
+            ModelNode template = modelNodeMapper.selectByPrimaryKey(modelNodeUuid);
+            Optional.ofNullable(template).ifPresent(temp -> {
                 node.setModelNodeUuid(template.getModelNodeUuid());
                 modelNodeMapper.updateByPrimaryKeySelective(node);
-                return;
+                is_new.set(false);
+            });
+            if (!is_new.get())return;
+            ModelNode mc_node = currentMcNode();
+            if (ObjectUtils.isEmpty(mc_node)) {
+                F2CException.throwException("找不到当前管理中心节点信息");
             }
             node.setNodeHost(Optional.ofNullable(node.getNodeHost()).orElse(mc_hostName));
             node.setNodeIp(Optional.ofNullable(node.getNodeIp()).orElse(mc_ip));
             node.setNodeCreateTime(new Date().getTime());
             node.setIsMc(false);
+            node.setMcNodeUuid(mc_node.getModelNodeUuid());
             modelNodeMapper.insert(node);
-            return;
-        }
-        ModelNodeExample modelNodeExample = new ModelNodeExample();
-        ModelNodeExample.Criteria criteria = modelNodeExample.createCriteria();
-        criteria.andIsMcEqualTo(node.getIsMc());
-        if(!StringUtils.isEmpty(node.getNodeIp())){
-            criteria.andNodeIpEqualTo(node.getNodeIp());
-        }
-        if(!StringUtils.isEmpty(node.getNodeHost())){
-            criteria.andNodeHostEqualTo(node.getNodeHost());
-        }
-        if(!StringUtils.isEmpty(node.getModelBasicUuid())){
-            criteria.andModelBasicUuidEqualTo(node.getModelBasicUuid());
-        }
-        List<ModelNode> modelNodes = modelNodeMapper.selectByExample(modelNodeExample);
-        if(CollectionUtils.isNotEmpty(modelNodes)){
-            template = modelNodes.get(0);
-            template.setNodeStatus(node.getNodeStatus());
-            modelNodeMapper.updateByPrimaryKey(template);
-            return ;
-        }
-        node.setNodeHost(Optional.of(node.getNodeHost()).orElse(mc_hostName));
-        node.setNodeIp(Optional.of(node.getNodeIp()).orElse(mc_ip));
-        node.setNodeCreateTime(new Date().getTime());
-        node.setIsMc(false);
-        modelNodeMapper.insert(node);
+        });
     }
 
+
     public void addOrUpdateMcNode(String node_status){
+        ModelNode node = currentMcNode();
+        AtomicBoolean is_new = new AtomicBoolean(true);
+        Optional.ofNullable(node).ifPresent(mc_node -> {
+            node.setNodeStatus(node_status);
+            modelNodeMapper.updateByPrimaryKey(node);
+            is_new.set(false);
+        });
+        if (!is_new.get()) return;
         String hostName = domain_host();
         String module = environment.getProperty("spring.application.name");
-        ModelNodeExample modelNodeExample = new ModelNodeExample();
-        modelNodeExample.createCriteria().andNodeHostEqualTo(hostName).andModelBasicUuidEqualTo(module);
-        List<ModelNode> modelNodes = modelNodeMapper.selectByExample(modelNodeExample);
-        if(CollectionUtils.isNotEmpty(modelNodes)){
-            ModelNode temp =modelNodes.get(0);
-            temp.setNodeStatus(node_status);
-            modelNodeMapper.updateByPrimaryKey(temp);
-            return ;
-        }
         ModelNode modelNode = new ModelNode();
         modelNode.setNodeHost(hostName);
         modelNode.setModelNodeUuid(UUIDUtil.newUUID());
@@ -175,17 +164,17 @@ public class ModuleNodeService {
         ModelBasic model = modelManagerService.modelBasicInfo(module);
         Optional.ofNullable(model).ifPresent(modelBasic -> {
             List<ModelNode> modelNodes = queryNodes(module);
-            final Map<String,String> statusMap = new HashMap<>();
+
+            AtomicReference<String> atomicReference = new AtomicReference<>(null);
             modelNodes.stream().anyMatch(node -> {
-                statusMap.put("key",node.getNodeStatus());
+                atomicReference.set(node.getNodeStatus());
                 return !node.getNodeStatus().endsWith("Faild");
             });
             if(modelNodes.stream().anyMatch(node -> node.getNodeStatus().equals(ModuleStatusConstants.running.value()))){
-                statusMap.put("key",ModuleStatusConstants.running.value());
+                atomicReference.set(ModuleStatusConstants.running.value());
             }
-            String status = statusMap.get("key");
             if(ObjectUtils.isNotEmpty(modelBasic)){
-                modelBasic.setCurrentStatus(status);
+                modelBasic.setCurrentStatus(atomicReference.get());
                 modelBasicMapper.updateByPrimaryKey(modelBasic);
             }
         });
@@ -233,7 +222,7 @@ public class ModuleNodeService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        },new ModelStatusParam(nodeInfo(nodeId),module,ModuleStatusConstants.startting));
+        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.startting));
     }
 
     public void stopNode(String module, String nodeId) throws Exception {
@@ -255,7 +244,7 @@ public class ModuleNodeService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        },new ModelStatusParam(nodeInfo(nodeId),module,ModuleStatusConstants.stopping));
+        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.stopping));
     }
 
 

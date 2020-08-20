@@ -35,6 +35,7 @@ public class ModelNodeController {
         modelNode.setModelNodeUuid(nodeId);
         modelNode.setModelBasicUuid(module);
         moduleNodeService.addOrUpdateModelNode(modelNode);
+        moduleNodeService.installNode(module,nodeId);
     }
 
     @PostMapping("/node/install")

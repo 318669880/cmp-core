@@ -1,6 +1,7 @@
 package com.fit2cloud.mc.strategy.task;
 
 import com.fit2cloud.commons.server.exception.F2CException;
+import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.model.ModelNode;
 import com.netflix.appinfo.InstanceInfo;
@@ -38,9 +39,6 @@ public class EurekaInstanceMonitor {
     @Resource
     private Environment environment;
 
-    @Resource
-    private EurekaClient eurekaClient;
-
 
 
     public List<Object> execute(String module, String nodeId, String urlSuffix, ModelNode modelNode){
@@ -65,10 +63,12 @@ public class EurekaInstanceMonitor {
                 HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(param,httpHeaders);
                 ResponseEntity<String> entity = restTemplate.postForEntity(url, request, String.class);
                 result = entity.getBody();
+                return result;
             }catch (Exception e){
-                F2CException.throwException(e);
+                LogUtil.error(e.getMessage(),e);
+                return null;
             }
-            return result;
+
         }).collect(Collectors.toList());
         return results;
     }
@@ -83,7 +83,7 @@ public class EurekaInstanceMonitor {
 
         if(CollectionUtils.isEmpty(services)) return new ArrayList<>();
         services.forEach(service -> {
-            List<InstanceInfo> instancesByVipAddressAndAppName = eurekaClient.getInstancesByVipAddressAndAppName(null, module.toUpperCase(), false);
+            //List<InstanceInfo> instancesByVipAddressAndAppName = eurekaClient.getInstancesByVipAddressAndAppName(null, module.toUpperCase(), false);
             sis.put(service,discoveryClient.getInstances(service));
         });
         List<ServiceInstance> moduleInstances = sis.get(module);

@@ -56,16 +56,18 @@ public class HelmUtil {
 
         checkFileExist(chartsDir,  chartFile);
 
-        if(!onLine){
-           //TODO
-        }
-
         LogUtil.info("Begin start service " +  serviceName);
         command.add(helm);
         command.add("upgrade");
         command.add(serviceName);
         command.add("--install");
         command.add("--recreate-pods");
+        if(!onLine){
+            InternalDockerRegistry internalDockerRegistry = CommonBeanFactory.getBean(InternalDockerRegistry.class);
+            command.add("--set modules.imagePrefix=" + internalDockerRegistry.getImagePrefix());
+            command.add("--set modules.imagePullSecret=registry-fit2cloud-inner-key");
+        }
+
         command.add(chartsDir);
         int starCode = execCommand(result, command);
         if(starCode != 0){

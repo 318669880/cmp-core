@@ -688,13 +688,13 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             init: 1
         };
 
-        Notification.prompt(obj, function (result) {
-            let pod_number = result;
+        Notification.confirm("确定启动服务？", function () {
             $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr}, function (resp) {
                 Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
             }, function (resp) {
             });
         });
+
     }
 
     $scope.stopK8sModule = function (item) {
@@ -709,12 +709,13 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             return;
         }
 
-        $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function (resp) {
-            Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
-        }, function (resp) {
+        Notification.confirm("确定停止服务？", function () {
+            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function (resp) {
+                Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
+            }, function (resp) {
+            });
         });
     }
-
 
 });
 

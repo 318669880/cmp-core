@@ -14,6 +14,7 @@ public class InternalDockerRegistry {
     private String user;
     private String passwd;
     private String url;
+    private String imagePrefix;
 
     public String getUser() {
         return user;
@@ -37,6 +38,14 @@ public class InternalDockerRegistry {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getImagePrefix() {
+        return imagePrefix;
+    }
+
+    public void setImagePrefix(String imagePrefix) {
+        this.imagePrefix = imagePrefix;
     }
 
 }

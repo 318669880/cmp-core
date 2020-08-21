@@ -73,12 +73,15 @@ public class ModelNodeTask {
         List<ModelNode> modelNodes = modelNodeMapper.selectByExample(modelNodeExample);
         //  当前节点如果 没有包含预安装模块 那么这里自动执行预安装
         modelInstalls.stream().filter(model -> !modelNodes.stream().anyMatch(node -> StringUtils.equals(node.getModelBasicUuid(),model.getModule()))).forEach(modelInstall -> {
+            String module = modelInstall.getModule();
+            String modelNodeId = UUIDUtil.newUUID();
             ModelNode modelNode = new ModelNode();
             modelNode.setNodeStatus(ModuleStatusConstants.readyInstall.value());
-            modelNode.setModelBasicUuid(modelInstall.getModule());
-            modelNode.setModelNodeUuid(UUIDUtil.newUUID());
+            modelNode.setModelBasicUuid(module);
+            modelNode.setModelNodeUuid(modelNodeId);
             try {
                 moduleNodeService.addOrUpdateModelNode(modelNode);
+                moduleNodeService.installNode(module,modelNodeId);
             } catch (Exception e) {
                 F2CException.throwException(e);
             }

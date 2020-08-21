@@ -66,6 +66,8 @@ public class EurekaInstanceMonitor {
                 return result;
             }catch (Exception e){
                 LogUtil.error(e.getMessage(),e);
+                // 如果不是批量操作 那么直接抛出异常 否则继续运行
+                if(!ObjectUtils.isEmpty(modelNode)) F2CException.throwException(e);
                 return null;
             }
 

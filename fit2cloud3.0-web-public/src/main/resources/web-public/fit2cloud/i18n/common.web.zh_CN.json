@@ -327,5 +327,10 @@
   "i18n_index_server": "索引服务",
   "i18n_model_installer": "模块安装",
   "i18n_model_runner": "模块运行",
-  "i18n_no_empty": "不能为空"
+  "i18n_no_empty": "不能为空",
+
+  "i18n_model_check_no": "请至少选择一个模块",
+  "i18n_model_check_no_stop": "请至少选择一个停止状态的模块",
+  "i18n_model_check_no_start": "请至少选择一个启动状态的模块",
+  "i18n_model_result": "启动结果 请查看日志"
 }

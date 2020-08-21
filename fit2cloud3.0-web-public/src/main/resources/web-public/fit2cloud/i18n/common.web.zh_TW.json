@@ -321,5 +321,10 @@
   "i18n_index_server": "索引服務",
   "i18n_model_installer": "模塊安裝",
   "i18n_model_runner": "模塊運行",
-  "i18n_delete_after_reconfig": "请修改配置后删除!"
+  "i18n_delete_after_reconfig": "请修改配置后删除!",
+
+  "i18n_model_check_no": "請至少選擇壹個模塊",
+  "i18n_model_check_no_stop": "請至少選擇壹個停止狀態的模塊",
+  "i18n_model_check_no_start": "請至少選擇壹個啟動狀態的模塊",
+  "i18n_model_result": "啟動結果 請查看日誌"
 }

@@ -14,7 +14,7 @@
                                 <md-input-container md-no-float class="md-block"
                                                     layout-gt-xs="row"
                                                     style="margin-bottom: 0px" >
-                                    <label>使用在线索引服务</label>
+                                    <label>{{'i18n_index_type' | translator:'使用在线索引服务'}}：</label>
                                     <md-switch class="md-primary" aria-label="enable" ng-change="indexServer.changeOnline()" ng-model="indexServer.onLine" ></md-switch>
 
                                 </md-input-container>
@@ -51,12 +51,12 @@
                 <wizard-step id="2">
                     <md-content flex="100" >
                         <md-tabs md-dynamic-height md-border-bottom>
-                            <md-tab ng-click="modelInstaller.loadData()" label="可安装" has-permission="KEYCLOAK_SETTING:SYNC">
+                            <md-tab ng-click="modelInstaller.loadData()" label="{{'i18n_model_tab_title_Installable' | translator:'可安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
                                     <filter-tools conditions="modelInstaller.conditions" results="modelInstaller.filters" search="'true'" execute="modelInstaller.loadData()">
                                         <div class="filter-item">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.executeInstall()">
-                                                <md-tooltip md-delay="300">安装</md-tooltip>
+                                                <md-tooltip md-delay="300">{{'i18n_model_op_install' | translator:'安装'}}</md-tooltip>
                                                 <md-icon>build</md-icon>
                                             </md-button>
                                         </div>
@@ -78,10 +78,10 @@
                                                        ng-if="!!item.lastRevision" ng-hide="item._versionEdit" >
                                                         {{item.lastRevision}}
                                                         <md-tooltip md-direction="top" class="f2c-tooltip-version">
-                                                            版本信息：{{item.last_version.revision}}<br>
-                                                            创建时间：{{item.last_version.created}}<br>
-                                                            下载地址：{{item.last_version.downloadUrl}}<br>
-                                                            <span class="auto-break">描述信息：{{item.last_version.description}}</span>
+                                                            {{'i18n_model_node_version_info' | translator:'版本信息'}}：{{item.last_version.revision}}<br>
+                                                            {{'i18n_model_node_create_time' | translator:'创建时间'}}：{{item.last_version.created}}<br>
+                                                            {{'i18n_model_node_down_url' | translator:'下载地址'}}：{{item.last_version.downloadUrl}}<br>
+                                                            <span class="auto-break">{{'i18n_model_node_over_view' | translator:'描述信息'}}：{{item.last_version.description}}</span>
                                                         </md-tooltip>
                                                     </a>
                                                     <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
@@ -99,12 +99,12 @@
                                             <td>
                                                 <md-button ng-click="item.enable = true;modelInstaller.executeInstall()">
                                                     <md-icon class="md-18">build</md-icon>
-                                                    安装
+                                                    {{'i18n_model_op_install' | translator:'安装'}}
                                                 </md-button>
 
                                                 <md-button ng-click="mcNodeInfo(item)">
                                                     <md-icon class="md-18">apps</md-icon>
-                                                    节点
+                                                    {{'i18n_model_op_node' | translator:'显示节点'}}
                                                 </md-button>
                                             </td>
                                         </tr>
@@ -114,7 +114,7 @@
                                 </md-content>
 
                             </md-tab>
-                            <md-tab ng-click="modelInstaller.loadData()" label="可更新" has-permission="KEYCLOAK_SETTING:SYNC">
+                            <md-tab ng-click="modelInstaller.loadData()" label="{{'i18n_model_tab_title_updatable' | translator:'可更新'}}" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <div>
                                     <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
                                         <table class="edit-table" dynamic-table columns="modelInstaller.installupdateColumns" execute="modelInstaller.loadUpdates()">
@@ -131,10 +131,10 @@
                                                            ng-if="!!item.lastRevision" ng-hide="item._versionEdit" >
                                                             {{item.lastRevision}}
                                                             <md-tooltip md-direction="top" class="f2c-tooltip-version">
-                                                                版本信息：{{item.last_version.revision}}<br>
-                                                                创建时间：{{item.last_version.created}}<br>
-                                                                下载地址：{{item.last_version.downloadUrl}}<br>
-                                                                <span class="auto-break">描述信息：{{item.last_version.description}}</span>
+                                                                {{'i18n_model_node_version_info' | translator:'版本信息'}}：{{item.last_version.revision}}<br>
+                                                                {{'i18n_model_node_create_time' | translator:'创建时间'}}：{{item.last_version.created}}<br>
+                                                                {{'i18n_model_node_down_url' | translator:'下载地址'}}：{{item.last_version.downloadUrl}}<br>
+                                                                <span class="auto-break">{{'i18n_model_node_over_view' | translator:'描述信息'}}：{{item.last_version.description}}</span>
                                                             </md-tooltip>
                                                         </a>
                                                         <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
@@ -153,7 +153,7 @@
                                                 <td>
                                                     <md-button ng-click="item.enable = true;modelInstaller.executeUpdate()">
                                                         <md-icon class="md-18">build</md-icon>
-                                                        更新
+                                                        {{'i18n_model_op_update' | translator:'更新'}}
                                                     </md-button>
                                                 </td>
                                             </tr>
@@ -163,19 +163,19 @@
                                     </md-content>
                                 </div>
                             </md-tab>
-                            <md-tab ng-click="list()" label="已安装" has-permission="KEYCLOAK_SETTING:SYNC">
+                            <md-tab ng-click="list()" label="{{'i18n_model_tab_title_installed' | translator:'已安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}" >
                                     <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
                                         <select-columns columns="columns"></select-columns>
                                         <div class="filter-item">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStart()">
-                                                <md-tooltip md-delay="300">启动</md-tooltip>
+                                                <md-tooltip md-delay="300">{{'i18n_model_op_start' | translator:'启动'}}</md-tooltip>
                                                 <md-icon>touch_app</md-icon>
                                             </md-button>
                                         </div>
                                         <div class="filter-item">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStop()">
-                                                <md-tooltip md-delay="300">停止</md-tooltip>
+                                                <md-tooltip md-delay="300">{{'i18n_model_op_stop' | translator:'停止'}}</md-tooltip>
                                                 <md-icon>stop</md-icon>
                                             </md-button>
                                         </div>
@@ -203,9 +203,9 @@
 
                                                         <table class="node_tip_table">
                                                             <tr>
-                                                                <th align="left">节点</th>
-                                                                <th align="left">状态</th>
-                                                                <th align="left">安装时间</th>
+                                                                <th align="left">{{'i18n_model_node_field_node' | translator:'节点'}}</th>
+                                                                <th align="left">{{'i18n_model_node_field_status' | translator:'状态'}}</th>
+                                                                <th align="left">{{'i18n_model_node_field_create_time' | translator:'安装时间'}}</th>
                                                             </tr>
 
                                                             <tr ng-repeat="node in _nodeData[item.module]">
@@ -224,16 +224,16 @@
 
                                                 <md-button ng-click="openNodeInfo(item)" ng-if="indexServer.model_env=='host'">
                                                     <md-icon class="md-18">apps</md-icon>
-                                                    节点
+                                                    {{'i18n_model_op_node' | translator:'显示节点'}}
                                                 </md-button>
 
                                                 <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
                                                     <md-icon class="md-18">play_arrow</md-icon>
-                                                    启动
+                                                    {{'i18n_model_op_start' | translator:'启动'}}
                                                 </md-button>
                                                 <md-button ng-click="stopK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
                                                     <md-icon class="md-18">stop</md-icon>
-                                                    停止
+                                                    {{'i18n_model_op_stop' | translator:'停止'}}
                                                 </md-button>
                                             </td>
 
@@ -243,7 +243,7 @@
                                     <table-pagination pagination="pagination"></table-pagination>
                                 </md-content>
                             </md-tab>
-                            <md-tab label="自定义" has-permission="KEYCLOAK_SETTING:SYNC">
+                            <md-tab label="{{'i18n_model_tab_title_customize' | translator:'自定义'}}" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <h1>玩命开发中。。。。。。</h1>
                             </md-tab>
                         </md-tabs>

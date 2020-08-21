@@ -225,5 +225,33 @@
   "i18n_dashboard_mc_user_info": "User Information",
   "i18n_dashboard_mc_cloud_account_info": "Cloud Account Information",
   "i18n_dashboard_mc_sys_status": "System Status",
-  "i18n_is_anon": "Is Anon"
+  "i18n_is_anon": "Is Anon",
+  "i18n_index_type": "Using online indexing service",
+  "i18n_model_tab_title_Installable": "Installable",
+  "i18n_model_tab_title_updatable": "updatable",
+  "i18n_model_tab_title_installed": "installed",
+  "i18n_model_tab_title_customize": "customize",
+  "i18n_model_field_name": "Name",
+  "i18n_model_field_module": "Module",
+  "i18n_model_field_status": "Status",
+  "i18n_model_field_current_version": "CurrentVersion",
+  "i18n_model_field_available_version": "AvailableVersion",
+  "i18n_model_field_install_time": "InstallTime",
+  "i18n_model_field_overview": "OverView",
+
+  "i18n_model_op_install": "Install",
+  "i18n_model_op_uninstall": "Uninstall",
+  "i18n_model_op_update": "Update",
+  "i18n_model_op_start": "Start",
+  "i18n_model_op_stop": "Stop",
+  "i18n_model_op_node": "ShowNode",
+
+  "i18n_model_node_version_info": "Version Info",
+  "i18n_model_node_create_time": "Create Time",
+  "i18n_model_node_down_url": "Download Url",
+  "i18n_model_node_over_view": "Over view",
+
+  "i18n_model_node_field_node": "Node",
+  "i18n_model_node_field_status": "Status",
+  "i18n_model_node_field_create_time": "CreateTime"
 }

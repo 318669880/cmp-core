@@ -225,5 +225,33 @@
   "i18n_dashboard_mc_user_info": "用戶信息",
   "i18n_dashboard_mc_cloud_account_info": "雲賬號信息",
   "i18n_dashboard_mc_sys_status": "系統狀態",
-  "i18n_is_anon": "是否免密"
+  "i18n_is_anon": "是否免密",
+  "i18n_index_type": "使用在線索引服務",
+  "i18n_model_tab_title_Installable": "可安裝",
+  "i18n_model_tab_title_updatable": "可更新",
+  "i18n_model_tab_title_installed": "已安裝",
+  "i18n_model_tab_title_customize": "自定義",
+  "i18n_model_field_name": "名稱",
+  "i18n_model_field_module": "模塊",
+  "i18n_model_field_status": "狀態",
+  "i18n_model_field_current_version": "當前版本",
+  "i18n_model_field_available_version": "可用版本",
+  "i18n_model_field_install_time": "安裝時間",
+  "i18n_model_field_overview": "概訴",
+
+  "i18n_model_op_install": "安裝",
+  "i18n_model_op_uninstall": "卸載",
+  "i18n_model_op_update": "更新",
+  "i18n_model_op_start": "啟動",
+  "i18n_model_op_stop": "停止",
+  "i18n_model_op_node": "顯示節點",
+
+  "i18n_model_node_version_info": "版本信息",
+  "i18n_model_node_create_time": "創建時間",
+  "i18n_model_node_down_url": "下載地址",
+  "i18n_model_node_over_view": "概訴",
+
+  "i18n_model_node_field_node": "節點",
+  "i18n_model_node_field_status": "狀態",
+  "i18n_model_node_field_create_time": "創建時間"
 }

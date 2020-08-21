@@ -225,5 +225,33 @@
   "i18n_dashboard_mc_user_info": "用户信息",
   "i18n_dashboard_mc_cloud_account_info": "云账号信息",
   "i18n_dashboard_mc_sys_status": "系统状态",
-  "i18n_is_anon": "是否免密"
+  "i18n_is_anon": "是否免密",
+  "i18n_index_type": "使用在线索引服务",
+  "i18n_model_tab_title_Installable": "可安装",
+  "i18n_model_tab_title_updatable": "可更新",
+  "i18n_model_tab_title_installed": "已安装",
+  "i18n_model_tab_title_customize": "自定义",
+  "i18n_model_field_name": "名称",
+  "i18n_model_field_module": "模块",
+  "i18n_model_field_status": "状态",
+  "i18n_model_field_current_version": "当前本本",
+  "i18n_model_field_available_version": "可用版本",
+  "i18n_model_field_install_time": "安装时间",
+  "i18n_model_field_overview": "概诉",
+
+  "i18n_model_op_install": "安装",
+  "i18n_model_op_uninstall": "卸载",
+  "i18n_model_op_update": "更新",
+  "i18n_model_op_start": "启动",
+  "i18n_model_op_stop": "停止",
+  "i18n_model_op_node": "显示节点",
+
+  "i18n_model_node_version_info": "版本信息",
+  "i18n_model_node_create_time": "创建时间",
+  "i18n_model_node_down_url": "下载地址",
+  "i18n_model_node_over_view": "概诉",
+
+  "i18n_model_node_field_node": "节点",
+  "i18n_model_node_field_status": "状态",
+  "i18n_model_node_field_create_time": "创建时间"
 }

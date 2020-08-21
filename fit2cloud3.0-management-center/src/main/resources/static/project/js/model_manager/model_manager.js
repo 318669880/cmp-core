@@ -137,8 +137,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         initialize: function () {
 
             this.conditions = [
-                {key: "name", name: '名称', directive: "filter-contains"},
-                {key: "module", name: '模块', directive: "filter-contains"}
+                {key: "name", name: Translator.get("i18n_model_field_name"), directive: "filter-contains"},
+                {key: "module", name: Translator.get("i18n_model_field_module"), directive: "filter-contains"}
             ];
 
             // 用于传入后台的参数
@@ -163,22 +163,22 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             }
             this.installableColumns = [
                 checkColumn,
-                {value: '名称', key: "name", sort: false},
-                {value: '模块', key: "module", sort: false},
-                {value: '版本', key: "lastRevision", sort: false},
-                {value: '概诉', key: "overview", sort: false},
+                {value: Translator.get("i18n_model_field_name"), key: "name", sort: false},
+                {value: Translator.get("i18n_model_field_module"), key: "module", sort: false},
+                {value: Translator.get("i18n_model_field_available_version"), key: "lastRevision", sort: false},
+                {value: Translator.get("i18n_model_field_overview"), key: "overview", sort: false},
                 // {value: '操作', key: "name", sort: false}
             ];
 
 
 
             this.installupdateColumns = [
-                {value: '名称', key: "name", sort: false},
-                {value: '模块', key: "module", sort: false},
-                {value: '当前版本', key: "current_version", sort: false},
-                {value: '安装时间', key: "installTime", sort: false},
-                {value: '可选版本', key: "lastRevision", sort: false},
-                {value: '概诉', key: "overview", sort: false}
+                {value: Translator.get("i18n_model_field_name"), key: "name", sort: false},
+                {value: Translator.get("i18n_model_field_module"), key: "module", sort: false},
+                {value: Translator.get("i18n_model_field_current_version"), key: "current_version", sort: false},
+                {value: Translator.get("i18n_model_field_install_time"), key: "installTime", sort: false},
+                {value: Translator.get("i18n_model_field_available_version"), key: "lastRevision", sort: false},
+                {value: Translator.get("i18n_model_field_overview"), key: "overview", sort: false}
             ];
         },
 
@@ -221,7 +221,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         saveData: function () {
             // 存储到本地数据库
             if(!this._installValidate){
-                $scope.showError(null,'请先安装至少一个模块');
+                $scope.showError('i18n_model_check_no','请先安装至少一个模块');
                 return false;
             }
             return true;
@@ -304,7 +304,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 return dto;
             });
             if (param.length == 0 ){
-                $scope.showWarn(null,"请至少选择一个模块！");
+                $scope.showWarn('i18n_model_check_no',"请至少选择一个模块！");
                 return;
             }
             nodeId = nodeId || "-1";
@@ -422,14 +422,15 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         allNodeStart: function () {
             let param = $scope.items.filter(item => item.enable===true);
             if(!param || param.length===0){
-                Notification.warn("请至少选择一个模块！");
+                //Notification.warn("！");
+                $scope.showWarn('i18n_model_check_no','请至少选择一个模块');
                 return;
             }
             param = param.filter(item => {
                 return item.status.indexOf("stopped") != -1;
             });
             if(!param || param.length===0){
-                Notification.warn("请至少选择一个停止状态的模块！");
+                $scope.showWarn('i18n_model_check_no_stop','请至少选择一个停止状态的模块');
                 return;
             }
             param = param.map(item => item.module);
@@ -443,7 +444,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         allNodeStop: function () {
             let param = $scope.items.filter(item => item.enable===true);
             if(!param || param.length===0){
-                Notification.warn("请至少选择一个模块！");
+                $scope.showWarn('i18n_model_check_no','请至少选择一个模块');
                 return;
             }
             param = param.filter(item => {
@@ -451,7 +452,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 return arr[0] != 0;
             });
             if(!param || param.length===0){
-                Notification.warn("请至少选择一个启动状态的模块！");
+                Notification.warn("！");
+                $scope.showWarn('i18n_model_check_no_start','请至少选择一个启动状态的模块');
                 return;
             }
             param = param.map(item => item.module);
@@ -568,12 +570,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             }.bind(this),
             width: "40px"
         },
-        {value: '名称', key: "name", sort: false},
-        {value: '模块', key: "module", sort: false},
-        {value: '状态', key: "currentStatus", sort: false},
-        {value: '版本', key: "lastRevision", sort: false},
-        {value: '安装时间', key: "installTime", sort: false},
-        {value: '概诉', key: "overview", sort: false}
+        {value: Translator.get("i18n_model_field_name"), key: "name", sort: false},
+        {value: Translator.get("i18n_model_field_module"), key: "module", sort: false},
+        {value: Translator.get("i18n_model_field_status"), key: "currentStatus", sort: false},
+        {value: Translator.get("i18n_model_field_current_version"), key: "lastRevision", sort: false},
+        {value: Translator.get("i18n_model_field_install_time"), key: "installTime", sort: false},
+        {value: Translator.get("i18n_model_field_overview"), key: "overview", sort: false}
     ];
 
     $scope.list = function (sortObj) {
@@ -675,7 +677,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
         }
         if (module_arr.length == 0 ){
-            Notification.warn("请选择模块！");
+            $scope.showWarn('i18n_model_check_no','请至少选择一个模块')
             return;
         }
         let obj = {
@@ -689,7 +691,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         Notification.prompt(obj, function (result) {
             let pod_number = result;
             $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr}, function (resp) {
-                Notification.info("启动结果，请查看日志.") ;
+                Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
             }, function (resp) {
             });
         });
@@ -703,12 +705,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
         }
         if (module_arr.length == 0 ){
-            Notification.warn("请选择模块！");
+            $scope.showWarn('i18n_model_check_no','请至少选择一个模块')
             return;
         }
 
         $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function (resp) {
-            Notification.info("启动结果，请查看日志.") ;
+            Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
         }, function (resp) {
         });
     }
@@ -719,9 +721,9 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils, Translator) {
 
     $scope.columns = [
-        {value: '节点', key: "nodeHost", sort: false},
-        {value: '状态', key: "nodeStatus", sort: false},
-        {value: '安装时间', key: "nodeCreateTime", sort: false},
+        {value: Translator.get("i18n_model_node_field_node"), key: "nodeHost", sort: false},
+        {value: Translator.get("i18n_model_node_field_status"), key: "nodeStatus", sort: false},
+        {value: Translator.get("i18n_model_node_field_create_time"), key: "nodeCreateTime", sort: false},
     ];
 
     $scope.list = function () {

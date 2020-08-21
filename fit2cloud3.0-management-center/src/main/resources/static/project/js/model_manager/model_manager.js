@@ -12,7 +12,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         this.address = null;
         this.validate = false;
         this.autoNext = true;
-
+        this.model_env = 'host';
         this.onLine = true;
         this.initialize.apply(this , arguments);
     };
@@ -27,7 +27,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
                 _self._init_address = response.modelAddress
                 _self.address = response.modelAddress;
-
+                _self.model_env = response.env;
                 _self._init_onLine = !!response.onLine;
                 _self.onLine = !!response.onLine;
 
@@ -104,7 +104,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 onLine : this.onLine                   // 环境 默认是host 可选 k8s
             }
             $scope.executeAjax(this._saveDataUrl,'POST',param,res => {
-                //saveSuccess = true;
+                _self.model_env =  res.env;
                 _self._init_address = res.address;
                 _self._init_onLine = res.onLine;
                 _self.validate = true;
@@ -131,7 +131,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         this._batchInstallUrl = 'modelManager/operate/readyInstall';
         this._loadNodeDataUrl = 'modelManager/model/nodes';
         this._installValidate = false;
-
         this.initialize.apply(this , arguments);
     }
     ModelInstaller.prototype = {

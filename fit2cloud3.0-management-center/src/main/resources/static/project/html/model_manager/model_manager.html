@@ -249,7 +249,95 @@
                         </md-tabs>
                     </md-content>
                 </wizard-step>
+                <wizard-step id="3">
+                    <md-content flex="100">
+                        <div cg-busy="{promise:loadingLayer,minDuration:500}" layout-align="center center" layout="column">
+                            <md-content layout="column" class="md-padding" style="overflow-y: auto;width: 100%;padding: 0 16px!important;">
+                                <div class="module-header" layout="row" layout-align="center center">
 
+                                    <!--<div>
+                                        <md-button class="md-raised" ng-repeat="tag in tags" ng-click="selectTag(tag.tagKey)"
+                                                   ng-class="{'md-primary':tag.selected === true}">{{tag.tagValue}}
+                                        </md-button>
+                                    </div>-->
+
+                                    <div layout="row" layout-align="start center">
+                                        <div class="module-input">
+                                            <md-input-container style="margin: 0">
+                                                <md-icon>search</md-icon>
+                                                <input ng-model="param" type="text" ng-change="search(param)"
+                                                       placeholder="{{'i18n_module_name' | translator:'模块名称'}}">
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                    <div flex="auto"></div>
+                                </div>
+                                <div class="module-content model-content" ng-if="cards.length>0" style="margin-top: 0px!important;">
+
+                                    <div layout="row" layout-wrap layout-padding>
+                                        <div ng-repeat="item in cards" style="padding: 10px 20px!important;" flex-gt-lg="25" flex-gt-md="33" flex-md="33" flex-gt-xs="50" flex-xs="100">
+
+                                            <div class="module-card md-whiteframe-2dp" layout="column">
+                                                <div class="header">
+                                                    <div class="title">
+                                                        {{item.name}}
+                                                    </div>
+                                                    <div style="float: right;display: inline;" layout="column" >
+                                                        <!--这是打开日志的按钮-->
+                                                        <md-button class="md-icon-button f2c-icon-button" ng-click="modelShow.openLog(item)" style="padding: 0px;height: 24px;min-height: 0;width: 24px;margin: 0px">
+                                                            <md-icon class="cursor" auto-open="false">list<md-tooltip>日志</md-tooltip></md-icon>
+                                                        </md-button>
+                                                    </div>
+                                                </div>
+                                                <div class="content">
+                                                    {{item.content}}
+                                                    <md-tooltip md-direction="top" class="f2c-tooltip-version">
+
+                                                        <table class="node_tip_table">
+                                                            <tr>
+                                                                <th align="left">{{'i18n_model_node_field_node' | translator:'节点'}}</th>
+                                                                <th align="left">{{'i18n_model_node_field_status' | translator:'状态'}}</th>
+                                                                <!--<th align="left">{{'i18n_model_node_field_create_time' | translator:'安装时间'}}</th>-->
+                                                            </tr>
+
+                                                            <tr ng-repeat="node in _nodeData[item.module]">
+                                                                <td>{{node.nodeHost}}</td>
+                                                                <td>{{node.nodeStatus}}</td>
+                                                                <!--<td>{{node.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>-->
+                                                            </tr>
+                                                        </table>
+                                                    </md-tooltip>
+                                                </div>
+                                                <div flex="auto"></div>
+                                                <div layout="row" layout-align="center center" class="footer">
+                                                    <div flex="50" style="margin: 16px 0">
+                                                        <div ng-if="item.auth ">
+                                                            <span>
+                                                                {{item.statuInfo}}
+                                                            </span>
+                                                            </span>
+                                                        </div>
+                                                        <div ng-if="!item.auth" md-colors="{color: 'red'}"> {{'i18n_module_unauthorized' | translator:'未授权'}}
+                                                        </div>
+                                                    </div>
+                                                    <div flex="50" layout-align="end" layout="row">
+                                                        <div style="margin: 21px 5px;">
+
+                                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_model_status_'+item.module_status | translator:'停止11'}}</span>
+                                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_model_status_'+item.module_status | translator:'运行11'}}</span>
+                                                        </div>
+                                                        <md-switch class="md-primary" ng-model="item.active" disabled>
+                                                        </md-switch>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </md-content>
+                        </div>
+                    </md-content>
+                </wizard-step>
             </div>
         </md-content>
 

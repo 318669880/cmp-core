@@ -219,6 +219,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         },
 
         saveData: function () {
+            this._installValidate = !!$scope._localData;
             // 存储到本地数据库
             if(!this._installValidate){
                 $scope.showError('i18n_model_check_no','请先安装至少一个模块');
@@ -465,10 +466,59 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }
 
     };
+
+    let ModelShow = function(){
+        $scope.cards = [];//需要展示的卡片
+        this.initialize.apply(this , arguments);
+    };
+    ModelShow.prototype = {
+        initialize: function () {
+            //this._initCards();
+        },
+        _initCards: function () {
+            $scope.cards = [];
+            angular.forEach($scope._localData, (model,module) => {
+                let status_array = model.status.split(",");
+                let runing_array = status_array.filter(item => item==='running');
+                let statuInfo = runing_array.length + "/" + status_array.length;
+
+                if(!!runing_array && runing_array.length > 0 ){
+                    model.active = true;
+                    model.module_status = "running";
+                }
+
+
+                let card = {
+                    name: model.name,
+                    module: module,
+                    content: model.overview,
+                    auth: true,
+                    status: model.status,
+                    statuInfo: statuInfo,
+                    module_status: model.module_status || 'stopped',
+                    active: model.active || false
+                };
+                $scope.cards.push(card);
+            })
+        },
+        openLog: function (item) {
+            sessionStorage.setItem("ModuleToLogParam", angular.toJson({
+                    label: item.name,
+                    value: item.module
+                }
+            ));
+            $state.go("log/system")
+        },
+        search: function (param) {
+            this._initCards();
+            $scope.cards = !!param && $scope.cards.filter(card => (card.name.indexOf(param) != -1) || (card.module.indexOf(param) != -1)) || $scope.cards;
+        }
+    }
+
     $scope.background = "/web-public/fit2cloud/html/background/background.html?_t" + window.appversion;
     $scope.indexServer = new IndexServer();
     $scope.modelInstaller = new ModelInstaller();
-
+    $scope.modelShow = new ModelShow();
     $scope.wizard = {
         setting: {
             title: $filter('translator')('i18n_title', '标题'),
@@ -503,17 +553,18 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                     return $scope.modelInstaller.saveData();
                 }
             },
-            /*{
+            {
                 id: "3",
-                name: $filter('translator')('i18n_model_runner', '模块运行'),
+                name: $filter('translator')('i18n_model_runner', '模块展示'),
                 select: function () {
-                    $scope.currentIndex = 3;
-                    $scope.list();
+                    for (let i = 0; i < 10; i++) {
+                        $scope.modelShow._initCards();
+                    }
                 },
                 next: function () {
                     return true;
                 }
-            }*/
+            }
         ],
         // 嵌入页面需要指定关闭方法
         close: function () {
@@ -688,13 +739,13 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             init: 1
         };
 
-        Notification.confirm("确定启动服务？", function () {
+        Notification.prompt(obj, function (result) {
+            let pod_number = result;
             $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr}, function (resp) {
                 Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
             }, function (resp) {
             });
         });
-
     }
 
     $scope.stopK8sModule = function (item) {
@@ -709,13 +760,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             return;
         }
 
-        Notification.confirm("确定停止服务？", function () {
-            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function (resp) {
-                Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
-            }, function (resp) {
-            });
+        $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function (resp) {
+            Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
+        }, function (resp) {
         });
     }
+
 
 });
 

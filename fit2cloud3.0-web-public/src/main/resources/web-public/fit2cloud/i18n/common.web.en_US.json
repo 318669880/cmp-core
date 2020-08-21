@@ -320,7 +320,7 @@
   "i18n_confirm_forbidden": "Confirm forbidden？",
   "i18n_index_server": "Index Server",
   "i18n_model_installer": "Module Installer",
-  "i18n_model_runner": "Module Runner",
+  "i18n_model_show": "Module ShowCase",
   "i18n_delete_after_reconfig": "Please delete after modifying the configuration!",
 
   "i18n_model_check_no": "Please select at least one",

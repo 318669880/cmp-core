@@ -265,7 +265,7 @@
                                         <div class="module-input">
                                             <md-input-container style="margin: 0">
                                                 <md-icon>search</md-icon>
-                                                <input ng-model="param" type="text" ng-change="search(param)"
+                                                <input ng-model="param" type="text" ng-change="modelShow.search(param)"
                                                        placeholder="{{'i18n_module_name' | translator:'模块名称'}}">
                                             </md-input-container>
                                         </div>
@@ -285,7 +285,7 @@
                                                     <div style="float: right;display: inline;" layout="column" >
                                                         <!--这是打开日志的按钮-->
                                                         <md-button class="md-icon-button f2c-icon-button" ng-click="modelShow.openLog(item)" style="padding: 0px;height: 24px;min-height: 0;width: 24px;margin: 0px">
-                                                            <md-icon class="cursor" auto-open="false">list<md-tooltip>日志</md-tooltip></md-icon>
+                                                            <md-icon class="cursor" auto-open="false">list<md-tooltip>{{'i18n_search_log' | translator:'查看日志'}}</md-tooltip></md-icon>
                                                         </md-button>
                                                     </div>
                                                 </div>
@@ -322,9 +322,8 @@
                                                     </div>
                                                     <div flex="50" layout-align="end" layout="row">
                                                         <div style="margin: 21px 5px;">
-
-                                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_model_status_'+item.module_status | translator:'停止11'}}</span>
-                                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_model_status_'+item.module_status | translator:'运行11'}}</span>
+                                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_model_status_'+item.module_status | translator:'停止'}}</span>
+                                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_model_status_'+item.module_status | translator:'运行'}}</span>
                                                         </div>
                                                         <md-switch class="md-primary" ng-model="item.active" disabled>
                                                         </md-switch>

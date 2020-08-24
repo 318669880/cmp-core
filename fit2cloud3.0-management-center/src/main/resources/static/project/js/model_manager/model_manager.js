@@ -555,7 +555,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             },
             {
                 id: "3",
-                name: $filter('translator')('i18n_model_runner', '模块展示'),
+                name: $filter('translator')('i18n_model_show', '模块展示'),
                 select: function () {
                     for (let i = 0; i < 10; i++) {
                         $scope.modelShow._initCards();

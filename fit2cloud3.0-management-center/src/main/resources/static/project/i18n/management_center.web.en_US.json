@@ -252,6 +252,7 @@
   "i18n_model_node_over_view": "Over view",
 
   "i18n_model_node_field_node": "Node",
+  "i18n_model_node_field_node_running": "Running Node",
   "i18n_model_node_field_status": "Status",
   "i18n_model_node_field_create_time": "CreateTime",
   "i18n_module_null_msg": "Module can not be empty.",

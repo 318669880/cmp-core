@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS  `model_basic` (
   `overview` varchar(255) DEFAULT NULL,
   `summary` varchar(255) DEFAULT NULL,
   `current_status` varchar(50) DEFAULT NULL,
+  `pod_num` int(2) DEFAULT NULL,
   PRIMARY KEY (`model_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

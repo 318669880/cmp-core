@@ -18,6 +18,9 @@ public class ModelInstalledDto implements Serializable {
 
     private ModelVersion modelVersion;
 
+    private Integer pods;
+
+
     public ModelBasic getModelBasic() {
         return modelBasic;
     }
@@ -32,5 +35,13 @@ public class ModelInstalledDto implements Serializable {
 
     public void setModelVersion(ModelVersion modelVersion) {
         this.modelVersion = modelVersion;
+    }
+
+    public Integer getPods() {
+        return pods;
+    }
+
+    public void setPods(Integer pods) {
+        this.pods = pods;
     }
 }

@@ -1,6 +1,7 @@
 
 ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $document, $mdBottomSheet, HttpUtils, FilterSearch, Notification, $interval, AuthService, $state, $filter,Translator) {
     $scope._localData = {};
+    $scope._eurekaData = {};
     /**
      * 索引服务工具
      * @constructor
@@ -228,7 +229,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             return true;
         },
 
-
         // 加载可安装数据
         loadInstallable: function () {
             let _self = this;
@@ -263,9 +263,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             });
         },
 
-
-
-
         editVersion: function (item) {
             this.endEditAll();
             if(item._versionEdit) return;
@@ -292,13 +289,35 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             $scope.installableItems.forEach( item => item._versionEdit = false);
         },
 
+        executeInstall_k8s: function(){
+            let info = {
+                title: $filter('translator')('i18n_pod_number', 'Pod 数量'),
+                text: $filter('translator')('i18n_pod_number', 'Pod 数量'),
+                required: true,
+                type:'number',
+                init: 1
+            };
+
+            Notification.prompt(info, function (result) {
+                let pod_number = result;
+                if(pod_number < 1){
+                    Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于1'));
+                    return;
+                }
+                this.executeInstall(null,pod_number);
+            }.bind(this));
+        },
+
         //  执行安装
-        executeInstall: function (nodeId) {
+        executeInstall: function (nodeId,pod_num) {
             let _self = this;
             let param = $scope.installableItems.filter(model => model.enable === true).map(model => {
                 let dto = Object.create({});
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
+                if($scope.indexServer.model_env === 'k8s' || !!pod_num) {
+                    dto.modelBasic.podNum = pod_num;
+                }
                 let modelVersion = model.last_version;
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
@@ -314,7 +333,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 _self.loadData();
             };
             $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/"+nodeId, param, callBackMethod,callBackMethod);
-
 
         },
 
@@ -687,13 +705,36 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     };
 
     $scope.formatModuleStatus = function(){
-        $scope.items.forEach(item => {
-            let status_array = item.status.split(",");
-            let runing_array = status_array.filter(item => item==='running');
-            item.enable = false;
-            item.statuInfo = runing_array.length + "/" + status_array.length;
-        })
-    }
+        if($scope.indexServer.model_env=='host')
+            $scope.items.forEach(item => {
+                let status_array = item.status.split(",");
+                let runing_array = status_array.filter(item => item==='running');
+                item.enable = false;
+                item.statuInfo = runing_array.length + "/" + status_array.length;
+            })
+        else {
+            let fillEurekaData = function(){
+                $scope.items.forEach(item => {
+                    let podNum = item.podNum;
+                    let podInstances = $scope._eurekaData[item.module];
+                    let runningPods = !!podInstances && podInstances.length || 0;
+                    item.enable = false;
+                    item.runningPods = runningPods;
+                    item.statuInfo = runningPods + "/" + podNum;
+                })
+            };
+            $scope.loadEurekaData(fillEurekaData);
+        }
+    };
+    $scope.loadEurekaData = function(callBack) {
+        $scope.executeAjax('k8s-operator-module/pods','GET',null,res => {
+            $scope._eurekaData = res;
+            if(!!callBack && (callBack instanceof Function)){
+                callBack(res);
+            }
+        });
+    };
+
 
     $scope.openNodeInfo = function (item) {
         if ($scope.selected === item.$$hashKey) {

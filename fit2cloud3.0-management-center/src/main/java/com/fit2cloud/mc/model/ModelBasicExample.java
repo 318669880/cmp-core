@@ -754,6 +754,66 @@ public class ModelBasicExample {
             return (Criteria) this;
         }
 
+        public Criteria andPodNumIsNull() {
+            addCriterion("pod_num is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumIsNotNull() {
+            addCriterion("pod_num is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumEqualTo(Integer value) {
+            addCriterion("pod_num =", value, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumNotEqualTo(Integer value) {
+            addCriterion("pod_num <>", value, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumGreaterThan(Integer value) {
+            addCriterion("pod_num >", value, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("pod_num >=", value, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumLessThan(Integer value) {
+            addCriterion("pod_num <", value, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumLessThanOrEqualTo(Integer value) {
+            addCriterion("pod_num <=", value, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumIn(List<Integer> values) {
+            addCriterion("pod_num in", values, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumNotIn(List<Integer> values) {
+            addCriterion("pod_num not in", values, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumBetween(Integer value1, Integer value2) {
+            addCriterion("pod_num between", value1, value2, "podNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPodNumNotBetween(Integer value1, Integer value2) {
+            addCriterion("pod_num not between", value1, value2, "podNum");
+            return (Criteria) this;
+        }
+
         public Criteria andSqlCriterion(String value) {
             addCriterion("(" + value + ")");
             return (Criteria) this;

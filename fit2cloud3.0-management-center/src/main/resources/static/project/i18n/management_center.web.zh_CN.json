@@ -252,6 +252,7 @@
   "i18n_model_node_over_view": "概诉",
 
   "i18n_model_node_field_node": "节点",
+  "i18n_model_node_field_node_running": "运行节点",
   "i18n_model_node_field_status": "状态",
   "i18n_model_node_field_create_time": "创建时间",
 

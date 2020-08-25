@@ -54,7 +54,7 @@
                             <md-tab ng-click="modelInstaller.loadData()" label="{{'i18n_model_tab_title_Installable' | translator:'可安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
                                     <filter-tools conditions="modelInstaller.conditions" results="modelInstaller.filters" search="'true'" execute="modelInstaller.loadData()">
-                                        <div class="filter-item">
+                                        <div class="filter-item" ng-if="indexServer.model_env == 'host'">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.executeInstall()">
                                                 <md-tooltip md-delay="300">{{'i18n_model_op_install' | translator:'安装'}}</md-tooltip>
                                                 <md-icon>build</md-icon>
@@ -97,12 +97,17 @@
                                             </td>
                                             <td>{{item.overview}}</td>
                                             <td>
-                                                <md-button ng-click="item.enable = true;modelInstaller.executeInstall()">
+                                                <md-button ng-click="item.enable = true;modelInstaller.executeInstall()" ng-if="indexServer.model_env == 'host'">
                                                     <md-icon class="md-18">build</md-icon>
                                                     {{'i18n_model_op_install' | translator:'安装'}}
                                                 </md-button>
 
-                                                <md-button ng-click="mcNodeInfo(item)">
+                                                <md-button ng-click="item.enable = true;modelInstaller.executeInstall_k8s()" ng-if="indexServer.model_env == 'k8s'">
+                                                    <md-icon class="md-18">build</md-icon>
+                                                    {{'i18n_model_op_install' | translator:'安装'}}
+                                                </md-button>
+
+                                                <md-button ng-click="mcNodeInfo(item)" ng-if="indexServer.model_env == 'host'">
                                                     <md-icon class="md-18">apps</md-icon>
                                                     {{'i18n_model_op_node' | translator:'显示节点'}}
                                                 </md-button>
@@ -167,13 +172,13 @@
                                 <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}" >
                                     <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
                                         <select-columns columns="columns"></select-columns>
-                                        <div class="filter-item">
+                                        <div class="filter-item" ng-if="indexServer.model_env == 'host'">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStart()">
                                                 <md-tooltip md-delay="300">{{'i18n_model_op_start' | translator:'启动'}}</md-tooltip>
                                                 <md-icon>touch_app</md-icon>
                                             </md-button>
                                         </div>
-                                        <div class="filter-item">
+                                        <div class="filter-item" ng-if="indexServer.model_env == 'host'">
                                             <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStop()">
                                                 <md-tooltip md-delay="300">{{'i18n_model_op_stop' | translator:'停止'}}</md-tooltip>
                                                 <md-icon>stop</md-icon>
@@ -196,7 +201,23 @@
                                             </td>
                                             <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
                                             <td>{{item.module}}</td>
-                                            <td class="edit-td">
+                                            <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
+                                                <a class="edit-span" class="md-primary" style="cursor:pointer" href="" >
+                                                    {{item.statuInfo}}
+                                                    <md-tooltip md-direction="top" class="f2c-tooltip-version">
+                                                        <table class="node_tip_table">
+                                                            <tr>
+                                                                <th align="left">{{'i18n_model_node_field_node_running' | translator:'在线节点'}}</th>
+                                                            </tr>
+
+                                                            <tr ng-repeat="node in _eurekaData[item.module]">
+                                                                <td>{{node}}</td>
+                                                            </tr>
+                                                        </table>
+                                                    </md-tooltip>
+                                                </a>
+                                            </td>
+                                            <td class="edit-td" ng-if="indexServer.model_env=='host'">
                                                 <a class="edit-span" class="md-primary" style="cursor:pointer" href="" >
                                                     {{item.statuInfo}}
                                                     <md-tooltip md-direction="top" class="f2c-tooltip-version">
@@ -227,11 +248,11 @@
                                                     {{'i18n_model_op_node' | translator:'显示节点'}}
                                                 </md-button>
 
-                                                <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
+                                                <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.runningPods==0">
                                                     <md-icon class="md-18">play_arrow</md-icon>
                                                     {{'i18n_model_op_start' | translator:'启动'}}
                                                 </md-button>
-                                                <md-button ng-click="stopK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
+                                                <md-button ng-click="stopK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.runningPods!=0">
                                                     <md-icon class="md-18">stop</md-icon>
                                                     {{'i18n_model_op_stop' | translator:'停止'}}
                                                 </md-button>

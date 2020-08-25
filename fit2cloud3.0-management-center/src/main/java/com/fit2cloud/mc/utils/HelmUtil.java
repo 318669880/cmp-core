@@ -67,7 +67,8 @@ public class HelmUtil {
         command.add("--recreate-pods");
         if(!onLine){
             InternalDockerRegistry internalDockerRegistry = CommonBeanFactory.getBean(InternalDockerRegistry.class);
-            command.add("--set modules.imagePrefix=" + internalDockerRegistry.getImagePrefix());
+            command.add("--set");
+            command.add("modules.imagePrefix=" + internalDockerRegistry.getImagePrefix());
         }else {
             //在线环境，不需要imagepullsecret
         }

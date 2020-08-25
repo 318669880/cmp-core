@@ -5,6 +5,7 @@ import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.dao.McSysStatsMapper;
 import com.fit2cloud.mc.model.McSysStats;
 import com.fit2cloud.mc.model.McSysStatsExample;
+import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
@@ -43,6 +44,9 @@ public class SyncEurekaServer implements ApplicationRunner {
     @Resource
     private EurekaClientConfigBean eurekaClientConfigBean;
 
+    @Resource
+    private ModelNodeTask modelNodeTask;
+
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
         init();
@@ -68,7 +72,8 @@ public class SyncEurekaServer implements ApplicationRunner {
         }
     }
 
-    public void init() {
+    public void init() throws Exception {
+        modelNodeTask.registerCurrentMc();//注册自己
         if (!isKubernetes()) {
             LogUtil.info("Not Kubernetes Deployment.");
             return;

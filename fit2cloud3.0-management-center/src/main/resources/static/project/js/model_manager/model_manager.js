@@ -515,10 +515,50 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }
     }
 
+    let ModelNodeWs = function(){
+        this.ws_url = null;
+        this.ws_uid = "1";//这里与后台对应
+        this.ws = null;
+        this.socket = null;
+        this.stompClient = null;
+        this.initialize.apply(this , arguments);
+    }
+    ModelNodeWs.prototype = {
+        initialize: function () {
+            /*let pre = window.location.origin.indexOf("https") !=-1 ? "https" : "http";
+            this.ws_url = window.location.origin.replace(pre,"ws");
+            this.ws_url += "/websocket";*/
+            this.ws_url = window.location.origin+"/websocket";
+            this.connect();
+        },
+        connect: function () {
+            this.socket = new SockJS(this.ws_url);
+            this.stompClient = Stomp.over(this.socket);//使用STMOP子协议的WebSocket客户端
+            this.stompClient.connect({},function(frame){//连接WebSocket服务端
+                console.log('Connected:' + frame);
+                //通过stompClient.subscribe订阅/topic/getResponse 目标(destination)发送的消息
+                this.stompClient.subscribe('/topic/getResponse',function(response){
+                    this.parseMessage(JSON.parse(response.body));
+                }.bind(this));
+            }.bind(this));
+        },
+        disconnect: function () {
+            if(this.stompClient != null) {
+                this.stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        },
+        parseMessage: function (obj) {
+            // 如果obj为true那么刷新数据
+            !!obj && $scope.modelInstaller.loadData();
+        }
+    };
+
     $scope.background = "/web-public/fit2cloud/html/background/background.html?_t" + window.appversion;
     $scope.indexServer = new IndexServer();
     $scope.modelInstaller = new ModelInstaller();
     $scope.modelShow = new ModelShow();
+    $scope.modelNodeWs = new ModelNodeWs();
     $scope.wizard = {
         setting: {
             title: $filter('translator')('i18n_title', '标题'),

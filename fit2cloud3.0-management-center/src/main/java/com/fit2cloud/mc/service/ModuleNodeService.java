@@ -7,15 +7,11 @@ import com.fit2cloud.mc.dao.ModelBasicMapper;
 import com.fit2cloud.mc.dao.ModelBasicPageMapper;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
 import com.fit2cloud.mc.model.*;
-import com.fit2cloud.mc.strategy.entity.ModelStatusParam;
-import com.fit2cloud.mc.strategy.queue.ModuleDelayTaskManager;
-import com.fit2cloud.mc.strategy.service.EurekaCheckService;
 import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,11 +39,6 @@ public class ModuleNodeService {
     @Resource
     private ModelManagerService modelManagerService;
 
-    @Resource
-    private ModuleDelayTaskManager moduleDelayTaskManager;
-
-    @Resource
-    private EurekaCheckService eurekaCheckService;
 
     @Resource
     private Environment environment;
@@ -193,14 +184,14 @@ public class ModuleNodeService {
             addOrUpdateModelNode(modelNode);
             F2CException.throwException(e);
         }
-        if(ModuleStatusConstants.installing.value().equals(modelNode.getNodeStatus()))
+        /*if(ModuleStatusConstants.installing.value().equals(modelNode.getNodeStatus()))
         moduleDelayTaskManager.addTask(90000,param -> {
             try {
                 eurekaCheckService.checkModuleStatus((ModelStatusParam)param);
             } catch (Exception e) {
                 F2CException.throwException(e);
             }
-        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.installing));
+        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.installing));*/
     }
 
     public void startNode(String module, String nodeId) throws Exception {
@@ -215,14 +206,14 @@ public class ModuleNodeService {
             F2CException.throwException(e);
         }
 
-        if (ModuleStatusConstants.startting.value().equals(modelNode.getNodeStatus()))
+        /*if (ModuleStatusConstants.startting.value().equals(modelNode.getNodeStatus()))
         moduleDelayTaskManager.addTask(90000,param -> {
             try {
                 eurekaCheckService.checkModuleStatus((ModelStatusParam)param);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.startting));
+        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.startting));*/
     }
 
     public void stopNode(String module, String nodeId) throws Exception {
@@ -237,14 +228,14 @@ public class ModuleNodeService {
             F2CException.throwException(e);
         }
 
-        if (ModuleStatusConstants.stopping.value().equals(modelNode.getNodeStatus()))
+        /*if (ModuleStatusConstants.stopping.value().equals(modelNode.getNodeStatus()))
         moduleDelayTaskManager.addTask(90000,param -> {
             try {
                 eurekaCheckService.checkModuleStatus((ModelStatusParam)param);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.stopping));
+        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.stopping));*/
     }
 
 

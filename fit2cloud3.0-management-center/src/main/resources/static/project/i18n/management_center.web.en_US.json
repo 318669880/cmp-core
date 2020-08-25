@@ -253,5 +253,10 @@
 
   "i18n_model_node_field_node": "Node",
   "i18n_model_node_field_status": "Status",
-  "i18n_model_node_field_create_time": "CreateTime"
+  "i18n_model_node_field_create_time": "CreateTime",
+  "i18n_module_null_msg": "Module can not be empty.",
+  "i18n_pod_number": "Pod number",
+  "i18n_pod_number_limit": "Pod number cannot be less than 1",
+  "i18n_excute_resule": "The execution is successful. Please refresh the module status later.",
+  "i18n_stop_modules_confirm": "Confirm to stop the selected modules？"
 }

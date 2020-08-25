@@ -16,8 +16,6 @@ public class OperatorModuleRequest {
         this.modules = modules;
     }
 
-
-
     public Map<String, Object> getParams() {
         return params;
     }

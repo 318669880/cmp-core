@@ -27,9 +27,9 @@ public class K8sOperatorModuleService {
             try{
                 String filePath = downLoad(module);
                 ModelOperateStrategy operateStrategy = NodeOperateStrategyFactory.build(managerInfo.getEnv());
-                operateStrategy.executeInstall(managerInfo, module, filePath, new HashMap<>());
+                operateStrategy.executeInstall(managerInfo, module, filePath, operatorModuleRequest.getParams());
             }catch (Exception e){
-                LogUtil.error("Faild to start module: " + module);
+                LogUtil.error("Faild to start module: " + module, e);
             }
 
         });
@@ -42,7 +42,7 @@ public class K8sOperatorModuleService {
                 ModelOperateStrategy operateStrategy = NodeOperateStrategyFactory.build(managerInfo.getEnv());
                 operateStrategy.executeStop(module);
             }catch (Exception e){
-                LogUtil.error("Faild to stop module: " + module);
+                LogUtil.error("Faild to stop module: " + module, e);
             }
 
         });

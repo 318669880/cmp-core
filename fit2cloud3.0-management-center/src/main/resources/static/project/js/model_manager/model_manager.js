@@ -692,34 +692,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         $scope.toggleInfoForm(false);
     };
 
-
-    $scope.startModule = function (item) {
-        let module_arr = [];
-        if(item){
-            module_arr.push(item.module);
-        }else{
-            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
-        }
-        if (module_arr.length == 0 ){
-            Notification.warn("请选择模块！");
-            return;
-        }
-        let obj = {
-            title: $filter('translator')('i18n_apply_reason', 'Pod 数量'),
-            text: $filter('translator')('i18n_apply_reason', 'Pod 数量'),
-            required: true,
-            type:'number',
-            init: 1
-        };
-
-        Notification.prompt(obj, function (result) {
-            let pod_number = result;
-
-            //TODO
-        });
-
-    }
-
     $scope.startK8sModule = function (item) {
         let module_arr = [];
         if(item){
@@ -728,12 +700,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
         }
         if (module_arr.length == 0 ){
-            $scope.showWarn('i18n_model_check_no','请至少选择一个模块')
+            $scope.showWarn('i18n_module_null_msg','模块不能为空')
             return;
         }
         let obj = {
-            title: $filter('translator')('i18n_apply_reason', 'Pod 数量'),
-            text: $filter('translator')('i18n_apply_reason', 'Pod 数量'),
+            title: $filter('translator')('i18n_pod_number', 'Pod 数量'),
+            text: $filter('translator')('i18n_pod_number', 'Pod 数量'),
             required: true,
             type:'number',
             init: 1
@@ -741,8 +713,13 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
         Notification.prompt(obj, function (result) {
             let pod_number = result;
-            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr}, function (resp) {
-                Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
+            if(pod_number < 1){
+                Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于1'));
+                return;
+            }
+            let params = {"pod_number": pod_number};
+            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr, params: params}, function (resp) {
+                Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
             }, function (resp) {
             });
         });
@@ -756,14 +733,19 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
         }
         if (module_arr.length == 0 ){
-            $scope.showWarn('i18n_model_check_no','请至少选择一个模块')
+            $scope.showWarn('i18n_module_null_msg','模块不能为空.')
             return;
         }
 
-        $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function (resp) {
-            Notification.info($filter('translator')('i18n_model_result', "启动结果，请查看日志.")) ;
-        }, function (resp) {
-        });
+        Notification.confirm($filter('translator')("i18n_stop_modules_confirm", "确定停止所选模块？"), function () {
+            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function () {
+                Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
+            }, function (resp) {
+
+            });
+
+        })
+
     }
 
 

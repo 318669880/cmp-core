@@ -253,5 +253,10 @@
 
   "i18n_model_node_field_node": "節點",
   "i18n_model_node_field_status": "狀態",
-  "i18n_model_node_field_create_time": "創建時間"
+  "i18n_model_node_field_create_time": "創建時間",
+  "i18n_module_null_msg": "模塊不能為空",
+  "i18n_pod_number": "Pod 數量",
+  "i18n_pod_number_limit": "Pod 數量不能小於1",
+  "i18n_excute_resule": "執行成功，請稍候刷新模塊狀態.",
+  "i18n_stop_modules_confirm": "確定停止所選模塊？"
 }

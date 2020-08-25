@@ -261,5 +261,10 @@
   "i18n_model_status_startting": "启动中",
   "i18n_model_status_startFaild": "启动失败",
   "i18n_model_status_stopping": "停止中",
-  "i18n_model_status_installing": "安装中"
+  "i18n_model_status_installing": "安装中",
+  "i18n_module_null_msg": "模块不能为空",
+  "i18n_pod_number": "Pod 数量",
+  "i18n_pod_number_limit": "Pod 数量不能小于1",
+  "i18n_excute_resule": "执行成功，请稍后刷新模块状态.",
+  "i18n_stop_modules_confirm": "确定停止所选模块？"
 }

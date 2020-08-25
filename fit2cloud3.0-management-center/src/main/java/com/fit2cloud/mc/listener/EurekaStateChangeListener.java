@@ -19,7 +19,7 @@ public class EurekaStateChangeListener {
     @EventListener(condition = "#event.replication")
     public void listen(EurekaInstanceRegisteredEvent event) {
         InstanceInfo info = event.getInstanceInfo();
-        LogUtil.info("Service registration:" + info.getAppName());
+        LogUtil.info("Service registration:" + info.getAppName() + "," + info.getIPAddr()+":" + info.getPort());
         //注册后验证连接
         CommonBeanFactory.getBean(StatsService.class).validateModuleConnection(info.getAppName(), info.getIPAddr(), info.getPort());
     }

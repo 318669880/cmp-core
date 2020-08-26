@@ -4,19 +4,19 @@ import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelNodeBatchMapper;
 import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.model.WsMessage;
+import com.fit2cloud.mc.service.K8sOperatorModuleService;
 import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.service.WsService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,13 +34,25 @@ public class CheckModuleStatus {
     @Resource
     private WsService wsService;
 
+    @Resource
+    private K8sOperatorModuleService k8sOperatorModuleService;
+
 
     final public static String model_node_fresh_topic = "/topic/getResponse";
 
     //每30s执行一次检测
     @Scheduled(cron = "0/30 * * * * ? ")
     public void check(){
+        if(SyncEurekaServer.IS_KUBERNETES){
+            checkPodsNum();return;
+        }
+        checkNodes();
+    }
+
+    private void checkNodes(){
         Map<String, List<ModelNode>> listMap = dbNodes();
+        Map<String, List<ModelNode>> result = new HashMap<>();
+        AtomicBoolean atoChanged = new AtomicBoolean(false);
         listMap.entrySet().stream().forEach(entry -> {
             List<ModelNode> nodeList = entry.getValue();
             List<ModelNode> changeNodes = new ArrayList<>();
@@ -52,11 +64,18 @@ public class CheckModuleStatus {
                 changeNodes.addAll(off_line_node(nodes));
             });
             if(!CollectionUtils.isEmpty(changeNodes)){
-                WsMessage<Boolean> booleanWsMessage = new WsMessage<Boolean>(null,model_node_fresh_topic,true);
-                wsService.releaseMessage(booleanWsMessage);
+                result.put(entry.getKey(),changeNodes);
+                atoChanged.set(true);
             }
         });
+        if(atoChanged.get()){
+            WsMessage<Map<String, List<ModelNode>>> wsMessage = new WsMessage<Map<String, List<ModelNode>>>(null,model_node_fresh_topic,result);
+            moduleNodeService.clearCache();
+            wsService.releaseMessage(wsMessage);
+        }
     }
+
+
 
     private Map<String, List<ModelNode>> dbNodes(){
         List<ModelNode> modelNodes = moduleNodeService.queryNodes(null);
@@ -98,6 +117,34 @@ public class CheckModuleStatus {
         if(CollectionUtils.isEmpty(instances)) return false;
         String nodeHost = node.getNodeHost();
         return instances.stream().anyMatch(instance -> instance.getUri().toString().indexOf(nodeHost) != -1);
+    }
+
+    private void checkPodsNum(){
+        Map<String, List<String>> pods = k8sOperatorModuleService.pods();
+        Map<String, List<ModelNode>> dbNodes = dbNodes();
+        AtomicBoolean atomicChange = new AtomicBoolean(false);
+        Map<String, List<String>> change_pods = new HashMap<>();
+        dbNodes.entrySet().stream().forEach(entry -> {
+            String module = entry.getKey();
+            //List<ModelNode> nodes = entry.getValue();
+            List<String> cache_pods = pods.get(module);
+            if (CollectionUtils.isEmpty(cache_pods))
+                cache_pods = new ArrayList<>();
+            List<String> instances = discoveryClient.getInstances(module).stream().map(ServiceInstance::getHost).collect(Collectors.toList());
+            if(cache_pods.size() == instances.size() && !cache_pods.stream().anyMatch(pod -> !instances.contains(pod))){
+                return;
+            }
+            atomicChange.set(true);
+            change_pods.put(module,instances);
+        });
+        if(atomicChange.get()){
+            //发生改变了 需要清楚缓存
+            k8sOperatorModuleService.clearCache();
+            moduleNodeService.clearCache();
+            //通知前台页面改变podNum
+            WsMessage<Map<String, List<String>>> wsMessage = new WsMessage<Map<String, List<String>>>(null,model_node_fresh_topic,change_pods);
+            wsService.releaseMessage(wsMessage);
+        }
     }
 
 

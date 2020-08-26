@@ -9,10 +9,18 @@ import com.fit2cloud.mc.strategy.entity.ResultInfo;
 import com.fit2cloud.mc.strategy.factory.NodeOperateStrategyFactory;
 import com.fit2cloud.mc.strategy.service.ModelOperateStrategy;
 import com.fit2cloud.mc.strategy.service.NetFileService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class K8sOperatorModuleService {
@@ -20,6 +28,8 @@ public class K8sOperatorModuleService {
     private ModelManagerService modelManagerService;
     @Resource
     private NetFileService netFileService;
+    @Resource
+    private DiscoveryClient discoveryClient;
 
 
     public void start(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
@@ -31,7 +41,6 @@ public class K8sOperatorModuleService {
             }catch (Exception e){
                 LogUtil.error("Faild to start module: " + module, e);
             }
-
         });
 
     }
@@ -44,9 +53,7 @@ public class K8sOperatorModuleService {
             }catch (Exception e){
                 LogUtil.error("Faild to stop module: " + module, e);
             }
-
         });
-
     }
 
     private String downLoad (String module) throws Exception{
@@ -56,4 +63,20 @@ public class K8sOperatorModuleService {
         ResultInfo<String> resultInfo = netFileService.down(downloadUrl);
         return resultInfo.getData();
     }
+
+    @Cacheable(value = "k8s-pod-cache" )
+    public Map<String, List<String>> pods(){
+        Map<String,List<String>> result = new HashMap<>();
+        discoveryClient.getServices().forEach(module -> {
+            List<ServiceInstance> instances = discoveryClient.getInstances(module);
+            if(!CollectionUtils.isEmpty(instances)){
+                result.put(module,instances.stream().map(ServiceInstance::getHost).collect(Collectors.toList()));
+            }
+        });
+        return result;
+    }
+
+    @CacheEvict(value = "k8s-pod-cache" ,allEntries = true)
+    public void clearCache(){}
+
 }

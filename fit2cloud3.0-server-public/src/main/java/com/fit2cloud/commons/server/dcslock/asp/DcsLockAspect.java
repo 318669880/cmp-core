@@ -55,6 +55,7 @@ public class DcsLockAspect {
             Long waitime = dcsLock.waitime();
             if(lockService.tryLock(key,overtime,waitime)){
                 Object result = proceedingJoinPoint.proceed();
+                lockService.unLock(key);
                 return result;
             }
         } catch (Throwable throwable) {

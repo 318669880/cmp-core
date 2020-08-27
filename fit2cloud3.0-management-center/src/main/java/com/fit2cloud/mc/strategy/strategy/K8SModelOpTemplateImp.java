@@ -41,7 +41,6 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
     @DcsLock
     @Override
     public void executeStop(String modeule)throws Exception {
-        K8sUtil.stopService(modeule);
     }
 
     @DcsLock

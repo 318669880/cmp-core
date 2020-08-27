@@ -22,7 +22,7 @@ public class DbDcsLockService implements DcsLockService {
 
 
     @Override
-    public boolean tryLock(String key,Long overTime,Long waitime) {
+    public synchronized boolean tryLock(String key,Long overTime,Long waitime) {
         try{
             return dbLockUtilService.lock(key,overTime,waitime);
         }catch (Exception e){

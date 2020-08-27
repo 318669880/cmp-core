@@ -4,8 +4,8 @@ MAINTAINER FIT2CLOUD <support@fit2cloud.com>
 
 RUN mkdir -p /opt/apps
 
-RUN cd /tmp; wget https://get.helm.sh/helm-v3.0.0-linux-amd64.tar.gz ; tar zxvf helm-v3.0.0-linux-amd64.tar.gz; mv /tmp/linux-amd64/helm /usr/bin/helm ; rm -rf /tmp/helm-v3.0.0-linux-amd64.tar.gz /tmp/linux-amd64
-
+#RUN cd /tmp; wget https://get.helm.sh/helm-v3.0.0-linux-amd64.tar.gz ; tar zxvf helm-v3.0.0-linux-amd64.tar.gz; mv /tmp/linux-amd64/helm /usr/bin/helm ; rm -rf /tmp/helm-v3.0.0-linux-amd64.tar.gz /tmp/linux-amd64
+ADD ./helm /usr/bin/helm
 ADD target/fit2cloud3.0-management-center-3.0.0.jar /opt/apps
 
 ENV JAVA_APP_JAR=/opt/apps/fit2cloud3.0-management-center-3.0.0.jar

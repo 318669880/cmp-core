@@ -5,8 +5,6 @@ import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.config.InternalDockerRegistry;
 import com.fit2cloud.mc.dto.ModuleParamData;
 import com.google.gson.Gson;
-import com.sun.org.apache.xml.internal.utils.NameSpace;
-import io.fabric8.kubernetes.api.model.NamespaceList;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -17,21 +15,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.*;
 
 public class K8sUtil {
-
     private static String helm = "/usr/bin/helm";
-    private static String chartFile = "Chart.yaml";
     private static String valueFile = "values.yaml";
 
-
-    public static void startService(String serviceName) throws Exception{
-
-    }
-
-    public static void stopService(String serviceName)throws Exception{
+    public static void uninstallService(String serviceName)throws Exception{
         List<String> command = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
         if(!checkServiceExist(serviceName, command, result)){
@@ -39,28 +29,23 @@ public class K8sUtil {
             return;
         }
         result.setLength(0);
-        LogUtil.info("Begin stop service " +  serviceName);
         command.add(helm);
         command.add("uninstall");
         command.add(serviceName);
         int starCode = execCommand(result, command);
         if(starCode != 0){
-            LogUtil.error("stop service failed: " + result.toString());
-            throw new Exception("stop service failed: " + result.toString());
+            throw new Exception("Failed to uninstall service: " + result.toString());
         }else {
-            LogUtil.info("Success to stop service: " + result.toString());
+            LogUtil.info("Success to uninstall service: " + result.toString());
         }
         result.setLength(0);
     }
 
     public static void startService(String serviceName, ModuleParamData moduleParamData, Map<String, Object> params){
-        Integer podNumber = params.get("pod_number") == null ? 1 : Integer.valueOf(params.get("pod_number").toString());
+        Integer podNumber = params == null || params.get("pod_number") == null ? 1 : Integer.valueOf(params.get("pod_number").toString());
         KubernetesClient client = new DefaultKubernetesClient();
-        NamespaceList namespaceList = client.namespaces().list();
-        System.out.printf("namespaceList: " + new Gson().toJson(namespaceList));
-
         moduleParamData.getDeployment().forEach(deployment -> {
-            client.apps().deployments().withName(deployment).edit().buildSpec().setReplicas(podNumber);
+            client.apps().deployments().withName(deployment).scale(podNumber);
         });
     }
 
@@ -68,7 +53,7 @@ public class K8sUtil {
         KubernetesClient client = new DefaultKubernetesClient();
         moduleParamData.getDeployment().forEach(deployment -> {
             Integer podNumber = 0;
-            client.apps().deployments().withName(deployment).edit().buildSpec().setReplicas(podNumber);
+            client.apps().deployments().withName(deployment).scale(podNumber);
         });
     }
 
@@ -81,10 +66,9 @@ public class K8sUtil {
         String templatesDir = "templates/";
 
         if(checkServiceExist(serviceName, command, result)){
-            stopService(serviceName);
+            uninstallService(serviceName);
         }
         result.setLength(0);
-
         try{
             uncompress(moduleFileName, tmp_dir);
         }catch (Exception e) {
@@ -92,10 +76,9 @@ public class K8sUtil {
             throw new Exception(e.getMessage());
         }
 
-        checkFileExist(chartsDir,  chartFile);
         checkFileExist(chartsDir,  valueFile);
 
-        LogUtil.info("Begin start service " +  serviceName);
+        LogUtil.info("Begin install service " +  serviceName);
         command.add(helm);
         command.add("install");
         command.add(serviceName);
@@ -116,48 +99,49 @@ public class K8sUtil {
         command.add(chartsDir);
         int starCode = execCommand(result, command);
         if(starCode != 0){
-            LogUtil.error("Start service failed: " + result.toString());
-            throw new Exception("Start service failed: " + result.toString());
+            LogUtil.error("Install service failed: " + result.toString());
+            throw new Exception("Install service failed: " + result.toString());
         }else {
-            LogUtil.info("Success to Start service: " + result.toString());
+            LogUtil.info("Success to install service: " + result.toString());
         }
         result.setLength(0);
         ModuleParamData moduleParamData = new ModuleParamData();
-        moduleParamData.setDeployment(filterDeployments(chartsDir + templatesDir, command, result));
+        List<String> deployments = new ArrayList<>();
+        moduleParamData.setDeployment(filterDeployments(deployments, chartsDir + templatesDir));
         return moduleParamData;
     }
 
-    private static List<String> filterDeployments(String path, List<String> command, StringBuilder result) throws Exception{
-        List<String> deployments = new ArrayList<>();
-        try {
-
-        }catch (Exception e){
-
-        }
-        String commands[]={"find", path,"-name", "\"*.yaml\"", "|", "xargs", "grep", "Deployment", "|", "awk", "-F", ":", "'{print $1}'"};
-        List<String> commandsList=Arrays.asList(commands);
-        command.addAll(commandsList);
-        int starCode = execCommand(result, command);
-        if(starCode == 0){
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(result.toString().getBytes(Charset.forName("utf8")))));
-            String line;
-            while ((line=bufferedReader.readLine()) != null){
-                deployments.addAll(filterDeployments(path + line));
+    public static List<String> filterDeployments(List<String> deployments , String path) throws Exception{
+        File rootFile = new File(path);
+        if (rootFile.exists()) {
+            File[] files = rootFile.listFiles();
+            if (null != files) {
+                for (File file : files) {
+                    if (!file.isDirectory() && file.getName().endsWith("yaml")) {
+                        deployments.addAll(filterDeployments(file));
+                    } else {
+                        filterDeployments(deployments, file.getAbsolutePath());
+                    }
+                }
             }
         }
-        result.setLength(0);
         return deployments;
     }
 
-    private static List<String> filterDeployments(String valueYamlFile) throws Exception{
+    public static List<String> filterDeployments(File valueYamlFile) throws Exception{
+        LogUtil.info(valueYamlFile);
         List<String> deployments = new ArrayList<>();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(valueYamlFile));
         String line;
         while ((line = bufferedReader.readLine()) != null){
             if(line.contains("kind:") && line.contains("Deployment")){
+                LogUtil.info(line);
                 if((line = bufferedReader.readLine()) != null && line.contains("metadata")){
+                    LogUtil.info(line);
                     if((line = bufferedReader.readLine()) != null && line.contains("name:")){
-                        deployments.add(line.replace("name:", "").replace(" ", ""));
+                        LogUtil.info(line);
+                        String deployment = line.replace("name:", "").replace(" ", "");
+                        deployments.add(deployment);
                     }
                 }
             }
@@ -184,9 +168,6 @@ public class K8sUtil {
         bufferedWriter.flush();
         bufferedWriter.close();
     }
-
-
-
 
     private static boolean checkServiceExist(String serviceName, List<String> command, StringBuilder result)throws Exception{
         command.add(helm);

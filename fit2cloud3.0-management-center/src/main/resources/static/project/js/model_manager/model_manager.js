@@ -208,7 +208,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             });
         },
 
-        loadNodeData: function () {
+        loadNodeData: function (callBack) {
             $scope.executeAjax(this._loadNodeDataUrl,"POST",null,function(res) {
                 $scope._nodeData = Object.create({});
                 res.forEach(function(node){
@@ -216,6 +216,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                     $scope._nodeData[model_uuid] = $scope._nodeData.hasOwnProperty(model_uuid) ? $scope._nodeData[model_uuid] : new Array();
                     $scope._nodeData[model_uuid].push(node);
                 }.bind(this));
+                if(!!callBack && (callBack instanceof Function))
+                    callBack();
             }.bind(this));
         },
 
@@ -555,10 +557,11 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             this.socket = new SockJS(this.ws_url);
             this.stompClient = Stomp.over(this.socket);//使用STMOP子协议的WebSocket客户端
             this.stompClient.connect({},function(frame){//连接WebSocket服务端
-                console.log('Connected:' + frame);
+                //console.log('Connected:' + frame);
                 //通过stompClient.subscribe订阅/topic/getResponse 目标(destination)发送的消息
                 this.stompClient.subscribe('/topic/getResponse',function(response){
-                    this.parseMessage(JSON.parse(response.body));
+                    let res = JSON.parse(response.body);
+                    $scope.indexServer.model_env==='host' && this.parseHostMessage(res) || this.parseK8sMessage(res);
                 }.bind(this));
             }.bind(this));
         },
@@ -566,11 +569,34 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             if(this.stompClient != null) {
                 this.stompClient.disconnect();
             }
-            console.log("Disconnected");
+            //console.log("Disconnected");
         },
-        parseMessage: function (obj) {
+        parseHostMessage: function (obj) {
             // 如果obj为true那么刷新数据
-            !!obj && $scope.modelInstaller.loadData();
+            //!!obj && $scope.modelInstaller.loadData();
+            let changeData = obj;
+            /*angular.forEach(changeData, (nodes ,module) => {
+                if(!$scope._nodeData[module]) return;
+                let nodeMaps = {};
+                nodes.forEach(node => {
+                    nodeMaps[node.nodeHost] = node;
+                })
+                $scope._nodeData[module].forEach((_currentNode,index) => {
+                    if (!!nodeMaps[_currentNode.nodeHost]) {
+                        $scope._nodeData[module][index].nodeStatus = nodeMaps[_currentNode.nodeHost].nodeStatus;
+                    }
+                })
+            })
+            $scope.fillNodeData(true);*/
+            $scope.formatModuleStatus();
+        },
+        parseK8sMessage: function (obj) {
+            let changeData = obj;
+            /*angular.forEach(changeData,(pods, module) => {
+                $scope._eurekaData[module] = pods;
+            });
+            $scope.fillEurekaData();*/
+            $scope.formatModuleStatus();
         }
     };
 
@@ -700,33 +726,38 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             condition.sort = $scope.sort.sql;
         }
         HttpUtils.paging($scope, "modelManager/runner", condition, function (rep) {
-            //$scope.load = true;
             $scope.formatModuleStatus();
-            $scope.modelInstaller.loadNodeData();
         });
     };
-
     $scope.formatModuleStatus = function(){
-        if($scope.indexServer.model_env=='host')
-            $scope.items.forEach(item => {
-                let status_array = item.status.split(",");
-                let runing_array = status_array.filter(item => item==='running');
-                item.enable = false;
-                item.statuInfo = runing_array.length + "/" + status_array.length;
-            })
-        else {
-            let fillEurekaData = function(){
-                $scope.items.forEach(item => {
-                    let podNum = item.podNum;
-                    let podInstances = $scope._eurekaData[item.module];
-                    let runningPods = !!podInstances && podInstances.length || 0;
-                    item.enable = false;
-                    item.runningPods = runningPods;
-                    item.statuInfo = runningPods + "/" + podNum;
-                })
-            };
-            $scope.loadEurekaData(fillEurekaData);
+        if($scope.indexServer.model_env=='host'){
+            $scope.modelInstaller.loadNodeData($scope.fillNodeData);
+        }else {
+            $scope.loadEurekaData($scope.fillEurekaData);
         }
+    };
+    $scope.fillNodeData = function (is_fresh) {
+        $scope.items.forEach((item ,index) => {
+            let status_array = item.status.split(",");
+            //let runing_array = !!is_fresh && $scope._nodeData[item.module] && $scope._nodeData[item.module].filter(item => item.nodeStatus==='running') || status_array.filter(item => item==='running');
+            let runing_array = $scope._nodeData[item.module].filter(item => item.nodeStatus==='running');
+            item.enable = false;
+            let statuInfo = (!!runing_array ? runing_array.length : 0 )+ "/" + (!!status_array ? status_array.length : 0 );
+            item.statuInfo = statuInfo;
+            $scope.items[index].statuInfo = statuInfo;
+            //console.log(item.statuInfo);
+        });
+    };
+    $scope.fillEurekaData = function(){
+        $scope.items.forEach(item => {
+            let podNum = item.podNum;
+            let podInstances = $scope._eurekaData[item.module];
+
+            let runningPods = !!podInstances && podInstances.length || 0;
+            item.enable = false;
+            item.runningPods = runningPods;
+            item.statuInfo = runningPods + "/" + podNum;
+        })
     };
     $scope.loadEurekaData = function(callBack) {
         $scope.executeAjax('k8s-operator-module/pods','GET',null,res => {
@@ -803,6 +834,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             let params = {"pod_number": pod_number};
             $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr, params: params}, function (resp) {
                 Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
+                $scope.list();
             }, function (resp) {
             });
         });
@@ -823,12 +855,33 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         Notification.confirm($filter('translator')("i18n_stop_modules_confirm", "确定停止所选模块？"), function () {
             $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function () {
                 Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
+                $scope.list();
             }, function (resp) {
-
             });
 
         })
+    }
 
+    $scope.uninstallK8sModule = function (item) {
+        let module_arr = [];
+        if(item){
+            module_arr.push(item.module);
+        }else{
+            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
+        }
+        if (module_arr.length == 0 ){
+            $scope.showWarn('i18n_module_null_msg','模块不能为空.')
+            return;
+        }
+
+        Notification.confirm($filter('translator')("i18n_uninstall_modules_confirm", "确定卸载所选模块？"), function () {
+            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/uninstall/' , {modules: module_arr}, function () {
+                Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
+                $scope.list();
+            }, function (resp) {
+            });
+
+        })
     }
 
 

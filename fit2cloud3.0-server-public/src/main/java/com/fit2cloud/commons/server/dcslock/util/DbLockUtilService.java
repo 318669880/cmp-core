@@ -1,8 +1,7 @@
 package com.fit2cloud.commons.server.dcslock.util;
 
 import com.fit2cloud.commons.server.base.domain.TLock;
-import com.fit2cloud.commons.server.base.domain.TLockExample;
-import com.fit2cloud.commons.server.base.mapper.TLockMapper;
+import com.fit2cloud.commons.server.dcslock.service.LockDaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,6 +9,7 @@ import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * @Company: FIT2CLOUD 飞致云
@@ -24,7 +24,7 @@ public class DbLockUtilService {
     private static Logger log = LoggerFactory.getLogger(DbLockUtilService.class);
 
     @Resource
-    private TLockMapper tLockMapper;
+    private LockDaoService lockDaoService;
 
     //将requestid保存在该变量中
     private static ThreadLocal<String> requestIdTL = new ThreadLocal<>();
@@ -39,47 +39,47 @@ public class DbLockUtilService {
      * @param waitime(毫秒)  获取锁的超时时间，这个时间内获取不到将重试
      * @return
      */
-    public boolean lock(String lock_key, long overTime, long waitime) throws Exception {
+    public boolean lock(String lock_key, long overTime, long waitime) throws Exception{
         log.info("start");
         boolean lockResult = false;
         String request_id = getRequestId();
-        //long starttime = System.currentTimeMillis();
+
         while (true) {
             TLock tLock = get(lock_key);
             if (Objects.isNull(tLock)) {
                 //插入一条记录,重新尝试获取锁
                 insert(lock_key);
                 continue;
-            } else {
-                String reqid = tLock.getRequestId();
-                //如果reqid为空字符，表示锁未被占用
-                if ("".equals(reqid)) {
-                    tLock.setRequestId(request_id);
-                    tLock.setLockCount(1);
-                    tLock.setTimeout(System.currentTimeMillis() + overTime);
-                    if (update(tLock) == 1) {
-                        lockResult = true;
-                        break;
-                    }
-                } else if (request_id.equals(reqid)) {
-                    //如果request_id和表中request_id一样表示锁被当前线程持有者，此时需要加重入锁
-                    tLock.setTimeout(System.currentTimeMillis() + overTime);
-                    tLock.setLockCount(tLock.getLockCount() + 1);
-                    if (update(tLock) == 1) {
-                        lockResult = true;
-                        break;
-                    }
-                } else {
-                    //锁不是自己的，并且已经超时了，则重置锁，继续重试
-                    if (tLock.getTimeout() < System.currentTimeMillis()) {
-                        resetLock(tLock);
-                    } else {
-                        //如果未超时，休眠waitime秒，继续重试
-                        TimeUnit.MILLISECONDS.sleep(waitime);
-                    }
+            }
+            String reqid = tLock.getRequestId();
+            //如果reqid为空字符，表示锁未被占用
+            if ("".equals(reqid)) {
+                tLock.setRequestId(request_id);
+                tLock.setLockCount(1);
+                tLock.setTimeout(System.currentTimeMillis() + overTime);
+                if (update(tLock) == 1) {
+                    lockResult = true;
+
+                    break;
                 }
             }
+            if (request_id.equals(reqid)) {
+                //如果request_id和表中request_id一样表示锁被当前线程持有者，此时需要加重入锁
+                tLock.setTimeout(System.currentTimeMillis() + overTime);
+                tLock.setLockCount(tLock.getLockCount() + 1);
+                if (update(tLock) == 1) {
+                    lockResult = true;
+                    break;
+                }
+            }
+            if (tLock.getTimeout() < System.currentTimeMillis()) {
+                resetLock(tLock);
+            } else {
+                //如果未超时，休眠waitime秒，继续重试
+                TimeUnit.MILLISECONDS.sleep(waitime);
+            }
         }
+
         log.info("end");
         return lockResult;
     }
@@ -90,7 +90,7 @@ public class DbLockUtilService {
      * @param lock_key
      * @throws Exception
      */
-    public void unlock(String lock_key) throws Exception {
+    public void unlock(String lock_key) {
         //获取当前线程requestId
         String requestId = getRequestId();
         TLock tLock = get(lock_key);
@@ -113,7 +113,7 @@ public class DbLockUtilService {
      * @return
      * @throws Exception
      */
-    private int resetLock(TLock tLock) throws Exception {
+    private int resetLock(TLock tLock) {
         tLock.setRequestId("");
         tLock.setLockCount(0);
         tLock.setTimeout(0L);
@@ -148,25 +148,23 @@ public class DbLockUtilService {
      * @return
      * @throws Exception
      */
-    private int update(TLock tLock) throws Exception {
-        TLockExample example = new TLockExample();
-        example.createCriteria().andLockKeyEqualTo(tLock.getLockKey()).andVersionEqualTo(tLock.getVersion());
+    private int update(TLock tLock) {
         tLock.setVersion(tLock.getVersion()+1);
-        return tLockMapper.updateByExampleSelective(tLock,example);
+        return lockDaoService.update(tLock);
     }
 
-    private void insert(String lock_key){
+    private void insert(String lock_key) {
         TLock tLock = new TLock();
         tLock.setLockKey(lock_key);
         tLock.setRequestId("");
         tLock.setTimeout(0L);
         tLock.setLockCount(0);
         tLock.setVersion(0);
-        tLockMapper.insert(tLock);
+        lockDaoService.insert(tLock);
     }
 
-    private TLock get(String lock_key) throws Exception {
-        return tLockMapper.selectByPrimaryKey(lock_key);
+    private TLock get(String lock_key) {
+        return lockDaoService.query(lock_key);
     }
 
 }

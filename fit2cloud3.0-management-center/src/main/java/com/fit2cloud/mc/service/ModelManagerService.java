@@ -6,7 +6,9 @@ import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.job.SyncEurekaServer;
 import com.fit2cloud.mc.model.*;
+import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
+import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -27,15 +29,11 @@ public class ModelManagerService {
     @Resource
     private ModelManagerMapper modelManagerMapper;
 
-
     @Resource
     private ModelBasicMapper modelBasicMapper;
 
-
     @Resource
     private ModelBasicPageMapper modelBasicPageMapper;
-
-
 
     @Resource
     private ModelVersionMapper modelVersionMapper;
@@ -43,7 +41,8 @@ public class ModelManagerService {
     @Resource
     private EurekaInstanceMonitor eurekaInstanceMonitor;
 
-
+    @Resource
+    private NodeOperateService nodeOperateService;
 
     public ModelManager add(ModelManager modelManager) {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
@@ -76,7 +75,7 @@ public class ModelManagerService {
     public ModelBasic modelBasicInfo(String module){
         ModelBasicExample example = new ModelBasicExample();
         example.createCriteria().andModuleEqualTo(module);
-        List<ModelBasic> modelBasics = modelBasicMapper.selectByExample(example);
+        List<ModelBasic> modelBasics = modelBasicMapper.selectByExampleWithBLOBs(example);
         if(CollectionUtils.isNotEmpty(modelBasics)){
             ModelBasic modelBasic = modelBasics.get(0);
             return modelBasic;
@@ -96,7 +95,7 @@ public class ModelManagerService {
         ModelBasicExample example = new ModelBasicExample();
         example.createCriteria().andModuleEqualTo(module);
         ModelBasic modelBasic = new ModelBasic();
-        modelBasic.setCustomData(moduleParamData.toString());
+        modelBasic.setCustomData(new Gson().toJson(moduleParamData));
         modelBasicMapper.updateByExampleSelective(modelBasic, example);
     }
 
@@ -124,7 +123,7 @@ public class ModelManagerService {
      * 模块安装
      * @param modelInstalledDto
      */
-    public void readyInstallModule(ModelInstalledDto modelInstalledDto, ModelNode node){
+    public void readyInstallModule(ModelInstalledDto modelInstalledDto, ModelNode node) throws Exception{
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
         String module = modelBasic.getModule();
         ModelVersion modelVersion = modelInstalledDto.getModelVersion();
@@ -145,8 +144,11 @@ public class ModelManagerService {
         modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
         modelVersion.setInstallTime(new Date().getTime());
         modelVersionMapper.insert(modelVersion);
-
-        eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall", node);
+        if(node == null){
+            nodeOperateService.installOrUpdate(select(), module);
+        }else {
+            eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall", node);
+        }
     }
 
 

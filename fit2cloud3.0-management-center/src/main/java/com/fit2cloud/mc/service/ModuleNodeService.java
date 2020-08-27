@@ -10,6 +10,8 @@ import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -50,9 +52,11 @@ public class ModuleNodeService {
 
     /**
      * 根据model_uuid查询节点
+     * 查询全部节点使用缓存
      * @param module
      * @return
      */
+    @Cacheable(value = "host-nodes-cache",condition = "#module==null")
     public List<ModelNode> queryNodes(String module){
         ModelNodeExample modelNodeExample = new ModelNodeExample();
         ModelNodeExample.Criteria criteria = modelNodeExample.createCriteria();
@@ -63,6 +67,10 @@ public class ModuleNodeService {
         modelNodeExample.setOrderByClause("node_create_time desc");
         return modelNodeMapper.selectByExample(modelNodeExample);
     }
+
+    @CacheEvict(value = "host-nodes-cache",allEntries = true)
+    public void clearCache(){}
+
 
     public ModelNode currentMcNode(){
         String host = domain_host();
@@ -92,6 +100,7 @@ public class ModuleNodeService {
      * 新增或修改模块节点状态
      *
      */
+    @CacheEvict(value = "host-nodes-cache",allEntries = true)
     public void addOrUpdateModelNode (ModelNode node) throws Exception{
         String mc_hostName = domain_host();
         String mc_ip = environment.getProperty("eureka.instance.ip-address");

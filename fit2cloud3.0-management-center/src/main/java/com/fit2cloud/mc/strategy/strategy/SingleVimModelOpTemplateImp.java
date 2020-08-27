@@ -22,11 +22,14 @@ import java.util.Map;
 public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
 
     // 集群环境避免各节点同时执行
-    @DcsLock
+    // 锁住该方法1分钟 避免同时启动导致报错
+    @DcsLock(overtime = 60000,waitime = 5000)
     @Override
     public void executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params) throws Exception{
         try{
             ModuleUtil.installOrUpdateModule(module, filePath, modelManager.getOnLine());
+            // 执行命令后等待50s 因为模块启动是一个过程
+            Thread.sleep(50000);
         }catch (Exception e){
             F2CException.throwException(e);
         }

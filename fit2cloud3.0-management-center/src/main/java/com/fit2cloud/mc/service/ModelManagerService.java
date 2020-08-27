@@ -1,17 +1,14 @@
 package com.fit2cloud.mc.service;
 
-import com.fit2cloud.commons.server.handle.ResultResponseBodyAdvice;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.dao.*;
+import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.job.SyncEurekaServer;
 import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -87,7 +84,21 @@ public class ModelManagerService {
         return null;
     }
 
+    public void updateModelBasicPodNum(String module, Integer podNum){
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleEqualTo(module);
+        ModelBasic modelBasic = new ModelBasic();
+        modelBasic.setPodNum(podNum);
+        modelBasicMapper.updateByExampleSelective(modelBasic, example);
+    }
 
+    public void updateModelBasicCustomData(String module, ModuleParamData moduleParamData){
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleEqualTo(module);
+        ModelBasic modelBasic = new ModelBasic();
+        modelBasic.setCustomData(moduleParamData.toString());
+        modelBasicMapper.updateByExampleSelective(modelBasic, example);
+    }
 
     public ModelVersion modelVersionInfo(String model_uuid,String lastVersion){
         ModelVersionExample example = new ModelVersionExample();

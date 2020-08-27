@@ -290,26 +290,28 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         },
 
         executeInstall_k8s: function(){
-            let info = {
-                title: $filter('translator')('i18n_pod_number', 'Pod 数量'),
-                text: $filter('translator')('i18n_pod_number', 'Pod 数量'),
-                required: true,
-                type:'number',
-                init: 1
-            };
+            this.executeInstall(null, 0);
 
-            Notification.prompt(info, function (result) {
-                let pod_number = result;
-                if(pod_number < 1){
-                    Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于1'));
-                    return;
-                }
-                this.executeInstall(null,pod_number);
-            }.bind(this));
+            // let info = {
+            //     title: $filter('translator')('i18n_pod_number', 'Pod 数量'),
+            //     text: $filter('translator')('i18n_pod_number', 'Pod 数量'),
+            //     required: true,
+            //     type:'number',
+            //     init: 1
+            // };
+            //
+            // Notification.prompt(info, function (result) {
+            //     let pod_number = result;
+            //     if(pod_number < 1){
+            //         Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于1'));
+            //         return;
+            //     }
+            //     this.executeInstall(null, pod_number);
+            // }.bind(this));
         },
 
         //  执行安装
-        executeInstall: function (nodeId,pod_num) {
+        executeInstall: function (nodeId, pod_num) {
             let _self = this;
             let param = $scope.installableItems.filter(model => model.enable === true).map(model => {
                 let dto = Object.create({});

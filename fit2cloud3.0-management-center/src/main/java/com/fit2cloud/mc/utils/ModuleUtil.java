@@ -321,6 +321,7 @@ public class ModuleUtil {
             result.append(line).append("\n");
         }
         int exitCode = process.waitFor();
+        command.clear();
         return exitCode;
     }
 

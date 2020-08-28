@@ -129,7 +129,7 @@ public class CheckModuleStatus {
      */
     private void checkPodsNum(){
         //这里从缓存中取出数据 否则 跟下面数据完全一样 则不会触发websocket消息推送
-        Map<String, List<String>> pods = k8sOperatorModuleService.pods();
+        Map<String, List<String>> pods = k8sOperatorModuleService.pods(true);
         List<ModelBasic> modelInstalls = modelManagerService.modelBasics();
         AtomicBoolean atomicChange = new AtomicBoolean(false);
         Map<String, List<String>> change_pods = new HashMap<>();

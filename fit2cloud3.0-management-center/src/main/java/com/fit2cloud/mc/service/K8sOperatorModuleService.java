@@ -66,8 +66,8 @@ public class K8sOperatorModuleService {
         });
     }
 
-    @Cacheable(value = "k8s-pod-cache" )
-    public Map<String, List<String>> pods(){
+    @Cacheable(value = "k8s-pod-cache" ,condition = "#user_cache==true")
+    public Map<String, List<String>> pods(boolean user_cache){
         Map<String,List<String>> result = new HashMap<>();
         discoveryClient.getServices().forEach(module -> {
             List<ServiceInstance> instances = discoveryClient.getInstances(module);

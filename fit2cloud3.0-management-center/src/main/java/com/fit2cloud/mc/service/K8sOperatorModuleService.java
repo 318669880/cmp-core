@@ -33,37 +33,41 @@ public class K8sOperatorModuleService {
     private DiscoveryClient discoveryClient;
 
     public void start(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
+        Map<String, Object> params = operatorModuleRequest.getParams() == null ? new HashMap<String, Object>() : operatorModuleRequest.getParams();
+        Integer podNumber = operatorModuleRequest.getParams() == null || operatorModuleRequest.getParams().get("pod_number") == null ? 1 : Integer.valueOf(operatorModuleRequest.getParams().get("pod_number").toString());
+        params.put("pod_number", podNumber);
+        operatorModuleRequest.setParams(params);
+        actionModules("start", managerInfo, operatorModuleRequest);
+    }
+
+    public void stop(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
+        Map<String, Object> params = operatorModuleRequest.getParams() == null ? new HashMap<String, Object>() : operatorModuleRequest.getParams();
+        params.put("pod_number", 0);
+        operatorModuleRequest.setParams(params);
+        actionModules("stop", managerInfo, operatorModuleRequest);
+    }
+
+    private void actionModules(String action, ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
         operatorModuleRequest.getModules().forEach(module -> {
             try{
-                LogUtil.info("Begin to start module: " + module);
-                Integer podNumber = operatorModuleRequest.getParams() == null || operatorModuleRequest.getParams().get("pod_number") == null ? 1 : Integer.valueOf(operatorModuleRequest.getParams().get("pod_number").toString());
+                LogUtil.info("Begin to {} module: " + module, action);
+                Integer podNumber = Integer.valueOf(operatorModuleRequest.getParams().get("pod_number").toString());
                 modelManagerService.updateModelBasicPodNum(module, podNumber);
                 ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
-                K8sUtil.startService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class) , operatorModuleRequest.getParams());
-                LogUtil.info("End of start module: " + module);
+                K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
+                LogUtil.info("End of {} module: " + module, action);
             }catch (Exception e){
-                LogUtil.error("Faild to start module: " + module, e);
+                LogUtil.error("Faild to {} module: {}" + module, action,  e);
             }
         });
     }
 
-    public void stop(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
-        operatorModuleRequest.getModules().forEach(module -> {
-            try{
-                LogUtil.info("Begin to stop module: " + module);
-                ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
-                K8sUtil.stopService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class));
-                LogUtil.info("End of stop module: " + module);
-            }catch (Exception e){
-                LogUtil.error("Faild to stop module: " + module, e);
-            }
-        });
-    }
 
     public void uninstall(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
         operatorModuleRequest.getModules().forEach(module -> {
             try{
                 LogUtil.info("Begin to uninstall module: " + module);
+                modelManagerService.deleteModelBasic(module);
                 K8sUtil.uninstallService(module);
                 LogUtil.info("End of uninstall module: " + module);
             }catch (Exception e){

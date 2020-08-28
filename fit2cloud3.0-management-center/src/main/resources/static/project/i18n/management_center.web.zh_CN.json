@@ -268,5 +268,11 @@
   "i18n_pod_number_limit": "Pod 数量不能小于1",
   "i18n_excute_resule": "执行成功，请稍后刷新模块状态.",
   "i18n_stop_modules_confirm": "确定停止所选模块？",
-  "i18n_uninstall_modules_confirm": "确定卸载所选模块？"
+  "i18n_uninstall_modules_confirm": "确定卸载所选模块？",
+  "i18n_docker_registry_url_require": "镜像仓库地址不能为空",
+  "i18n_docker_registry_user_require": "镜像仓库用户名不能为空",
+  "i18n_docker_registry_passwd_require": "镜像仓库密码不能为空",
+  "i18n_docker_registry": "镜像仓库",
+  "i18n_docker_registry_user": "用户名",
+  "i18n_docker_registry_passwd": "密码"
 }

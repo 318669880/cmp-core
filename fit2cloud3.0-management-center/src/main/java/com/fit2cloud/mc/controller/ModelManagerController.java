@@ -5,8 +5,10 @@ import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
+import com.fit2cloud.mc.common.constants.RuntimeEnvironment;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.dto.request.ModelInstalledRequest;
+import com.fit2cloud.mc.job.SyncEurekaServer;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelInstall;
 import com.fit2cloud.mc.model.ModelManager;
@@ -55,10 +57,8 @@ public class ModelManagerController {
 
     @GetMapping("/indexServer/query")
     public ModelManager query (){
-        return modelManagerService.select();
+        return modelManagerService.queryModelManager();
     }
-
-
 
     @PostMapping(value = "/runner/{goPage}/{pageSize}")
     public Pager<List<ModelInstall>> paging(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody ModelInstalledRequest request) {

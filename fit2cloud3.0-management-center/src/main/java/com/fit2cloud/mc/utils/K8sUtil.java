@@ -1,10 +1,16 @@
 package com.fit2cloud.mc.utils;
 
+import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
-import com.fit2cloud.mc.config.InternalDockerRegistry;
+import com.fit2cloud.mc.config.DockerRegistry;
 import com.fit2cloud.mc.dto.ModuleParamData;
+import com.fit2cloud.mc.model.ModelManager;
 import com.google.gson.Gson;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.api.model.SecretBuilder;
+import io.fabric8.kubernetes.api.model.SecretList;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -20,44 +26,10 @@ import java.util.*;
 public class K8sUtil {
     private static String helm = "/usr/bin/helm";
     private static String valueFile = "values.yaml";
+    private static String f2cImagePullSecret = "f2c-image-pull-secret";
 
-    public static void uninstallService(String serviceName)throws Exception{
-        List<String> command = new ArrayList<String>();
-        StringBuilder result = new StringBuilder();
-        if(!checkServiceExist(serviceName, command, result)){
-            LogUtil.info("Service {} do not exist.", serviceName);
-            return;
-        }
-        result.setLength(0);
-        command.add(helm);
-        command.add("uninstall");
-        command.add(serviceName);
-        int starCode = execCommand(result, command);
-        if(starCode != 0){
-            throw new Exception("Failed to uninstall service: " + result.toString());
-        }else {
-            LogUtil.info("Success to uninstall service: " + result.toString());
-        }
-        result.setLength(0);
-    }
 
-    public static void startService(String serviceName, ModuleParamData moduleParamData, Map<String, Object> params){
-        Integer podNumber = params == null || params.get("pod_number") == null ? 1 : Integer.valueOf(params.get("pod_number").toString());
-        KubernetesClient client = new DefaultKubernetesClient();
-        moduleParamData.getDeployment().forEach(deployment -> {
-            client.apps().deployments().withName(deployment).scale(podNumber);
-        });
-    }
-
-    public static void stopService(String serviceName, ModuleParamData moduleParamData){
-        KubernetesClient client = new DefaultKubernetesClient();
-        moduleParamData.getDeployment().forEach(deployment -> {
-            Integer podNumber = 0;
-            client.apps().deployments().withName(deployment).scale(podNumber);
-        });
-    }
-
-    public static ModuleParamData installOrUpdateModule(String serviceName, String moduleFileName, boolean onLine, Map<String, Object> params) throws Exception {
+    public static ModuleParamData installOrUpdateModule(String serviceName, String moduleFileName, ModelManager modelManager, Map<String, Object> params) throws Exception {
         List<String> command = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
         String random_dir_name = UUID.randomUUID().toString();
@@ -82,12 +54,18 @@ public class K8sUtil {
         command.add(helm);
         command.add("install");
         command.add(serviceName);
-        if(!onLine){
-            InternalDockerRegistry internalDockerRegistry = CommonBeanFactory.getBean(InternalDockerRegistry.class);
+        if(!modelManager.getOnLine()){
+            //离线环境下，需要根据docker 仓库信息，替换镜像的前缀
+            DockerRegistry dockerRegistry =  new Gson().fromJson(modelManager.getDockerRegistry(), DockerRegistry.class);
+            String originalImagePrefix = filterOriginalImagePrefix(chartsDir + valueFile);
+            String imagePrefix = handleOffLineImagePrefix(dockerRegistry, originalImagePrefix);
             command.add("--set");
-            command.add("modules.imagePrefix=" + internalDockerRegistry.getImagePrefix());
+            command.add("modules.imagePrefix=" + imagePrefix);
+            command.add("--set");
+            command.add("modules.imagePullSecret=" + f2cImagePullSecret);
         }else {
-            //在线环境，不需要imagepullsecret
+            //TODO 在线环境，不需要imagepullsecret
+
         }
 
         if(params.get("pod_number") != null){
@@ -111,7 +89,68 @@ public class K8sUtil {
         return moduleParamData;
     }
 
-    public static List<String> filterDeployments(List<String> deployments , String path) throws Exception{
+
+    public static void uninstallService(String serviceName)throws Exception{
+        List<String> command = new ArrayList<String>();
+        StringBuilder result = new StringBuilder();
+        if(!checkServiceExist(serviceName, command, result)){
+            LogUtil.info("Service {} do not exist.", serviceName);
+            return;
+        }
+        result.setLength(0);
+        command.add(helm);
+        command.add("uninstall");
+        command.add(serviceName);
+        int starCode = execCommand(result, command);
+        if(starCode != 0){
+            throw new Exception("Failed to uninstall service: " + result.toString());
+        }else {
+            LogUtil.info("Success to uninstall service: " + result.toString());
+        }
+        result.setLength(0);
+    }
+
+    public static void actionService(String serviceName, ModuleParamData moduleParamData, Map<String, Object> params){
+        Integer podNumber = Integer.valueOf(params.get("pod_number").toString());
+        KubernetesClient client = new DefaultKubernetesClient();
+        moduleParamData.getDeployment().forEach(deployment -> {
+            client.apps().deployments().withName(deployment).scale(podNumber);
+        });
+    }
+
+    public static void stopService(String serviceName, ModuleParamData moduleParamData){
+        KubernetesClient client = new DefaultKubernetesClient();
+        moduleParamData.getDeployment().forEach(deployment -> {
+            Integer podNumber = 0;
+            client.apps().deployments().withName(deployment).scale(podNumber);
+        });
+    }
+
+    public static void createOrReplaceSeccet(DockerRegistry dockerRegistry){
+        if(StringUtils.isEmpty(dockerRegistry.getUrl()) || StringUtils.isEmpty(dockerRegistry.getUser()) || StringUtils.isEmpty(dockerRegistry.getPasswd())){
+            F2CException.throwException("Docker Registry info is ncomplete.");
+        }
+        KubernetesClient client = new DefaultKubernetesClient();
+        Base64.Encoder encoder = Base64.getEncoder();
+
+        String authStr = String.format("%s:%s", dockerRegistry.getUser(), dockerRegistry.getPasswd());
+        String enStr = encoder.encodeToString(authStr.getBytes());
+        String dataStr =  String.format("{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"auth\":\"%s\"}}}",
+                dockerRegistry.getUrl(), dockerRegistry.getUser(), dockerRegistry.getPasswd(), enStr);
+        dataStr = encoder.encodeToString(dataStr.getBytes());
+        Secret registrySecret = new SecretBuilder()
+                .withNewMetadata()
+                .withName(f2cImagePullSecret)
+                .endMetadata()
+                .withApiVersion("v1")
+                .withKind("Secret")
+                .addToData(".dockerconfigjson", dataStr)
+                .withType("kubernetes.io/dockerconfigjson")
+                .build();
+        client.secrets().createOrReplace(registrySecret);
+    }
+
+    private static List<String> filterDeployments(List<String> deployments , String path) throws Exception{
         File rootFile = new File(path);
         if (rootFile.exists()) {
             File[] files = rootFile.listFiles();
@@ -128,8 +167,7 @@ public class K8sUtil {
         return deployments;
     }
 
-    public static List<String> filterDeployments(File valueYamlFile) throws Exception{
-        LogUtil.info(valueYamlFile);
+    private static List<String> filterDeployments(File valueYamlFile) throws Exception{
         List<String> deployments = new ArrayList<>();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(valueYamlFile));
         String line;
@@ -148,6 +186,42 @@ public class K8sUtil {
             if(line == null) break;
         }
         return deployments;
+    }
+
+    private static String handleOffLineImagePrefix(DockerRegistry dockerRegistry, String originalImagePrefix) throws Exception{
+        String dockerRegistryUrl;
+        if(StringUtils.isEmpty(dockerRegistry.getUrl())){
+            throw new Exception("Docker Registry Adress is empty!");
+        }
+        if(dockerRegistry.getUrl().contains("//")){
+            dockerRegistryUrl = dockerRegistry.getUrl().split("//")[1];
+        }else {
+            dockerRegistryUrl = dockerRegistry.getUrl();
+        }
+        dockerRegistryUrl = dockerRegistryUrl.trim();
+        if(dockerRegistryUrl.endsWith("/")){
+            dockerRegistryUrl.substring(0, dockerRegistryUrl.length() -1);
+        }
+        if(originalImagePrefix.contains("/")){
+            String origiOockerRegistryUrl = originalImagePrefix.split("/")[0];
+            return originalImagePrefix.replace(origiOockerRegistryUrl, dockerRegistryUrl);
+        }else{
+            return dockerRegistryUrl;
+        }
+    }
+
+    private static String filterOriginalImagePrefix(String valueFile) throws Exception{
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(valueFile));
+        String line = null;
+        String originalImagePrefix = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line=bufferedReader.readLine()) != null){
+            if(line.contains("imagePrefix:")){
+                originalImagePrefix =  line.replace("imagePrefix:", "").replace(" ", "");
+            }
+        }
+        bufferedReader.close();
+        return originalImagePrefix;
     }
 
     private static void handleReplicas(Integer replicas, String valueYamlFile) throws Exception{

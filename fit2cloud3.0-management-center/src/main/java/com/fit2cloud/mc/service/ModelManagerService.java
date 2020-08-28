@@ -1,6 +1,8 @@
 package com.fit2cloud.mc.service;
 
 import com.fit2cloud.commons.utils.UUIDUtil;
+import com.fit2cloud.mc.common.constants.RuntimeEnvironment;
+import com.fit2cloud.mc.config.DockerRegistry;
 import com.fit2cloud.mc.dao.*;
 import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
@@ -8,6 +10,7 @@ import com.fit2cloud.mc.job.SyncEurekaServer;
 import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
+import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -45,11 +48,13 @@ public class ModelManagerService {
     private NodeOperateService nodeOperateService;
 
     public ModelManager add(ModelManager modelManager) {
+        if(SyncEurekaServer.IS_KUBERNETES){
+            K8sUtil.createOrReplaceSeccet(new Gson().fromJson(modelManager.getDockerRegistry(), DockerRegistry.class));
+        }
         ModelManagerExample modelManagerExample = new ModelManagerExample();
-        modelManagerExample.createCriteria().andModelAddressIsNotNull();
         modelManagerMapper.deleteByExample(modelManagerExample);
-
-        modelManager.setEnv(SyncEurekaServer.IS_KUBERNETES? "k8s" : "host");
+        modelManager.setEnv(SyncEurekaServer.IS_KUBERNETES? RuntimeEnvironment.K8S : RuntimeEnvironment.HOST);
+        modelManager.setUuid(UUIDUtil.newUUID());
         modelManagerMapper.insert(modelManager);
         return modelManager;
     }
@@ -57,8 +62,21 @@ public class ModelManagerService {
     public ModelManager select() {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
         modelManagerExample.createCriteria().andModelAddressIsNotNull();
-        List<ModelManager> modelManagerList = modelManagerMapper.selectByExample(modelManagerExample);
+        List<ModelManager> modelManagerList = modelManagerMapper.selectByExampleWithBLOBs(modelManagerExample);
         return CollectionUtils.isEmpty(modelManagerList) ? null : modelManagerList.get(0);
+    }
+
+    public ModelManager queryModelManager(){
+        ModelManager modelManager = select();
+        if(modelManager == null){
+            modelManager = new ModelManager();
+            if (SyncEurekaServer.IS_KUBERNETES) {
+                modelManager.setEnv(RuntimeEnvironment.K8S);
+            } else {
+                modelManager.setEnv(RuntimeEnvironment.HOST);
+            }
+        }
+        return modelManager;
     }
 
 
@@ -81,6 +99,20 @@ public class ModelManagerService {
             return modelBasic;
         }
         return null;
+    }
+
+    public void deleteModelBasic(String module){
+        ModelBasic modelBasic = modelBasicInfo(module);
+        if(modelBasic == null){
+            return;
+        }
+        ModelVersionExample modelVersionExample = new ModelVersionExample();
+        modelVersionExample.createCriteria().andModelBasicUuidEqualTo(modelBasic.getModelUuid());
+        modelVersionMapper.deleteByExample(modelVersionExample);
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleEqualTo(module);
+        modelBasicMapper.deleteByExample(example);
+
     }
 
     public void updateModelBasicPodNum(String module, Integer podNum){

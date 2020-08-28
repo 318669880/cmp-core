@@ -9,7 +9,7 @@ import java.util.List;
         prefix = "docker.registry",
         ignoreUnknownFields = true
 )
-public class InternalDockerRegistry {
+public class DockerRegistry {
 
     private String user;
     private String passwd;

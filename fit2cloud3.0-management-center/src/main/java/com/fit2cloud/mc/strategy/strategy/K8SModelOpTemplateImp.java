@@ -28,7 +28,7 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
         }
         Integer podNum = Integer.valueOf(params.get("pod_number").toString());
         modelManagerService.updateModelBasicPodNum(module, podNum);
-        ModuleParamData moduleParamData = K8sUtil.installOrUpdateModule(module, filePath, modelManager.getOnLine(), params);
+        ModuleParamData moduleParamData = K8sUtil.installOrUpdateModule(module, filePath, modelManager, params);
         modelManagerService.updateModelBasicCustomData(module, moduleParamData);
     }
 

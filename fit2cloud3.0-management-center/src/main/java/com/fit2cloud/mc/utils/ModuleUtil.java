@@ -2,7 +2,7 @@ package com.fit2cloud.mc.utils;
 
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
-import com.fit2cloud.mc.config.InternalDockerRegistry;
+import com.fit2cloud.mc.config.DockerRegistry;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -125,8 +125,8 @@ public class ModuleUtil {
     }
 
     private static void handleWithInternalDockerRegistry(String extensionTmpDir) throws IOException {
-        InternalDockerRegistry internalDockerRegistry = CommonBeanFactory.getBean(InternalDockerRegistry.class);
-        String url = internalDockerRegistry.getUrl().contains("://") ? internalDockerRegistry.getUrl().split("://")[1] : internalDockerRegistry.getUrl();
+        DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistry.class);
+        String url = dockerRegistry.getUrl().contains("://") ? dockerRegistry.getUrl().split("://")[1] : dockerRegistry.getUrl();
         if(url.endsWith("/")) url = url.substring(0, url.length() -1);
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader newDockerComposebufferedReader = new BufferedReader(new FileReader(extensionTmpDir + dockerComposeFile));
@@ -200,14 +200,14 @@ public class ModuleUtil {
     private static void pullImages(List<String> command, StringBuilder result, List<String> newImageNameList, boolean onLine) throws Exception {
         LogUtil.info("Pull images" +  newImageNameList);
         if(!onLine){
-            InternalDockerRegistry internalDockerRegistry = CommonBeanFactory.getBean(InternalDockerRegistry.class);
+            DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistry.class);
             command.add(docker);
             command.add("login");
-            command.add(internalDockerRegistry.getUrl());
+            command.add(dockerRegistry.getUrl());
             command.add("-u");
-            command.add(internalDockerRegistry.getUser());
+            command.add(dockerRegistry.getUser());
             command.add("-p");
-            command.add(internalDockerRegistry.getPasswd());
+            command.add(dockerRegistry.getPasswd());
             execCommand(result, command);
             command.clear();
             result.setLength(0);

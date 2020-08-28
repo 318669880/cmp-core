@@ -1,5 +1,5 @@
 
-ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $document, $mdBottomSheet, HttpUtils, FilterSearch, Notification, $interval, AuthService, $state, $filter,Translator) {
+ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $document, $mdBottomSheet, HttpUtils, FilterSearch, Notification, $interval, AuthService, $state, $filter,Translator, eyeService, ProhibitPrompts) {
     $scope._localData = {};
     $scope._eurekaData = {};
     /**
@@ -15,7 +15,14 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         this.autoNext = true;
         this.model_env = 'host';
         this.onLine = true;
+        this.dockerRegistry = {};
+        this._dockerRegistry = {};
         this.initialize.apply(this , arguments);
+    };
+
+    $scope.view = function (index) {
+
+        eyeService.view('#password' + index, '#eye' + index);
     };
     IndexServer.prototype = {
         initialize: function () {
@@ -31,7 +38,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 _self.model_env = response.env;
                 _self._init_onLine = !!response.onLine;
                 _self.onLine = !!response.onLine;
-
+                _self.dockerRegistry = angular.fromJson(response.dockerRegistry);
+                _self._dockerRegistry = angular.fromJson(response.dockerRegistry);
 
                 if (response.validate === 1 && _self.autoNext) {
                     _self.validate = true;
@@ -41,6 +49,14 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             })
         },
 
+        view: function (index) {
+            eyeService.view('#password' + index, '#eye' + index);
+        },
+
+        changeType: function (id) {
+            ProhibitPrompts.changeType(id);
+        },
+
         saveData: function() {
             this.validate = this.validateAddress();
             return this.validate;
@@ -48,11 +64,27 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
         validateAddress: function(isvalidate) {
             if( !this.onLine ){
-                this.address = window.location.origin + "/indexServer";
+                // this.address = window.location.origin + "/indexServer";
+                this.address ="http://62.234.205.170/indexServer/";
             }
             let _self = this;
             if(!this.address){
                 $scope.showError('i18n_name_require', '索引服务不能为空');
+                this.validate = false;
+                return;
+            }
+            if(!this.onLine && this.model_env == 'k8s' && !this.dockerRegistry.url){
+                $scope.showError('i18n_docker_registry_url_require', '镜像仓库地址不能为空');
+                this.validate = false;
+                return;
+            }
+            if(!this.onLine && this.model_env == 'k8s' && !this.dockerRegistry.user){
+                $scope.showError('i18n_docker_registry_user_require', '镜像仓库用户名不能为空');
+                this.validate = false;
+                return;
+            }
+            if(!this.onLine && this.model_env == 'k8s' && !this.dockerRegistry.passwd){
+                $scope.showError('i18n_docker_registry_passwd_require', '镜像仓库密码不能为空');
                 this.validate = false;
                 return;
             }
@@ -90,7 +122,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         },
 
         validateSave: function() {
-            if(this._init_address === this.address  && this._init_onLine === this.onLine){
+            if(this._init_address === this.address  && this._init_onLine === this.onLine && angular.toJson(this._dockerRegistry) === angular.toJson(this.dockerRegistry)){
                 // 这说明 索引服务没有改过 为提升那么一点客户体验 那就不走后台了保存了
                 this.validate = true;
                 $scope.wizard.continue();
@@ -102,7 +134,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             let param = {
                 modelAddress : this.address,             // 索引服务地址
                 validate : 1,                            // 验证结果
-                onLine : this.onLine                   // 环境 默认是host 可选 k8s
+                onLine : this.onLine,                    // 环境 默认是host 可选 k8s
+                dockerRegistry: angular.toJson(this.dockerRegistry)
             }
             $scope.executeAjax(this._saveDataUrl,'POST',param,res => {
                 _self.model_env =  res.env;

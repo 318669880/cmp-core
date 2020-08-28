@@ -2,7 +2,6 @@ package com.fit2cloud.mc.config;
 
 import com.fit2cloud.commons.server.license.DefaultLicenseService;
 import com.fit2cloud.commons.utils.GlobalConfigurations;
-import io.prometheus.client.exporter.PushGateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +25,8 @@ public class CommonConfig {
     private String address;
 
     @Bean
-    public InternalDockerRegistry internalDockerRegistry() {
-        return new InternalDockerRegistry();
+    public DockerRegistry internalDockerRegistry() {
+        return new DockerRegistry();
     }
 
     @EventListener

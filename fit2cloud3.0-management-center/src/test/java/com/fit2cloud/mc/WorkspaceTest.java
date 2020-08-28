@@ -19,6 +19,18 @@ public class WorkspaceTest extends BeforeTest {
 
     @Test
     public void test() {
-        sysStatsService.diskUsage("asdf", 23);
+        String dockerCfg = String.format("{ " +
+                        " \"auths\": { " +
+                        "  \"%s\": { " +
+                        "   \"user\": \"%s\", " +
+                        "   \"passwd\": \"%s\", " +
+                        "  } " +
+                        " } " +
+                        "}",
+                "aa",
+                "bb",
+                "dockerRegistry.getPasswd()"
+        );
+        System.out.println(dockerCfg);
     }
 }

@@ -1,8 +1,11 @@
 CREATE TABLE IF NOT EXISTS `model_manager` (
+  `uuid` varchar(64) NOT NULL,
   `model_address` varchar(255) NOT NULL,
   `on_line` tinyint(1) NOT NULL,
   `env` varchar(100) NOT NULL,
-  `validate` int(10) DEFAULT NULL
+  `docker_registry` longtext CHARACTER SET utf8mb4 COMMENT 'Docker registry 信息',
+  `validate` int(10) DEFAULT NULL,
+  PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS  `model_basic` (

@@ -7,8 +7,7 @@
             <div wizard="wizard" ng-if="show" class="model_class model_content_container">
                 <wizard-step id="1">
                     <md-content flex="100">
-
-                        <div >
+                        <div>
                             <form name="modelFrom" class="md-padding"
                                   cg-busy="{promise:loadingLayer,minDuration:500}">
                                 <md-input-container md-no-float class="md-block"
@@ -18,18 +17,33 @@
                                     <md-switch class="md-primary" aria-label="enable" ng-change="indexServer.changeOnline()" ng-model="indexServer.onLine" ></md-switch>
 
                                 </md-input-container>
+                                <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+                                                    layout-gt-xs="row"
+                                                    style="margin-bottom: 0px" >
+                                    <label>{{'i18n_docker_registry' | translator:'镜像仓库'}}</label>
+                                    <input ng-model="indexServer.dockerRegistry.url" required
+                                           type="text"
+                                           placeholder="{{'i18n_docker_registry' | translator:'镜像仓库'}}">
+                                </md-input-container>
 
-                                <!--<md-input-container class="md-block" layout-gt-xs="row">
-                                    <label>运行环境</label>
-                                    <md-select ng-model="indexServer.model_env" required >
-                                        <md-option ng-value="env.value" ng-repeat="env in envs">
-                                            {{env.name}}
-                                        </md-option>
-                                    </md-select>
-                                    <div ng-messages="modelFrom.parentId.$error">
-                                        <div ng-message="required"> {{'i18n_required' | translator}}</div>
-                                    </div>
-                                </md-input-container>-->
+                                <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+                                                    layout-gt-xs="row"
+                                                    style="margin-bottom: 0px" >
+                                    <label>{{'i18n_docker_registry_user' | translator:'用户名'}}</label>
+                                    <input ng-model="indexServer.dockerRegistry.user" required
+                                           type="text"
+                                           placeholder="{{'i18n_docker_registry_user' | translator:'用户名'}}">
+                                </md-input-container>
+
+                                <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+                                                    layout-gt-xs="row"
+                                                    style="margin-bottom: 0px" >
+                                    <label>{{'i18n_docker_registry_passws' | translator:'密码'}}</label>
+                                    <i id="eye{{$index}}" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view($index)"></i>
+                                    <input   id="password{{$index}}" ng-model="indexServer.dockerRegistry.passwd" required type="password"  name="password"
+                                           placeholder="{{'i18n_docker_registry_passws' | translator:'密码'}}">
+
+                                </md-input-container>
 
                                 <md-input-container ng-show="!!indexServer.onLine" md-no-float class="md-block"
                                                     layout-gt-xs="row"
@@ -257,7 +271,7 @@
                                                     {{'i18n_model_op_stop' | translator:'停止'}}
                                                 </md-button>
                                                 <md-button ng-click="uninstallK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
-                                                    <md-icon class="md-18">stop</md-icon>
+                                                    <md-icon class="md-18">delete_forever</md-icon>
                                                     {{'i18n_model_op_uninstall' | translator:'卸载'}}
                                                 </md-button>
                                             </td>

@@ -160,6 +160,7 @@ public class ModuleNodeService {
      * 只要有一个节点操作是成功的 则认为 模块是成功的
      * @param module
      */
+    /*
     public void modelStatu(String module){
         ModelBasic model = modelManagerService.modelBasicInfo(module);
         Optional.ofNullable(model).ifPresent(modelBasic -> {
@@ -179,7 +180,7 @@ public class ModuleNodeService {
             }
         });
     }
-
+    */
 
 
     public void installNode(String module, String nodeId) throws Exception{

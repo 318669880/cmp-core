@@ -2,13 +2,15 @@ package com.fit2cloud.mc.job;
 
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelNodeBatchMapper;
+import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.model.WsMessage;
 import com.fit2cloud.mc.service.K8sOperatorModuleService;
+import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.service.WsService;
+import com.fit2cloud.mc.strategy.util.ModelManagerUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -30,6 +32,9 @@ public class CheckModuleStatus {
 
     @Resource
     private ModelNodeBatchMapper modelNodeBatchMapper;
+
+    @Resource
+    private ModelManagerService modelManagerService;
 
     @Resource
     private WsService wsService;
@@ -119,19 +124,23 @@ public class CheckModuleStatus {
         return instances.stream().anyMatch(instance -> instance.getUri().toString().indexOf(nodeHost) != -1);
     }
 
+    /**
+     * 从eureka中取出数据 与 redis数据对比 如果有区别 那么 触发websocket消息推送 前段页面刷新
+     */
     private void checkPodsNum(){
+        //这里从缓存中取出数据 否则 跟下面数据完全一样 则不会触发websocket消息推送
         Map<String, List<String>> pods = k8sOperatorModuleService.pods();
-        Map<String, List<ModelNode>> dbNodes = dbNodes();
+        List<ModelBasic> modelInstalls = modelManagerService.modelBasics();
         AtomicBoolean atomicChange = new AtomicBoolean(false);
         Map<String, List<String>> change_pods = new HashMap<>();
-        dbNodes.entrySet().stream().forEach(entry -> {
-            String module = entry.getKey();
-            //List<ModelNode> nodes = entry.getValue();
+        modelInstalls.forEach(model -> {
+            String module = model.getModule();
             List<String> cache_pods = pods.get(module);
             if (CollectionUtils.isEmpty(cache_pods))
                 cache_pods = new ArrayList<>();
             List<String> instances = discoveryClient.getInstances(module).stream().map(ServiceInstance::getHost).collect(Collectors.toList());
-            if(cache_pods.size() == instances.size() && !cache_pods.stream().anyMatch(pod -> !instances.contains(pod))){
+            // 没有发生任何改变
+            if(ModelManagerUtil.sameList(cache_pods,instances,item -> item.toString())){
                 return;
             }
             atomicChange.set(true);
@@ -140,12 +149,9 @@ public class CheckModuleStatus {
         if(atomicChange.get()){
             //发生改变了 需要清楚缓存
             k8sOperatorModuleService.clearCache();
-            moduleNodeService.clearCache();
             //通知前台页面改变podNum
             WsMessage<Map<String, List<String>>> wsMessage = new WsMessage<Map<String, List<String>>>(null,model_node_fresh_topic,change_pods);
             wsService.releaseMessage(wsMessage);
         }
     }
-
-
 }

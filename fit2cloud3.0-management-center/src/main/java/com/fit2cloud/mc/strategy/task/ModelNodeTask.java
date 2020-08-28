@@ -5,6 +5,7 @@ import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
+import com.fit2cloud.mc.job.SyncEurekaServer;
 import com.fit2cloud.mc.model.ModelInstall;
 import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.model.ModelNodeExample;
@@ -13,7 +14,6 @@ import com.fit2cloud.mc.service.ModuleNodeService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EurekaClientConfigBean;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -57,6 +57,7 @@ public class ModelNodeTask {
      * @throws Exception
      */
     public void registerCurrentMc() throws Exception{
+        if (SyncEurekaServer.IS_KUBERNETES) return;
         moduleNodeService.addOrUpdateMcNode(ModuleStatusConstants.running.value());
         syncFromDb();
     }
@@ -94,6 +95,7 @@ public class ModelNodeTask {
      */
     @Scheduled(fixedDelay = 10000,initialDelay = 5000)
     public void joinEurekaCluster(){
+        if (SyncEurekaServer.IS_KUBERNETES) return;
         final String eureka_instance_ip_address = environment.getProperty("eureka.instance.ip-address");
         String host = "http://"+eureka_instance_ip_address+":"+port;
         ModelNodeExample modelNodeExample = new ModelNodeExample();

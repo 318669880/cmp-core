@@ -5,21 +5,15 @@ import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.dto.request.OperatorModuleRequest;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelManager;
-
-import com.fit2cloud.mc.strategy.service.NetFileService;
-
 import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +66,7 @@ public class K8sOperatorModuleService {
         });
     }
 
-//    @Cacheable(value = "k8s-pod-cache" )
+    @Cacheable(value = "k8s-pod-cache" )
     public Map<String, List<String>> pods(){
         Map<String,List<String>> result = new HashMap<>();
         discoveryClient.getServices().forEach(module -> {

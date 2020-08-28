@@ -10,6 +10,8 @@ import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,6 +46,7 @@ public class ModelManagerService {
     @Resource
     private NodeOperateService nodeOperateService;
 
+    @CacheEvict(value = "model-manager-info")
     public ModelManager add(ModelManager modelManager) {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
         modelManagerExample.createCriteria().andModelAddressIsNotNull();
@@ -54,6 +57,8 @@ public class ModelManagerService {
         return modelManager;
     }
 
+    //  运行环境 一旦部署 一般不会发生改变 但查询的频率还是蛮高的 加入redis
+    @Cacheable(value = "model-manager-info")
     public ModelManager select() {
         ModelManagerExample modelManagerExample = new ModelManagerExample();
         modelManagerExample.createCriteria().andModelAddressIsNotNull();
@@ -122,7 +127,9 @@ public class ModelManagerService {
     /**
      * 模块安装
      * @param modelInstalledDto
+     * 删除所有model_baisc_lists中缓存
      */
+    @CacheEvict(value = "model_baisc_lists",allEntries = true)
     public void readyInstallModule(ModelInstalledDto modelInstalledDto, ModelNode node) throws Exception{
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
         String module = modelBasic.getModule();
@@ -144,17 +151,23 @@ public class ModelManagerService {
         modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
         modelVersion.setInstallTime(new Date().getTime());
         modelVersionMapper.insert(modelVersion);
-        if(node == null){
-            nodeOperateService.installOrUpdate(select(), module);
-        }else {
-            eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall", node);
+        ModelManager managerInfo = select();
+        if(managerInfo.getEnv().equals("k8s")){
+            nodeOperateService.installOrUpdate(managerInfo, module);
+            return;
         }
+        eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall", node);
     }
 
 
 
 
-
+    @Cacheable(value = "model_baisc_lists")
+    public List<ModelBasic> modelBasics(){
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleIsNotNull();
+        return modelBasicMapper.selectByExample(example);
+    }
 
 
 }

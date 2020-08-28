@@ -401,7 +401,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 dto.modelVersion = modelVersion
                 return dto;
             });
-            $scope.executeAjax(this._batchInstallUrl,'POST',param, (resp) => {
+            $scope.executeAjax(this._batchInstallUrl+"/-1",'POST',param, (resp) => {
                 opmodel.enable = false;
                 _self.loadData();
             })

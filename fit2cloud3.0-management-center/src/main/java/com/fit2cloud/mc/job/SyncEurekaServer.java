@@ -74,6 +74,7 @@ public class SyncEurekaServer implements ApplicationRunner {
 
     public void init() throws Exception {
         modelNodeTask.registerCurrentMc();//注册自己
+        modelNodeTask.clearRedisCache();
         if (!isKubernetes()) {
             LogUtil.info("Not Kubernetes Deployment.");
             return;

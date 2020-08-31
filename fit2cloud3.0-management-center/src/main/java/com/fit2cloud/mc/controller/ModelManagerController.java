@@ -9,10 +9,7 @@ import com.fit2cloud.mc.common.constants.RuntimeEnvironment;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.dto.request.ModelInstalledRequest;
 import com.fit2cloud.mc.job.SyncEurekaServer;
-import com.fit2cloud.mc.model.ModelBasic;
-import com.fit2cloud.mc.model.ModelInstall;
-import com.fit2cloud.mc.model.ModelManager;
-import com.fit2cloud.mc.model.ModelNode;
+import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.strategy.service.NodeOperateService;
@@ -75,9 +72,15 @@ public class ModelManagerController {
     @PostMapping("/operate/readyInstall/{mcNodeId}")
     public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos, @PathVariable("mcNodeId") String mcNodeId) {
         ModelManager modelManager = modelManagerService.select();
-        String addr = modelManager.getModelAddress();
+
+
         modelInstalledDtos.forEach(modelInstalledDto -> {
             try{
+                String addr = modelManager.getModelAddress();
+                ModelBasic basic = modelInstalledDto.getModelBasic();
+                if(!modelManager.getOnLine()){
+                    addr += "/"+basic.getModule()+"/"+basic.getLastRevision();
+                }
                 String url = modelInstalledDto.getModelVersion().getDownloadUrl();
                 modelInstalledDto.getModelVersion().setDownloadUrl(modelManagerService.prefix(addr,url));
                 String icon = modelInstalledDto.getModelBasic().getIcon();

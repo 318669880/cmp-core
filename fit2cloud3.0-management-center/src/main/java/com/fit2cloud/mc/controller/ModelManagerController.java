@@ -72,15 +72,9 @@ public class ModelManagerController {
     @PostMapping("/operate/readyInstall/{mcNodeId}")
     public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos, @PathVariable("mcNodeId") String mcNodeId) {
         ModelManager modelManager = modelManagerService.select();
-
-
+        String addr = modelManager.getModelAddress();
         modelInstalledDtos.forEach(modelInstalledDto -> {
             try{
-                String addr = modelManager.getModelAddress();
-                ModelBasic basic = modelInstalledDto.getModelBasic();
-                if(!modelManager.getOnLine()){
-                    addr += "/"+basic.getModule()+"/"+basic.getLastRevision();
-                }
                 String url = modelInstalledDto.getModelVersion().getDownloadUrl();
                 modelInstalledDto.getModelVersion().setDownloadUrl(modelManagerService.prefix(addr,url));
                 String icon = modelInstalledDto.getModelBasic().getIcon();

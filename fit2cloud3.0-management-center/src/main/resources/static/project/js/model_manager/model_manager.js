@@ -65,7 +65,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         validateAddress: function(isvalidate) {
             if( !this.onLine ){
                 // this.address = "http://62.234.205.170/nexus/repository/maven-releases/com/fit2cloud";
-                this.address = window.location.origin + "/nexus/repository/maven-releases/com/fit2cloud";
+                this.address = window.location.origin + "/nexus/repository/maven-releases/";
             }
             let _self = this;
             if(!this.address){
@@ -90,7 +90,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             }
             let dataUrl = this.address+"/json/data.js";
             if(!this.onLine){
-                dataUrl = this.address + "/indexserver/3.0/indexserver-3.0.js";
+                dataUrl = this.address + "com/fit2cloud/indexserver/3.0/indexserver-3.0.js";
             }
             $scope.executeAjax(dataUrl,'GET', {remarks: 'query_version_json'}, function(text){
                 try {
@@ -103,11 +103,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                                 let icon = basicModel.icon;
                                 if(icon.indexOf(this.address) == -1){
                                     icon = (this.address.endsWith("/")? this.address : (this.address+"/")) + icon;
-                                    if(!this.onLine){
-                                        let versionInfo = $scope.modelInstaller._lastVersion(basicModel);
-                                        let version = versionInfo.revision;
-                                        icon = (this.address.endsWith("/")? this.address : (this.address+"/")) + basicModel.module+"/"+version+"/"+icon;
-                                    }
                                     basicModel.icon = icon;
                                 }
                             })

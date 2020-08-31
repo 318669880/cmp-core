@@ -198,32 +198,35 @@ public class ModuleUtil {
     }
 
     private static void pullImages(List<String> command, StringBuilder result, List<String> newImageNameList, boolean onLine) throws Exception {
-        LogUtil.info("Pull images" +  newImageNameList);
-        if(!onLine){
-            DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistry.class);
+//        if(!onLine){
+//            DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistry.class);
+//            command.add(docker);
+//            command.add("login");
+//            command.add(dockerRegistry.getUrl());
+//            command.add("-u");
+//            command.add(dockerRegistry.getUser());
+//            command.add("-p");
+//            command.add(dockerRegistry.getPasswd());
+//            execCommand(result, command);
+//            command.clear();
+//            result.setLength(0);
+//        }
+        // 离线环境，需要事先把docker images 导入，这里不做处理
+        if(onLine){
+            LogUtil.info("Pull images" +  newImageNameList);
             command.add(docker);
-            command.add("login");
-            command.add(dockerRegistry.getUrl());
-            command.add("-u");
-            command.add(dockerRegistry.getUser());
-            command.add("-p");
-            command.add(dockerRegistry.getPasswd());
-            execCommand(result, command);
+            command.add("pull");
+            command.addAll(newImageNameList);
+            int pullExitCode = execCommand(result, command);
             command.clear();
+            if(pullExitCode != 0){
+                LogUtil.error("Result of pull images: " + result.toString());
+                throw new Exception("Filed to pull images, " + result.toString());
+            }else {
+                LogUtil.info("Result of pull images: " + result.toString());
+            }
             result.setLength(0);
         }
-        command.add(docker);
-        command.add("pull");
-        command.addAll(newImageNameList);
-        int pullExitCode = execCommand(result, command);
-        command.clear();
-        if(pullExitCode != 0){
-            LogUtil.error("Result of pull images: " + result.toString());
-            throw new Exception("Filed to pull images, " + result.toString());
-        }else {
-            LogUtil.info("Result of pull images: " + result.toString());
-        }
-        result.setLength(0);
     }
 
     private static void execScripts(List<String> command, StringBuilder result, String scipt) throws Exception {

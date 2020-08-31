@@ -24,11 +24,6 @@ public class CommonConfig {
     @Value("${prometheus.push-gateway.host}")
     private String address;
 
-    @Bean
-    public DockerRegistry internalDockerRegistry() {
-        return new DockerRegistry();
-    }
-
     @EventListener
     public void initLicense(ContextRefreshedEvent event) {
         if (GlobalConfigurations.isReleaseMode()) {

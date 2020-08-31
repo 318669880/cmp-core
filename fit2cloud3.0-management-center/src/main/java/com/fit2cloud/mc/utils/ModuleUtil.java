@@ -58,7 +58,8 @@ public class ModuleUtil {
         checkFileExist(extensionTmpDir,  dockerComposeFile);
 
         if(!onLine){
-            handleWithInternalDockerRegistry(extensionTmpDir);
+            // 离线环境，需要事先把docker images 导入，这里不做处理
+//            handleWithInternalDockerRegistry(extensionTmpDir);
         }
 
         List<String> newModuleNameList = new ArrayList<>();
@@ -119,7 +120,8 @@ public class ModuleUtil {
 
         pullImages(command, result, newImageNameList, onLine);
 
-        startService(command, result, newModuleNameList, fit2cloudModuleDir);
+//        安装时，不启动
+//        startService(command, result, newModuleNameList, fit2cloudModuleDir);
 
         deleteFile(command, result, tmp_dir);
     }
@@ -156,8 +158,8 @@ public class ModuleUtil {
         command.clear();
     }
 
-    private static void startService(List<String> command, StringBuilder result, List<String> newModuleNameList, String fit2cloudModuleDir) throws Exception {
-        LogUtil.info("Begin start new application " +  newModuleNameList);
+    private static void startService(List<String> command, StringBuilder result, List<String> moduleNameList, String fit2cloudModuleDir) throws Exception {
+        LogUtil.info("Begin start application " +  moduleNameList);
         command.add(docker_compose);
         command.add("-f");
         command.add(workDir + File.separatorChar + dockerComposeFile);
@@ -166,19 +168,19 @@ public class ModuleUtil {
         command.add("up");
         command.add("--no-recreate");
         command.add("-d");
-        command.addAll(newModuleNameList);
+        command.addAll(moduleNameList);
         int starCode = execCommand(result, command);
         if(starCode != 0){
-            LogUtil.error("Start new application failed: " + result.toString());
-            throw new Exception("Start new application failed: " + result.toString());
+            LogUtil.error("Start application failed: " + result.toString());
+            throw new Exception("Start application failed: " + result.toString());
         }else {
-            LogUtil.info("Success to Start new application: " + result.toString());
+            LogUtil.info("Success to Start application: " + result.toString());
         }
         result.setLength(0);
     }
 
     private static void stopService(List<String> command, StringBuilder result, String fit2cloudModuleDir, List<String> moduleNameList) throws Exception {
-        LogUtil.info("Begin stop old application " +  moduleNameList);
+        LogUtil.info("Begin stop application " +  moduleNameList);
         command.add(docker_compose);
         command.add( "-f");
         command.add(workDir + File.separator + dockerComposeFile);
@@ -189,15 +191,16 @@ public class ModuleUtil {
         command.addAll(moduleNameList);
         int stopExitCode = execCommand(result, command);
         if(stopExitCode != 0){
-            LogUtil.error("Stop old application failed: " + result.toString());
-            throw new Exception("Stop old application failed: " + result.toString());
+            LogUtil.error("Stop application failed: " + result.toString());
+            throw new Exception("Stop application failed: " + result.toString());
         }else {
-            LogUtil.info("Success to stop old application: " + result.toString());
+            LogUtil.info("Success to stop application: " + result.toString());
         }
         result.setLength(0);
     }
 
     private static void pullImages(List<String> command, StringBuilder result, List<String> newImageNameList, boolean onLine) throws Exception {
+//        离线环境，需要预先把docker images 导入，这里不做处理
 //        if(!onLine){
 //            DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistry.class);
 //            command.add(docker);
@@ -211,7 +214,6 @@ public class ModuleUtil {
 //            command.clear();
 //            result.setLength(0);
 //        }
-        // 离线环境，需要事先把docker images 导入，这里不做处理
         if(onLine){
             LogUtil.info("Pull images" +  newImageNameList);
             command.add(docker);
@@ -244,12 +246,17 @@ public class ModuleUtil {
         result.setLength(0);
     }
 
-    private static void copyFile(List<String> command, StringBuilder result, String extentionTmpConfFolder, String fit2cloudModuleDirConf) throws Exception {
-        LogUtil.info("Copy file from {} to {}", extentionTmpConfFolder, fit2cloudModuleDirConf);
+    private static void copyFile(List<String> command, StringBuilder result, String src, String dest) throws Exception {
+        command.add("rm");
+        command.add("-rf");
+        execCommand(result, command);
+        result.setLength(0);
+        command.clear();
+        LogUtil.info("Copy file from {} to {}", src, dest);
         command.add("cp");
         command.add("-r");
-        command.add(extentionTmpConfFolder);
-        command.add(fit2cloudModuleDirConf);
+        command.add(src);
+        command.add(dest);
         execCommand(result, command);
         command.clear();
         result.setLength(0);

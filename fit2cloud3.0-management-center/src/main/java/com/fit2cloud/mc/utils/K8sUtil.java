@@ -37,10 +37,10 @@ public class K8sUtil {
         String chartsDir = tmp_dir + "/helm-charts/";
         String templatesDir = "templates/";
 
-        if(checkServiceExist(serviceName, command, result)){
-            uninstallService(serviceName);
-        }
-        result.setLength(0);
+//        if(checkServiceExist(serviceName, command, result)){
+//            uninstallService(serviceName);
+//        }
+//        result.setLength(0);
         try{
             uncompress(moduleFileName, tmp_dir);
         }catch (Exception e) {
@@ -52,8 +52,9 @@ public class K8sUtil {
 
         LogUtil.info("Begin install service " +  serviceName);
         command.add(helm);
-        command.add("install");
+        command.add("upgrade");
         command.add(serviceName);
+        command.add("--install");
         if(!modelManager.getOnLine()){
             //离线环境下，需要根据docker 仓库信息，替换镜像的前缀
             DockerRegistry dockerRegistry =  new Gson().fromJson(modelManager.getDockerRegistry(), DockerRegistry.class);
@@ -128,7 +129,7 @@ public class K8sUtil {
 
     public static void createOrReplaceSeccet(DockerRegistry dockerRegistry){
         if(StringUtils.isEmpty(dockerRegistry.getUrl()) || StringUtils.isEmpty(dockerRegistry.getUser()) || StringUtils.isEmpty(dockerRegistry.getPasswd())){
-            F2CException.throwException("Docker Registry info is ncomplete.");
+            F2CException.throwException("Docker Registry info is incomplete.");
         }
         KubernetesClient client = new DefaultKubernetesClient();
         Base64.Encoder encoder = Base64.getEncoder();

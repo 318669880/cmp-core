@@ -51,7 +51,7 @@ public class ModelManagerService {
 
     @CacheEvict(value = "model-manager-info")
     public ModelManager add(ModelManager modelManager) {
-        if(SyncEurekaServer.IS_KUBERNETES){
+        if(SyncEurekaServer.IS_KUBERNETES && !modelManager.getOnLine()){
             K8sUtil.createOrReplaceSeccet(new Gson().fromJson(modelManager.getDockerRegistry(), DockerRegistry.class));
         }
         ModelManagerExample modelManagerExample = new ModelManagerExample();

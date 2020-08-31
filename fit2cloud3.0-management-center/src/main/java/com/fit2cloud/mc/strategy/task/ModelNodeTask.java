@@ -3,6 +3,7 @@ package com.fit2cloud.mc.strategy.task;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.UUIDUtil;
+import com.fit2cloud.mc.common.constants.BusinessCacheConstants;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
 import com.fit2cloud.mc.job.SyncEurekaServer;
@@ -12,10 +13,12 @@ import com.fit2cloud.mc.model.ModelNodeExample;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.eureka.EurekaClientConfigBean;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -50,6 +53,9 @@ public class ModelNodeTask {
     @Resource
     private ModelManagerService modelManagerService;
 
+    @Resource
+    private RedisTemplate redisTemplate;
+
 
 
     /**
@@ -61,6 +67,22 @@ public class ModelNodeTask {
         moduleNodeService.addOrUpdateMcNode(ModuleStatusConstants.running.value());
         syncFromDb();
     }
+
+
+    public void clearRedisCache(String ... cacheNames){
+        List<BusinessCacheConstants> values = Arrays.asList(BusinessCacheConstants.values());
+        if(!ObjectUtils.isEmpty(cacheNames) &&  cacheNames.length > 0){
+            List<String> cacheNameList = Arrays.asList(cacheNames);
+            values = values.stream().filter(value -> cacheNameList.contains(value)).collect(Collectors.toList());
+        }
+        values.forEach(value -> {
+            String prefix = value.getCacheName()+"::*";
+            Set keys = redisTemplate.keys(prefix);
+            redisTemplate.delete(keys);
+        });
+    }
+
+
 
     /**
      * 从数据库中同步其他节点已经预安装的模块

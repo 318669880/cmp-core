@@ -1,6 +1,5 @@
 package com.fit2cloud.mc.strategy.service;
 
-import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.model.ModelManager;
 
 /**
@@ -14,11 +13,11 @@ import com.fit2cloud.mc.model.ModelManager;
  */
 public interface NodeOperateService {
     //安装
-    public void installOrUpdate(ModelManager managerInfo, String module) throws Exception;
+    public void installOrUpdate(ModelManager managerInfo, String module, String nodeId) throws Exception;
     //卸载
     public void unInstall(ModelManager managerInfo,String modeule) throws Exception;
     //启动
-    public void start(ModelManager managerInfo,String modeule) throws Exception;
+    public void start(ModelManager managerInfo,String modeule ,String nodeId) throws Exception;
     //停止
-    public void stop(ModelManager managerInfo,String modeule) throws Exception;
+    public void stop(ModelManager managerInfo,String modeule,String nodeId) throws Exception;
 }

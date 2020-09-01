@@ -3,7 +3,8 @@ ProjectApp.controller('SystemLogController', function ($scope, $mdDialog, HttpUt
     sessionStorage.removeItem("ModuleToLogParam");
     $scope.accountToLogParam = angular.fromJson(sessionStorage.getItem("AccountToLogParam"));
     sessionStorage.removeItem("AccountToLogParam");
-
+    $scope.levelToLogParam = angular.fromJson(sessionStorage.getItem("LevelToLogParam"));
+    sessionStorage.removeItem("LevelToLogParam");
     $scope.conditions = [
         {
             key: "module",
@@ -33,6 +34,12 @@ ProjectApp.controller('SystemLogController', function ($scope, $mdDialog, HttpUt
             label: $scope.moduleToLogParam.label,
             value: $scope.moduleToLogParam.value
         }];
+        !!$scope.levelToLogParam && !!$scope.levelToLogParam.value && $scope.filters.push({
+            key: "level",
+            name: Translator.get("i18n_log_level"),
+            label: $scope.levelToLogParam.label,
+            value: $scope.levelToLogParam.value
+        });
     }
 
     if ($scope.accountToLogParam) {

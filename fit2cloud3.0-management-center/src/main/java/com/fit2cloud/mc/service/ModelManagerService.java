@@ -183,7 +183,7 @@ public class ModelManagerService {
         modelVersionMapper.insert(modelVersion);
         ModelManager managerInfo = select();
         if(managerInfo.getEnv().equals("k8s")){
-            nodeOperateService.installOrUpdate(managerInfo, module);
+            nodeOperateService.installOrUpdate(managerInfo, module, null);
             return;
         }
         eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall", node);

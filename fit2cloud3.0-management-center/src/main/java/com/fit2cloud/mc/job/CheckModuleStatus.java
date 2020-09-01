@@ -89,13 +89,14 @@ public class CheckModuleStatus {
     }
 
     private List<ModelNode> off_line_node(List<ModelNode> nodes){
-        // 找到running状态的节点 且 状态改为stoppped
-        nodes = nodes.stream().filter(node ->
-                StringUtils.equals(node.getNodeStatus(), ModuleStatusConstants.running.value()))
-                .map(item -> {
-                    item.setNodeStatus(ModuleStatusConstants.stopped.value());
-                    return item;
-                }).collect(Collectors.toList());
+        // 找到running或者installing状态的节点 且 状态改为stoppped
+        List<String> status = new ArrayList<>();
+        status.add(ModuleStatusConstants.running.value());
+        status.add(ModuleStatusConstants.installing.value());
+        nodes = nodes.stream().filter(node -> status.contains(node.getNodeStatus())).map(item -> {
+            item.setNodeStatus(ModuleStatusConstants.stopped.value());
+            return item;
+        }).collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(nodes)){
             modelNodeBatchMapper.batchUpdate(nodes);
             //wsServer.sendMessage();

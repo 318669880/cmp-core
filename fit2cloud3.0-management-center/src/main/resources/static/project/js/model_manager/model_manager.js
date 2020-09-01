@@ -367,13 +367,14 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 $scope.showWarn('i18n_model_check_no',"请至少选择一个模块！");
                 return;
             }
-            nodeId = nodeId || "-1";
-            let callBackMethod = function(){
-                $scope.closeInformation();
-                _self.loadData();
-            };
-            $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/"+nodeId, param, callBackMethod,callBackMethod);
-
+            Notification.confirm(Translator.get("i18n_model_install_confirm"),  () => {
+                nodeId = nodeId || "-1";
+                let callBackMethod = function(){
+                    $scope.closeInformation();
+                    _self.loadData();
+                };
+                $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/"+nodeId, param, callBackMethod,callBackMethod);
+            });
         },
 
         // 加载可更新数据
@@ -923,7 +924,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
 });
 
-ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils, Translator) {
+ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils, Translator, $state) {
 
     $scope.columns = [
         {value: Translator.get("i18n_model_node_field_node"), key: "nodeHost", sort: false},
@@ -934,14 +935,12 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
     $scope.list = function () {
         if(!$scope.model_name || !$scope.current_module) return;
         let url = "modelManager/node/" + $scope.current_module;
-        HttpUtils.paging($scope,  url, resp => {
-            if($scope.is_mc) {
-                /*let sourceModule = $scope.sourceItem.module;
-                let nodes = $scope.installableItems.filter(item => item.module === sourceModule)
-                $scope.items.forEach(item => {
-
-                })*/
-            }
+        $scope.formatModuleStatus();
+        HttpUtils.paging($scope,  url, {}, resp => {
+            $scope.items.forEach(item => {
+                item.showLog = !$scope.is_mc && item.nodeStatus.indexOf("Faild") != -1;
+                item.showStart = !$scope.is_mc && (item.nodeStatus == 'stopped' || item.nodeStatus == 'startFaild');
+            })
         })
     };
     $scope.list();
@@ -967,6 +966,19 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
             $scope.list();
         });
     };
+    $scope.showErrorLog = function(item) {
+        sessionStorage.setItem("ModuleToLogParam", angular.toJson({
+                label: '管理中心',
+                value: 'management-center'
+            }
+        ));
+        sessionStorage.setItem("LevelToLogParam", angular.toJson({
+                label: 'ERROR',
+                value: 'ERROR'
+            }
+        ));
+        $state.go("log/system")
+    }
 
 });
 

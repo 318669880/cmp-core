@@ -36,13 +36,6 @@ public class ModuleNodeService {
     private ModelNodeMapper modelNodeMapper;
 
     @Resource
-    private ModelBasicMapper modelBasicMapper;
-
-    @Resource
-    private ModelManagerService modelManagerService;
-
-
-    @Resource
     private Environment environment;
 
     @Resource
@@ -155,33 +148,6 @@ public class ModuleNodeService {
         return "http://"+_ip+":"+port;
     }
 
-    /**
-     * 根据各个模块节点的状态设置模块状态
-     * 只要有一个节点操作是成功的 则认为 模块是成功的
-     * @param module
-     */
-    /*
-    public void modelStatu(String module){
-        ModelBasic model = modelManagerService.modelBasicInfo(module);
-        Optional.ofNullable(model).ifPresent(modelBasic -> {
-            List<ModelNode> modelNodes = queryNodes(module);
-
-            AtomicReference<String> atomicReference = new AtomicReference<>(null);
-            modelNodes.stream().anyMatch(node -> {
-                atomicReference.set(node.getNodeStatus());
-                return !node.getNodeStatus().endsWith("Faild");
-            });
-            if(modelNodes.stream().anyMatch(node -> node.getNodeStatus().equals(ModuleStatusConstants.running.value()))){
-                atomicReference.set(ModuleStatusConstants.running.value());
-            }
-            if(ObjectUtils.isNotEmpty(modelBasic)){
-                modelBasic.setCurrentStatus(atomicReference.get());
-                modelBasicMapper.updateByPrimaryKey(modelBasic);
-            }
-        });
-    }
-    */
-
 
     public void installNode(String module, String nodeId) throws Exception{
         ModelNode modelNode = nodeInfo(nodeId);
@@ -194,14 +160,6 @@ public class ModuleNodeService {
             addOrUpdateModelNode(modelNode);
             F2CException.throwException(e);
         }
-        /*if(ModuleStatusConstants.installing.value().equals(modelNode.getNodeStatus()))
-        moduleDelayTaskManager.addTask(90000,param -> {
-            try {
-                eurekaCheckService.checkModuleStatus((ModelStatusParam)param);
-            } catch (Exception e) {
-                F2CException.throwException(e);
-            }
-        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.installing));*/
     }
 
     public void startNode(String module, String nodeId) throws Exception {
@@ -215,15 +173,6 @@ public class ModuleNodeService {
             addOrUpdateModelNode(modelNode);
             F2CException.throwException(e);
         }
-
-        /*if (ModuleStatusConstants.startting.value().equals(modelNode.getNodeStatus()))
-        moduleDelayTaskManager.addTask(90000,param -> {
-            try {
-                eurekaCheckService.checkModuleStatus((ModelStatusParam)param);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.startting));*/
     }
 
     public void stopNode(String module, String nodeId) throws Exception {
@@ -237,15 +186,6 @@ public class ModuleNodeService {
             addOrUpdateModelNode(modelNode);
             F2CException.throwException(e);
         }
-
-        /*if (ModuleStatusConstants.stopping.value().equals(modelNode.getNodeStatus()))
-        moduleDelayTaskManager.addTask(90000,param -> {
-            try {
-                eurekaCheckService.checkModuleStatus((ModelStatusParam)param);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        },new ModelStatusParam(modelNode,module,ModuleStatusConstants.stopping));*/
     }
 
 

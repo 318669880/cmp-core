@@ -121,8 +121,8 @@ public class CheckModuleStatus {
     private boolean is_node_available(ModelNode node){
         List<ServiceInstance> instances = discoveryClient.getInstances(node.getModelBasicUuid());
         if(CollectionUtils.isEmpty(instances)) return false;
-        String nodeHost = node.getNodeHost();
-        return instances.stream().anyMatch(instance -> instance.getUri().toString().indexOf(nodeHost) != -1);
+        String nodeIp = node.getNodeIp();
+        return instances.stream().anyMatch(instance -> instance.getUri().toString().indexOf(nodeIp) != -1);
     }
 
     /**

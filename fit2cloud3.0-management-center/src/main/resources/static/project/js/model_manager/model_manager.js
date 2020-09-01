@@ -512,7 +512,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 return arr[0] != 0;
             });
             if(!param || param.length===0){
-                Notification.warn("！");
                 $scope.showWarn('i18n_model_check_no_start','请至少选择一个启动状态的模块');
                 return;
             }
@@ -584,10 +583,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     }
     ModelNodeWs.prototype = {
         initialize: function () {
-            /*let pre = window.location.origin.indexOf("https") !=-1 ? "https" : "http";
-            this.ws_url = window.location.origin.replace(pre,"ws");
-            this.ws_url += "/websocket";*/
-            this.ws_url = window.location.origin+"/websocket";
+            this.ws_url = window.location.origin+"/management-center/websocket";
             this.connect();
         },
         connect: function () {

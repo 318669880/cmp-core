@@ -85,8 +85,7 @@ public class K8sUtil {
         }
         result.setLength(0);
         ModuleParamData moduleParamData = new ModuleParamData();
-        List<String> deployments = new ArrayList<>();
-        moduleParamData.setDeployment(filterDeployments(deployments, chartsDir + templatesDir));
+        filterDeployments(moduleParamData, chartsDir + templatesDir);
         return moduleParamData;
     }
 
@@ -117,13 +116,8 @@ public class K8sUtil {
         moduleParamData.getDeployment().forEach(deployment -> {
             client.apps().deployments().withName(deployment).scale(podNumber);
         });
-    }
-
-    public static void stopService(String serviceName, ModuleParamData moduleParamData){
-        KubernetesClient client = new DefaultKubernetesClient();
-        moduleParamData.getDeployment().forEach(deployment -> {
-            Integer podNumber = 0;
-            client.apps().deployments().withName(deployment).scale(podNumber);
+        moduleParamData.getStatefulset().forEach(statefulset -> {
+            client.apps().statefulSets().withName(statefulset).scale(podNumber);
         });
     }
 
@@ -151,25 +145,23 @@ public class K8sUtil {
         client.secrets().createOrReplace(registrySecret);
     }
 
-    private static List<String> filterDeployments(List<String> deployments , String path) throws Exception{
+    public static void filterDeployments(ModuleParamData moduleParamData , String path) throws Exception{
         File rootFile = new File(path);
         if (rootFile.exists()) {
             File[] files = rootFile.listFiles();
             if (null != files) {
                 for (File file : files) {
                     if (!file.isDirectory() && file.getName().endsWith("yaml")) {
-                        deployments.addAll(filterDeployments(file));
+                        filterDeployments(moduleParamData, file);
                     } else {
-                        filterDeployments(deployments, file.getAbsolutePath());
+                        filterDeployments(moduleParamData, file.getAbsolutePath());
                     }
                 }
             }
         }
-        return deployments;
     }
 
-    private static List<String> filterDeployments(File valueYamlFile) throws Exception{
-        List<String> deployments = new ArrayList<>();
+    private static void filterDeployments(ModuleParamData moduleParamData, File valueYamlFile) throws Exception{
         BufferedReader bufferedReader = new BufferedReader(new FileReader(valueYamlFile));
         String line;
         while ((line = bufferedReader.readLine()) != null){
@@ -177,13 +169,20 @@ public class K8sUtil {
                 if((line = bufferedReader.readLine()) != null && line.contains("metadata")){
                     if((line = bufferedReader.readLine()) != null && line.contains("name:")){
                         String deployment = line.replace("name:", "").replace(" ", "");
-                        deployments.add(deployment);
+                        moduleParamData.addDeployment(deployment);
+                    }
+                }
+            }
+            if(line.contains("kind:") && line.contains("StatefulSet")){
+                if((line = bufferedReader.readLine()) != null && line.contains("metadata")){
+                    if((line = bufferedReader.readLine()) != null && line.contains("name:")){
+                        String statefulSet = line.replace("name:", "").replace(" ", "");
+                        moduleParamData.addStatefulset(statefulSet);
                     }
                 }
             }
             if(line == null) break;
         }
-        return deployments;
     }
 
     private static String handleOffLineImagePrefix(DockerRegistry dockerRegistry, String originalImagePrefix) throws Exception{

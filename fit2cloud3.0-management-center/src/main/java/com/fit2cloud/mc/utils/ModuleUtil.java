@@ -138,8 +138,9 @@ public class ModuleUtil {
             F2CException.throwException(e);
         }
 
-//        安装时，不启动
-//        startService(command, result, newModuleNameList, fit2cloudModuleDir);
+        if(action.equalsIgnoreCase(moduleActionUpdate)){
+            startService(command, result, newModuleNameList, fit2cloudModuleDir);
+        }
 
         deleteFile(command, result, tmp_dir);
     }

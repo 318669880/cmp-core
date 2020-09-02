@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.service;
 
+import com.fit2cloud.commons.utils.CommonThreadPool;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.dto.request.OperatorModuleRequest;
@@ -25,6 +26,8 @@ public class K8sOperatorModuleService {
     private ModelManagerService modelManagerService;
     @Resource
     private DiscoveryClient discoveryClient;
+    @Resource
+    private CommonThreadPool commonThreadPool;
 
     public void start(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
         Map<String, Object> params = operatorModuleRequest.getParams() == null ? new HashMap<String, Object>() : operatorModuleRequest.getParams();
@@ -42,20 +45,21 @@ public class K8sOperatorModuleService {
     }
 
     private void actionModules(String action, ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
+        Integer podNumber = Integer.valueOf(operatorModuleRequest.getParams().get("pod_number").toString());
         operatorModuleRequest.getModules().forEach(module -> {
-            try{
-                LogUtil.info("Begin to {} module: " + module, action);
-                Integer podNumber = Integer.valueOf(operatorModuleRequest.getParams().get("pod_number").toString());
-                modelManagerService.updateModelBasicPodNum(module, podNumber);
-                ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
-                K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
-                LogUtil.info("End of {} module: " + module, action);
-            }catch (Exception e){
-                LogUtil.error("Faild to {} module: {}" + module, action,  e);
-            }
+            commonThreadPool.addTask(() ->{
+                try{
+                    LogUtil.info("Begin to {} module: " + module, action);
+                    modelManagerService.updateModelBasicPodNum(module, podNumber);
+                    ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
+                    K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
+                    LogUtil.info("End of {} module: " + module, action);
+                }catch (Exception e){
+                    LogUtil.error("Faild to {} module: {}" + module, action,  e);
+                }
+            });
         });
     }
-
 
     public void uninstall(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
         operatorModuleRequest.getModules().forEach(module -> {

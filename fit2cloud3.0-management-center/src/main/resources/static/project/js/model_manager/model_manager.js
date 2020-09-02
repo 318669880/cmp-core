@@ -1,4 +1,3 @@
-
 ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $document, $mdBottomSheet, HttpUtils, FilterSearch, Notification, $interval, AuthService, $state, $filter,Translator, eyeService, ProhibitPrompts) {
     $scope._localData = {};
     $scope._eurekaData = {};
@@ -615,31 +614,18 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             //console.log("Disconnected");
         },
         parseHostMessage: function (obj) {
-            // 如果obj为true那么刷新数据
-            //!!obj && $scope.modelInstaller.loadData();
-            let changeData = obj;
-            /*angular.forEach(changeData, (nodes ,module) => {
-                if(!$scope._nodeData[module]) return;
-                let nodeMaps = {};
-                nodes.forEach(node => {
-                    nodeMaps[node.nodeHost] = node;
-                })
-                $scope._nodeData[module].forEach((_currentNode,index) => {
-                    if (!!nodeMaps[_currentNode.nodeHost]) {
-                        $scope._nodeData[module][index].nodeStatus = nodeMaps[_currentNode.nodeHost].nodeStatus;
-                    }
-                })
-            })
-            $scope.fillNodeData(true);*/
+
             $scope.formatModuleStatus();
+            if(!!$scope.selected ){
+                $scope.$broadcast('onNodeRefresh', 'true');
+            }
         },
         parseK8sMessage: function (obj) {
             let changeData = obj;
-            /*angular.forEach(changeData,(pods, module) => {
-                $scope._eurekaData[module] = pods;
-            });
-            $scope.fillEurekaData();*/
             $scope.formatModuleStatus();
+            if(!!$scope.selected ){
+                $scope.$broadcast('onNodeRefresh', 'true');
+            }
         }
     };
 
@@ -938,6 +924,20 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
         {value: Translator.get("i18n_model_node_field_create_time"), key: "nodeCreateTime", sort: false},
     ];
 
+    $scope.classMap = {
+        running: 'status-button-success',
+        installFaild: 'status-button-error',
+        startFaild: 'status-button-error',
+        stopped: 'status-button-error',
+        installing: 'status-button-running',
+        startting: 'status-button-running',
+        stopping: 'status-button-running',
+        stopFaild: 'status-button-error'
+    }
+
+
+
+
     $scope.list = function () {
         if(!$scope.model_name || !$scope.current_module) return;
         let url = "modelManager/node/" + $scope.current_module;
@@ -946,6 +946,8 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
             $scope.items.forEach(item => {
                 item.showLog = !$scope.is_mc && item.nodeStatus.indexOf("Faild") != -1;
                 item.showStart = !$scope.is_mc && (item.nodeStatus == 'stopped' || item.nodeStatus == 'startFaild');
+                item.buttonClass = $scope.classMap[item.nodeStatus] || $scope.classMap['stopped'];
+                item.loading = (item.nodeStatus.indexOf("ing") != -1 ) && item.nodeStatus != 'running';
             })
         })
     };
@@ -986,6 +988,9 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
         $state.go("log/system")
     }
 
+    $scope.$on('onNodeRefresh',(evt,args) => {
+        $scope.list();
+    })
 });
 
 

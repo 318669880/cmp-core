@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.utils;
 
+import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.config.DockerRegistry;
@@ -118,7 +119,12 @@ public class ModuleUtil {
             copyFile(command, result, extentionTmpConfFolder, fit2cloudModuleDir + "conf/");
         }
 
-        pullImages(command, result, newImageNameList, onLine);
+        try {
+            pullImages(command, result, newImageNameList, onLine);
+        }catch (Exception e ){
+            LogUtil.error("Failed to pull images, ", e);
+            F2CException.throwException(e);
+        }
 
 //        安装时，不启动
 //        startService(command, result, newModuleNameList, fit2cloudModuleDir);
@@ -174,7 +180,7 @@ public class ModuleUtil {
             LogUtil.error("Start application failed: " + result.toString());
             throw new Exception("Start application failed: " + result.toString());
         }else {
-            LogUtil.info("Success to Start application: " + result.toString());
+            LogUtil.info("Success to Start application: " + moduleNameList, result.toString());
         }
         result.setLength(0);
     }
@@ -216,17 +222,17 @@ public class ModuleUtil {
 //        }
         if(onLine){
             LogUtil.info("Pull images" +  newImageNameList);
-            command.add(docker);
-            command.add("pull");
-            command.addAll(newImageNameList);
-            int pullExitCode = execCommand(result, command);
-            command.clear();
-            if(pullExitCode != 0){
-                LogUtil.error("Result of pull images: " + result.toString());
-                throw new Exception("Filed to pull images, " + result.toString());
-            }else {
-                LogUtil.info("Result of pull images: " + result.toString());
+            for (String image : newImageNameList) {
+                command.add(docker);
+                command.add("pull");
+                command.add(image);
+                int pullExitCode = execCommand(result, command);
+                command.clear();
+                if(pullExitCode != 0){
+                    throw new Exception("Filed to pull image, " + image);
+                }
             }
+            LogUtil.info("Result of pull images: " + result.toString());
             result.setLength(0);
         }
     }

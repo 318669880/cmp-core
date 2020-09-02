@@ -174,11 +174,8 @@ public class K8sUtil {
         String line;
         while ((line = bufferedReader.readLine()) != null){
             if(line.contains("kind:") && line.contains("Deployment")){
-                LogUtil.info(line);
                 if((line = bufferedReader.readLine()) != null && line.contains("metadata")){
-                    LogUtil.info(line);
                     if((line = bufferedReader.readLine()) != null && line.contains("name:")){
-                        LogUtil.info(line);
                         String deployment = line.replace("name:", "").replace(" ", "");
                         deployments.add(deployment);
                     }

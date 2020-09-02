@@ -2,6 +2,7 @@ package com.fit2cloud.mc.strategy.strategy;
 
 import com.fit2cloud.commons.server.dcslock.annotation.DcsLock;
 import com.fit2cloud.commons.server.exception.F2CException;
+import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.strategy.service.ModelOperateStrategy;
 import com.fit2cloud.mc.utils.ModuleUtil;
@@ -17,13 +18,14 @@ import java.util.Map;
  * 单机docker-compose操作模块
  */
 @Service("host")
-public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
+public class HostModelOpTemplateImp implements ModelOperateStrategy {
 
     @Override
     public void executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params) throws Exception{
         try{
             ModuleUtil.installOrUpdateModule(module, filePath, modelManager.getOnLine());
         }catch (Exception e){
+            LogUtil.error("Failed to install module: " + module, e);
             F2CException.throwException(e);
         }
     }
@@ -38,6 +40,7 @@ public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
             // 执行命令后等待50s 因为模块启动是一个过程
             Thread.sleep(50000);
         } catch (Exception e) {
+            LogUtil.error("Failed to start module: " + modeule, e);
             F2CException.throwException(e);
         }
     }
@@ -47,6 +50,7 @@ public class SingleVimModelOpTemplateImp implements ModelOperateStrategy {
         try {
             ModuleUtil.stopService(modeule);
         } catch (Exception e) {
+            LogUtil.error("Failed to stop module: " + modeule, e);
             F2CException.throwException(e);
         }
     }

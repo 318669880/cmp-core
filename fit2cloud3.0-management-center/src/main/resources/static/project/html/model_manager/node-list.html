@@ -12,13 +12,26 @@
     <table dynamic-table columns="columns">
         <tbody>
         <tr ng-repeat="item in items">
-            <td>{{item.nodeHost}}</td>
-            <td ng-if="!item.showLog">{{item.nodeStatus}}</td>
+            <td ng-if="!item.showLog">{{item.nodeHost}}</td>
+            <td ng-if="item.showLog">
+                <a class="md-primary" style="cursor:pointer" href="" ng-click="showErrorLog(item)">
+                    {{item.nodeHost}}
+                </a>
+            </td>
+
+            <td>
+                <button class="status-button " ng-class="item.buttonClass">
+                    <i ng-if="item.loading" class="fas fa-sync-alt fa-spin" aria-hidden="true"></i>
+                    {{'i18n_model_status_'+item.nodeStatus | translator:''}}
+                </button>
+            </td>
+
+            <!--<td ng-if="!item.showLog">{{item.nodeStatus}}</td>
             <td ng-if="item.showLog">
                 <a class="md-primary" style="cursor:pointer" href="" ng-click="showErrorLog(item)">
                 {{item.nodeStatus}}
                 </a>
-            </td>
+            </td>-->
             <td>{{item.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>
 
             <td>

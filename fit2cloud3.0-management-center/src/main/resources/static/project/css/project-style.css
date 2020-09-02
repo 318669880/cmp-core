@@ -456,3 +456,30 @@ span.auto-break {
     max-height: 41px!important;
 }
 
+
+.status-button {
+    color: #FFF;
+    padding: 1px 5px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 2px;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.status-button-error {
+    background-color: #FF521B;
+}
+
+.status-button-success {
+    background-color: #8FB143;
+}
+
+.status-button-running {
+    background-color: #095DB1;
+}
+

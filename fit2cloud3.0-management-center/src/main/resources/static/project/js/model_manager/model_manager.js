@@ -374,7 +374,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                     $scope.closeInformation();
                     _self.loadData();
                 };
-                $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/"+nodeId, param, callBackMethod,callBackMethod);
+                $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/"+nodeId+"/add", param, callBackMethod,callBackMethod);
             });
         },
 
@@ -444,12 +444,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 return;
             }
             Notification.confirm(Translator.get("i18n_model_update_confirm"),  () => {
-                nodeId = nodeId || "-1";
+
                 let callBackMethod = function(){
                     $scope.closeInformation();
                     _self.loadData();
                 };
-                $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/"+nodeId, param, callBackMethod,callBackMethod);
+                $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/-1/update", param, callBackMethod,callBackMethod);
             });
             opmodel.enable = false;
         },

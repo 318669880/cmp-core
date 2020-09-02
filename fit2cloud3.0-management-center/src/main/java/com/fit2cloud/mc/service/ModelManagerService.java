@@ -162,7 +162,7 @@ public class ModelManagerService {
      * 删除所有model_baisc_lists中缓存
      */
     @CacheEvict(value = "model_baisc_lists",allEntries = true)
-    public void readyInstallModule(ModelInstalledDto modelInstalledDto, ModelNode node) throws Exception{
+    public void readyInstallModule(ModelInstalledDto modelInstalledDto, ModelNode node, boolean isUpdate) throws Exception{
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
         String module = modelBasic.getModule();
         ModelVersion modelVersion = modelInstalledDto.getModelVersion();
@@ -189,7 +189,11 @@ public class ModelManagerService {
             nodeOperateService.installOrUpdate(managerInfo, module, null);
             return;
         }
-        eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall", node);
+        if (!isUpdate){
+            eurekaInstanceMonitor.execute(module, null, "/modelNode/readyInstall", node);
+            return;
+        }
+        eurekaInstanceMonitor.execute(module, null, "/modelNode/readyUpdate", node);
     }
 
 

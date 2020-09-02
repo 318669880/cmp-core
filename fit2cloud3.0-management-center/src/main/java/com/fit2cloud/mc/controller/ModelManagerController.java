@@ -69,8 +69,8 @@ public class ModelManagerController {
         return modelManagerService.installInfoquery();
     }
 
-    @PostMapping("/operate/readyInstall/{mcNodeId}")
-    public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos, @PathVariable("mcNodeId") String mcNodeId) {
+    @PostMapping("/operate/readyInstall/{mcNodeId}/{type}")
+    public void modelInstall(@RequestBody List<ModelInstalledDto> modelInstalledDtos, @PathVariable("mcNodeId") String mcNodeId ,@PathVariable("type") String type) {
         ModelManager modelManager = modelManagerService.select();
         String addr = modelManager.getModelAddress();
         modelInstalledDtos.forEach(modelInstalledDto -> {
@@ -79,7 +79,7 @@ public class ModelManagerController {
                 modelInstalledDto.getModelVersion().setDownloadUrl(modelManagerService.prefix(addr,url));
                 String icon = modelInstalledDto.getModelBasic().getIcon();
                 modelInstalledDto.getModelBasic().setIcon(modelManagerService.prefix(addr,icon));
-                modelManagerService.readyInstallModule(modelInstalledDto, StringUtils.equals("-1",mcNodeId) ? null : moduleNodeService.nodeInfo(mcNodeId));
+                modelManagerService.readyInstallModule(modelInstalledDto, StringUtils.equals("-1",mcNodeId) ? null : moduleNodeService.nodeInfo(mcNodeId), StringUtils.equals("update",type));
             }catch (Exception e){
                 F2CException.throwException(e);
             }

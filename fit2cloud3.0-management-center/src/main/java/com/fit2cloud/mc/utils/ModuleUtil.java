@@ -40,6 +40,18 @@ public class ModuleUtil {
         stopService(new ArrayList<>(), new StringBuilder(), extensionDir + moduleName + File.separator, moduleNameList);
     }
 
+    public static void deleteService(String moduleName)throws Exception{
+        checkFileExist(extensionDir + moduleName + File.separator,  dockerComposeFile);
+        List<String> moduleNameList = new ArrayList<>();
+        filterModuleInDockerCompose(extensionDir + moduleName + File.separator + dockerComposeFile, moduleNameList, new ArrayList<>());
+        stopService(new ArrayList<>(), new StringBuilder(), extensionDir + moduleName + File.separator, moduleNameList);
+        List<String> command = new ArrayList<String>();
+        StringBuilder result = new StringBuilder();
+        command.add("rm");
+        command.add("-rf");
+        command.add(extensionDir + moduleName);
+        execCommand(result, command);
+    }
 
     public static void installOrUpdateModule(String moduleName, String moduleFileName, boolean onLine) throws Exception {
         List<String> command = new ArrayList<String>();

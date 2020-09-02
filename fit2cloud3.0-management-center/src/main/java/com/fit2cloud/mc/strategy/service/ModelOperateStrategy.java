@@ -20,4 +20,5 @@ public interface ModelOperateStrategy {
     public void executeStart(String modeule)throws Exception;
 
     public void executeStop(String modeule)throws Exception;
+
 }

@@ -25,12 +25,12 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
     @DcsLock
     @Override
     public void executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params)throws Exception {
-        if(ObjectUtils.isEmpty(params) || !params.containsKey("pod_number")){
-            F2CException.throwException("Pod number can not be empty! ");
-        }
-        Integer podNum = Integer.valueOf(params.get("pod_number").toString());
-        modelManagerService.updateModelBasicPodNum(module, podNum);
         try{
+            if(ObjectUtils.isEmpty(params) || !params.containsKey("pod_number")){
+                F2CException.throwException("Pod number can not be empty! ");
+            }
+            Integer podNum = Integer.valueOf(params.get("pod_number").toString());
+            modelManagerService.updateModelBasicPodNum(module, podNum);
             ModuleParamData moduleParamData = K8sUtil.installOrUpdateModule(module, filePath, modelManager, params);
             modelManagerService.updateModelBasicCustomData(module, moduleParamData);
         }catch (Exception e){
@@ -55,7 +55,5 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
     public void executeDelete(String modeule) {
 
     }
-
-
 
 }

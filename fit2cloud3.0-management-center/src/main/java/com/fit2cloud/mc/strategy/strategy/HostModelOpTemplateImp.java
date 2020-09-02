@@ -57,6 +57,12 @@ public class HostModelOpTemplateImp implements ModelOperateStrategy {
 
     @Override
     public void executeDelete(String modeule) {
-
+        try {
+            ModuleUtil.deleteService(modeule);
+        } catch (Exception e) {
+            LogUtil.error("Failed to delete module: " + modeule, e);
+            F2CException.throwException(e);
+        }
     }
+
 }

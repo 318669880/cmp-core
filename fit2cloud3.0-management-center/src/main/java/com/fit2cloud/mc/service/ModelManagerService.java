@@ -171,7 +171,7 @@ public class ModelManagerService {
             ModelBasic temp = modelBasics.get(0);
             modelBasic.setModelUuid(temp.getModelUuid());
             //modelBasic.setCurrentStatus("updating");//设置状态为更新中。。。
-            modelBasicMapper.updateByPrimaryKey(modelBasic);
+            modelBasicMapper.updateByPrimaryKeySelective(modelBasic);
         }else{
             modelBasic.setModelUuid(UUIDUtil.newUUID());
             //modelBasic.setCurrentStatus("installing");//设置状态为安装中。。。

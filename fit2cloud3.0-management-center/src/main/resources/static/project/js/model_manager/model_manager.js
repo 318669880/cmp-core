@@ -64,7 +64,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
         validateAddress: function(isvalidate) {
             if( !this.onLine ){
-                // this.address = "http://62.234.205.170/nexus/repository/maven-releases/com/fit2cloud";
+                //this.address = "http://62.234.205.170/nexus/repository/maven-releases/";
                 this.address = window.location.origin + "/nexus/repository/maven-releases/";
             }
             let _self = this;
@@ -137,9 +137,10 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             let param = {
                 modelAddress : this.address,             // 索引服务地址
                 validate : 1,                            // 验证结果
-                onLine : this.onLine,                    // 环境 默认是host 可选 k8s
-                dockerRegistry: angular.toJson(this.dockerRegistry)
+                onLine : this.onLine                     // 环境 默认是host 可选 k8s
+
             }
+            !!this.dockerRegistry && angular.extend(param,{dockerRegistry: angular.toJson(this.dockerRegistry)});
             $scope.executeAjax(this._saveDataUrl,'POST',param,res => {
                 _self.model_env =  res.env;
                 _self._init_address = res.address;
@@ -592,6 +593,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     ModelNodeWs.prototype = {
         initialize: function () {
             this.ws_url = window.location.origin+"/management-center/websocket";
+            //this.ws_url = window.location.origin+"/websocket";
             this.connect();
         },
         connect: function () {

@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.service;
 
+import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.RuntimeEnvironment;
 import com.fit2cloud.mc.config.DockerRegistry;
@@ -49,7 +50,7 @@ public class ModelManagerService {
     @Resource
     private NodeOperateService nodeOperateService;
 
-    @CacheEvict(value = "model-manager-info")
+    @CacheEvict(value = "model-manager-info",allEntries = true)
     public ModelManager add(ModelManager modelManager) {
         if(SyncEurekaServer.IS_KUBERNETES && !modelManager.getOnLine()){
             K8sUtil.createOrReplaceSeccet(new Gson().fromJson(modelManager.getDockerRegistry(), DockerRegistry.class));
@@ -72,7 +73,8 @@ public class ModelManagerService {
     }
 
     public ModelManager queryModelManager(){
-        ModelManager modelManager = select();
+        ModelManagerService proxy = CommonBeanFactory.getBean(ModelManagerService.class);
+        ModelManager modelManager = proxy.select();
         if(modelManager == null){
             modelManager = new ModelManager();
             if (SyncEurekaServer.IS_KUBERNETES) {
@@ -181,7 +183,8 @@ public class ModelManagerService {
         modelVersion.setModelVersionUuid(UUIDUtil.newUUID());
         modelVersion.setInstallTime(new Date().getTime());
         modelVersionMapper.insert(modelVersion);
-        ModelManager managerInfo = select();
+        ModelManagerService proxy = CommonBeanFactory.getBean(ModelManagerService.class);
+        ModelManager managerInfo = proxy.select();
         if(managerInfo.getEnv().equals("k8s")){
             nodeOperateService.installOrUpdate(managerInfo, module, null);
             return;

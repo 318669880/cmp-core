@@ -438,10 +438,18 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 dto.modelVersion = modelVersion
                 return dto;
             });
-            $scope.executeAjax(this._batchInstallUrl+"/-1",'POST',param, (resp) => {
-                opmodel.enable = false;
-                _self.loadData();
-            })
+            if (param.length == 0 ){
+                $scope.showWarn('i18n_model_check_no',"请至少选择一个模块！");
+                return;
+            }
+            Notification.confirm(Translator.get("i18n_model_update_confirm"),  () => {
+                nodeId = nodeId || "-1";
+                let callBackMethod = function(){
+                    $scope.closeInformation();
+                    _self.loadData();
+                };
+                $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/"+nodeId, param, callBackMethod,callBackMethod);
+            });
             opmodel.enable = false;
         },
 

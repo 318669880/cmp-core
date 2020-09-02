@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.job;
 
+import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelNodeBatchMapper;
 import com.fit2cloud.mc.model.ModelBasic;
@@ -98,8 +99,14 @@ public class CheckModuleStatus {
             return item;
         }).collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(nodes)){
-            modelNodeBatchMapper.batchUpdate(nodes);
-            //wsServer.sendMessage();
+            //modelNodeBatchMapper.batchUpdate(nodes);
+            nodes.forEach(node -> {
+                try{
+                    moduleNodeService.addOrUpdateModelNode(node);
+                }catch (Exception e){
+                    LogUtil.error(e);
+                }
+            });
         }
         return nodes;
     }
@@ -112,7 +119,13 @@ public class CheckModuleStatus {
                     return item;
                 }).collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(nodes)){
-            modelNodeBatchMapper.batchUpdate(nodes);
+            nodes.forEach(node -> {
+                try{
+                    moduleNodeService.addOrUpdateModelNode(node);
+                }catch (Exception e){
+                    LogUtil.error(e);
+                }
+            });
         }
         return nodes;
     }

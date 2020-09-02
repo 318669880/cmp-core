@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.service;
 
+import com.fit2cloud.commons.server.dcslock.annotation.DcsLock;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
@@ -93,6 +94,7 @@ public class ModuleNodeService {
      * 新增或修改模块节点状态
      *
      */
+    @DcsLock
     @CacheEvict(value = "host-nodes-cache",allEntries = true)
     public void addOrUpdateModelNode (ModelNode node) throws Exception{
         String mc_hostName = domain_host();

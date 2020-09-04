@@ -1,35 +1,35 @@
 CREATE TABLE IF NOT EXISTS `model_manager` (
-  `uuid` varchar(64) NOT NULL,
-  `model_address` varchar(255) NOT NULL,
-  `on_line` tinyint(1) NOT NULL,
-  `env` varchar(100) NOT NULL,
+  `uuid` varchar(64) NOT NULL COMMENT '模块环境唯一标识',
+  `model_address` varchar(255) NOT NULL COMMENT '索引服务域名',
+  `on_line` tinyint(1) NOT NULL COMMENT '是否在线服务',
+  `env` varchar(100) NOT NULL COMMENT '运行环境',
   `docker_registry` longtext CHARACTER SET utf8mb4 COMMENT 'Docker registry 信息',
-  `validate` int(10) DEFAULT NULL,
+  `validate` int(10) DEFAULT NULL COMMENT '验证结果',
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS  `model_basic` (
-  `model_uuid` varchar(64) NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `icon` varchar(255) DEFAULT NULL,
-  `last_revision` varchar(50) DEFAULT NULL,
-  `module` varchar(255) DEFAULT NULL,
-  `overview` varchar(255) DEFAULT NULL,
-  `summary` varchar(255) DEFAULT NULL,
-  `current_status` varchar(50) DEFAULT NULL,
-  `pod_num` int(2) DEFAULT 0,
+  `model_uuid` varchar(64) NOT NULL COMMENT '模块唯一标识',
+  `name` varchar(100) DEFAULT NULL COMMENT '模块名称',
+  `icon` varchar(255) DEFAULT NULL COMMENT '模块图标',
+  `last_revision` varchar(50) DEFAULT NULL COMMENT '安装版本',
+  `module` varchar(255) DEFAULT NULL COMMENT '模块',
+  `overview` varchar(255) DEFAULT NULL COMMENT '概诉',
+  `summary` varchar(255) DEFAULT NULL COMMENT '总结',
+  `current_status` varchar(50) DEFAULT NULL COMMENT '当前状态',
+  `pod_num` int(2) DEFAULT 0 COMMENT 'k8s环境pod数量',
   `custom_data` longtext CHARACTER SET utf8mb4 COMMENT '部署信息',
   PRIMARY KEY (`model_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `model_version` (
-  `model_version_uuid` varchar(64) NOT NULL,
-  `created` bigint(13) DEFAULT NULL,
-  `desctiption` varchar(255) DEFAULT NULL,
-  `download_url` varchar(255) NOT NULL,
-  `revision` varchar(10) NOT NULL,
-  `model_basic_uuid` varchar(64) NOT NULL,
-  `install_time` bigint(13) NOT NULL,
+  `model_version_uuid` varchar(64) NOT NULL COMMENT '模块版本唯一标识',
+  `created` bigint(13) DEFAULT NULL COMMENT '创建时间',
+  `desctiption` varchar(255) DEFAULT NULL COMMENT '描述',
+  `download_url` varchar(255) NOT NULL COMMENT '模块下载地址',
+  `revision` varchar(10) NOT NULL COMMENT '模块版本',
+  `model_basic_uuid` varchar(64) NOT NULL COMMENT '所属模块',
+  `install_time` bigint(13) NOT NULL COMMENT '安装时间',
   PRIMARY KEY (`model_version_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

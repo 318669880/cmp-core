@@ -4,31 +4,31 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class ModelBasic implements Serializable {
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "模块唯一标识", required = true)
     private String modelUuid;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("模块名称")
     private String name;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("模块图标")
     private String icon;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("安装版本")
     private String lastRevision;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("模块")
     private String module;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("概诉")
     private String overview;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("总结")
     private String summary;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("当前状态")
     private String currentStatus;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("k8s环境pod数量")
     private Integer podNum;
 
     @ApiModelProperty("部署信息")

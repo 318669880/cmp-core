@@ -4,25 +4,25 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class ModelVersion implements Serializable {
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "模块版本唯一标识", required = true)
     private String modelVersionUuid;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("创建时间")
     private Long created;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("描述")
     private String desctiption;
 
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "模块下载地址", required = true)
     private String downloadUrl;
 
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "模块版本", required = true)
     private String revision;
 
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "所属模块", required = true)
     private String modelBasicUuid;
 
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "安装时间", required = true)
     private Long installTime;
 
     /**

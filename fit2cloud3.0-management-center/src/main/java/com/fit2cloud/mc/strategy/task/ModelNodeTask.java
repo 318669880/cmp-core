@@ -6,12 +6,14 @@ import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.BusinessCacheConstants;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
+import com.fit2cloud.mc.dto.ModuleParamData;
+import com.fit2cloud.mc.dto.request.OperatorModuleRequest;
 import com.fit2cloud.mc.job.SyncEurekaServer;
-import com.fit2cloud.mc.model.ModelInstall;
-import com.fit2cloud.mc.model.ModelNode;
-import com.fit2cloud.mc.model.ModelNodeExample;
+import com.fit2cloud.mc.model.*;
+import com.fit2cloud.mc.service.K8sOperatorModuleService;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
+import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,6 +58,9 @@ public class ModelNodeTask {
     @Resource
     private RedisTemplate redisTemplate;
 
+    @Resource
+    private K8sOperatorModuleService k8sOperatorModuleService;
+
 
 
     /**
@@ -63,9 +68,13 @@ public class ModelNodeTask {
      * @throws Exception
      */
     public void registerCurrentMc() throws Exception{
-        if (SyncEurekaServer.IS_KUBERNETES) return;
+        if (SyncEurekaServer.IS_KUBERNETES) {
+            chainK8sStart();//关联启动下属所有子模块
+            return;
+        }
         moduleNodeService.addOrUpdateMcNode(ModuleStatusConstants.running.value());
         syncFromDb();
+        chainStart();//关联启动下属所有子模块
     }
 
 
@@ -183,5 +192,44 @@ public class ModelNodeTask {
             }
         }
         return true;
+    }
+
+    /**
+     * 连锁启动
+     * 当mc模块启动时 mc下属所有子模块跟着启动
+     */
+    private void chainStart() {
+        ModelNode mcNode = moduleNodeService.currentMcNode();
+        Optional.ofNullable(mcNode.getModelNodeUuid()).ifPresent(nodeId -> {
+            ModelNodeExample example = new ModelNodeExample();
+            example.createCriteria().andMcNodeUuidEqualTo(nodeId);
+            List<ModelNode> modelNodes = modelNodeMapper.selectByExample(example);
+            if (CollectionUtils.isEmpty(modelNodes)) return;
+            modelNodes.forEach(node -> {
+                try {
+                    moduleNodeService.startNode(node.getModelBasicUuid(), node.getModelNodeUuid());
+                } catch (Exception e) {
+                    LogUtil.error(e.getMessage() ,e);
+                }
+            });
+        });
+    }
+    private void chainK8sStart() {
+        List<ModelBasic> modelInstalls = modelManagerService.modelBasics();
+        modelInstalls.forEach(modelBasic -> {
+            String module = modelBasic.getModule();
+            if (!StringUtils.equals("management-center" ,module)){
+                ModelManager manager = modelManagerService.select();
+                List<String> modules = new ArrayList<String>(){{add(module);}};
+                Map<String,Object> params = new HashMap<>();
+                Integer podNum = modelBasic.getPodNum();
+                if (ObjectUtils.isEmpty(podNum) || podNum==0){
+                    podNum = 1;
+                }
+                params.put("pod_number",podNum);
+                OperatorModuleRequest request = new OperatorModuleRequest(){{setModules(modules);setParams(params);}};
+                k8sOperatorModuleService.start(manager, request);
+            }
+        });
     }
 }

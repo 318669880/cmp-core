@@ -19,13 +19,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         this.initialize.apply(this , arguments);
     };
 
-    $scope.view = function (index) {
-
-        eyeService.view('#password' + index, '#eye' + index);
+    $scope.view = function () {
+        eyeService.view("#password", "#eye");
     };
+
     IndexServer.prototype = {
         initialize: function () {
-
         },
 
         loadData: function() {

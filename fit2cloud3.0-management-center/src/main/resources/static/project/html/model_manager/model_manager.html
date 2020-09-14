@@ -39,8 +39,8 @@
                                                     layout-gt-xs="row"
                                                     style="margin-bottom: 0px" >
                                     <label>{{'i18n_docker_registry_passws' | translator:'密码'}}</label>
-                                    <i id="eye{{$index}}" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view($index)"></i>
-                                    <input   id="password{{$index}}" ng-model="indexServer.dockerRegistry.passwd" required type="password"  name="password"
+                                    <i layout-gt-xs id="eye" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('password','eye')"></i>
+                                    <input   id="password" ng-model="indexServer.dockerRegistry.passwd" required type="password"  name="password"
                                            placeholder="{{'i18n_docker_registry_passws' | translator:'密码'}}">
 
                                 </md-input-container>

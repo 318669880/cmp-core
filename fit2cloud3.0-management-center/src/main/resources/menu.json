@@ -51,7 +51,7 @@
           "title": "i18n_menu_organization",
           "name": "organization",
           "url": "/organization",
-          "templateUrl": "project/html/organization/organization-list.html",
+          "templateUrl": "project/html/organization/organization-tree-list.html",
           "requiredPermissions": [
             {
               "role": "ADMIN",

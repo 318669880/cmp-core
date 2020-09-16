@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.OrgTreeMapper">
+
+
+    <resultMap id="OrgTreeNodeResult" type="com.fit2cloud.commons.server.model.OrgTreeNode">
+        <result column="node_id" jdbcType="BIGINT" property="nodeId"/>
+        <result column="node_name" jdbcType="VARCHAR" property="nodeName"/>
+        <result column="node_type" jdbcType="VARCHAR" property="nodeType"/>
+        <result column="relative_num" jdbcType="TINYINT" property="relativeNum"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+
+    <select id="nodes" resultMap="com.fit2cloud.commons.server.base.mapper.OrgTreeMapper.OrgTreeNodeResult">
+        (SELECT
+        id as node_id,
+        name as node_name,
+        'org' as node_type,
+        0 as relative_num,
+        description,
+        pid as parent_id,
+        create_time
+        FROM organization o ORDER BY create_time ASC )
+        <if test="!excludeWs">
+        UNION ALL
+        (SELECT
+        id as node_id,
+        name as node_name,
+        'wks' as node_type,
+        0 as relative_num,
+        description,
+        organization_id as parent_id,
+        create_time
+        FROM workspace w ORDER BY create_time ASC )
+        </if>
+    </select>
+
+
+
+</mapper>

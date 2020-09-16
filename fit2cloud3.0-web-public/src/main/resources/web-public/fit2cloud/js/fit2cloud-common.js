@@ -1741,7 +1741,74 @@
             }
         };
     });
+
+    F2CModule.directive("treeTable", function () {
+        return {
+            restrict: 'E',
+            templateUrl: "web-public/fit2cloud/html/table/tree-table.html" + '?_t=' + window.appversion,
+            scope: {
+                tBTitles: "=",
+                treeDatas: "=",
+                treeUrl: "=",
+                idName: "=",
+                pidName: "=",
+                where: "="
+            },
+            link: function ($scope, element, attr, ctrl) {
+
+                $scope.init = function () {
+                    let options = $scope.buildTbOptions();
+                    layui.config({
+                        base: 'web-public/external/layui/extend/'
+                    }).use([ 'treeTable'], () => {
+                        let treeTable = layui.treeTable;
+                        let insTb = treeTable.render(options);
+                    })
+                };
+
+                $scope.buildTbOptions = (treeTable) => {
+                    let options = {};
+                    options.elem = "#_treeTableTb_";
+                    options.cols = $scope.tBTitles;
+                    options.defaultToolbar = ['filter', 'print', 'exports', {
+                        title: '提示',
+                        layEvent: 'LAYTABLE_TIPS',
+                        icon: 'layui-icon-tips'
+                    }];
+                    options.tree = {
+                        iconIndex: 2,
+                        isPidData: true,
+                        idName: $scope.idName,
+                        pidName: $scope.pidName
+                    };
+                    if ($scope.treeDatas && $scope.treeDatas.length > 0){
+                        options.data = treeDatas;
+                    }
+                    if ($scope.treeUrl) {
+                        options.url = $scope.treeUrl;
+                    }
+                    //options.toolbar = 'default';
+                    options.height = 'full-200';
+                    options.style = 'margin-top:0;';
+                    options.method = "post";
+                    options.where = $scope.where
+                    options.contentType = "application/json";
+                    options.parseData = (res) => {
+                        return {
+                            code: 0,
+                            msg: res.message,
+                            count: res.data.length,
+                            data: res.data
+                        }
+                    }
+                    return options;
+                };
+                $scope.init();
+            }
+        };
+    });
 })();
+
 
 /**
  * 综合搜索框,Filter,Search

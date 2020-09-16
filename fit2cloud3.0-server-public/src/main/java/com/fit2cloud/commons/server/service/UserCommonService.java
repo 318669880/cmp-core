@@ -1,10 +1,7 @@
 package com.fit2cloud.commons.server.service;
 
 import com.fit2cloud.commons.server.base.domain.*;
-import com.fit2cloud.commons.server.base.mapper.OrganizationMapper;
-import com.fit2cloud.commons.server.base.mapper.RoleMapper;
-import com.fit2cloud.commons.server.base.mapper.UserMapper;
-import com.fit2cloud.commons.server.base.mapper.UserRoleMapper;
+import com.fit2cloud.commons.server.base.mapper.*;
 import com.fit2cloud.commons.server.base.mapper.ext.ExtUserRoleMapper;
 import com.fit2cloud.commons.server.constants.I18nConstants;
 import com.fit2cloud.commons.server.constants.ParamConstants;
@@ -12,6 +9,7 @@ import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.constants.WebConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
+import com.fit2cloud.commons.server.model.OrgTreeNode;
 import com.fit2cloud.commons.server.model.UserDTO;
 import com.fit2cloud.commons.server.model.UserRoleDTO;
 import com.fit2cloud.commons.server.model.UserRoleHelpDTO;
@@ -21,6 +19,7 @@ import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.EncryptUtils;
 import com.fit2cloud.commons.utils.GlobalConfigurations;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -374,5 +373,19 @@ public class UserCommonService {
         userExample.createCriteria().andIdIn(ids);
         return userMapper.selectByExample(userExample);
     }
+
+
+    @Resource
+    private OrgTreeMapper orgTreeMapper;
+
+    public List<OrgTreeNode> orgTreeNodeList(String rootId, boolean excludeWs){
+        List<OrgTreeNode> nodes = orgTreeMapper.nodes(!!excludeWs);
+
+        if (ObjectUtils.isNotEmpty(rootId)){
+
+        }
+        return nodes;
+    }
+
 
 }

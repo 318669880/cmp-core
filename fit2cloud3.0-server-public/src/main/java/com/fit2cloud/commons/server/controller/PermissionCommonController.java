@@ -5,6 +5,8 @@ import com.fit2cloud.commons.server.constants.WebConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.handle.annotation.I18n;
 import com.fit2cloud.commons.server.i18n.Translator;
+import com.fit2cloud.commons.server.model.OrgTreeNode;
+import com.fit2cloud.commons.server.model.OrgTreeQueryDto;
 import com.fit2cloud.commons.server.model.UserRoleDTO;
 import com.fit2cloud.commons.server.security.SsoSessionHandler;
 import com.fit2cloud.commons.server.service.UserCommonService;
@@ -13,13 +15,12 @@ import com.fit2cloud.commons.server.utils.RoleUtils;
 import com.fit2cloud.commons.server.utils.SessionUtils;
 import com.fit2cloud.commons.utils.GlobalConfigurations;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -64,5 +65,10 @@ public class PermissionCommonController {
         }
     }
 
+    @ApiOperation("组织结构树")
+    @PostMapping("orgtree")
+    public List<OrgTreeNode> orgTree(@RequestBody OrgTreeQueryDto orgTreeQueryDto){
+        return userCommonService.orgTreeNodeList(orgTreeQueryDto.getRootId(), orgTreeQueryDto.getExcludeWs());
+    }
 
 }

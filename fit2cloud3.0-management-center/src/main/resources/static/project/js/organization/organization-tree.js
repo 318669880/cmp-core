@@ -1,4 +1,4 @@
-ProjectApp.controller('OrganizationTreeController', function ($scope, HttpUtils, FilterSearch, $http, Notification, operationArr, $state, Translator) {
+ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, HttpUtils, FilterSearch, $http, Notification, operationArr, $state, Translator) {
     $scope.cols = [
         [
             {type: 'numbers'},
@@ -8,11 +8,12 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, HttpUtils,
                 title: '菜单图标', align: 'center', hide: true,
                 templet: '<p><i class="layui-icon {{d.menuIcon}}"></i></p>'
             },
-            {field: 'relativeNum', title: '相关人员'},
-            {title: '类型', templet: '<p>{{d.nodeType==org?"组织机构":"工作空间"}}</p>', align: 'center', width: 60},
+            {field: 'relativeNum', title: '相关人员', width: 50},
+            {title: '类型', templet: '<p>{{d.nodeType=="org" ? "组织机构" : "工作空间"}}</p>', align: 'center', width: 60},
             {
                 title: '创建时间', templet: function (d) {
-                    return d.createTime;
+                    /*return $filter('date')(d.createTime,'yyyy-MM-dd hh:mm:ss');*/
+                    return $filter('date')(d.createTime,'yyyy-MM-dd');
                 }
             },
             {field: 'description', title: '描述', minWidth: 105},
@@ -108,7 +109,7 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, HttpUtils,
     $scope.list();
 
     $scope.create = function () {
-        $scope.formUrl = 'project/html/organization/organization-add.html' + '?_t=' + Math.random();
+        $scope.formUrl = 'project/html/organization/organization-tree-add.html' + '?_t=' + Math.random();
         $scope.toggleForm();
     };
 
@@ -121,6 +122,7 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, HttpUtils,
 
     $scope.submit = function (type, data) {
         if (type === 'add') {
+            data.pid = $scope.organizationId;
             HttpUtils.post("organization/add", data, function () {
                 $scope.list();
                 Notification.success(Translator.get("i18n_mc_create_success"));
@@ -167,7 +169,6 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, HttpUtils,
         ));
         $state.go("workspace")
     };
-
     $scope.linkOrgAdmin = function (item) {
         if ($scope.selected === item.$$hashKey) {
             $scope.closeInformation();
@@ -184,6 +185,22 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, HttpUtils,
         $scope.selected = "";
         $scope.toggleInfoForm(false);
     };
+    $scope.ts_url = "user/orgtreeselect";
+    $scope.ts_param = {excludeWs: true};
+    $scope.method = "post";
+    $scope.organizationId = null;
+    $scope.ts_changed = (values) => {
+        $scope.organizationId = (!!values && values.length > 0) ? values[0] : null;
+    };
+
+    $scope.start = (e) => {
+        angular.element('#_treeSelectTs_').parent().addClass("md-input-focused");
+    };
+    $scope.end = (e) => {
+        angular.element('#_treeSelectTs_').parent().removeClass("md-input-focused");
+        angular.element('#_treeSelectTs_').parent().addClass(!!$scope.organizationId ? "md-input-has-value" : "md-input-invalid");
+    };
+
 });
 
 ProjectApp.controller('OrganizationLinkWorkspaceController', function ($scope, HttpUtils, Translator) {

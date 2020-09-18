@@ -71,4 +71,10 @@ public class PermissionCommonController {
         return userCommonService.orgTreeNodeList(orgTreeQueryDto.getRootId(), orgTreeQueryDto.getExcludeWs());
     }
 
+    @ApiOperation("组织结构下拉树")
+    @PostMapping("orgtreeselect")
+    public List<OrgTreeNode> orgTreeWithoutWs(@RequestBody OrgTreeQueryDto orgTreeQueryDto){
+        return userCommonService.orgTreeSelect(orgTreeQueryDto.getRootId(), orgTreeQueryDto.getExcludeWs());
+    }
+
 }

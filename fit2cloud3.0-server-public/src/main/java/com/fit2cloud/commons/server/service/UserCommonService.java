@@ -380,12 +380,54 @@ public class UserCommonService {
 
     public List<OrgTreeNode> orgTreeNodeList(String rootId, boolean excludeWs){
         List<OrgTreeNode> nodes = orgTreeMapper.nodes(!!excludeWs);
-
+        List<Map<String,Object>> nums = orgTreeMapper.relativeNum();
         if (ObjectUtils.isNotEmpty(rootId)){
-
+            //这里需要过滤
         }
+        if (CollectionUtils.isEmpty(nums)) return nodes;
+
+        //设置relativeNums
+        Map<String, List<Map<String, Object>>> numDataMap = nums.stream().collect(Collectors.groupingBy(num -> num.get("source_id").toString()));
+        nodes.forEach(node -> {
+            String nodeType = StringUtils.equalsIgnoreCase(node.getNodeType(),"org") ? RoleConstants.Id.ORGADMIN.name(): RoleConstants.Id.USER.name();
+            List<Map<String, Object>> nodeNums = numDataMap.get(node.getNodeId());
+            boolean existNums = !CollectionUtils.isEmpty(nodeNums) && nodeNums.stream().anyMatch(num -> {
+                node.setRelativeNum(Integer.parseInt(num.get("nums").toString()));
+                return StringUtils.equals(num.get("role_type").toString(), nodeType);
+            });
+            if(!existNums)
+                node.setRelativeNum(0);
+        });
         return nodes;
     }
 
 
+    /**
+     * 根据List格式化为树结构
+     * 时间复杂度为o(n平方)
+     * @param lists
+     * @return
+     */
+    private List<OrgTreeNode> formatRoot(List<OrgTreeNode> lists) {
+        List<OrgTreeNode> rootNodes = new ArrayList<>();
+        lists.forEach(node -> {
+            if (StringUtils.isEmpty(node.getParentId())) {
+                rootNodes.add(node);
+            }
+            lists.forEach(tNode -> {
+                if(StringUtils.equals(tNode.getParentId(), node.getNodeId())){
+                    if (node.getChildNodes() == null){
+                        node.setChildNodes(new ArrayList<OrgTreeNode>());
+                    }
+                    //tNode.setParentNode(node);
+                    node.getChildNodes().add(tNode);
+                }
+            });
+        });
+        return rootNodes;
+    }
+
+    public List<OrgTreeNode> orgTreeSelect (String rootId, boolean excludeWs) {
+        return formatRoot(orgTreeNodeList(rootId, excludeWs));
+    }
 }

@@ -1807,6 +1807,132 @@
             }
         };
     });
+
+    F2CModule.directive("treeSelect", function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree-select.html" + '?_t=' + window.appversion,
+            scope: {
+                tsUrl: "=",
+                where: "=",
+                innerStyle: "=",
+                onSelect: "=",
+                onSuccess: "=",
+                type : "=",
+                start: "=",
+                end: "=",
+                changed: "=",
+                single: "="
+            },
+            link: function ($scope, element, attr, ctrl) {
+
+                $scope.init = function () {
+                    let options = $scope.buildTsOptions();
+                    layui.config({
+                        base: 'web-public/external/layui/extend/'
+                    }).extend({
+                        zTreeSelectM: 'zTreeSelectM/zTreeSelectM'
+                    }).use([ 'zTreeSelectM'], () => {
+                        let treeSelect = layui.zTreeSelectM;
+                        let _treeSelect = treeSelect(options);
+                    })
+                };
+
+                $scope.buildTsOptions = (treeSelect) => {
+                    let options = {};
+                    options.elem = "#_treeSelectTs_";
+                    options.data = options.data = $scope.tsUrl;
+                    options.type = $scope.type || "get";
+                    options.search = true;
+                    options.style = {
+                        folder: {
+                            enable: true
+                        },
+                        line: {
+                            enable: true
+                        }
+                    }
+                    options.zTreeSetting = { //zTree设置
+                        check: {
+                            enable: true,
+                            chkboxType: { "Y": "", "N": "" }
+                        },
+                        data: {
+                            simpleData: {
+                                enable: false
+                            },
+                            key: {
+                                name: 'name',
+                                children: 'children'
+                            }
+                        }
+
+                    }
+                    options.click = (d) => {
+                        $scope.onClick && $scope.onClick(d);
+                    };
+                    options.success = (d) => {
+                        $scope.onSuccess && $scope.onSuccess(d);
+                    };
+
+                    options.where = !!$scope.where? JSON.stringify($scope.where) : null;
+
+                    $scope.start && (options.start = $scope.start);
+                    $scope.end && (options.end = $scope.end);
+                    options.changed = $scope.changed;
+                    options.single = $scope.single;
+                    options.parseData = (res) => {
+                        let result = $scope.formatResult(res.data);
+                        return result;
+                    }
+
+                    return options;
+                };
+
+                $scope.formatResult = (rootNodes) => {
+                    let treeNodes = [];
+                    rootNodes.forEach((node) => {
+                        let treeNode =  new TreeNode(node.nodeId, node.nodeName);
+                        if (!node.childNodes || node.childNodes.length == 0){
+                            treeNodes.push(treeNode);
+                            return true;
+                        }
+                        treeNode.setChildren($scope.formatResult(node.childNodes));
+                        treeNodes.push(treeNode);
+                    })
+                    return treeNodes;
+                };
+
+                let TreeNode = function (id, name) {
+                    this.id = null;
+                    this.name = null;
+                    this.open = false;
+                    this.checked = false;
+                    this.children = [];
+                    this.initialize.apply(this , arguments);
+                }
+                TreeNode.prototype = {
+                    initialize: function(id ,name){
+                        this.id = id;
+                        this.name = name;
+                    },
+                    setOpen: function (open) {
+                        this.open = open;
+                    },
+                    setChecked: function (checked) {
+                        this.checked = checked;
+                    },
+                    setChildren: function (children) {
+                        this.children = children;
+                    }
+                }
+                $scope.init();
+
+
+            }
+        };
+    });
 })();
 
 
@@ -1867,7 +1993,7 @@
 
                     $mdPanel.open({
                         attachTo: angular.element(document.body),
-                        templateUrl: "web-public/fit2cloud/html/filter/filter-conditions.html" + '?_t=' + window.appversion,
+                        templateUrl: "web-public/fit2cloud/html/filter/filter-conditions.html?_t=" + window.appversion,
                         position: position,
                         openFrom: event,
                         clickOutsideToClose: true,

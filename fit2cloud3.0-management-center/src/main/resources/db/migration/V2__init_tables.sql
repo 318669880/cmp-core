@@ -538,6 +538,7 @@ CREATE TABLE IF NOT EXISTS `organization` (
   `name` varchar(64) NOT NULL COMMENT '组织名称',
   `description` varchar(255) DEFAULT NULL COMMENT '描述',
   `create_time` bigint(13) NOT NULL COMMENT '创建时间时间戳',
+  `pid` varchar(50) DEFAULT NULL COMMENT '上级组织id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_NAME` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

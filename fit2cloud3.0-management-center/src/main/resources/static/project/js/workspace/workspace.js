@@ -47,15 +47,17 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
     $scope.list();
 
     $scope.create = function () {
-        $scope.acquisitionConditions();
-        $scope.formUrl = 'project/html/workspace/workspace-add.html' + '?_t=' + Math.random();
+        //$scope.acquisitionConditions();
+        $scope.formUrl = 'project/html/workspace/workspace-tree-add.html' + '?_t=' + Math.random();
         $scope.toggleForm();
     };
 
     $scope.edit = function (data) {
         $scope.item = angular.copy(data);
-        $scope.acquisitionConditions();
-        $scope.formUrl = 'project/html/workspace/workspace-edit.html' + '?_t=' + Math.random();
+        //$scope.acquisitionConditions();
+        $scope.sourceDatas = [data.organizationId];
+        $scope.organizationId = data.organizationId;
+        $scope.formUrl = 'project/html/workspace/workspace-tree-edit.html' + '?_t=' + Math.random();
         $scope.toggleForm();
     };
 
@@ -67,6 +69,7 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
 
 
     $scope.submit = function (type, data) {
+        data.organizationId = $scope.organizationId;
         if(!data.name){
             Notification.danger(Translator.get("i18n_ex_workspace_name_no_empty"));
             return;
@@ -125,6 +128,22 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
     $scope.closeInformation = function () {
         $scope.selected = "";
         $scope.toggleInfoForm(false);
+    };
+
+    $scope.ts_url = "user/orgtreeselect";
+    $scope.ts_param = {excludeWs: true};
+    $scope.method = "post";
+    $scope.organizationId = null;
+    $scope.ts_changed = (values) => {
+        $scope.organizationId = (!!values && values.length > 0) ? values[0] : null;
+    };
+
+    $scope.start = (e) => {
+        angular.element('#_treeSelectTs_').parent().addClass("md-input-focused");
+    };
+    $scope.end = (e) => {
+        angular.element('#_treeSelectTs_').parent().removeClass("md-input-focused");
+        angular.element('#_treeSelectTs_').parent().addClass(!!$scope.organizationId ? "md-input-has-value" : "md-input-invalid");
     };
 });
 ProjectApp.controller('WorkspaceAuthorizeController', function ($scope, HttpUtils, Translator) {

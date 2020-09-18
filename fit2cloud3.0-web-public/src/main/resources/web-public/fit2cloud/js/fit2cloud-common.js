@@ -1752,7 +1752,8 @@
                 treeUrl: "=",
                 idName: "=",
                 pidName: "=",
-                where: "="
+                where: "=",
+                loadFinish: "="
             },
             link: function ($scope, element, attr, ctrl) {
 
@@ -1762,10 +1763,10 @@
                         base: 'web-public/external/layui/extend/'
                     }).use([ 'treeTable'], () => {
                         let treeTable = layui.treeTable;
-                        let insTb = treeTable.render(options);
+                        let targetTree = treeTable.render(options);
+                        $scope.loadFinish && $scope.loadFinish(targetTree);
                     })
                 };
-
                 $scope.buildTbOptions = (treeTable) => {
                     let options = {};
                     options.elem = "#_treeTableTb_";
@@ -1798,7 +1799,10 @@
                             code: 0,
                             msg: res.message,
                             count: res.data.length,
-                            data: res.data
+                            data: res.data.map( node => {
+                                node.open = true;
+                                return node;
+                            })
                         }
                     }
                     return options;
@@ -1823,7 +1827,8 @@
                 start: "=",
                 end: "=",
                 changed: "=",
-                single: "="
+                single: "=",
+                selected: "="
             },
             link: function ($scope, element, attr, ctrl) {
 
@@ -1882,9 +1887,13 @@
                     $scope.end && (options.end = $scope.end);
                     options.changed = $scope.changed;
                     options.single = $scope.single;
+                    options.selected = $scope.selected;
                     options.parseData = (res) => {
                         let result = $scope.formatResult(res.data);
                         return result;
+                    }
+                    if (options.selected){
+                        $scope.end();
                     }
 
                     return options;

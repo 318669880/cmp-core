@@ -8,22 +8,71 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
                 title: '菜单图标', align: 'center', hide: true,
                 templet: '<p><i class="layui-icon {{d.menuIcon}}"></i></p>'
             },
-            {field: 'relativeNum', title: '相关人员', width: 50},
+            {field: 'relativeNum', title: '相关人员', width: 50,
+                templet: d => {
+                    let relativeNum = d.relativeNum;
+                    window.aClick = node => {
+                        if (node.relativeNum == 0)return;
+                        let item = {
+                            id: node.nodeId,
+                            pid: node.parentId,
+                            name: node.nodeName,
+                            description: node.description
+                        }
+                        if (node.nodeType=="org"){
+                            $scope.linkOrgAdmin(item);
+                            return;
+                        }
+                        $scope.workspaceAuthorize(item);
+                    };
+                    let temp = "<a style='cursor:pointer' class='md-primary' href = '' onClick='aClick("+JSON.stringify(d)+")' >"+relativeNum+"</a>";
+                    return temp;
+                }
+            },
             {title: '类型', templet: '<p>{{d.nodeType=="org" ? "组织机构" : "工作空间"}}</p>', align: 'center', width: 60},
             {
                 title: '创建时间', templet: function (d) {
-                    /*return $filter('date')(d.createTime,'yyyy-MM-dd hh:mm:ss');*/
                     return $filter('date')(d.createTime,'yyyy-MM-dd');
                 }
             },
             {field: 'description', title: '描述', minWidth: 105},
-            {align: 'center', toolbar: '#tbBar', title: '操作', width: 120}
+            {
+                align: 'center',
+                title: '操作',
+                width: 150,
+                templet: (d) => {
+                    window.treeEdit = (node) => {
+                        let item = {
+                            id: node.nodeId,
+                            pid: node.parentId,
+                            name: node.nodeName,
+                            description: node.description
+                        }
+                        $scope.sourceDatas = [node.parentId];
+                        $scope.organizationId = node.parentId;
+                        $scope.edit(item);
+                    }
+                    window.treeDelete = (node) => {
+                        $scope.targetTree.setChecked([node.nodeId]);
+
+                        $scope.delete();
+                    }
+                    return "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" onClick = 'treeEdit("+JSON.stringify(d)+")'>编辑</a>\n" +
+                           "<a class=\"layui-btn layui-btn-danger layui-btn-xs\" onClick = 'treeDelete("+JSON.stringify(d)+")'>删除</a>"
+                }
+            }
         ]
     ];
+    $scope.targetTree = null;
     $scope.tree_url = "user/orgtree";
     $scope.id_name = "nodeId";
     $scope.pid_name = "parentId";
     $scope.treeTableParam = {excludeWs: false};
+    $scope.treeSucess = (targetTree) => {
+        $scope.targetTree = targetTree;
+        //$scope.targetTree.expandAll();
+    }
+
     // 定义搜索条件
     $scope.conditions = [
         {key: "name", name: Translator.get("i18n_organization_name"), directive: "filter-contains"}
@@ -33,57 +82,20 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
     $scope.filters = [];
     $scope.ids = [];
     // 全选按钮，添加到$scope.columns
-    $scope.first = {
-        default: true,
-        sort: false,
-        type: "checkbox",
-        checkValue: false,
-        change: function (checked) {
-            $scope.items.forEach(function (item) {
-                if (!item.countWorkspace > 0) {
-                    item.enable = checked;
-                    $scope.singleClick(checked, item, true);
-                }
-            });
-        },
-        width: "40px"
-    };
 
-    $scope.clickChecked = function (checked, item, isSelectAll) {
-        $scope.singleClick(checked, item, isSelectAll);
-        // $scope.selectAll();
-    };
 
-    $scope.singleClick = function (checked, item, isSelectAll) {
-        if (checked === true) {
-            $scope.ids.push(item.id);
-        } else {
-            if (isSelectAll) {
-                $scope.ids = [];
-            } else {
-                operationArr.removeByValue($scope.ids, item.id);
-                if ($scope.ids.length === 0) {
-                    $scope.first.checkValue = false;
-                }
-            }
+    $scope.list = () => {
+        let condition = FilterSearch.convert($scope.filters);
+        // 保留排序条件，用于分页
+        if ($scope.sort) {
+            condition.sort = $scope.sort.sql;
         }
-    };
+        $scope.targetTree && $scope.targetTree.refresh && $scope.targetTree.refresh();
+    }
 
-    // $scope.selectAll = function () {
-    //     var count = 0;
-    //     angular.forEach($scope.items, function (item) {
-    //         if (!item.countWorkspace > 0) {
-    //             count++;
-    //             if (count === $scope.ids.length) {
-    //                 $scope.first.checkValue = true;
-    //             }
-    //         }
-    //     });
-    // };
 
 
     $scope.columns = [
-        $scope.first,
         {value: Translator.get("i18n_organization_name"), key: "name", sort: false},
         {value: Translator.get("i18n_workspace_list"), key: "countWorkspace"},// 不想排序的列，用sort: false
         {value: Translator.get("组织管理员"), key: "countOrgAdmin"},// 不想排序的列，用sort: false
@@ -91,22 +103,7 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
         {value: Translator.get("i18n_create_time"), key: "create_time"},
     ];
 
-    $scope.list = function (sortObj) {
-        var condition = FilterSearch.convert($scope.filters);
-        if (sortObj) {
-            $scope.sort = sortObj;
-        }
-        // 保留排序条件，用于分页
-        if ($scope.sort) {
-            condition.sort = $scope.sort.sql;
-        }
-        HttpUtils.paging($scope, "organization", condition, function () {
-            angular.forEach($scope.items, function (item) {
-                item.enable = false;
-            });
-        });
-    };
-    $scope.list();
+
 
     $scope.create = function () {
         $scope.formUrl = 'project/html/organization/organization-tree-add.html' + '?_t=' + Math.random();
@@ -115,14 +112,16 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
 
     $scope.edit = function (data) {
         $scope.item = angular.copy(data);
-        $scope.formUrl = 'project/html/organization/organization-edit.html' + '?_t=' + Math.random();
+        $scope.formUrl = 'project/html/organization/organization-tree-edit.html' + '?_t=' + Math.random();
         $scope.toggleForm();
     };
 
 
+
+
     $scope.submit = function (type, data) {
+        data.pid = $scope.organizationId;
         if (type === 'add') {
-            data.pid = $scope.organizationId;
             HttpUtils.post("organization/add", data, function () {
                 $scope.list();
                 Notification.success(Translator.get("i18n_mc_create_success"));
@@ -142,7 +141,9 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
         }
     };
     $scope.delete = function () {
-        if ($scope.ids.length === 0) {
+        let checkdNodes = $scope.targetTree.checkStatus();
+        $scope.ids = checkdNodes && checkdNodes.length > 0 && checkdNodes.filter(node => !node.LAY_INDETERMINATE).map(node => node.nodeId);
+        if (!$scope.ids  || $scope.ids.length === 0) {
             Notification.info(Translator.get("i18n_no_selected_item"))
         } else {
             Notification.confirm(Translator.get("i18n_menu_delete_confirm"), function () {
@@ -170,13 +171,23 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
         $state.go("workspace")
     };
     $scope.linkOrgAdmin = function (item) {
-        if ($scope.selected === item.$$hashKey) {
+        if ($scope.selected === item.id) {
             $scope.closeInformation();
             return;
         }
-        $scope.selected = item.$$hashKey;
+        $scope.selected = item.id;
         $scope.orgId = item.id;
         $scope.infoUrl = 'project/html/organization/organization-link-orgAdmin.html' + '?_t=' + Math.random();
+        $scope.toggleInfoForm(true);
+    };
+    $scope.workspaceAuthorize = function (item) {
+        if ($scope.selected === item.id) {
+            $scope.closeInformation();
+            return;
+        }
+        $scope.selected = item.id;
+        $scope.selectWorkspaceId = item.id;
+        $scope.infoUrl = 'project/html/workspace/workspace-authorize.html' + '?_t=' + Math.random();
         $scope.toggleInfoForm(true);
     };
 

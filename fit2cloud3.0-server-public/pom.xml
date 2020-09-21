@@ -116,6 +116,25 @@
             <artifactId>icu4j</artifactId>
             <version>64.2</version>
         </dependency>
+
+        <!--protobuf-->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>3.11.0</version>
+        </dependency>
+
+        <!--grpc-->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-all</artifactId>
+            <version>1.20.0</version>
+        </dependency>
     </dependencies>
 
     <build>

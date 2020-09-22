@@ -180,8 +180,7 @@ public class ModuleUtil {
     private static void startService(List<String> command, StringBuilder result, List<String> moduleNameList, String fit2cloudModuleDir) throws Exception {
         LogUtil.info("Begin start application " +  moduleNameList);
         command.add(docker_compose);
-        command.add("-f");
-        command.add(workDir + File.separatorChar + dockerComposeFile);
+        blendWithRootDockerComposeFile(command);
         command.add("-f");
         command.add(fit2cloudModuleDir + File.separatorChar + dockerComposeFile);
         command.add("up");
@@ -198,11 +197,23 @@ public class ModuleUtil {
         result.setLength(0);
     }
 
+    private static void blendWithRootDockerComposeFile(List<String> command){
+        File rootFile = new File(workDir);
+        if (rootFile.exists()) {
+            File[] files = rootFile.listFiles();
+            for (File file : files) {
+                if(file.getAbsolutePath().endsWith(".yml")){
+                    command.add("-f");
+                    command.add(file.getAbsolutePath());
+                }
+            }
+        }
+    }
+
     private static void stopService(List<String> command, StringBuilder result, String fit2cloudModuleDir, List<String> moduleNameList) throws Exception {
         LogUtil.info("Begin stop application " +  moduleNameList);
         command.add(docker_compose);
-        command.add( "-f");
-        command.add(workDir + File.separator + dockerComposeFile);
+        blendWithRootDockerComposeFile(command);
         command.add("-f");
         command.add(fit2cloudModuleDir + File.separator +dockerComposeFile);
         command.add("rm");

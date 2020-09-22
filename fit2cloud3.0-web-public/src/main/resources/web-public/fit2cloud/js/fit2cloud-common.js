@@ -1850,14 +1850,6 @@
                     options.data = options.data = $scope.tsUrl;
                     options.type = $scope.type || "get";
                     options.search = true;
-                    options.style = {
-                        folder: {
-                            enable: true
-                        },
-                        line: {
-                            enable: true
-                        }
-                    }
                     options.zTreeSetting = { //zTree设置
                         check: {
                             enable: true,
@@ -1871,6 +1863,9 @@
                                 name: 'name',
                                 children: 'children'
                             }
+                        },
+                        view: {
+                            showIcon: false
                         }
 
                     }
@@ -1899,15 +1894,16 @@
                     return options;
                 };
 
-                $scope.formatResult = (rootNodes) => {
+                $scope.formatResult = function(rootNodes) {
                     let treeNodes = [];
                     rootNodes.forEach((node) => {
                         let treeNode =  new TreeNode(node.nodeId, node.nodeName);
                         if (!node.childNodes || node.childNodes.length == 0){
+                            treeNode.setChildren(null);
                             treeNodes.push(treeNode);
                             return true;
                         }
-                        treeNode.setChildren($scope.formatResult(node.childNodes));
+                        treeNode.setChildren(arguments.callee(node.childNodes));
                         treeNodes.push(treeNode);
                     })
                     return treeNodes;

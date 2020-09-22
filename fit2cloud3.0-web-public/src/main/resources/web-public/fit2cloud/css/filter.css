@@ -162,3 +162,7 @@
 md-checkbox.select-columns {
     margin: 0;
 }
+
+.filter-multistage-tree button.md-icon-button{
+    min-width: 30px!important;
+}

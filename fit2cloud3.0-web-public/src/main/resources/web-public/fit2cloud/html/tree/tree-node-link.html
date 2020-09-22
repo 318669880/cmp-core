@@ -1,0 +1,12 @@
+<div class="tree-node-link">
+
+    <div ng-if="node.switchable && !node.current" ng-click="select(node)" ng-class="{true: 'link-node-selected-true', false: 'link-node-selected-false'}[selected()]">
+        <a >{{node[option.label]}}
+        </a>
+    </div>
+    <div ng-if="!(node.switchable && !node.current)" ng-class="{true: 'link-node-selected-true', false: 'link-node-selected-false'}[selected()]">
+        <span >
+            {{node[option.label]}}
+        </span>
+    </div>
+</div>

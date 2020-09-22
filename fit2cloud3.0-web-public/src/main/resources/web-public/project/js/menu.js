@@ -2,7 +2,7 @@
  * FIT2CLOUD Menu Frame
  */
 
-let MenuApp = angular.module('MenuApp', ['ngMaterial', 'pascalprecht.translate', 'ngMessages', 'ngSanitize', 'cgBusy', 'TaskApp']);
+let MenuApp = angular.module('MenuApp', ['ngMaterial', 'pascalprecht.translate', 'ngMessages', 'ngSanitize', 'cgBusy', 'TaskApp', 'f2c.common']);
 
 MenuApp.config(function ($httpProvider, $mdThemingProvider, $mdAriaProvider) {
     $mdAriaProvider.disableWarnings();
@@ -631,58 +631,68 @@ MenuApp.controller('MenuCtrl', function ($scope, $http, $mdSidenav, $mdDialog, $
         });
     };
 
-    $scope.getUserRoleList = function () {
-        HttpUtils.get("user/source/list", function (response) {
-            $scope.userRoleList = [];
-            angular.forEach(response.data, function (item) {
-                    item.current = item.id === $scope.user.sourceId;
-                    if (item.current) {
-                        $scope.switchInfo = item.name + " [" + item.desc + "]";
-                    }
-                    if (!item.parentId) {
-                        item.hasChild = false;
-                        item.children = [];
-                        $scope.userRoleList.push(item);
-                    } else {
-                        angular.forEach($scope.userRoleList, function (userRole) {
-                            if (userRole.id === item.parentId) {
-                                userRole.children.push(item);
-                                userRole.hasChild = true;
-                            }
-                        });
-                    }
+
+
+
+
+    $scope.buildTreeData = function(callBack){
+        let treeData = [];
+        $http.get("user/source/list").then(function (rep) {
+
+            $scope.rawData = rep.data.data;
+            angular.forEach($scope.rawData, function (data) {
+                data.current = data.id === $scope.user.sourceId;
+                if (data.current) {
+                    $scope.switchInfo = data.name + " [" + data.desc + "]";
+                    $scope.currentRoleNode = data;
                 }
-            );
-
-
+                data.collapsed = false;
+                if (data.parentId == null) {
+                    if (data.switchable) {
+                        data.name = data.name + "[" + data.desc + "]"
+                    }
+                    treeData.push(data);
+                }
+            });
+            angular.forEach(treeData, function (_treeData) {
+                $scope.setChildren(_treeData, $scope.rawData);
+            })
+            callBack && callBack(treeData);
         });
-    };
+    }
 
-    $scope.select = function (item) {
-        if (!item.switchable || item.current) {
-            return;
+    $scope.setChildren = (node, nodeLists) => {
+        node.children = [];
+        nodeLists.forEach(item => {
+
+            if (item.parentId == node.id){
+                if (item.switchable){
+                    item.name = item.name + "[" + item.desc + "]"
+                }
+                $scope.setChildren(item, nodeLists);
+                item.current = item.id === $scope.user.sourceId;
+                if (item.current) {
+                    $scope.switchInfo = item.name;
+                }
+                node.children.push(item);
+            }
+        })
+        if (node.children.length == 0){
+            node.children = null;
         }
+    }
 
-        angular.forEach($scope.userRoleList, function (p) {
-            p.selected = item.id === p.id;
+    $scope.selectItem = node => {
+        $scope.selectItemId = node.id;
+    }
 
-            if (angular.isArray(p.children)) {
-                angular.forEach(p.children, function (c) {
-                    c.selected = item.id === c.id;
-                });
-            }
-        });
+    $scope.getUserRoleList = function () {
+        $scope.buildTreeData(treeDatas => {
 
-        $scope.selectItemId = item.id;
+        })
     };
 
-    $scope.switchSHow = function (item) {
-        angular.forEach($scope.userRoleList, function (r) {
-            if (item.id === r.id) {
-                r.show = !item.show;
-            }
-        });
-    };
+
 
     $scope.switchRole = function (id) {
         $scope.indexLoadingLayer = HttpUtils.post("user/switch/source/" + id, {}, function () {
@@ -705,7 +715,7 @@ MenuApp.controller('MenuCtrl', function ($scope, $http, $mdSidenav, $mdDialog, $
 
     $scope.switch = function () {
         $mdDialog.show({
-            templateUrl: 'web-public/project/html/switch-source.html' + '?_t=' + window.appversion,
+            templateUrl: 'web-public/project/html/switch-source-tree.html' + '?_t=' + window.appversion,
             parent: angular.element($document[0].body),
             scope: $scope,
             preserveScope: true,
@@ -1042,6 +1052,31 @@ MenuApp.component('headerMenu', {
             return angular.isDefined(menu.menus) && menu.menus.length > 0;
         };
     }
+});
+
+MenuApp.controller('SwitchRoleController', function ($scope, HttpUtils, $http) {
+    $scope.treeApi = {
+        selected: $scope.currentRoleNode,
+        onChange: function (node) {
+            //$scope.cancelCheckAll($scope.treeData);
+            $scope.selectItem(node);
+        }
+    };
+
+    $scope.cancelCheckAll = function(roots){
+        roots.forEach(root => {
+            root.checked = false;
+            if (!!root.children && root.children.length > 0){
+                arguments.callee(root.children);
+            }
+        })
+    }
+
+    $scope.buildTreeData((treeDatas) => {
+        $scope.treeData = treeDatas;
+        $scope.treeApi.selected = $scope.currentRoleNode;
+    })
+
 });
 
 /**

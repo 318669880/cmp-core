@@ -7,19 +7,33 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
     ];
 
     if ($scope.currentRole === $scope.roleConst.admin) {
-        $scope.conditions.push({
+        /*$scope.conditions.push({
             key: "organizationId",
             name: Translator.get("i18n_organization"),
             directive: "filter-select-virtual",
             url: "organization",
             search: true,
             convert: {value: "id", label: "name"}
+        });*/
+        $scope.conditions.push({
+            key: "organizationIds",
+            name: '组织机构',
+            directive: "filter-multistage-tree",
+            url: "user/getOgrTree/true",
+            multiple: true,
+            convert: {value: "nodeId", label: "nodeName"},
+            build: {
+                id: "nodeId",
+                name: "nodeName",
+                children: "childNodes"
+            }
+
         })
     }
     $scope.filters = [];
     if ($scope.orgParam && $scope.currentRole === $scope.roleConst.admin) {
         $scope.filters = [{
-            key: "organizationId",
+            key: "organizationIds",
             name: Translator.get("i18n_organization"),
             label: $scope.orgParam.label,
             value: $scope.orgParam.value

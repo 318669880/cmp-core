@@ -2862,6 +2862,90 @@
         };
     });
 
+    F2CModule.directive("filterMultistageTree", function (FilterSearch, HttpUtils) {
+        return {
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/filter/filter-multistage-tree.html" + '?_t=' + window.appversion,
+            scope: {
+                results: "=",
+                condition: "=",
+                remove: "&",
+                complete: "&"
+            },
+            link: function ($scope) {
+                $scope.condition.selecteds = [];
+                $scope.noroot = {
+                    onChange: function (node) {
+                        $scope.onChangeTree(node);
+                        //$scope.add();
+                    }
+                };
+                $scope.onChangeTree = function (node) {
+                    if (!node.checked){
+                        $scope.cancelSelected($scope.noroot.getParent(node), node.id);
+                        if ($scope.condition.selecteds.length > 0){
+                            $scope.condition.selecteds = $scope.condition.selecteds.filter(selected => node.id != selected.id);
+                        }
+
+                    }else{
+                        $scope.condition.selecteds.push(node);
+                    }
+                };
+
+                $scope.cancelSelected = function (node, key) {
+                    if (node) {
+                        if (angular.isArray(node.children) && node.children.length > 0) {
+                            angular.forEach(node.children, child => $scope.cancelSelected(child, key));
+                        }
+                    }
+                };
+
+
+
+
+
+                HttpUtils.get($scope.condition.url, function (response) {
+                    let nodes = response.data;
+                    $scope.buildTreeData(nodes);
+                    $scope.treeData = nodes;
+                }, function (data) {
+                    $scope.error = data;
+                });
+
+                $scope.buildTreeData = (nodes) => {
+                    angular.forEach(nodes ,(node) => {
+                        angular.forEach($scope.condition.build, (value, key) => node[key] = node[value]);
+                        //$scope.condition.selects.push(node);
+                        $scope.buildTreeData(node.children);
+
+                    })
+                }
+
+                // 核心方法，必须有，名字随便，用于添加条件到results
+                $scope.add = function () {
+                    let values = [];
+                    let labels = [];
+                    $scope.condition.selecteds.forEach(function (c) {
+                        if (c.checked) {
+                            values.push(c.id);
+                            labels.push(c.name);
+                        }
+                    });
+                    if (values.length === 0) {
+                        $scope.remove();
+                        return;
+                    }
+                    $scope.condition.values = values;
+                    $scope.condition.label = labels.join(", ");
+                    FilterSearch.push($scope.results, $scope.condition);
+                    $scope.remove();
+                    $scope.complete();
+                    $scope.close();
+                };
+            }
+        };
+    });
+
 })();
 
 /**
@@ -2956,6 +3040,9 @@
                         break;
                     case "text":
                         $scope.directive = "tree-node-text";
+                        break;
+                    case "link":
+                        $scope.directive = "tree-node-link";
                         break;
                     default:
                         $scope.directive = "tree-node-checkbox";
@@ -3206,10 +3293,48 @@
                     if ($scope.option.select === "all") {
                         $scope.api.selected = node;
                     }
+                    if ($scope.api.onChange) {
+                        $scope.api.onChange(node);
+                    }
                 };
 
                 $scope.selected = function () {
                     return $scope.api.selected.$$hashKey === $scope.node.$$hashKey;
+                }
+            }
+        };
+    });
+
+    F2CModule.directive("treeNodeLink", function () {
+        return {
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree-node-link.html" + '?_t=' + window.appversion,
+            scope: {
+                data: "=",
+                node: "=",
+                api: "=",
+                option: "="
+            },
+            link: function ($scope) {
+                $scope.selected = false;
+                $scope.option = angular.extend({
+                    label: "name",
+                    key: "id",
+                    multiple: false,
+                }, $scope.option);
+
+                $scope.hasChildren = function () {
+                    return angular.isArray($scope.node.children);
+                };
+
+                $scope.select = function (node) {
+                    if ($scope.api.onChange) {
+                        $scope.api.onChange(node);
+                    }
+                    $scope.api.selected = node;
+                };
+                $scope.selected = function () {
+                    return $scope.api.selected.id === $scope.node.id;
                 }
             }
         };

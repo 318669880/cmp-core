@@ -430,18 +430,7 @@ ProjectApp.controller('ResourceController', function ($scope, HttpUtils, $http) 
                 }
             });
             angular.forEach($scope.treeData, function (treeData) {
-                treeData.children = [];
-                angular.forEach($scope.rawData, function (data) {
-                    if (data.parentId === treeData.id) {
-                        if (data.switchable) {
-                            data.name = data.name + "[" + data.desc + "]"
-                        }
-                        treeData.children.push(data)
-                    }
-                });
-                if (treeData.children.length === 0) {
-                    treeData.children = null;
-                }
+                $scope.setChildren(treeData, $scope.rawData);
             })
 
         }, function (rep) {
@@ -449,6 +438,22 @@ ProjectApp.controller('ResourceController', function ($scope, HttpUtils, $http) 
         });
     };
     $scope.roleTree();
+    $scope.setChildren = (node, nodeLists) => {
+        node.children = [];
+        nodeLists.forEach(item => {
+
+            if (item.parentId == node.id){
+                if (item.switchable){
+                    item.name = item.name + "[" + item.desc + "]"
+                }
+                $scope.setChildren(item, nodeLists);
+                node.children.push(item);
+            }
+        })
+        if (node.children.length == 0){
+            node.children = null;
+        }
+    }
 });
 
 ProjectApp.controller('ImportExtraUserController', function ($scope, HttpUtils, FilterSearch, $http, Notification, operationArr, Translator) {

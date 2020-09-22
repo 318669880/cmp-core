@@ -591,3 +591,63 @@ md-input-container.md-input-invalid .md-input-messages-animation + .hint {
     display: none
 }
 
+/* 树 */
+.tree {
+    overflow-y: auto;
+}
+
+.tree-node {
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.tree-node .tree-node {
+    margin-left: 24px;
+}
+
+.tree-node .tree-node-prefix {
+    margin-left: 40px;
+    min-height: 40px;
+}
+
+.tree-node .md-icon-button {
+    margin: 0;
+}
+
+.tree-node .tree-node-checkbox md-checkbox {
+    margin: 0;
+}
+
+.tree-node .tree-node-radio .tree-node-radio-child {
+    margin-left: -30px;
+}
+
+.tree-node .tree-node-radio md-radio-button {
+    margin: 0;
+}
+
+.tree-node .tree-node-file {
+    min-width: 100px;
+    line-height: 36px;
+    cursor: pointer;
+}
+
+.tree-node .tree-node-file:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.tree-node .tree-node-selected {
+    background-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
+}
+.tree-node-link > div > a:hover{
+    background-color: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+.link-node-selected-true > a{
+    color: #3c77e7 !important;
+}
+.link-node-selected-true > span{
+    color: #3c77e7 !important;
+}
+

@@ -23,6 +23,18 @@
             WHERE user_role.user_id = #{userId}
     </select>
 
+    <select id="getRoleTreeHelpList" parameterType="java.lang.String"
+            resultType="com.fit2cloud.commons.server.model.UserRoleHelpDTO">
+        SELECT
+            user_role.role_id AS roleId,
+            role.`name` AS roleName,
+            role.parent_id AS roleParentId,
+            user_role.source_id AS sourceId
+        FROM user_role LEFT JOIN role ON role.id = user_role.role_id
+        where user_role.user_id = #{userId}
+    </select>
+
+
     <select id="getCustomRolesByUserId" resultType="java.lang.String">
         SELECT user_role.role_id FROM user_role
         LEFT JOIN role ON user_role.role_id = role.id

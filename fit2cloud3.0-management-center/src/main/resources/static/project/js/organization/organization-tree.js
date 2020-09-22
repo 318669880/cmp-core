@@ -209,7 +209,8 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
     };
     $scope.end = (e) => {
         angular.element('#_treeSelectTs_').parent().removeClass("md-input-focused");
-        angular.element('#_treeSelectTs_').parent().addClass(!!$scope.organizationId ? "md-input-has-value" : "md-input-invalid");
+        angular.element('#_treeSelectTs_').parent().addClass(!!$scope.organizationId ? "md-input-has-value" : "");
+        //angular.element('#_treeSelectTs_').parent().addClass("md-input-has-value");
     };
 
 });

@@ -280,6 +280,17 @@ md-sidenav.side-form {
     background-color: rgba(0, 0, 0, 0.12);
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12);
 }
+.tree-node-link > div > a:hover{
+    background-color: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+.link-node-selected-true > a{
+    color: #3c77e7 !important;
+}
+.link-node-selected-true > span{
+    color: #3c77e7 !important;
+}
+
 
 /*信息板*/
 .info-form {

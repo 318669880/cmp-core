@@ -33,9 +33,15 @@
         <if test="map.name!=null">
             and workspace.name like #{map.name}
         </if>
-        <if test="map.organizationId!=null">
-            and workspace.organization_id = #{map.organizationId}
+        <if test="map.organizationIds!=null">
+            and workspace.organization_id in
+            <foreach collection="map.organizationIds" item="organizationId" index="index" open="(" close=")" separator=",">
+                #{organizationId}
+            </foreach>
         </if>
+        <!--<if test="map.organizationId!=null">
+            and workspace.organization_id = #{map.organizationId}
+        </if>-->
         <if test="map.role!=null">
             and workspace.id in
             <foreach collection="map.resourceIds" item="resourceId" index="index" open="(" close=")" separator=",">

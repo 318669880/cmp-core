@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.fit2cloud.commons.server.utils.SessionUtils.getRequest;
@@ -156,23 +157,45 @@ public class UserCommonService {
         userMapper.updateByPrimaryKeySelective(u);
     }
 
+
     public List<UserRoleDTO> getUserRoles(String userId) {
         if (StringUtils.isEmpty(userId)) {
             return new ArrayList<>();
         }
-
+        List<OrgTreeNode> nodes = orgTreeMapper.nodes(false);
         List<UserRoleHelpDTO> helpDTOList = extUserRoleMapper.getUserRoleHelpList(userId);
+        //List<UserRoleHelpDTO> helpDTOList = extUserRoleMapper.getRoleTreeHelpList(userId);
         if (roleCommonService.isOrgAdmin()) {
             List<String> sourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(SessionUtils.getOrganizationId());
             sourceIds.add(SessionUtils.getOrganizationId());
             return convertUserRoleDTO(helpDTOList.stream()
                     .filter(userRoleHelpDTO -> sourceIds.contains(userRoleHelpDTO.getSourceId()))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList()), nodes);
         }
-        return convertUserRoleDTO(helpDTOList);
+        return convertUserRoleDTO(helpDTOList, nodes);
     }
 
-    private List<UserRoleDTO> convertUserRoleDTO(List<UserRoleHelpDTO> helpDTOList) {
+    private List<String> cascadeIds(String parentId, List<OrgTreeNode> nodes){
+        List<String> result = new ArrayList<>();
+        AtomicReference<String> parent = new AtomicReference<>(parentId);
+        AtomicReference<OrgTreeNode> currentNode = new AtomicReference<>();
+        while (!StringUtils.isEmpty(parent.get())){
+            boolean existParent = nodes.stream().anyMatch(node -> {
+                currentNode.set(node);
+                return StringUtils.equals(parent.get(), node.getNodeId());
+            });
+            if (existParent){
+                result.add(currentNode.get().getNodeId());
+                parent.set(currentNode.get().getParentId());
+                continue;
+            }
+            parent.set(null);
+        }
+        return result;
+    }
+
+
+    private List<UserRoleDTO> convertUserRoleDTO(List<UserRoleHelpDTO> helpDTOList, List<OrgTreeNode> orgTreeNodes) {
         StringBuilder buffer = new StringBuilder();
 
         Map<String, UserRoleDTO> roleMap = new HashMap<>();
@@ -181,21 +204,13 @@ public class UserCommonService {
 
         List<UserRoleDTO> otherList = new ArrayList<>();
 
-        Set<String> orgSet = new HashSet<>();
+        Set<String> parentSet = new HashSet<>();
 
-        Set<String> workspaceSet = new HashSet<>();
+        Map<String,OrgTreeNode> nodesMap = orgTreeNodes.stream().collect(Collectors.toMap(OrgTreeNode::getNodeId , node -> node, (k1,k2) -> k1));
 
         for (UserRoleHelpDTO helpDTO : helpDTOList) {
-
-            if (StringUtils.isEmpty(helpDTO.getSourceName()) && !StringUtils.isEmpty(helpDTO.getSourceId())) {
-                continue;
-            }
-
-            if (StringUtils.equalsIgnoreCase(helpDTO.getRoleId(), RoleConstants.Id.ADMIN.name()) ||
-                    StringUtils.equalsIgnoreCase(helpDTO.getRoleId(), RoleConstants.Id.ORGADMIN.name()) ||
-                    StringUtils.equalsIgnoreCase(helpDTO.getRoleId(), RoleConstants.Id.USER.name())) {
-                helpDTO.setRoleName(Translator.toI18nKey(helpDTO.getRoleName()));
-            }
+            String source_id = helpDTO.getSourceId();
+            OrgTreeNode node = nodesMap.get(source_id);
 
             if (RoleConstants.Id.ADMIN.name().equals(helpDTO.getRoleParentId())) {
                 if (StringUtils.isEmpty(buffer.toString())) {
@@ -204,9 +219,27 @@ public class UserCommonService {
                     buffer.append(",");
                     buffer.append(helpDTO.getRoleName());
                 }
-
                 continue;
             }
+
+
+            if (ObjectUtils.isEmpty(node)) continue;
+            helpDTO.setSourceName(node.getNodeName());
+            //helpDTO.setParentId(node.getParentId());
+
+            if (StringUtils.isEmpty(helpDTO.getSourceName()) && !StringUtils.isEmpty(helpDTO.getSourceId())) {
+                continue;
+            }
+
+            parentSet.addAll(cascadeIds(node.getParentId(), orgTreeNodes));
+
+            if (StringUtils.equalsIgnoreCase(helpDTO.getRoleId(), RoleConstants.Id.ADMIN.name()) ||
+                    StringUtils.equalsIgnoreCase(helpDTO.getRoleId(), RoleConstants.Id.ORGADMIN.name()) ||
+                    StringUtils.equalsIgnoreCase(helpDTO.getRoleId(), RoleConstants.Id.USER.name())) {
+                helpDTO.setRoleName(Translator.toI18nKey(helpDTO.getRoleName()));
+            }
+
+
 
             //第三方角色
             if ("other".equalsIgnoreCase(helpDTO.getRoleParentId())) {
@@ -225,19 +258,13 @@ public class UserCommonService {
 
             if (userRoleDTO == null) {
                 userRoleDTO = new UserRoleDTO();
-
-                if (!StringUtils.isEmpty(helpDTO.getParentId())) {
-                    workspaceSet.add(helpDTO.getParentId());
-                    userRoleDTO.setType("workspace");
-                } else {
-                    orgSet.add(helpDTO.getSourceId());
-                    userRoleDTO.setType("organization");
-                }
-
-
+                String type = (!StringUtils.isEmpty(node.getNodeType()) && StringUtils.equals("wks",node.getNodeType())) ?
+                        "workspace" : "organization";
+                parentSet.add(node.getNodeId());
+                userRoleDTO.setType(type);
                 userRoleDTO.setId(helpDTO.getSourceId());
                 userRoleDTO.setName(helpDTO.getSourceName());
-                userRoleDTO.setParentId(helpDTO.getParentId());
+                userRoleDTO.setParentId(node.getParentId());
                 userRoleDTO.setDesc(helpDTO.getRoleName());
 
             } else {
@@ -255,24 +282,21 @@ public class UserCommonService {
             resultList.add(dto);
         }
 
-        for (String org : orgSet) {
-            workspaceSet.remove(org);
-        }
-
         List<UserRoleDTO> orgWorkSpace = new ArrayList<>(roleMap.values());
 
-        if (!CollectionUtils.isEmpty(workspaceSet)) {
-            for (String orgId : workspaceSet) {
-                Organization organization = organizationMapper.selectByPrimaryKey(orgId);
-                if (organization != null) {
-                    UserRoleDTO dto = new UserRoleDTO();
-                    dto.setId(orgId);
-                    dto.setName(organization.getName());
-                    dto.setSwitchable(false);
-                    dto.setType("organization");
-                    orgWorkSpace.add(dto);
-                }
-            }
+        parentSet  = parentSet.stream().filter(parentId -> !orgWorkSpace.stream().anyMatch(roleDto -> StringUtils.equals(roleDto.getId(), parentId))).collect(Collectors.toSet());
+
+        if (!CollectionUtils.isEmpty(parentSet)) {
+            parentSet.forEach(parentId -> {
+                OrgTreeNode node = nodesMap.get(parentId);
+                UserRoleDTO dto = new UserRoleDTO();
+                dto.setId(parentId);
+                dto.setParentId(node.getParentId());
+                dto.setName(node.getNodeName());
+                dto.setSwitchable(false);
+                dto.setType("organization");
+                orgWorkSpace.add(dto);
+            });
         }
 
         orgWorkSpace.sort((o1, o2) -> {
@@ -298,7 +322,7 @@ public class UserCommonService {
             return new ArrayList<>();
         }
 
-        return convertUserRoleDTO(extUserRoleMapper.getUserRoleHelpList(userId));
+        return convertUserRoleDTO(extUserRoleMapper.getUserRoleHelpList(userId), orgTreeMapper.nodes(false));
     }
 
     public void setLastSourceId(User user, String sourceId) {

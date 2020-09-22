@@ -9,6 +9,8 @@ public interface ExtUserRoleMapper {
 
     List<UserRoleHelpDTO> getUserRoleHelpList(@Param("userId") String userId);
 
+    List<UserRoleHelpDTO> getRoleTreeHelpList(@Param("userId") String userId);
+
     List<String> getCustomRolesByUserId(@Param("userId") String userId);
 
 }

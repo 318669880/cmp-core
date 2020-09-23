@@ -68,7 +68,7 @@ public class PermissionCommonController {
     @ApiOperation("组织结构树")
     @PostMapping("orgtree")
     public List<OrgTreeNode> orgTree(@RequestBody OrgTreeQueryDto orgTreeQueryDto){
-        return userCommonService.orgTreeNodeList(orgTreeQueryDto.getRootId(), orgTreeQueryDto.getExcludeWs());
+        return userCommonService.orgTreeNodeList(orgTreeQueryDto.getRootId(), orgTreeQueryDto.getOrgName(), orgTreeQueryDto.getExcludeWs());
     }
 
     @ApiOperation("组织结构下拉树")

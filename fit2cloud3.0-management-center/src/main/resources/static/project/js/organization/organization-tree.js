@@ -90,6 +90,16 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
         if ($scope.sort) {
             condition.sort = $scope.sort.sql;
         }
+
+        $scope.targetTree.options.where = $scope.treeTableParam;
+        if (!!condition && condition.name){
+            let orgName = condition.name.substring(1,condition.name.length-1);
+            let where = angular.extend({orgName: orgName},$scope.treeTableParam);
+            $scope.targetTree.options.where = where;
+            $scope.targetTree.reload();
+            return;
+            //$scope.targetTree && $scope.targetTree.filterData && $scope.targetTree.filterData(orgName);
+        }
         $scope.targetTree && $scope.targetTree.refresh && $scope.targetTree.refresh();
     }
 

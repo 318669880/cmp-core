@@ -402,12 +402,38 @@ public class UserCommonService {
     @Resource
     private OrgTreeMapper orgTreeMapper;
 
-    public List<OrgTreeNode> orgTreeNodeList(String rootId, boolean excludeWs){
+    private List<OrgTreeNode> filterByName(String orgName, List<OrgTreeNode> nodes) {
+        if (CollectionUtils.isEmpty(nodes) || StringUtils.isEmpty(orgName)) return nodes;
+        Set<String> nodeIdSets = new HashSet<>();
+        //1.找到符合条件的节点
+        List<OrgTreeNode> treeNodes = nodes.stream().filter(node -> StringUtils.contains(node.getNodeName(), orgName)).collect(Collectors.toList());
+        //2.根据1的结果向上查找父节点
+
+        if (CollectionUtils.isEmpty(treeNodes)) return null;
+
+        Map<String,OrgTreeNode> nodesMap = nodes.stream().collect(Collectors.toMap(OrgTreeNode::getNodeId, node -> node, (k1,k2) -> k1));
+
+        treeNodes.stream().forEach(node -> {
+            while (ObjectUtils.isNotEmpty(node) ){
+                nodeIdSets.add(node.getNodeId());
+                String parentId = node.getParentId();
+                node = StringUtils.isNotEmpty(parentId) ? nodesMap.get(parentId) : null;
+            }
+        });
+
+        return nodeIdSets.stream().map(nodesMap::get).collect(Collectors.toList());
+    }
+
+    public List<OrgTreeNode> orgTreeNodeList(String rootId, String orgName, boolean excludeWs){
         List<OrgTreeNode> nodes = orgTreeMapper.nodes(!!excludeWs);
         List<Map<String,Object>> nums = orgTreeMapper.relativeNum();
         if (ObjectUtils.isNotEmpty(rootId)){
             //这里需要过滤
         }
+        if (ObjectUtils.isNotEmpty(orgName)){
+            nodes = filterByName(orgName, nodes);
+        }
+        if (CollectionUtils.isEmpty(nodes)) return nodes;
         if (CollectionUtils.isEmpty(nums)) return nodes;
 
         //设置relativeNums
@@ -452,6 +478,6 @@ public class UserCommonService {
     }
 
     public List<OrgTreeNode> orgTreeSelect (String rootId, boolean excludeWs) {
-        return formatRoot(orgTreeNodeList(rootId, excludeWs));
+        return formatRoot(orgTreeNodeList(rootId, null, excludeWs));
     }
 }

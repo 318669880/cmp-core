@@ -14,10 +14,12 @@ import java.io.Serializable;
  */
 public class OrgTreeQueryDto implements Serializable {
 
-    @ApiModelProperty(value = "跟节点ID")
+    @ApiModelProperty(value = "根节点ID")
     private String rootId;
     @ApiModelProperty(value = "是否排除工作空间" ,required = false, dataType = "Boolean")
     private Boolean excludeWs;
+    @ApiModelProperty(value = "节点名称")
+    private String orgName;
 
     public String getRootId() {
         return rootId;
@@ -38,5 +40,13 @@ public class OrgTreeQueryDto implements Serializable {
     public OrgTreeQueryDto(String rootId, Boolean excludeWs) {
         this.rootId = rootId;
         this.excludeWs = excludeWs;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 }

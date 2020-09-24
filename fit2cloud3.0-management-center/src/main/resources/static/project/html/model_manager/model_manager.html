@@ -217,7 +217,8 @@
                                             <td>{{item.module}}</td>
                                             <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
                                                 <a class="edit-span" class="md-primary" style="cursor:pointer" href="" >
-                                                    {{item.statuInfo}}
+                                                    <!--{{item.statuInfo}}-->
+                                                    {{item.dynamicInfo}}
                                                     <md-tooltip md-direction="top" class="f2c-tooltip-version">
                                                         <table class="node_tip_table">
                                                             <tr>
@@ -262,13 +263,17 @@
                                                     {{'i18n_model_op_node' | translator:'显示节点'}}
                                                 </md-button>
 
-                                                <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.runningPods==0">
+                                                <!--<md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.runningPods==0">
                                                     <md-icon class="md-18">play_arrow</md-icon>
                                                     {{'i18n_model_op_start' | translator:'启动'}}
                                                 </md-button>
                                                 <md-button ng-click="stopK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.runningPods!=0">
                                                     <md-icon class="md-18">stop</md-icon>
                                                     {{'i18n_model_op_stop' | translator:'停止'}}
+                                                </md-button>-->
+                                                <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
+                                                    <md-icon class="md-18">edit</md-icon>
+                                                    {{'i18n_model_op_pod_eidt' | translator:'节点调整'}}
                                                 </md-button>
                                                 <md-button ng-click="uninstallK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
                                                     <md-icon class="md-18">delete_forever</md-icon>

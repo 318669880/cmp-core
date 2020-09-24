@@ -88,10 +88,6 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
             Notification.danger(Translator.get("i18n_ex_workspace_name_no_empty"));
             return;
         }
-        if(!data.organizationId){
-            Notification.danger(Translator.get("i18n_ex_workspace_orgId_no_empty"));
-            return;
-        }
         if (type === 'add') {
             HttpUtils.post("workspace/add", data, function () {
                 $scope.list();

@@ -274,5 +274,11 @@
   "i18n_docker_registry_user": "用户名",
   "i18n_docker_registry_passwd": "密码",
   "i18n_model_install_confirm": "install selected model",
-  "i18n_model_update_confirm": "update selected model"
+  "i18n_model_update_confirm": "update selected model",
+  "i18n_organization_relative": "Relative People",
+  "i18n_organization_type": "Type",
+  "i18n_organization_operate": "Operate",
+  "i18n_organization_parent": "Parent Organization",
+  "i18n_organization_edit": "Edit",
+  "i18n_organization_delete": "Delete"
 }

@@ -17,7 +17,7 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
         });*/
         $scope.conditions.push({
             key: "organizationIds",
-            name: '组织机构',
+            name: Translator.get("i18n_organization"),
             directive: "filter-multistage-tree",
             url: "user/getOgrTree/true",
             multiple: true,

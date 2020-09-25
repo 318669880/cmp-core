@@ -3,12 +3,12 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
         [
             {type: 'numbers'},
             {type: 'checkbox'},
-            {field: 'nodeName', title: '名称', minWidth: 165},
+            {field: 'nodeName', title: Translator.get("i18n_organization_name"), minWidth: 165},
             {
                 title: '菜单图标', align: 'center', hide: true,
                 templet: '<p><i class="layui-icon {{d.menuIcon}}"></i></p>'
             },
-            {field: 'relativeNum', title: '相关人员', width: 50,
+            {field: 'relativeNum', title: Translator.get("i18n_organization_relative"), width: 50,
                 templet: d => {
                     let relativeNum = d.relativeNum;
                     window.aClick = node => {
@@ -29,16 +29,16 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
                     return temp;
                 }
             },
-            {title: '类型', templet: '<p>{{d.nodeType=="org" ? "组织机构" : "工作空间"}}</p>', align: 'center', width: 60},
+            {title: Translator.get("i18n_organization_type"), templet: '<p>{{d.nodeType=="org" ? "组织机构" : "工作空间"}}</p>', align: 'center', width: 60},
             {
-                title: '创建时间', templet: function (d) {
+                title: Translator.get("i18n_create_time"), templet: function (d) {
                     return $filter('date')(d.createTime,'yyyy-MM-dd');
                 }
             },
-            {field: 'description', title: '描述', minWidth: 105},
+            {field: 'description', title: Translator.get("i18n_organization_desc"), minWidth: 105},
             {
                 align: 'center',
-                title: '操作',
+                title: Translator.get("i18n_organization_operate"),
                 width: 150,
                 templet: (d) => {
                     window.treeEdit = (node) => {
@@ -57,8 +57,8 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
 
                         $scope.delete();
                     }
-                    return "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" onClick = 'treeEdit("+JSON.stringify(d)+")'>编辑</a>\n" +
-                           "<a class=\"layui-btn layui-btn-danger layui-btn-xs\" onClick = 'treeDelete("+JSON.stringify(d)+")'>删除</a>"
+                    return "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" onClick = 'treeEdit("+JSON.stringify(d)+")'>"+Translator.get("i18n_organization_edit")+"</a>\n" +
+                           "<a class=\"layui-btn layui-btn-danger layui-btn-xs\" onClick = 'treeDelete("+JSON.stringify(d)+")'>"+Translator.get("i18n_organization_delete")+"</a>"
                 }
             }
         ]

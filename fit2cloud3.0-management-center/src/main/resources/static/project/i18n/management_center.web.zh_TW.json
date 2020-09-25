@@ -274,5 +274,11 @@
   "i18n_docker_registry_user": "用戶名",
   "i18n_docker_registry_passwd": "密碼",
   "i18n_model_install_confirm": "安裝選中模塊",
-  "i18n_model_update_confirm": "更新選中模塊"
+  "i18n_model_update_confirm": "更新選中模塊",
+  "i18n_organization_relative": "相關人員",
+  "i18n_organization_type": "類型",
+  "i18n_organization_operate": "操作",
+  "i18n_organization_parent": "父級機構",
+  "i18n_organization_edit": "編輯",
+  "i18n_organization_delete": "刪除"
 }

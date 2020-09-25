@@ -1753,6 +1753,7 @@
                 idName: "=",
                 pidName: "=",
                 where: "=",
+                childName: "=",
                 loadFinish: "="
             },
             link: function ($scope, element, attr, ctrl) {
@@ -1780,7 +1781,8 @@
                         iconIndex: 2,
                         isPidData: true,
                         idName: $scope.idName,
-                        pidName: $scope.pidName
+                        pidName: $scope.pidName,
+                        childName: $scope.childName,
                     };
                     if ($scope.treeDatas && $scope.treeDatas.length > 0){
                         options.data = treeDatas;

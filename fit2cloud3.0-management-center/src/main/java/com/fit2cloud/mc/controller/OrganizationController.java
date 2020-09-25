@@ -3,6 +3,7 @@ package com.fit2cloud.mc.controller;
 import com.fit2cloud.commons.server.base.domain.Organization;
 import com.fit2cloud.commons.server.base.domain.Workspace;
 import com.fit2cloud.commons.server.i18n.Translator;
+import com.fit2cloud.commons.server.model.OrgTreeNode;
 import com.fit2cloud.commons.server.model.SessionUser;
 import com.fit2cloud.commons.server.model.UserDTO;
 import com.fit2cloud.commons.server.utils.SessionUtils;
@@ -15,16 +16,19 @@ import com.fit2cloud.mc.dto.request.CreateOrganizationRequest;
 import com.fit2cloud.mc.dto.request.OrganizationRequest;
 import com.fit2cloud.mc.dto.request.UpdateOrganizationRequest;
 import com.fit2cloud.mc.service.OrganizationService;
+import com.fit2cloud.mc.service.WorkspaceService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestMapping("/organization")
 @RestController
@@ -33,6 +37,9 @@ public class OrganizationController {
 
     @Resource
     private OrganizationService organizationService;
+
+    @Resource
+    private WorkspaceService workspaceService;
 
 
     @RequiresPermissions(value = {PermissionConstants.USER_READ,
@@ -92,6 +99,23 @@ public class OrganizationController {
     @RequiresPermissions(PermissionConstants.ORGANIZATION_EDIT)
     public Organization update(@RequestBody UpdateOrganizationRequest request) {
         return organizationService.update(request);
+    }
+
+
+    @ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_delete_batch" + Translator.SUFFIX)
+    @PostMapping(value = "/deleteTree")
+    @RequiresPermissions(PermissionConstants.ORGANIZATION_DELETE)
+    @Transactional
+    public void deleteTree(@RequestBody List<OrgTreeNode> deleteNodes){
+        Map<String,List<OrgTreeNode>> idsMap = deleteNodes.stream().collect(Collectors.groupingBy(OrgTreeNode::getNodeType));
+
+        Optional.ofNullable(idsMap.get("wks")).ifPresent(wksNodes -> {
+            wksNodes.forEach(wkNode -> workspaceService.delete(wkNode.getNodeId()));
+        });
+
+        Optional.ofNullable(idsMap.get("org")).ifPresent(orgNodes -> {
+            organizationService.delete(orgNodes.stream().map(OrgTreeNode::getNodeId).collect(Collectors.toList()));
+        });
     }
 
 }

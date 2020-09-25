@@ -279,6 +279,6 @@
   "i18n_organization_type": "類型",
   "i18n_organization_operate": "操作",
   "i18n_organization_parent": "父級機構",
-  "i18n_organization_edit": "編輯",
-  "i18n_organization_delete": "刪除"
+  "i18n_organization_operate_edit": "編輯",
+  "i18n_organization_operate_delete": "刪除"
 }

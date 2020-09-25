@@ -50,15 +50,21 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
                         }
                         $scope.sourceDatas = [node.parentId];
                         $scope.organizationId = node.parentId;
-                        $scope.edit(item);
+                        if (node.nodeType == 'org'){
+                            $scope.update_url = "organization/update";
+                            $scope.edit(item);
+                            return;
+                        }
+                        $scope.update_url = "workspace/update";
+                        $scope.edit_workspace(item);
                     }
                     window.treeDelete = (node) => {
+                        $scope.targetTree.expand(node.nodeId);
                         $scope.targetTree.setChecked([node.nodeId]);
-
                         $scope.delete();
                     }
-                    return "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" onClick = 'treeEdit("+JSON.stringify(d)+")'>"+Translator.get("i18n_organization_edit")+"</a>\n" +
-                           "<a class=\"layui-btn layui-btn-danger layui-btn-xs\" onClick = 'treeDelete("+JSON.stringify(d)+")'>"+Translator.get("i18n_organization_delete")+"</a>"
+                    return "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" onClick = 'treeEdit("+JSON.stringify(d)+")'>"+Translator.get("i18n_organization_operate_edit")+"</a>\n" +
+                           "<a class=\"layui-btn layui-btn-danger layui-btn-xs\" onClick = 'treeDelete("+JSON.stringify(d)+")'>"+Translator.get("i18n_organization_operate_delete")+"</a>"
                 }
             }
         ]
@@ -67,12 +73,13 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
     $scope.tree_url = "user/orgtree";
     $scope.id_name = "nodeId";
     $scope.pid_name = "parentId";
+    $scope.child_name = "childNodes";
     $scope.treeTableParam = {excludeWs: false};
     $scope.treeSucess = (targetTree) => {
         $scope.targetTree = targetTree;
         //$scope.targetTree.expandAll();
     }
-
+    $scope.update_url = "organization/update";
     // 定义搜索条件
     $scope.conditions = [
         {key: "name", name: Translator.get("i18n_organization_name"), directive: "filter-contains"}
@@ -80,7 +87,7 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
 
     // 用于传入后台的参数
     $scope.filters = [];
-    $scope.ids = [];
+    // $scope.ids = [];
     // 全选按钮，添加到$scope.columns
 
 
@@ -126,11 +133,21 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
         $scope.toggleForm();
     };
 
+    $scope.edit_workspace = function(data) {
+        $scope.item = angular.copy(data);
+        $scope.formUrl = 'project/html/workspace/workspace-tree-edit.html' + '?_t=' + Math.random();
+        $scope.toggleForm();
+    }
+
 
 
 
     $scope.submit = function (type, data) {
-        data.pid = $scope.organizationId;
+        if ($scope.update_url === 'workspace/update'){
+            data.organizationId = $scope.organizationId
+        }else{
+            data.pid = $scope.organizationId;
+        }
         if (type === 'add') {
             HttpUtils.post("organization/add", data, function () {
                 $scope.list();
@@ -141,7 +158,8 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
             })
         }
         if (type === 'edit') {
-            $http.post('organization/update', data).then(function () {
+            /*$http.post('organization/update', data).then(function () {*/
+            $http.post($scope.update_url || 'organization/update', data).then(function () {
                 $scope.list();
                 Notification.success(Translator.get("i18n_mc_update_success"));
                 $scope.closeToggleForm();
@@ -152,12 +170,17 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
     };
     $scope.delete = function () {
         let checkdNodes = $scope.targetTree.checkStatus();
-        $scope.ids = checkdNodes && checkdNodes.length > 0 && checkdNodes.filter(node => !node.LAY_INDETERMINATE).map(node => node.nodeId);
-        if (!$scope.ids  || $scope.ids.length === 0) {
+        let deleteNodes = checkdNodes && checkdNodes.length > 0 && checkdNodes.filter(node => !node.LAY_INDETERMINATE).map(node =>  {
+            return {
+                nodeId: node.nodeId,
+                nodeType: node.nodeType
+            }
+        });
+        if (!deleteNodes  || deleteNodes.length === 0) {
             Notification.info(Translator.get("i18n_no_selected_item"))
         } else {
             Notification.confirm(Translator.get("i18n_menu_delete_confirm"), function () {
-                $http.post("organization/delete", $scope.ids).then(function () {
+                $http.post("organization/deleteTree", deleteNodes).then(function () {
                     Notification.success(Translator.get("i18n_mc_delete_success"));
                     $scope.list();
                 }, function (rep) {

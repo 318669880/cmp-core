@@ -13,6 +13,9 @@ public class UpdateOrganizationRequest {
     @ApiModelProperty("描述")
     private String description;
 
+    @ApiModelProperty("父机构ID")
+    private String pid;
+
     public String getId() {
         return id;
     }
@@ -35,5 +38,13 @@ public class UpdateOrganizationRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 }

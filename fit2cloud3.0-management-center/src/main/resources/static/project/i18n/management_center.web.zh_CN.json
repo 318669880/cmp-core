@@ -278,6 +278,6 @@
   "i18n_organization_type": "类型",
   "i18n_organization_operate": "操作",
   "i18n_organization_parent": "父级机构",
-  "i18n_organization_edit": "编辑",
-  "i18n_organization_delete": "删除"
+  "i18n_organization_operate_edit": "编辑",
+  "i18n_organization_operate_delete": "删除"
 }

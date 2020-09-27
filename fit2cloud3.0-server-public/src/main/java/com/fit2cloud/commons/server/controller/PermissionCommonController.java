@@ -77,9 +77,9 @@ public class PermissionCommonController {
         return userCommonService.orgTreeSelect(orgTreeQueryDto.getRootId(), orgTreeQueryDto.getExcludeWs());
     }
 
-    @GetMapping("getOgrTree/{excludeWs}")
+    /*@GetMapping("getOgrTree/{excludeWs}")
     public List<OrgTreeNode> getOrgTree(@PathVariable("excludeWs") boolean excludeWs){
         return userCommonService.orgTreeSelect(null, excludeWs);
-    }
+    }*/
 
 }

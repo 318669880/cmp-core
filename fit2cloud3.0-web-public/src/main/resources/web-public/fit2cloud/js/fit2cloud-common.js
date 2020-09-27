@@ -2900,15 +2900,21 @@
 
 
 
-
-
-                HttpUtils.get($scope.condition.url, function (response) {
+                HttpUtils.post($scope.condition.url, $scope.condition.param, function (response) {
                     let nodes = response.data;
                     $scope.buildTreeData(nodes);
                     $scope.treeData = nodes;
                 }, function (data) {
                     $scope.error = data;
-                });
+                })
+
+                /*HttpUtils.get($scope.condition.url, function (response) {
+                    let nodes = response.data;
+                    $scope.buildTreeData(nodes);
+                    $scope.treeData = nodes;
+                }, function (data) {
+                    $scope.error = data;
+                });*/
 
                 $scope.buildTreeData = (nodes) => {
                     angular.forEach(nodes ,(node) => {

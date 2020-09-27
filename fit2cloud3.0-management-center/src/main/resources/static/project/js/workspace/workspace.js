@@ -19,7 +19,8 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
             key: "organizationIds",
             name: Translator.get("i18n_organization"),
             directive: "filter-multistage-tree",
-            url: "user/getOgrTree/true",
+            url: "user/orgtreeselect",
+            param: {excludeWs: true},
             multiple: true,
             convert: {value: "nodeId", label: "nodeName"},
             build: {

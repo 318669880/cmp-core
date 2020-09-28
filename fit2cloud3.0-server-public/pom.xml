@@ -138,6 +138,13 @@
     </dependencies>
 
     <build>
+        <!--        <extensions>-->
+        <!--            <extension>-->
+        <!--                <groupId>kr.motd.maven</groupId>-->
+        <!--                <artifactId>os-maven-plugin</artifactId>-->
+        <!--                <version>1.4.1.Final</version>-->
+        <!--            </extension>-->
+        <!--        </extensions>-->
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -156,6 +163,25 @@
             </resource>
         </resources>
         <plugins>
+            <!--            <plugin>-->
+            <!--                <groupId>org.xolstice.maven.plugins</groupId>-->
+            <!--                <artifactId>protobuf-maven-plugin</artifactId>-->
+            <!--                <version>0.6.1</version>-->
+            <!--                <configuration>-->
+            <!--                    <protocArtifact>com.google.protobuf:protoc:3.0.0:exe:${os.detected.classifier}</protocArtifact>-->
+            <!--                    <pluginId>grpc-java</pluginId>-->
+            <!--                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:0.15.0:exe:${os.detected.classifier}</pluginArtifact>-->
+            <!--                    <protocExecutable>/Users/gin/fit2cloud/protobuf-3.7.0/bin/protoc</protocExecutable>-->
+            <!--                </configuration>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            <goal>compile</goal>-->
+            <!--                            <goal>compile-custom</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

@@ -149,7 +149,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         name_ = s;
@@ -163,7 +163,7 @@ public final class Kobe {
         getNameBytes() {
       Object ref = name_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         name_ = b;
@@ -393,7 +393,7 @@ public final class Kobe {
                 Kobe.Project.class, Kobe.Project.Builder.class);
       }
 
-      // Construct using api.Kobe.Project.newBuilder()
+      // Construct using Kobe.Project.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -565,7 +565,7 @@ public final class Kobe {
           getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           name_ = b;
@@ -582,7 +582,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         name_ = value;
         onChanged();
         return this;
@@ -591,7 +591,7 @@ public final class Kobe {
        * <code>string name = 1;</code>
        */
       public Builder clearName() {
-
+        
         name_ = getDefaultInstance().getName();
         onChanged();
         return this;
@@ -605,7 +605,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         name_ = value;
         onChanged();
         return this;
@@ -817,11 +817,24 @@ public final class Kobe {
         getPrivateKeyBytes();
 
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>.api.ProxyConfig proxyConfig = 7;</code>
+     */
+    boolean hasProxyConfig();
+    /**
+     * <code>.api.ProxyConfig proxyConfig = 7;</code>
+     */
+    Kobe.ProxyConfig getProxyConfig();
+    /**
+     * <code>.api.ProxyConfig proxyConfig = 7;</code>
+     */
+    Kobe.ProxyConfigOrBuilder getProxyConfigOrBuilder();
+
+    /**
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
     int getVarsCount();
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
     boolean containsVars(
             String key);
@@ -832,19 +845,19 @@ public final class Kobe {
     java.util.Map<String, String>
     getVars();
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
     java.util.Map<String, String>
     getVarsMap();
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
 
     String getVarsOrDefault(
             String key,
             String defaultValue);
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
 
     String getVarsOrThrow(
@@ -930,10 +943,23 @@ public final class Kobe {
               break;
             }
             case 58: {
-              if (!((mutable_bitField0_ & 0x00000040) != 0)) {
+              Kobe.ProxyConfig.Builder subBuilder = null;
+              if (proxyConfig_ != null) {
+                subBuilder = proxyConfig_.toBuilder();
+              }
+              proxyConfig_ = input.readMessage(Kobe.ProxyConfig.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(proxyConfig_);
+                proxyConfig_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 66: {
+              if (!((mutable_bitField0_ & 0x00000080) != 0)) {
                 vars_ = com.google.protobuf.MapField.newMapField(
                     VarsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000040;
+                mutable_bitField0_ |= 0x00000080;
               }
               com.google.protobuf.MapEntry<String, String>
               vars__ = input.readMessage(
@@ -971,7 +997,7 @@ public final class Kobe {
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 7:
+        case 8:
           return internalGetVars();
         default:
           throw new RuntimeException(
@@ -997,7 +1023,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         ip_ = s;
@@ -1011,7 +1037,7 @@ public final class Kobe {
         getIpBytes() {
       Object ref = ip_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         ip_ = b;
@@ -1031,7 +1057,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         name_ = s;
@@ -1045,7 +1071,7 @@ public final class Kobe {
         getNameBytes() {
       Object ref = name_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         name_ = b;
@@ -1074,7 +1100,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         user_ = s;
@@ -1088,7 +1114,7 @@ public final class Kobe {
         getUserBytes() {
       Object ref = user_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         user_ = b;
@@ -1108,7 +1134,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         password_ = s;
@@ -1122,7 +1148,7 @@ public final class Kobe {
         getPasswordBytes() {
       Object ref = password_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         password_ = b;
@@ -1142,7 +1168,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         privateKey_ = s;
@@ -1156,7 +1182,7 @@ public final class Kobe {
         getPrivateKeyBytes() {
       Object ref = privateKey_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         privateKey_ = b;
@@ -1166,13 +1192,34 @@ public final class Kobe {
       }
     }
 
-    public static final int VARS_FIELD_NUMBER = 7;
+    public static final int PROXYCONFIG_FIELD_NUMBER = 7;
+    private Kobe.ProxyConfig proxyConfig_;
+    /**
+     * <code>.api.ProxyConfig proxyConfig = 7;</code>
+     */
+    public boolean hasProxyConfig() {
+      return proxyConfig_ != null;
+    }
+    /**
+     * <code>.api.ProxyConfig proxyConfig = 7;</code>
+     */
+    public Kobe.ProxyConfig getProxyConfig() {
+      return proxyConfig_ == null ? Kobe.ProxyConfig.getDefaultInstance() : proxyConfig_;
+    }
+    /**
+     * <code>.api.ProxyConfig proxyConfig = 7;</code>
+     */
+    public Kobe.ProxyConfigOrBuilder getProxyConfigOrBuilder() {
+      return getProxyConfig();
+    }
+
+    public static final int VARS_FIELD_NUMBER = 8;
     private static final class VarsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           String, String> defaultEntry =
               com.google.protobuf.MapEntry
               .<String, String>newDefaultInstance(
-                  Kobe.internal_static_api_Host_VarsEntry_descriptor,
+                  Kobe.internal_static_api_Host_VarsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -1193,7 +1240,7 @@ public final class Kobe {
       return internalGetVars().getMap().size();
     }
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
 
     public boolean containsVars(
@@ -1209,14 +1256,14 @@ public final class Kobe {
       return getVarsMap();
     }
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
 
     public java.util.Map<String, String> getVarsMap() {
       return internalGetVars().getMap();
     }
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
 
     public String getVarsOrDefault(
@@ -1228,7 +1275,7 @@ public final class Kobe {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, string&gt; vars = 7;</code>
+     * <code>map&lt;string, string&gt; vars = 8;</code>
      */
 
     public String getVarsOrThrow(
@@ -1274,12 +1321,15 @@ public final class Kobe {
       if (!getPrivateKeyBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, privateKey_);
       }
+      if (proxyConfig_ != null) {
+        output.writeMessage(7, getProxyConfig());
+      }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetVars(),
           VarsDefaultEntryHolder.defaultEntry,
-          7);
+          8);
       unknownFields.writeTo(output);
     }
 
@@ -1308,6 +1358,10 @@ public final class Kobe {
       if (!getPrivateKeyBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, privateKey_);
       }
+      if (proxyConfig_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, getProxyConfig());
+      }
       for (java.util.Map.Entry<String, String> entry
            : internalGetVars().getMap().entrySet()) {
         com.google.protobuf.MapEntry<String, String>
@@ -1316,7 +1370,7 @@ public final class Kobe {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(7, vars__);
+            .computeMessageSize(8, vars__);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1345,6 +1399,11 @@ public final class Kobe {
           .equals(other.getPassword())) return false;
       if (!getPrivateKey()
           .equals(other.getPrivateKey())) return false;
+      if (hasProxyConfig() != other.hasProxyConfig()) return false;
+      if (hasProxyConfig()) {
+        if (!getProxyConfig()
+            .equals(other.getProxyConfig())) return false;
+      }
       if (!internalGetVars().equals(
           other.internalGetVars())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -1370,6 +1429,10 @@ public final class Kobe {
       hash = (53 * hash) + getPassword().hashCode();
       hash = (37 * hash) + PRIVATEKEY_FIELD_NUMBER;
       hash = (53 * hash) + getPrivateKey().hashCode();
+      if (hasProxyConfig()) {
+        hash = (37 * hash) + PROXYCONFIG_FIELD_NUMBER;
+        hash = (53 * hash) + getProxyConfig().hashCode();
+      }
       if (!internalGetVars().getMap().isEmpty()) {
         hash = (37 * hash) + VARS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetVars().hashCode();
@@ -1485,7 +1548,7 @@ public final class Kobe {
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 7:
+          case 8:
             return internalGetVars();
           default:
             throw new RuntimeException(
@@ -1496,7 +1559,7 @@ public final class Kobe {
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 7:
+          case 8:
             return internalGetMutableVars();
           default:
             throw new RuntimeException(
@@ -1511,7 +1574,7 @@ public final class Kobe {
                 Kobe.Host.class, Kobe.Host.Builder.class);
       }
 
-      // Construct using api.Kobe.Host.newBuilder()
+      // Construct using Kobe.Host.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1541,6 +1604,12 @@ public final class Kobe {
 
         privateKey_ = "";
 
+        if (proxyConfigBuilder_ == null) {
+          proxyConfig_ = null;
+        } else {
+          proxyConfig_ = null;
+          proxyConfigBuilder_ = null;
+        }
         internalGetMutableVars().clear();
         return this;
       }
@@ -1576,6 +1645,11 @@ public final class Kobe {
         result.user_ = user_;
         result.password_ = password_;
         result.privateKey_ = privateKey_;
+        if (proxyConfigBuilder_ == null) {
+          result.proxyConfig_ = proxyConfig_;
+        } else {
+          result.proxyConfig_ = proxyConfigBuilder_.build();
+        }
         result.vars_ = internalGetVars();
         result.vars_.makeImmutable();
         result.bitField0_ = to_bitField0_;
@@ -1650,6 +1724,9 @@ public final class Kobe {
           privateKey_ = other.privateKey_;
           onChanged();
         }
+        if (other.hasProxyConfig()) {
+          mergeProxyConfig(other.getProxyConfig());
+        }
         internalGetMutableVars().mergeFrom(
             other.internalGetVars());
         this.mergeUnknownFields(other.unknownFields);
@@ -1705,7 +1782,7 @@ public final class Kobe {
           getIpBytes() {
         Object ref = ip_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           ip_ = b;
@@ -1722,7 +1799,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         ip_ = value;
         onChanged();
         return this;
@@ -1731,7 +1808,7 @@ public final class Kobe {
        * <code>string ip = 1;</code>
        */
       public Builder clearIp() {
-
+        
         ip_ = getDefaultInstance().getIp();
         onChanged();
         return this;
@@ -1745,7 +1822,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         ip_ = value;
         onChanged();
         return this;
@@ -1774,7 +1851,7 @@ public final class Kobe {
           getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           name_ = b;
@@ -1791,7 +1868,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         name_ = value;
         onChanged();
         return this;
@@ -1800,7 +1877,7 @@ public final class Kobe {
        * <code>string name = 2;</code>
        */
       public Builder clearName() {
-
+        
         name_ = getDefaultInstance().getName();
         onChanged();
         return this;
@@ -1814,7 +1891,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         name_ = value;
         onChanged();
         return this;
@@ -1831,7 +1908,7 @@ public final class Kobe {
        * <code>int32 port = 3;</code>
        */
       public Builder setPort(int value) {
-
+        
         port_ = value;
         onChanged();
         return this;
@@ -1840,7 +1917,7 @@ public final class Kobe {
        * <code>int32 port = 3;</code>
        */
       public Builder clearPort() {
-
+        
         port_ = 0;
         onChanged();
         return this;
@@ -1869,7 +1946,7 @@ public final class Kobe {
           getUserBytes() {
         Object ref = user_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           user_ = b;
@@ -1886,7 +1963,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         user_ = value;
         onChanged();
         return this;
@@ -1895,7 +1972,7 @@ public final class Kobe {
        * <code>string user = 4;</code>
        */
       public Builder clearUser() {
-
+        
         user_ = getDefaultInstance().getUser();
         onChanged();
         return this;
@@ -1909,7 +1986,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         user_ = value;
         onChanged();
         return this;
@@ -1938,7 +2015,7 @@ public final class Kobe {
           getPasswordBytes() {
         Object ref = password_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           password_ = b;
@@ -1955,7 +2032,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         password_ = value;
         onChanged();
         return this;
@@ -1964,7 +2041,7 @@ public final class Kobe {
        * <code>string password = 5;</code>
        */
       public Builder clearPassword() {
-
+        
         password_ = getDefaultInstance().getPassword();
         onChanged();
         return this;
@@ -1978,7 +2055,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         password_ = value;
         onChanged();
         return this;
@@ -2007,7 +2084,7 @@ public final class Kobe {
           getPrivateKeyBytes() {
         Object ref = privateKey_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           privateKey_ = b;
@@ -2024,7 +2101,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         privateKey_ = value;
         onChanged();
         return this;
@@ -2033,7 +2110,7 @@ public final class Kobe {
        * <code>string privateKey = 6;</code>
        */
       public Builder clearPrivateKey() {
-
+        
         privateKey_ = getDefaultInstance().getPrivateKey();
         onChanged();
         return this;
@@ -2047,10 +2124,127 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         privateKey_ = value;
         onChanged();
         return this;
+      }
+
+      private Kobe.ProxyConfig proxyConfig_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          Kobe.ProxyConfig, Kobe.ProxyConfig.Builder, Kobe.ProxyConfigOrBuilder> proxyConfigBuilder_;
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      public boolean hasProxyConfig() {
+        return proxyConfigBuilder_ != null || proxyConfig_ != null;
+      }
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      public Kobe.ProxyConfig getProxyConfig() {
+        if (proxyConfigBuilder_ == null) {
+          return proxyConfig_ == null ? Kobe.ProxyConfig.getDefaultInstance() : proxyConfig_;
+        } else {
+          return proxyConfigBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      public Builder setProxyConfig(Kobe.ProxyConfig value) {
+        if (proxyConfigBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          proxyConfig_ = value;
+          onChanged();
+        } else {
+          proxyConfigBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      public Builder setProxyConfig(
+          Kobe.ProxyConfig.Builder builderForValue) {
+        if (proxyConfigBuilder_ == null) {
+          proxyConfig_ = builderForValue.build();
+          onChanged();
+        } else {
+          proxyConfigBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      public Builder mergeProxyConfig(Kobe.ProxyConfig value) {
+        if (proxyConfigBuilder_ == null) {
+          if (proxyConfig_ != null) {
+            proxyConfig_ =
+              Kobe.ProxyConfig.newBuilder(proxyConfig_).mergeFrom(value).buildPartial();
+          } else {
+            proxyConfig_ = value;
+          }
+          onChanged();
+        } else {
+          proxyConfigBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      public Builder clearProxyConfig() {
+        if (proxyConfigBuilder_ == null) {
+          proxyConfig_ = null;
+          onChanged();
+        } else {
+          proxyConfig_ = null;
+          proxyConfigBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      public Kobe.ProxyConfig.Builder getProxyConfigBuilder() {
+        
+        onChanged();
+        return getProxyConfigFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      public Kobe.ProxyConfigOrBuilder getProxyConfigOrBuilder() {
+        if (proxyConfigBuilder_ != null) {
+          return proxyConfigBuilder_.getMessageOrBuilder();
+        } else {
+          return proxyConfig_ == null ?
+              Kobe.ProxyConfig.getDefaultInstance() : proxyConfig_;
+        }
+      }
+      /**
+       * <code>.api.ProxyConfig proxyConfig = 7;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          Kobe.ProxyConfig, Kobe.ProxyConfig.Builder, Kobe.ProxyConfigOrBuilder> 
+          getProxyConfigFieldBuilder() {
+        if (proxyConfigBuilder_ == null) {
+          proxyConfigBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              Kobe.ProxyConfig, Kobe.ProxyConfig.Builder, Kobe.ProxyConfigOrBuilder>(
+                  getProxyConfig(),
+                  getParentForChildren(),
+                  isClean());
+          proxyConfig_ = null;
+        }
+        return proxyConfigBuilder_;
       }
 
       private com.google.protobuf.MapField<
@@ -2080,7 +2274,7 @@ public final class Kobe {
         return internalGetVars().getMap().size();
       }
       /**
-       * <code>map&lt;string, string&gt; vars = 7;</code>
+       * <code>map&lt;string, string&gt; vars = 8;</code>
        */
 
       public boolean containsVars(
@@ -2096,14 +2290,14 @@ public final class Kobe {
         return getVarsMap();
       }
       /**
-       * <code>map&lt;string, string&gt; vars = 7;</code>
+       * <code>map&lt;string, string&gt; vars = 8;</code>
        */
 
       public java.util.Map<String, String> getVarsMap() {
         return internalGetVars().getMap();
       }
       /**
-       * <code>map&lt;string, string&gt; vars = 7;</code>
+       * <code>map&lt;string, string&gt; vars = 8;</code>
        */
 
       public String getVarsOrDefault(
@@ -2115,7 +2309,7 @@ public final class Kobe {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, string&gt; vars = 7;</code>
+       * <code>map&lt;string, string&gt; vars = 8;</code>
        */
 
       public String getVarsOrThrow(
@@ -2135,7 +2329,7 @@ public final class Kobe {
         return this;
       }
       /**
-       * <code>map&lt;string, string&gt; vars = 7;</code>
+       * <code>map&lt;string, string&gt; vars = 8;</code>
        */
 
       public Builder removeVars(
@@ -2154,7 +2348,7 @@ public final class Kobe {
         return internalGetMutableVars().getMutableMap();
       }
       /**
-       * <code>map&lt;string, string&gt; vars = 7;</code>
+       * <code>map&lt;string, string&gt; vars = 8;</code>
        */
       public Builder putVars(
           String key,
@@ -2166,7 +2360,7 @@ public final class Kobe {
         return this;
       }
       /**
-       * <code>map&lt;string, string&gt; vars = 7;</code>
+       * <code>map&lt;string, string&gt; vars = 8;</code>
        */
 
       public Builder putAllVars(
@@ -2223,6 +2417,954 @@ public final class Kobe {
 
     @Override
     public Kobe.Host getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ProxyConfigOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:api.ProxyConfig)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>bool enable = 1;</code>
+     */
+    boolean getEnable();
+
+    /**
+     * <code>string user = 2;</code>
+     */
+    String getUser();
+    /**
+     * <code>string user = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserBytes();
+
+    /**
+     * <code>string password = 3;</code>
+     */
+    String getPassword();
+    /**
+     * <code>string password = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getPasswordBytes();
+
+    /**
+     * <code>string ip = 4;</code>
+     */
+    String getIp();
+    /**
+     * <code>string ip = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getIpBytes();
+
+    /**
+     * <code>int32 port = 5;</code>
+     */
+    int getPort();
+  }
+  /**
+   * Protobuf type {@code api.ProxyConfig}
+   */
+  public  static final class ProxyConfig extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:api.ProxyConfig)
+      ProxyConfigOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProxyConfig.newBuilder() to construct.
+    private ProxyConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProxyConfig() {
+      user_ = "";
+      password_ = "";
+      ip_ = "";
+    }
+
+    @Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProxyConfig(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              enable_ = input.readBool();
+              break;
+            }
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
+              user_ = s;
+              break;
+            }
+            case 26: {
+              String s = input.readStringRequireUtf8();
+
+              password_ = s;
+              break;
+            }
+            case 34: {
+              String s = input.readStringRequireUtf8();
+
+              ip_ = s;
+              break;
+            }
+            case 40: {
+
+              port_ = input.readInt32();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return Kobe.internal_static_api_ProxyConfig_descriptor;
+    }
+
+    @Override
+    protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return Kobe.internal_static_api_ProxyConfig_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              Kobe.ProxyConfig.class, Kobe.ProxyConfig.Builder.class);
+    }
+
+    public static final int ENABLE_FIELD_NUMBER = 1;
+    private boolean enable_;
+    /**
+     * <code>bool enable = 1;</code>
+     */
+    public boolean getEnable() {
+      return enable_;
+    }
+
+    public static final int USER_FIELD_NUMBER = 2;
+    private volatile Object user_;
+    /**
+     * <code>string user = 2;</code>
+     */
+    public String getUser() {
+      Object ref = user_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        user_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string user = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserBytes() {
+      Object ref = user_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        user_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PASSWORD_FIELD_NUMBER = 3;
+    private volatile Object password_;
+    /**
+     * <code>string password = 3;</code>
+     */
+    public String getPassword() {
+      Object ref = password_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        password_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string password = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPasswordBytes() {
+      Object ref = password_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        password_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int IP_FIELD_NUMBER = 4;
+    private volatile Object ip_;
+    /**
+     * <code>string ip = 4;</code>
+     */
+    public String getIp() {
+      Object ref = ip_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        ip_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string ip = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIpBytes() {
+      Object ref = ip_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        ip_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PORT_FIELD_NUMBER = 5;
+    private int port_;
+    /**
+     * <code>int32 port = 5;</code>
+     */
+    public int getPort() {
+      return port_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (enable_ != false) {
+        output.writeBool(1, enable_);
+      }
+      if (!getUserBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, user_);
+      }
+      if (!getPasswordBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, password_);
+      }
+      if (!getIpBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, ip_);
+      }
+      if (port_ != 0) {
+        output.writeInt32(5, port_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (enable_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, enable_);
+      }
+      if (!getUserBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, user_);
+      }
+      if (!getPasswordBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, password_);
+      }
+      if (!getIpBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, ip_);
+      }
+      if (port_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(5, port_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof Kobe.ProxyConfig)) {
+        return super.equals(obj);
+      }
+      Kobe.ProxyConfig other = (Kobe.ProxyConfig) obj;
+
+      if (getEnable()
+          != other.getEnable()) return false;
+      if (!getUser()
+          .equals(other.getUser())) return false;
+      if (!getPassword()
+          .equals(other.getPassword())) return false;
+      if (!getIp()
+          .equals(other.getIp())) return false;
+      if (getPort()
+          != other.getPort()) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ENABLE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getEnable());
+      hash = (37 * hash) + USER_FIELD_NUMBER;
+      hash = (53 * hash) + getUser().hashCode();
+      hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
+      hash = (53 * hash) + getPassword().hashCode();
+      hash = (37 * hash) + IP_FIELD_NUMBER;
+      hash = (53 * hash) + getIp().hashCode();
+      hash = (37 * hash) + PORT_FIELD_NUMBER;
+      hash = (53 * hash) + getPort();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static Kobe.ProxyConfig parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Kobe.ProxyConfig parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Kobe.ProxyConfig parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Kobe.ProxyConfig parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Kobe.ProxyConfig parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Kobe.ProxyConfig parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Kobe.ProxyConfig parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static Kobe.ProxyConfig parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static Kobe.ProxyConfig parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static Kobe.ProxyConfig parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static Kobe.ProxyConfig parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static Kobe.ProxyConfig parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(Kobe.ProxyConfig prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @Override
+    protected Builder newBuilderForType(
+        BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code api.ProxyConfig}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ProxyConfig)
+        Kobe.ProxyConfigOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return Kobe.internal_static_api_ProxyConfig_descriptor;
+      }
+
+      @Override
+      protected FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return Kobe.internal_static_api_ProxyConfig_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                Kobe.ProxyConfig.class, Kobe.ProxyConfig.Builder.class);
+      }
+
+      // Construct using Kobe.ProxyConfig.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @Override
+      public Builder clear() {
+        super.clear();
+        enable_ = false;
+
+        user_ = "";
+
+        password_ = "";
+
+        ip_ = "";
+
+        port_ = 0;
+
+        return this;
+      }
+
+      @Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return Kobe.internal_static_api_ProxyConfig_descriptor;
+      }
+
+      @Override
+      public Kobe.ProxyConfig getDefaultInstanceForType() {
+        return Kobe.ProxyConfig.getDefaultInstance();
+      }
+
+      @Override
+      public Kobe.ProxyConfig build() {
+        Kobe.ProxyConfig result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @Override
+      public Kobe.ProxyConfig buildPartial() {
+        Kobe.ProxyConfig result = new Kobe.ProxyConfig(this);
+        result.enable_ = enable_;
+        result.user_ = user_;
+        result.password_ = password_;
+        result.ip_ = ip_;
+        result.port_ = port_;
+        onBuilt();
+        return result;
+      }
+
+      @Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return super.setField(field, value);
+      }
+      @Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof Kobe.ProxyConfig) {
+          return mergeFrom((Kobe.ProxyConfig)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(Kobe.ProxyConfig other) {
+        if (other == Kobe.ProxyConfig.getDefaultInstance()) return this;
+        if (other.getEnable() != false) {
+          setEnable(other.getEnable());
+        }
+        if (!other.getUser().isEmpty()) {
+          user_ = other.user_;
+          onChanged();
+        }
+        if (!other.getPassword().isEmpty()) {
+          password_ = other.password_;
+          onChanged();
+        }
+        if (!other.getIp().isEmpty()) {
+          ip_ = other.ip_;
+          onChanged();
+        }
+        if (other.getPort() != 0) {
+          setPort(other.getPort());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        Kobe.ProxyConfig parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (Kobe.ProxyConfig) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private boolean enable_ ;
+      /**
+       * <code>bool enable = 1;</code>
+       */
+      public boolean getEnable() {
+        return enable_;
+      }
+      /**
+       * <code>bool enable = 1;</code>
+       */
+      public Builder setEnable(boolean value) {
+        
+        enable_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool enable = 1;</code>
+       */
+      public Builder clearEnable() {
+        
+        enable_ = false;
+        onChanged();
+        return this;
+      }
+
+      private Object user_ = "";
+      /**
+       * <code>string user = 2;</code>
+       */
+      public String getUser() {
+        Object ref = user_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          user_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string user = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserBytes() {
+        Object ref = user_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          user_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string user = 2;</code>
+       */
+      public Builder setUser(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        user_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user = 2;</code>
+       */
+      public Builder clearUser() {
+        
+        user_ = getDefaultInstance().getUser();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user = 2;</code>
+       */
+      public Builder setUserBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        user_ = value;
+        onChanged();
+        return this;
+      }
+
+      private Object password_ = "";
+      /**
+       * <code>string password = 3;</code>
+       */
+      public String getPassword() {
+        Object ref = password_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          password_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string password = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPasswordBytes() {
+        Object ref = password_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          password_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string password = 3;</code>
+       */
+      public Builder setPassword(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        password_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string password = 3;</code>
+       */
+      public Builder clearPassword() {
+        
+        password_ = getDefaultInstance().getPassword();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string password = 3;</code>
+       */
+      public Builder setPasswordBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        password_ = value;
+        onChanged();
+        return this;
+      }
+
+      private Object ip_ = "";
+      /**
+       * <code>string ip = 4;</code>
+       */
+      public String getIp() {
+        Object ref = ip_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          ip_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string ip = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIpBytes() {
+        Object ref = ip_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          ip_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string ip = 4;</code>
+       */
+      public Builder setIp(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        ip_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ip = 4;</code>
+       */
+      public Builder clearIp() {
+        
+        ip_ = getDefaultInstance().getIp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ip = 4;</code>
+       */
+      public Builder setIpBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        ip_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int port_ ;
+      /**
+       * <code>int32 port = 5;</code>
+       */
+      public int getPort() {
+        return port_;
+      }
+      /**
+       * <code>int32 port = 5;</code>
+       */
+      public Builder setPort(int value) {
+        
+        port_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 port = 5;</code>
+       */
+      public Builder clearPort() {
+        
+        port_ = 0;
+        onChanged();
+        return this;
+      }
+      @Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:api.ProxyConfig)
+    }
+
+    // @@protoc_insertion_point(class_scope:api.ProxyConfig)
+    private static final Kobe.ProxyConfig DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new Kobe.ProxyConfig();
+    }
+
+    public static Kobe.ProxyConfig getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProxyConfig>
+        PARSER = new com.google.protobuf.AbstractParser<ProxyConfig>() {
+      @Override
+      public ProxyConfig parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProxyConfig(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProxyConfig> parser() {
+      return PARSER;
+    }
+
+    @Override
+    public com.google.protobuf.Parser<ProxyConfig> getParserForType() {
+      return PARSER;
+    }
+
+    @Override
+    public Kobe.ProxyConfig getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2454,7 +3596,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         name_ = s;
@@ -2468,7 +3610,7 @@ public final class Kobe {
         getNameBytes() {
       Object ref = name_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         name_ = b;
@@ -2542,7 +3684,7 @@ public final class Kobe {
           String, String> defaultEntry =
               com.google.protobuf.MapEntry
               .<String, String>newDefaultInstance(
-                  Kobe.internal_static_api_Group_VarsEntry_descriptor,
+                  Kobe.internal_static_api_Group_VarsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -2864,7 +4006,7 @@ public final class Kobe {
                 Kobe.Group.class, Kobe.Group.Builder.class);
       }
 
-      // Construct using api.Kobe.Group.newBuilder()
+      // Construct using Kobe.Group.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3058,7 +4200,7 @@ public final class Kobe {
           getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           name_ = b;
@@ -3075,7 +4217,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         name_ = value;
         onChanged();
         return this;
@@ -3084,7 +4226,7 @@ public final class Kobe {
        * <code>string name = 1;</code>
        */
       public Builder clearName() {
-
+        
         name_ = getDefaultInstance().getName();
         onChanged();
         return this;
@@ -3098,7 +4240,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         name_ = value;
         onChanged();
         return this;
@@ -3474,7 +4616,7 @@ public final class Kobe {
     /**
      * <code>repeated .api.Host hosts = 1;</code>
      */
-    java.util.List<Host>
+    java.util.List<Kobe.Host> 
         getHostsList();
     /**
      * <code>repeated .api.Host hosts = 1;</code>
@@ -3487,7 +4629,7 @@ public final class Kobe {
     /**
      * <code>repeated .api.Host hosts = 1;</code>
      */
-    java.util.List<? extends HostOrBuilder>
+    java.util.List<? extends Kobe.HostOrBuilder> 
         getHostsOrBuilderList();
     /**
      * <code>repeated .api.Host hosts = 1;</code>
@@ -3498,7 +4640,7 @@ public final class Kobe {
     /**
      * <code>repeated .api.Group groups = 2;</code>
      */
-    java.util.List<Group>
+    java.util.List<Kobe.Group> 
         getGroupsList();
     /**
      * <code>repeated .api.Group groups = 2;</code>
@@ -3511,7 +4653,7 @@ public final class Kobe {
     /**
      * <code>repeated .api.Group groups = 2;</code>
      */
-    java.util.List<? extends GroupOrBuilder>
+    java.util.List<? extends Kobe.GroupOrBuilder> 
         getGroupsOrBuilderList();
     /**
      * <code>repeated .api.Group groups = 2;</code>
@@ -3596,7 +4738,7 @@ public final class Kobe {
               break;
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                hosts_ = new java.util.ArrayList<Host>();
+                hosts_ = new java.util.ArrayList<Kobe.Host>();
                 mutable_bitField0_ |= 0x00000001;
               }
               hosts_.add(
@@ -3605,7 +4747,7 @@ public final class Kobe {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                groups_ = new java.util.ArrayList<Group>();
+                groups_ = new java.util.ArrayList<Kobe.Group>();
                 mutable_bitField0_ |= 0x00000002;
               }
               groups_.add(
@@ -3676,17 +4818,17 @@ public final class Kobe {
     }
 
     public static final int HOSTS_FIELD_NUMBER = 1;
-    private java.util.List<Host> hosts_;
+    private java.util.List<Kobe.Host> hosts_;
     /**
      * <code>repeated .api.Host hosts = 1;</code>
      */
-    public java.util.List<Host> getHostsList() {
+    public java.util.List<Kobe.Host> getHostsList() {
       return hosts_;
     }
     /**
      * <code>repeated .api.Host hosts = 1;</code>
      */
-    public java.util.List<? extends HostOrBuilder>
+    public java.util.List<? extends Kobe.HostOrBuilder> 
         getHostsOrBuilderList() {
       return hosts_;
     }
@@ -3711,17 +4853,17 @@ public final class Kobe {
     }
 
     public static final int GROUPS_FIELD_NUMBER = 2;
-    private java.util.List<Group> groups_;
+    private java.util.List<Kobe.Group> groups_;
     /**
      * <code>repeated .api.Group groups = 2;</code>
      */
-    public java.util.List<Group> getGroupsList() {
+    public java.util.List<Kobe.Group> getGroupsList() {
       return groups_;
     }
     /**
      * <code>repeated .api.Group groups = 2;</code>
      */
-    public java.util.List<? extends GroupOrBuilder>
+    public java.util.List<? extends Kobe.GroupOrBuilder> 
         getGroupsOrBuilderList() {
       return groups_;
     }
@@ -3751,7 +4893,7 @@ public final class Kobe {
           String, String> defaultEntry =
               com.google.protobuf.MapEntry
               .<String, String>newDefaultInstance(
-                  Kobe.internal_static_api_Inventory_VarsEntry_descriptor,
+                  Kobe.internal_static_api_Inventory_VarsEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.STRING,
@@ -4055,7 +5197,7 @@ public final class Kobe {
                 Kobe.Inventory.class, Kobe.Inventory.Builder.class);
       }
 
-      // Construct using api.Kobe.Inventory.newBuilder()
+      // Construct using Kobe.Inventory.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4201,7 +5343,7 @@ public final class Kobe {
               hostsBuilder_ = null;
               hosts_ = other.hosts_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              hostsBuilder_ =
+              hostsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getHostsFieldBuilder() : null;
             } else {
@@ -4227,7 +5369,7 @@ public final class Kobe {
               groupsBuilder_ = null;
               groups_ = other.groups_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              groupsBuilder_ =
+              groupsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getGroupsFieldBuilder() : null;
             } else {
@@ -4267,11 +5409,11 @@ public final class Kobe {
       }
       private int bitField0_;
 
-      private java.util.List<Host> hosts_ =
+      private java.util.List<Kobe.Host> hosts_ =
         java.util.Collections.emptyList();
       private void ensureHostsIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          hosts_ = new java.util.ArrayList<Host>(hosts_);
+          hosts_ = new java.util.ArrayList<Kobe.Host>(hosts_);
           bitField0_ |= 0x00000001;
          }
       }
@@ -4282,7 +5424,7 @@ public final class Kobe {
       /**
        * <code>repeated .api.Host hosts = 1;</code>
        */
-      public java.util.List<Host> getHostsList() {
+      public java.util.List<Kobe.Host> getHostsList() {
         if (hostsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(hosts_);
         } else {
@@ -4405,7 +5547,7 @@ public final class Kobe {
        * <code>repeated .api.Host hosts = 1;</code>
        */
       public Builder addAllHosts(
-          Iterable<? extends Host> values) {
+          Iterable<? extends Kobe.Host> values) {
         if (hostsBuilder_ == null) {
           ensureHostsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -4462,7 +5604,7 @@ public final class Kobe {
       /**
        * <code>repeated .api.Host hosts = 1;</code>
        */
-      public java.util.List<? extends HostOrBuilder>
+      public java.util.List<? extends Kobe.HostOrBuilder> 
            getHostsOrBuilderList() {
         if (hostsBuilder_ != null) {
           return hostsBuilder_.getMessageOrBuilderList();
@@ -4488,12 +5630,12 @@ public final class Kobe {
       /**
        * <code>repeated .api.Host hosts = 1;</code>
        */
-      public java.util.List<Host.Builder>
+      public java.util.List<Kobe.Host.Builder> 
            getHostsBuilderList() {
         return getHostsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Kobe.Host, Kobe.Host.Builder, Kobe.HostOrBuilder>
+          Kobe.Host, Kobe.Host.Builder, Kobe.HostOrBuilder> 
           getHostsFieldBuilder() {
         if (hostsBuilder_ == null) {
           hostsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -4507,11 +5649,11 @@ public final class Kobe {
         return hostsBuilder_;
       }
 
-      private java.util.List<Group> groups_ =
+      private java.util.List<Kobe.Group> groups_ =
         java.util.Collections.emptyList();
       private void ensureGroupsIsMutable() {
         if (!((bitField0_ & 0x00000002) != 0)) {
-          groups_ = new java.util.ArrayList<Group>(groups_);
+          groups_ = new java.util.ArrayList<Kobe.Group>(groups_);
           bitField0_ |= 0x00000002;
          }
       }
@@ -4522,7 +5664,7 @@ public final class Kobe {
       /**
        * <code>repeated .api.Group groups = 2;</code>
        */
-      public java.util.List<Group> getGroupsList() {
+      public java.util.List<Kobe.Group> getGroupsList() {
         if (groupsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(groups_);
         } else {
@@ -4645,7 +5787,7 @@ public final class Kobe {
        * <code>repeated .api.Group groups = 2;</code>
        */
       public Builder addAllGroups(
-          Iterable<? extends Group> values) {
+          Iterable<? extends Kobe.Group> values) {
         if (groupsBuilder_ == null) {
           ensureGroupsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -4702,7 +5844,7 @@ public final class Kobe {
       /**
        * <code>repeated .api.Group groups = 2;</code>
        */
-      public java.util.List<? extends GroupOrBuilder>
+      public java.util.List<? extends Kobe.GroupOrBuilder> 
            getGroupsOrBuilderList() {
         if (groupsBuilder_ != null) {
           return groupsBuilder_.getMessageOrBuilderList();
@@ -4728,12 +5870,12 @@ public final class Kobe {
       /**
        * <code>repeated .api.Group groups = 2;</code>
        */
-      public java.util.List<Group.Builder>
+      public java.util.List<Kobe.Group.Builder> 
            getGroupsBuilderList() {
         return getGroupsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Kobe.Group, Kobe.Group.Builder, Kobe.GroupOrBuilder>
+          Kobe.Group, Kobe.Group.Builder, Kobe.GroupOrBuilder> 
           getGroupsFieldBuilder() {
         if (groupsBuilder_ == null) {
           groupsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -5041,7 +6183,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         name_ = s;
@@ -5055,7 +6197,7 @@ public final class Kobe {
         getNameBytes() {
       Object ref = name_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         name_ = b;
@@ -5075,7 +6217,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         source_ = s;
@@ -5089,7 +6231,7 @@ public final class Kobe {
         getSourceBytes() {
       Object ref = source_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         source_ = b;
@@ -5283,7 +6425,7 @@ public final class Kobe {
                 Kobe.CreateProjectRequest.class, Kobe.CreateProjectRequest.Builder.class);
       }
 
-      // Construct using api.Kobe.CreateProjectRequest.newBuilder()
+      // Construct using Kobe.CreateProjectRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5441,7 +6583,7 @@ public final class Kobe {
           getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           name_ = b;
@@ -5458,7 +6600,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         name_ = value;
         onChanged();
         return this;
@@ -5467,7 +6609,7 @@ public final class Kobe {
        * <code>string name = 1;</code>
        */
       public Builder clearName() {
-
+        
         name_ = getDefaultInstance().getName();
         onChanged();
         return this;
@@ -5481,7 +6623,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         name_ = value;
         onChanged();
         return this;
@@ -5510,7 +6652,7 @@ public final class Kobe {
           getSourceBytes() {
         Object ref = source_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           source_ = b;
@@ -5527,7 +6669,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         source_ = value;
         onChanged();
         return this;
@@ -5536,7 +6678,7 @@ public final class Kobe {
        * <code>string source = 2;</code>
        */
       public Builder clearSource() {
-
+        
         source_ = getDefaultInstance().getSource();
         onChanged();
         return this;
@@ -5550,7 +6692,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         source_ = value;
         onChanged();
         return this;
@@ -5910,7 +7052,7 @@ public final class Kobe {
                 Kobe.CreateProjectResponse.class, Kobe.CreateProjectResponse.Builder.class);
       }
 
-      // Construct using api.Kobe.CreateProjectResponse.newBuilder()
+      // Construct using Kobe.CreateProjectResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6130,7 +7272,7 @@ public final class Kobe {
        * <code>.api.Project item = 1;</code>
        */
       public Kobe.Project.Builder getItemBuilder() {
-
+        
         onChanged();
         return getItemFieldBuilder().getBuilder();
       }
@@ -6149,7 +7291,7 @@ public final class Kobe {
        * <code>.api.Project item = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Kobe.Project, Kobe.Project.Builder, Kobe.ProjectOrBuilder>
+          Kobe.Project, Kobe.Project.Builder, Kobe.ProjectOrBuilder> 
           getItemFieldBuilder() {
         if (itemBuilder_ == null) {
           itemBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6452,7 +7594,7 @@ public final class Kobe {
                 Kobe.ListProjectRequest.class, Kobe.ListProjectRequest.Builder.class);
       }
 
-      // Construct using api.Kobe.ListProjectRequest.newBuilder()
+      // Construct using Kobe.ListProjectRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6632,7 +7774,7 @@ public final class Kobe {
     /**
      * <code>repeated .api.Project items = 1;</code>
      */
-    java.util.List<Project>
+    java.util.List<Kobe.Project> 
         getItemsList();
     /**
      * <code>repeated .api.Project items = 1;</code>
@@ -6645,7 +7787,7 @@ public final class Kobe {
     /**
      * <code>repeated .api.Project items = 1;</code>
      */
-    java.util.List<? extends ProjectOrBuilder>
+    java.util.List<? extends Kobe.ProjectOrBuilder> 
         getItemsOrBuilderList();
     /**
      * <code>repeated .api.Project items = 1;</code>
@@ -6695,7 +7837,7 @@ public final class Kobe {
               break;
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                items_ = new java.util.ArrayList<Project>();
+                items_ = new java.util.ArrayList<Kobe.Project>();
                 mutable_bitField0_ |= 0x00000001;
               }
               items_.add(
@@ -6738,17 +7880,17 @@ public final class Kobe {
     }
 
     public static final int ITEMS_FIELD_NUMBER = 1;
-    private java.util.List<Project> items_;
+    private java.util.List<Kobe.Project> items_;
     /**
      * <code>repeated .api.Project items = 1;</code>
      */
-    public java.util.List<Project> getItemsList() {
+    public java.util.List<Kobe.Project> getItemsList() {
       return items_;
     }
     /**
      * <code>repeated .api.Project items = 1;</code>
      */
-    public java.util.List<? extends ProjectOrBuilder>
+    public java.util.List<? extends Kobe.ProjectOrBuilder> 
         getItemsOrBuilderList() {
       return items_;
     }
@@ -6949,7 +8091,7 @@ public final class Kobe {
                 Kobe.ListProjectResponse.class, Kobe.ListProjectResponse.Builder.class);
       }
 
-      // Construct using api.Kobe.ListProjectResponse.newBuilder()
+      // Construct using Kobe.ListProjectResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -7076,7 +8218,7 @@ public final class Kobe {
               itemsBuilder_ = null;
               items_ = other.items_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              itemsBuilder_ =
+              itemsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getItemsFieldBuilder() : null;
             } else {
@@ -7114,11 +8256,11 @@ public final class Kobe {
       }
       private int bitField0_;
 
-      private java.util.List<Project> items_ =
+      private java.util.List<Kobe.Project> items_ =
         java.util.Collections.emptyList();
       private void ensureItemsIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          items_ = new java.util.ArrayList<Project>(items_);
+          items_ = new java.util.ArrayList<Kobe.Project>(items_);
           bitField0_ |= 0x00000001;
          }
       }
@@ -7129,7 +8271,7 @@ public final class Kobe {
       /**
        * <code>repeated .api.Project items = 1;</code>
        */
-      public java.util.List<Project> getItemsList() {
+      public java.util.List<Kobe.Project> getItemsList() {
         if (itemsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(items_);
         } else {
@@ -7252,7 +8394,7 @@ public final class Kobe {
        * <code>repeated .api.Project items = 1;</code>
        */
       public Builder addAllItems(
-          Iterable<? extends Project> values) {
+          Iterable<? extends Kobe.Project> values) {
         if (itemsBuilder_ == null) {
           ensureItemsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -7309,7 +8451,7 @@ public final class Kobe {
       /**
        * <code>repeated .api.Project items = 1;</code>
        */
-      public java.util.List<? extends ProjectOrBuilder>
+      public java.util.List<? extends Kobe.ProjectOrBuilder> 
            getItemsOrBuilderList() {
         if (itemsBuilder_ != null) {
           return itemsBuilder_.getMessageOrBuilderList();
@@ -7335,12 +8477,12 @@ public final class Kobe {
       /**
        * <code>repeated .api.Project items = 1;</code>
        */
-      public java.util.List<Project.Builder>
+      public java.util.List<Kobe.Project.Builder> 
            getItemsBuilderList() {
         return getItemsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Kobe.Project, Kobe.Project.Builder, Kobe.ProjectOrBuilder>
+          Kobe.Project, Kobe.Project.Builder, Kobe.ProjectOrBuilder> 
           getItemsFieldBuilder() {
         if (itemsBuilder_ == null) {
           itemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -7551,7 +8693,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         project_ = s;
@@ -7565,7 +8707,7 @@ public final class Kobe {
         getProjectBytes() {
       Object ref = project_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         project_ = b;
@@ -7585,7 +8727,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         playbook_ = s;
@@ -7599,7 +8741,7 @@ public final class Kobe {
         getPlaybookBytes() {
       Object ref = playbook_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         playbook_ = b;
@@ -7830,7 +8972,7 @@ public final class Kobe {
                 Kobe.RunPlaybookRequest.class, Kobe.RunPlaybookRequest.Builder.class);
       }
 
-      // Construct using api.Kobe.RunPlaybookRequest.newBuilder()
+      // Construct using Kobe.RunPlaybookRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -8002,7 +9144,7 @@ public final class Kobe {
           getProjectBytes() {
         Object ref = project_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           project_ = b;
@@ -8019,7 +9161,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         project_ = value;
         onChanged();
         return this;
@@ -8028,7 +9170,7 @@ public final class Kobe {
        * <code>string project = 1;</code>
        */
       public Builder clearProject() {
-
+        
         project_ = getDefaultInstance().getProject();
         onChanged();
         return this;
@@ -8042,7 +9184,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         project_ = value;
         onChanged();
         return this;
@@ -8071,7 +9213,7 @@ public final class Kobe {
           getPlaybookBytes() {
         Object ref = playbook_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           playbook_ = b;
@@ -8088,7 +9230,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         playbook_ = value;
         onChanged();
         return this;
@@ -8097,7 +9239,7 @@ public final class Kobe {
        * <code>string playbook = 2;</code>
        */
       public Builder clearPlaybook() {
-
+        
         playbook_ = getDefaultInstance().getPlaybook();
         onChanged();
         return this;
@@ -8111,7 +9253,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         playbook_ = value;
         onChanged();
         return this;
@@ -8202,7 +9344,7 @@ public final class Kobe {
        * <code>.api.Inventory inventory = 3;</code>
        */
       public Kobe.Inventory.Builder getInventoryBuilder() {
-
+        
         onChanged();
         return getInventoryFieldBuilder().getBuilder();
       }
@@ -8221,7 +9363,7 @@ public final class Kobe {
        * <code>.api.Inventory inventory = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Kobe.Inventory, Kobe.Inventory.Builder, Kobe.InventoryOrBuilder>
+          Kobe.Inventory, Kobe.Inventory.Builder, Kobe.InventoryOrBuilder> 
           getInventoryFieldBuilder() {
         if (inventoryBuilder_ == null) {
           inventoryBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -8588,7 +9730,7 @@ public final class Kobe {
                 Kobe.RunPlaybookResult.class, Kobe.RunPlaybookResult.Builder.class);
       }
 
-      // Construct using api.Kobe.RunPlaybookResult.newBuilder()
+      // Construct using Kobe.RunPlaybookResult.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -8808,7 +9950,7 @@ public final class Kobe {
        * <code>.api.Result result = 1;</code>
        */
       public Kobe.Result.Builder getResultBuilder() {
-
+        
         onChanged();
         return getResultFieldBuilder().getBuilder();
       }
@@ -8827,7 +9969,7 @@ public final class Kobe {
        * <code>.api.Result result = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Kobe.Result, Kobe.Result.Builder, Kobe.ResultOrBuilder>
+          Kobe.Result, Kobe.Result.Builder, Kobe.ResultOrBuilder> 
           getResultFieldBuilder() {
         if (resultBuilder_ == null) {
           resultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -9075,7 +10217,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         pattern_ = s;
@@ -9089,7 +10231,7 @@ public final class Kobe {
         getPatternBytes() {
       Object ref = pattern_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         pattern_ = b;
@@ -9109,7 +10251,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         module_ = s;
@@ -9123,7 +10265,7 @@ public final class Kobe {
         getModuleBytes() {
       Object ref = module_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         module_ = b;
@@ -9143,7 +10285,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         param_ = s;
@@ -9157,7 +10299,7 @@ public final class Kobe {
         getParamBytes() {
       Object ref = param_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         param_ = b;
@@ -9377,7 +10519,7 @@ public final class Kobe {
                 Kobe.RunAdhocRequest.class, Kobe.RunAdhocRequest.Builder.class);
       }
 
-      // Construct using api.Kobe.RunAdhocRequest.newBuilder()
+      // Construct using Kobe.RunAdhocRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -9618,7 +10760,7 @@ public final class Kobe {
        * <code>.api.Inventory inventory = 1;</code>
        */
       public Kobe.Inventory.Builder getInventoryBuilder() {
-
+        
         onChanged();
         return getInventoryFieldBuilder().getBuilder();
       }
@@ -9637,7 +10779,7 @@ public final class Kobe {
        * <code>.api.Inventory inventory = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Kobe.Inventory, Kobe.Inventory.Builder, Kobe.InventoryOrBuilder>
+          Kobe.Inventory, Kobe.Inventory.Builder, Kobe.InventoryOrBuilder> 
           getInventoryFieldBuilder() {
         if (inventoryBuilder_ == null) {
           inventoryBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -9673,7 +10815,7 @@ public final class Kobe {
           getPatternBytes() {
         Object ref = pattern_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           pattern_ = b;
@@ -9690,7 +10832,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         pattern_ = value;
         onChanged();
         return this;
@@ -9699,7 +10841,7 @@ public final class Kobe {
        * <code>string pattern = 2;</code>
        */
       public Builder clearPattern() {
-
+        
         pattern_ = getDefaultInstance().getPattern();
         onChanged();
         return this;
@@ -9713,7 +10855,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         pattern_ = value;
         onChanged();
         return this;
@@ -9742,7 +10884,7 @@ public final class Kobe {
           getModuleBytes() {
         Object ref = module_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           module_ = b;
@@ -9759,7 +10901,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         module_ = value;
         onChanged();
         return this;
@@ -9768,7 +10910,7 @@ public final class Kobe {
        * <code>string module = 3;</code>
        */
       public Builder clearModule() {
-
+        
         module_ = getDefaultInstance().getModule();
         onChanged();
         return this;
@@ -9782,7 +10924,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         module_ = value;
         onChanged();
         return this;
@@ -9811,7 +10953,7 @@ public final class Kobe {
           getParamBytes() {
         Object ref = param_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           param_ = b;
@@ -9828,7 +10970,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         param_ = value;
         onChanged();
         return this;
@@ -9837,7 +10979,7 @@ public final class Kobe {
        * <code>string param = 4;</code>
        */
       public Builder clearParam() {
-
+        
         param_ = getDefaultInstance().getParam();
         onChanged();
         return this;
@@ -9851,7 +10993,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         param_ = value;
         onChanged();
         return this;
@@ -10211,7 +11353,7 @@ public final class Kobe {
                 Kobe.RunAdhocResult.class, Kobe.RunAdhocResult.Builder.class);
       }
 
-      // Construct using api.Kobe.RunAdhocResult.newBuilder()
+      // Construct using Kobe.RunAdhocResult.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -10431,7 +11573,7 @@ public final class Kobe {
        * <code>.api.Result result = 1;</code>
        */
       public Kobe.Result.Builder getResultBuilder() {
-
+        
         onChanged();
         return getResultFieldBuilder().getBuilder();
       }
@@ -10450,7 +11592,7 @@ public final class Kobe {
        * <code>.api.Result result = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Kobe.Result, Kobe.Result.Builder, Kobe.ResultOrBuilder>
+          Kobe.Result, Kobe.Result.Builder, Kobe.ResultOrBuilder> 
           getResultFieldBuilder() {
         if (resultBuilder_ == null) {
           resultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -10722,7 +11864,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         id_ = s;
@@ -10736,7 +11878,7 @@ public final class Kobe {
         getIdBytes() {
       Object ref = id_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         id_ = b;
@@ -10756,7 +11898,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         startTime_ = s;
@@ -10770,7 +11912,7 @@ public final class Kobe {
         getStartTimeBytes() {
       Object ref = startTime_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         startTime_ = b;
@@ -10790,7 +11932,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         endTime_ = s;
@@ -10804,7 +11946,7 @@ public final class Kobe {
         getEndTimeBytes() {
       Object ref = endTime_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         endTime_ = b;
@@ -10824,7 +11966,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         message_ = s;
@@ -10838,7 +11980,7 @@ public final class Kobe {
         getMessageBytes() {
       Object ref = message_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         message_ = b;
@@ -10876,7 +12018,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         content_ = s;
@@ -10890,7 +12032,7 @@ public final class Kobe {
         getContentBytes() {
       Object ref = content_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         content_ = b;
@@ -10910,7 +12052,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         project_ = s;
@@ -10924,7 +12066,7 @@ public final class Kobe {
         getProjectBytes() {
       Object ref = project_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         project_ = b;
@@ -11182,7 +12324,7 @@ public final class Kobe {
                 Kobe.Result.class, Kobe.Result.Builder.class);
       }
 
-      // Construct using api.Kobe.Result.newBuilder()
+      // Construct using Kobe.Result.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -11380,7 +12522,7 @@ public final class Kobe {
           getIdBytes() {
         Object ref = id_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           id_ = b;
@@ -11397,7 +12539,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         id_ = value;
         onChanged();
         return this;
@@ -11406,7 +12548,7 @@ public final class Kobe {
        * <code>string id = 1;</code>
        */
       public Builder clearId() {
-
+        
         id_ = getDefaultInstance().getId();
         onChanged();
         return this;
@@ -11420,7 +12562,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         id_ = value;
         onChanged();
         return this;
@@ -11449,7 +12591,7 @@ public final class Kobe {
           getStartTimeBytes() {
         Object ref = startTime_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           startTime_ = b;
@@ -11466,7 +12608,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         startTime_ = value;
         onChanged();
         return this;
@@ -11475,7 +12617,7 @@ public final class Kobe {
        * <code>string startTime = 2;</code>
        */
       public Builder clearStartTime() {
-
+        
         startTime_ = getDefaultInstance().getStartTime();
         onChanged();
         return this;
@@ -11489,7 +12631,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         startTime_ = value;
         onChanged();
         return this;
@@ -11518,7 +12660,7 @@ public final class Kobe {
           getEndTimeBytes() {
         Object ref = endTime_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           endTime_ = b;
@@ -11535,7 +12677,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         endTime_ = value;
         onChanged();
         return this;
@@ -11544,7 +12686,7 @@ public final class Kobe {
        * <code>string endTime = 3;</code>
        */
       public Builder clearEndTime() {
-
+        
         endTime_ = getDefaultInstance().getEndTime();
         onChanged();
         return this;
@@ -11558,7 +12700,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         endTime_ = value;
         onChanged();
         return this;
@@ -11587,7 +12729,7 @@ public final class Kobe {
           getMessageBytes() {
         Object ref = message_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           message_ = b;
@@ -11604,7 +12746,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         message_ = value;
         onChanged();
         return this;
@@ -11613,7 +12755,7 @@ public final class Kobe {
        * <code>string message = 4;</code>
        */
       public Builder clearMessage() {
-
+        
         message_ = getDefaultInstance().getMessage();
         onChanged();
         return this;
@@ -11627,7 +12769,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         message_ = value;
         onChanged();
         return this;
@@ -11644,7 +12786,7 @@ public final class Kobe {
        * <code>bool success = 5;</code>
        */
       public Builder setSuccess(boolean value) {
-
+        
         success_ = value;
         onChanged();
         return this;
@@ -11653,7 +12795,7 @@ public final class Kobe {
        * <code>bool success = 5;</code>
        */
       public Builder clearSuccess() {
-
+        
         success_ = false;
         onChanged();
         return this;
@@ -11670,7 +12812,7 @@ public final class Kobe {
        * <code>bool finished = 6;</code>
        */
       public Builder setFinished(boolean value) {
-
+        
         finished_ = value;
         onChanged();
         return this;
@@ -11679,7 +12821,7 @@ public final class Kobe {
        * <code>bool finished = 6;</code>
        */
       public Builder clearFinished() {
-
+        
         finished_ = false;
         onChanged();
         return this;
@@ -11708,7 +12850,7 @@ public final class Kobe {
           getContentBytes() {
         Object ref = content_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           content_ = b;
@@ -11725,7 +12867,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         content_ = value;
         onChanged();
         return this;
@@ -11734,7 +12876,7 @@ public final class Kobe {
        * <code>string content = 7;</code>
        */
       public Builder clearContent() {
-
+        
         content_ = getDefaultInstance().getContent();
         onChanged();
         return this;
@@ -11748,7 +12890,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         content_ = value;
         onChanged();
         return this;
@@ -11777,7 +12919,7 @@ public final class Kobe {
           getProjectBytes() {
         Object ref = project_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           project_ = b;
@@ -11794,7 +12936,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         project_ = value;
         onChanged();
         return this;
@@ -11803,7 +12945,7 @@ public final class Kobe {
        * <code>string project = 8;</code>
        */
       public Builder clearProject() {
-
+        
         project_ = getDefaultInstance().getProject();
         onChanged();
         return this;
@@ -11817,7 +12959,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         project_ = value;
         onChanged();
         return this;
@@ -12145,7 +13287,7 @@ public final class Kobe {
                 Kobe.WatchStream.class, Kobe.WatchStream.Builder.class);
       }
 
-      // Construct using api.Kobe.WatchStream.newBuilder()
+      // Construct using Kobe.WatchStream.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -12286,7 +13428,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         stream_ = value;
         onChanged();
         return this;
@@ -12295,7 +13437,7 @@ public final class Kobe {
        * <code>bytes stream = 1;</code>
        */
       public Builder clearStream() {
-
+        
         stream_ = getDefaultInstance().getStream();
         onChanged();
         return this;
@@ -12455,7 +13597,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         taskId_ = s;
@@ -12469,7 +13611,7 @@ public final class Kobe {
         getTaskIdBytes() {
       Object ref = taskId_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         taskId_ = b;
@@ -12653,7 +13795,7 @@ public final class Kobe {
                 Kobe.WatchRequest.class, Kobe.WatchRequest.Builder.class);
       }
 
-      // Construct using api.Kobe.WatchRequest.newBuilder()
+      // Construct using Kobe.WatchRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -12804,7 +13946,7 @@ public final class Kobe {
           getTaskIdBytes() {
         Object ref = taskId_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           taskId_ = b;
@@ -12821,7 +13963,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         taskId_ = value;
         onChanged();
         return this;
@@ -12830,7 +13972,7 @@ public final class Kobe {
        * <code>string taskId = 1;</code>
        */
       public Builder clearTaskId() {
-
+        
         taskId_ = getDefaultInstance().getTaskId();
         onChanged();
         return this;
@@ -12844,7 +13986,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         taskId_ = value;
         onChanged();
         return this;
@@ -13004,7 +14146,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         id_ = s;
@@ -13018,7 +14160,7 @@ public final class Kobe {
         getIdBytes() {
       Object ref = id_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         id_ = b;
@@ -13202,7 +14344,7 @@ public final class Kobe {
                 Kobe.GetInventoryRequest.class, Kobe.GetInventoryRequest.Builder.class);
       }
 
-      // Construct using api.Kobe.GetInventoryRequest.newBuilder()
+      // Construct using Kobe.GetInventoryRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -13353,7 +14495,7 @@ public final class Kobe {
           getIdBytes() {
         Object ref = id_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           id_ = b;
@@ -13370,7 +14512,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         id_ = value;
         onChanged();
         return this;
@@ -13379,7 +14521,7 @@ public final class Kobe {
        * <code>string id = 1;</code>
        */
       public Builder clearId() {
-
+        
         id_ = getDefaultInstance().getId();
         onChanged();
         return this;
@@ -13393,7 +14535,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         id_ = value;
         onChanged();
         return this;
@@ -13753,7 +14895,7 @@ public final class Kobe {
                 Kobe.GetInventoryResponse.class, Kobe.GetInventoryResponse.Builder.class);
       }
 
-      // Construct using api.Kobe.GetInventoryResponse.newBuilder()
+      // Construct using Kobe.GetInventoryResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -13973,7 +15115,7 @@ public final class Kobe {
        * <code>.api.Inventory item = 1;</code>
        */
       public Kobe.Inventory.Builder getItemBuilder() {
-
+        
         onChanged();
         return getItemFieldBuilder().getBuilder();
       }
@@ -13992,7 +15134,7 @@ public final class Kobe {
        * <code>.api.Inventory item = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Kobe.Inventory, Kobe.Inventory.Builder, Kobe.InventoryOrBuilder>
+          Kobe.Inventory, Kobe.Inventory.Builder, Kobe.InventoryOrBuilder> 
           getItemFieldBuilder() {
         if (itemBuilder_ == null) {
           itemBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -14159,7 +15301,7 @@ public final class Kobe {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         taskId_ = s;
@@ -14173,7 +15315,7 @@ public final class Kobe {
         getTaskIdBytes() {
       Object ref = taskId_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         taskId_ = b;
@@ -14357,7 +15499,7 @@ public final class Kobe {
                 Kobe.GetResultRequest.class, Kobe.GetResultRequest.Builder.class);
       }
 
-      // Construct using api.Kobe.GetResultRequest.newBuilder()
+      // Construct using Kobe.GetResultRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -14508,7 +15650,7 @@ public final class Kobe {
           getTaskIdBytes() {
         Object ref = taskId_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           taskId_ = b;
@@ -14525,7 +15667,7 @@ public final class Kobe {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         taskId_ = value;
         onChanged();
         return this;
@@ -14534,7 +15676,7 @@ public final class Kobe {
        * <code>string taskId = 1;</code>
        */
       public Builder clearTaskId() {
-
+        
         taskId_ = getDefaultInstance().getTaskId();
         onChanged();
         return this;
@@ -14548,7 +15690,7 @@ public final class Kobe {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         taskId_ = value;
         onChanged();
         return this;
@@ -14908,7 +16050,7 @@ public final class Kobe {
                 Kobe.GetResultResponse.class, Kobe.GetResultResponse.Builder.class);
       }
 
-      // Construct using api.Kobe.GetResultResponse.newBuilder()
+      // Construct using Kobe.GetResultResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -15128,7 +16270,7 @@ public final class Kobe {
        * <code>.api.Result item = 1;</code>
        */
       public Kobe.Result.Builder getItemBuilder() {
-
+        
         onChanged();
         return getItemFieldBuilder().getBuilder();
       }
@@ -15147,7 +16289,7 @@ public final class Kobe {
        * <code>.api.Result item = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Kobe.Result, Kobe.Result.Builder, Kobe.ResultOrBuilder>
+          Kobe.Result, Kobe.Result.Builder, Kobe.ResultOrBuilder> 
           getItemFieldBuilder() {
         if (itemBuilder_ == null) {
           itemBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -15450,7 +16592,7 @@ public final class Kobe {
                 Kobe.ListResultRequest.class, Kobe.ListResultRequest.Builder.class);
       }
 
-      // Construct using api.Kobe.ListResultRequest.newBuilder()
+      // Construct using Kobe.ListResultRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -15630,7 +16772,7 @@ public final class Kobe {
     /**
      * <code>repeated .api.Result items = 1;</code>
      */
-    java.util.List<Result>
+    java.util.List<Kobe.Result> 
         getItemsList();
     /**
      * <code>repeated .api.Result items = 1;</code>
@@ -15643,7 +16785,7 @@ public final class Kobe {
     /**
      * <code>repeated .api.Result items = 1;</code>
      */
-    java.util.List<? extends ResultOrBuilder>
+    java.util.List<? extends Kobe.ResultOrBuilder> 
         getItemsOrBuilderList();
     /**
      * <code>repeated .api.Result items = 1;</code>
@@ -15693,7 +16835,7 @@ public final class Kobe {
               break;
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                items_ = new java.util.ArrayList<Result>();
+                items_ = new java.util.ArrayList<Kobe.Result>();
                 mutable_bitField0_ |= 0x00000001;
               }
               items_.add(
@@ -15736,17 +16878,17 @@ public final class Kobe {
     }
 
     public static final int ITEMS_FIELD_NUMBER = 1;
-    private java.util.List<Result> items_;
+    private java.util.List<Kobe.Result> items_;
     /**
      * <code>repeated .api.Result items = 1;</code>
      */
-    public java.util.List<Result> getItemsList() {
+    public java.util.List<Kobe.Result> getItemsList() {
       return items_;
     }
     /**
      * <code>repeated .api.Result items = 1;</code>
      */
-    public java.util.List<? extends ResultOrBuilder>
+    public java.util.List<? extends Kobe.ResultOrBuilder> 
         getItemsOrBuilderList() {
       return items_;
     }
@@ -15947,7 +17089,7 @@ public final class Kobe {
                 Kobe.ListResultResponse.class, Kobe.ListResultResponse.Builder.class);
       }
 
-      // Construct using api.Kobe.ListResultResponse.newBuilder()
+      // Construct using Kobe.ListResultResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -16074,7 +17216,7 @@ public final class Kobe {
               itemsBuilder_ = null;
               items_ = other.items_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              itemsBuilder_ =
+              itemsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getItemsFieldBuilder() : null;
             } else {
@@ -16112,11 +17254,11 @@ public final class Kobe {
       }
       private int bitField0_;
 
-      private java.util.List<Result> items_ =
+      private java.util.List<Kobe.Result> items_ =
         java.util.Collections.emptyList();
       private void ensureItemsIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          items_ = new java.util.ArrayList<Result>(items_);
+          items_ = new java.util.ArrayList<Kobe.Result>(items_);
           bitField0_ |= 0x00000001;
          }
       }
@@ -16127,7 +17269,7 @@ public final class Kobe {
       /**
        * <code>repeated .api.Result items = 1;</code>
        */
-      public java.util.List<Result> getItemsList() {
+      public java.util.List<Kobe.Result> getItemsList() {
         if (itemsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(items_);
         } else {
@@ -16250,7 +17392,7 @@ public final class Kobe {
        * <code>repeated .api.Result items = 1;</code>
        */
       public Builder addAllItems(
-          Iterable<? extends Result> values) {
+          Iterable<? extends Kobe.Result> values) {
         if (itemsBuilder_ == null) {
           ensureItemsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -16307,7 +17449,7 @@ public final class Kobe {
       /**
        * <code>repeated .api.Result items = 1;</code>
        */
-      public java.util.List<? extends ResultOrBuilder>
+      public java.util.List<? extends Kobe.ResultOrBuilder> 
            getItemsOrBuilderList() {
         if (itemsBuilder_ != null) {
           return itemsBuilder_.getMessageOrBuilderList();
@@ -16333,12 +17475,12 @@ public final class Kobe {
       /**
        * <code>repeated .api.Result items = 1;</code>
        */
-      public java.util.List<Result.Builder>
+      public java.util.List<Kobe.Result.Builder> 
            getItemsBuilderList() {
         return getItemsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Kobe.Result, Kobe.Result.Builder, Kobe.ResultOrBuilder>
+          Kobe.Result, Kobe.Result.Builder, Kobe.ResultOrBuilder> 
           getItemsFieldBuilder() {
         if (itemsBuilder_ == null) {
           itemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -16406,122 +17548,127 @@ public final class Kobe {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_Project_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_Project_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_Host_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_Host_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_Host_VarsEntry_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_Host_VarsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_api_ProxyConfig_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_api_ProxyConfig_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_Group_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_Group_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_Group_VarsEntry_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_Group_VarsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_Inventory_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_Inventory_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_Inventory_VarsEntry_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_Inventory_VarsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_CreateProjectRequest_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_CreateProjectRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_CreateProjectResponse_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_CreateProjectResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_ListProjectRequest_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_ListProjectRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_ListProjectResponse_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_ListProjectResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_RunPlaybookRequest_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_RunPlaybookRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_RunPlaybookResult_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_RunPlaybookResult_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_RunAdhocRequest_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_RunAdhocRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_RunAdhocResult_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_RunAdhocResult_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_Result_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_Result_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_WatchStream_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_WatchStream_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_WatchRequest_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_WatchRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_GetInventoryRequest_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_GetInventoryRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_GetInventoryResponse_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_GetInventoryResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_GetResultRequest_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_GetResultRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_GetResultResponse_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_GetResultResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_ListResultRequest_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_ListResultRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_api_ListResultResponse_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_api_ListResultResponse_fieldAccessorTable;
 
@@ -16534,55 +17681,59 @@ public final class Kobe {
   static {
     String[] descriptorData = {
       "\n\nkobe.proto\022\003api\"*\n\007Project\022\014\n\004name\030\001 \001" +
-      "(\t\022\021\n\tplaybooks\030\002 \003(\t\"\262\001\n\004Host\022\n\n\002ip\030\001 \001" +
+      "(\t\022\021\n\tplaybooks\030\002 \003(\t\"\331\001\n\004Host\022\n\n\002ip\030\001 \001" +
       "(\t\022\014\n\004name\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\022\014\n\004user\030\004" +
       " \001(\t\022\020\n\010password\030\005 \001(\t\022\022\n\nprivateKey\030\006 \001" +
-      "(\t\022!\n\004vars\030\007 \003(\0132\023.api.Host.VarsEntry\032+\n" +
-      "\tVarsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
-      "8\001\"\207\001\n\005Group\022\014\n\004name\030\001 \001(\t\022\r\n\005hosts\030\002 \003(" +
-      "\t\022\020\n\010children\030\003 \003(\t\022\"\n\004vars\030\004 \003(\0132\024.api." +
-      "Group.VarsEntry\032+\n\tVarsEntry\022\013\n\003key\030\001 \001(" +
-      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\226\001\n\tInventory\022\030\n\005ho" +
-      "sts\030\001 \003(\0132\t.api.Host\022\032\n\006groups\030\002 \003(\0132\n.a" +
-      "pi.Group\022&\n\004vars\030\003 \003(\0132\030.api.Inventory.V" +
-      "arsEntry\032+\n\tVarsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
-      "lue\030\002 \001(\t:\0028\001\"4\n\024CreateProjectRequest\022\014\n" +
-      "\004name\030\001 \001(\t\022\016\n\006source\030\002 \001(\t\"3\n\025CreatePro" +
-      "jectResponse\022\032\n\004item\030\001 \001(\0132\014.api.Project" +
-      "\"\024\n\022ListProjectRequest\"2\n\023ListProjectRes" +
-      "ponse\022\033\n\005items\030\001 \003(\0132\014.api.Project\"Z\n\022Ru" +
-      "nPlaybookRequest\022\017\n\007project\030\001 \001(\t\022\020\n\010pla" +
-      "ybook\030\002 \001(\t\022!\n\tinventory\030\003 \001(\0132\016.api.Inv" +
-      "entory\"0\n\021RunPlaybookResult\022\033\n\006result\030\001 " +
-      "\001(\0132\013.api.Result\"d\n\017RunAdhocRequest\022!\n\ti" +
-      "nventory\030\001 \001(\0132\016.api.Inventory\022\017\n\007patter" +
-      "n\030\002 \001(\t\022\016\n\006module\030\003 \001(\t\022\r\n\005param\030\004 \001(\t\"-" +
-      "\n\016RunAdhocResult\022\033\n\006result\030\001 \001(\0132\013.api.R" +
-      "esult\"\216\001\n\006Result\022\n\n\002id\030\001 \001(\t\022\021\n\tstartTim" +
-      "e\030\002 \001(\t\022\017\n\007endTime\030\003 \001(\t\022\017\n\007message\030\004 \001(" +
-      "\t\022\017\n\007success\030\005 \001(\010\022\020\n\010finished\030\006 \001(\010\022\017\n\007" +
-      "content\030\007 \001(\t\022\017\n\007project\030\010 \001(\t\"\035\n\013WatchS" +
-      "tream\022\016\n\006stream\030\001 \001(\014\"\036\n\014WatchRequest\022\016\n" +
-      "\006taskId\030\001 \001(\t\"!\n\023GetInventoryRequest\022\n\n\002" +
-      "id\030\001 \001(\t\"4\n\024GetInventoryResponse\022\034\n\004item" +
-      "\030\001 \001(\0132\016.api.Inventory\"\"\n\020GetResultReque" +
-      "st\022\016\n\006taskId\030\001 \001(\t\".\n\021GetResultResponse\022" +
-      "\031\n\004item\030\001 \001(\0132\013.api.Result\"\023\n\021ListResult" +
-      "Request\"0\n\022ListResultResponse\022\032\n\005items\030\001" +
-      " \003(\0132\013.api.Result2\220\004\n\007KobeApi\022H\n\rCreateP" +
-      "roject\022\031.api.CreateProjectRequest\032\032.api." +
-      "CreateProjectResponse\"\000\022B\n\013ListProject\022\027" +
-      ".api.ListProjectRequest\032\030.api.ListProjec" +
-      "tResponse\"\000\022E\n\014GetInventory\022\030.api.GetInv" +
-      "entoryRequest\032\031.api.GetInventoryResponse" +
-      "\"\000\022@\n\013RunPlaybook\022\027.api.RunPlaybookReque" +
-      "st\032\026.api.RunPlaybookResult\"\000\0227\n\010RunAdhoc" +
-      "\022\024.api.RunAdhocRequest\032\023.api.RunAdhocRes" +
-      "ult\"\000\0226\n\013WatchResult\022\021.api.WatchRequest\032" +
-      "\020.api.WatchStream\"\0000\001\022<\n\tGetResult\022\025.api" +
-      ".GetResultRequest\032\026.api.GetResultRespons" +
-      "e\"\000\022?\n\nListResult\022\026.api.ListResultReques" +
-      "t\032\027.api.ListResultResponse\"\000b\006proto3"
+      "(\t\022%\n\013proxyConfig\030\007 \001(\0132\020.api.ProxyConfi" +
+      "g\022!\n\004vars\030\010 \003(\0132\023.api.Host.VarsEntry\032+\n\t" +
+      "VarsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028" +
+      "\001\"W\n\013ProxyConfig\022\016\n\006enable\030\001 \001(\010\022\014\n\004user" +
+      "\030\002 \001(\t\022\020\n\010password\030\003 \001(\t\022\n\n\002ip\030\004 \001(\t\022\014\n\004" +
+      "port\030\005 \001(\005\"\207\001\n\005Group\022\014\n\004name\030\001 \001(\t\022\r\n\005ho" +
+      "sts\030\002 \003(\t\022\020\n\010children\030\003 \003(\t\022\"\n\004vars\030\004 \003(" +
+      "\0132\024.api.Group.VarsEntry\032+\n\tVarsEntry\022\013\n\003" +
+      "key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\226\001\n\tInvento" +
+      "ry\022\030\n\005hosts\030\001 \003(\0132\t.api.Host\022\032\n\006groups\030\002" +
+      " \003(\0132\n.api.Group\022&\n\004vars\030\003 \003(\0132\030.api.Inv" +
+      "entory.VarsEntry\032+\n\tVarsEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"4\n\024CreateProjectRe" +
+      "quest\022\014\n\004name\030\001 \001(\t\022\016\n\006source\030\002 \001(\t\"3\n\025C" +
+      "reateProjectResponse\022\032\n\004item\030\001 \001(\0132\014.api" +
+      ".Project\"\024\n\022ListProjectRequest\"2\n\023ListPr" +
+      "ojectResponse\022\033\n\005items\030\001 \003(\0132\014.api.Proje" +
+      "ct\"Z\n\022RunPlaybookRequest\022\017\n\007project\030\001 \001(" +
+      "\t\022\020\n\010playbook\030\002 \001(\t\022!\n\tinventory\030\003 \001(\0132\016" +
+      ".api.Inventory\"0\n\021RunPlaybookResult\022\033\n\006r" +
+      "esult\030\001 \001(\0132\013.api.Result\"d\n\017RunAdhocRequ" +
+      "est\022!\n\tinventory\030\001 \001(\0132\016.api.Inventory\022\017" +
+      "\n\007pattern\030\002 \001(\t\022\016\n\006module\030\003 \001(\t\022\r\n\005param" +
+      "\030\004 \001(\t\"-\n\016RunAdhocResult\022\033\n\006result\030\001 \001(\013" +
+      "2\013.api.Result\"\216\001\n\006Result\022\n\n\002id\030\001 \001(\t\022\021\n\t" +
+      "startTime\030\002 \001(\t\022\017\n\007endTime\030\003 \001(\t\022\017\n\007mess" +
+      "age\030\004 \001(\t\022\017\n\007success\030\005 \001(\010\022\020\n\010finished\030\006" +
+      " \001(\010\022\017\n\007content\030\007 \001(\t\022\017\n\007project\030\010 \001(\t\"\035" +
+      "\n\013WatchStream\022\016\n\006stream\030\001 \001(\014\"\036\n\014WatchRe" +
+      "quest\022\016\n\006taskId\030\001 \001(\t\"!\n\023GetInventoryReq" +
+      "uest\022\n\n\002id\030\001 \001(\t\"4\n\024GetInventoryResponse" +
+      "\022\034\n\004item\030\001 \001(\0132\016.api.Inventory\"\"\n\020GetRes" +
+      "ultRequest\022\016\n\006taskId\030\001 \001(\t\".\n\021GetResultR" +
+      "esponse\022\031\n\004item\030\001 \001(\0132\013.api.Result\"\023\n\021Li" +
+      "stResultRequest\"0\n\022ListResultResponse\022\032\n" +
+      "\005items\030\001 \003(\0132\013.api.Result2\220\004\n\007KobeApi\022H\n" +
+      "\rCreateProject\022\031.api.CreateProjectReques" +
+      "t\032\032.api.CreateProjectResponse\"\000\022B\n\013ListP" +
+      "roject\022\027.api.ListProjectRequest\032\030.api.Li" +
+      "stProjectResponse\"\000\022E\n\014GetInventory\022\030.ap" +
+      "i.GetInventoryRequest\032\031.api.GetInventory" +
+      "Response\"\000\022@\n\013RunPlaybook\022\027.api.RunPlayb" +
+      "ookRequest\032\026.api.RunPlaybookResult\"\000\0227\n\010" +
+      "RunAdhoc\022\024.api.RunAdhocRequest\032\023.api.Run" +
+      "AdhocResult\"\000\0226\n\013WatchResult\022\021.api.Watch" +
+      "Request\032\020.api.WatchStream\"\0000\001\022<\n\tGetResu" +
+      "lt\022\025.api.GetResultRequest\032\026.api.GetResul" +
+      "tResponse\"\000\022?\n\nListResult\022\026.api.ListResu" +
+      "ltRequest\032\027.api.ListResultResponse\"\000B\007Z\005" +
+      ".;apib\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -16607,15 +17758,21 @@ public final class Kobe {
     internal_static_api_Host_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_Host_descriptor,
-        new String[] { "Ip", "Name", "Port", "User", "Password", "PrivateKey", "Vars", });
+        new String[] { "Ip", "Name", "Port", "User", "Password", "PrivateKey", "ProxyConfig", "Vars", });
     internal_static_api_Host_VarsEntry_descriptor =
       internal_static_api_Host_descriptor.getNestedTypes().get(0);
     internal_static_api_Host_VarsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_Host_VarsEntry_descriptor,
         new String[] { "Key", "Value", });
-    internal_static_api_Group_descriptor =
+    internal_static_api_ProxyConfig_descriptor =
       getDescriptor().getMessageTypes().get(2);
+    internal_static_api_ProxyConfig_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_api_ProxyConfig_descriptor,
+        new String[] { "Enable", "User", "Password", "Ip", "Port", });
+    internal_static_api_Group_descriptor =
+      getDescriptor().getMessageTypes().get(3);
     internal_static_api_Group_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_Group_descriptor,
@@ -16627,7 +17784,7 @@ public final class Kobe {
         internal_static_api_Group_VarsEntry_descriptor,
         new String[] { "Key", "Value", });
     internal_static_api_Inventory_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_api_Inventory_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_Inventory_descriptor,
@@ -16639,103 +17796,103 @@ public final class Kobe {
         internal_static_api_Inventory_VarsEntry_descriptor,
         new String[] { "Key", "Value", });
     internal_static_api_CreateProjectRequest_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_api_CreateProjectRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_CreateProjectRequest_descriptor,
         new String[] { "Name", "Source", });
     internal_static_api_CreateProjectResponse_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_api_CreateProjectResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_CreateProjectResponse_descriptor,
         new String[] { "Item", });
     internal_static_api_ListProjectRequest_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_api_ListProjectRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_ListProjectRequest_descriptor,
         new String[] { });
     internal_static_api_ListProjectResponse_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_api_ListProjectResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_ListProjectResponse_descriptor,
         new String[] { "Items", });
     internal_static_api_RunPlaybookRequest_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_api_RunPlaybookRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_RunPlaybookRequest_descriptor,
         new String[] { "Project", "Playbook", "Inventory", });
     internal_static_api_RunPlaybookResult_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_api_RunPlaybookResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_RunPlaybookResult_descriptor,
         new String[] { "Result", });
     internal_static_api_RunAdhocRequest_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_api_RunAdhocRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_RunAdhocRequest_descriptor,
         new String[] { "Inventory", "Pattern", "Module", "Param", });
     internal_static_api_RunAdhocResult_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_api_RunAdhocResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_RunAdhocResult_descriptor,
         new String[] { "Result", });
     internal_static_api_Result_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_api_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_Result_descriptor,
         new String[] { "Id", "StartTime", "EndTime", "Message", "Success", "Finished", "Content", "Project", });
     internal_static_api_WatchStream_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_api_WatchStream_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_WatchStream_descriptor,
         new String[] { "Stream", });
     internal_static_api_WatchRequest_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_api_WatchRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_WatchRequest_descriptor,
         new String[] { "TaskId", });
     internal_static_api_GetInventoryRequest_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_api_GetInventoryRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_GetInventoryRequest_descriptor,
         new String[] { "Id", });
     internal_static_api_GetInventoryResponse_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_api_GetInventoryResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_GetInventoryResponse_descriptor,
         new String[] { "Item", });
     internal_static_api_GetResultRequest_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_api_GetResultRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_GetResultRequest_descriptor,
         new String[] { "TaskId", });
     internal_static_api_GetResultResponse_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_api_GetResultResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_GetResultResponse_descriptor,
         new String[] { "Item", });
     internal_static_api_ListResultRequest_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_api_ListResultRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_ListResultRequest_descriptor,
         new String[] { });
     internal_static_api_ListResultResponse_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_api_ListResultResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_api_ListResultResponse_descriptor,

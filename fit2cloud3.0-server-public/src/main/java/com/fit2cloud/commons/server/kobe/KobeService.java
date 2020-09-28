@@ -1,5 +1,6 @@
 package com.fit2cloud.commons.server.kobe;
 
+import com.alibaba.fastjson.JSONObject;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +29,16 @@ public class KobeService {
         if (request.getVars().size() > 0) {
             builder.putAllVars(request.getVars());
         }
+        Kobe.ProxyConfig.Builder proxyBuilder = Kobe.ProxyConfig.newBuilder().setEnable(false);
         if (request.getProxy() != null) {
-            builder.putVars("ansible_ssh_common_args", request.getProxy());
+//            builder.putVars("ansible_ssh_common_args", request.getProxy());
+            String proxyJson = request.getProxy();
+            JSONObject jsonObject = JSONObject.parseObject(proxyJson);
+            proxyBuilder.setEnable(true);
+            proxyBuilder.setIp(jsonObject.getString("ip"));
+            proxyBuilder.setPort(jsonObject.getIntValue("port"));
+            proxyBuilder.setUser(jsonObject.getString("username"));
+            proxyBuilder.setPassword(jsonObject.getString("password"));
         }
         if (request.getCloudServerCredentailType().equals(CloudServerCredentialType.KEY)) {
             builder.setPrivateKey(request.getCredential());
@@ -58,6 +67,7 @@ public class KobeService {
                                         .setName("default-host")
                                         .setUser(request.getUsername())
                                         .setPort(request.getPort())
+                                        .setProxyConfig(proxyBuilder.build())
                                         .build()
                         )
                                 .addGroups(

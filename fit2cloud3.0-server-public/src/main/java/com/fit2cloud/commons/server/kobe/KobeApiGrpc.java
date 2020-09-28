@@ -1,9 +1,11 @@
 package com.fit2cloud.commons.server.kobe;
 
-import io.grpc.stub.ClientCalls;
-
 import static io.grpc.MethodDescriptor.generateFullMethodName;
+import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncUnaryCall;
 import static io.grpc.stub.ClientCalls.*;
+import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.*;
 
 /**
@@ -164,49 +166,49 @@ public class KobeApiGrpc {
 
     @Override
     public void createProject(Kobe.CreateProjectRequest request,
-                              io.grpc.stub.StreamObserver<Kobe.CreateProjectResponse> responseObserver) {
+        io.grpc.stub.StreamObserver<Kobe.CreateProjectResponse> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_CREATE_PROJECT, responseObserver);
     }
 
     @Override
     public void listProject(Kobe.ListProjectRequest request,
-                            io.grpc.stub.StreamObserver<Kobe.ListProjectResponse> responseObserver) {
+        io.grpc.stub.StreamObserver<Kobe.ListProjectResponse> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_LIST_PROJECT, responseObserver);
     }
 
     @Override
     public void getInventory(Kobe.GetInventoryRequest request,
-                             io.grpc.stub.StreamObserver<Kobe.GetInventoryResponse> responseObserver) {
+        io.grpc.stub.StreamObserver<Kobe.GetInventoryResponse> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_GET_INVENTORY, responseObserver);
     }
 
     @Override
     public void runPlaybook(Kobe.RunPlaybookRequest request,
-                            io.grpc.stub.StreamObserver<Kobe.RunPlaybookResult> responseObserver) {
+        io.grpc.stub.StreamObserver<Kobe.RunPlaybookResult> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_RUN_PLAYBOOK, responseObserver);
     }
 
     @Override
     public void runAdhoc(Kobe.RunAdhocRequest request,
-                         io.grpc.stub.StreamObserver<Kobe.RunAdhocResult> responseObserver) {
+        io.grpc.stub.StreamObserver<Kobe.RunAdhocResult> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_RUN_ADHOC, responseObserver);
     }
 
     @Override
     public void watchResult(Kobe.WatchRequest request,
-                            io.grpc.stub.StreamObserver<Kobe.WatchStream> responseObserver) {
+        io.grpc.stub.StreamObserver<Kobe.WatchStream> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_WATCH_RESULT, responseObserver);
     }
 
     @Override
     public void getResult(Kobe.GetResultRequest request,
-                          io.grpc.stub.StreamObserver<Kobe.GetResultResponse> responseObserver) {
+        io.grpc.stub.StreamObserver<Kobe.GetResultResponse> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_GET_RESULT, responseObserver);
     }
 
     @Override
     public void listResult(Kobe.ListResultRequest request,
-                           io.grpc.stub.StreamObserver<Kobe.ListResultResponse> responseObserver) {
+        io.grpc.stub.StreamObserver<Kobe.ListResultResponse> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_LIST_RESULT, responseObserver);
     }
 
@@ -312,57 +314,57 @@ public class KobeApiGrpc {
 
     @Override
     public void createProject(Kobe.CreateProjectRequest request,
-                              io.grpc.stub.StreamObserver<Kobe.CreateProjectResponse> responseObserver) {
-      ClientCalls.asyncUnaryCall(
+        io.grpc.stub.StreamObserver<Kobe.CreateProjectResponse> responseObserver) {
+      asyncUnaryCall(
           getChannel().newCall(METHOD_CREATE_PROJECT, getCallOptions()), request, responseObserver);
     }
 
     @Override
     public void listProject(Kobe.ListProjectRequest request,
-                            io.grpc.stub.StreamObserver<Kobe.ListProjectResponse> responseObserver) {
-      ClientCalls.asyncUnaryCall(
+        io.grpc.stub.StreamObserver<Kobe.ListProjectResponse> responseObserver) {
+      asyncUnaryCall(
           getChannel().newCall(METHOD_LIST_PROJECT, getCallOptions()), request, responseObserver);
     }
 
     @Override
     public void getInventory(Kobe.GetInventoryRequest request,
-                             io.grpc.stub.StreamObserver<Kobe.GetInventoryResponse> responseObserver) {
-      ClientCalls.asyncUnaryCall(
+        io.grpc.stub.StreamObserver<Kobe.GetInventoryResponse> responseObserver) {
+      asyncUnaryCall(
           getChannel().newCall(METHOD_GET_INVENTORY, getCallOptions()), request, responseObserver);
     }
 
     @Override
     public void runPlaybook(Kobe.RunPlaybookRequest request,
-                            io.grpc.stub.StreamObserver<Kobe.RunPlaybookResult> responseObserver) {
-      ClientCalls.asyncUnaryCall(
+        io.grpc.stub.StreamObserver<Kobe.RunPlaybookResult> responseObserver) {
+      asyncUnaryCall(
           getChannel().newCall(METHOD_RUN_PLAYBOOK, getCallOptions()), request, responseObserver);
     }
 
     @Override
     public void runAdhoc(Kobe.RunAdhocRequest request,
-                         io.grpc.stub.StreamObserver<Kobe.RunAdhocResult> responseObserver) {
-      ClientCalls.asyncUnaryCall(
+        io.grpc.stub.StreamObserver<Kobe.RunAdhocResult> responseObserver) {
+      asyncUnaryCall(
           getChannel().newCall(METHOD_RUN_ADHOC, getCallOptions()), request, responseObserver);
     }
 
     @Override
     public void watchResult(Kobe.WatchRequest request,
-                            io.grpc.stub.StreamObserver<Kobe.WatchStream> responseObserver) {
-      ClientCalls.asyncServerStreamingCall(
+        io.grpc.stub.StreamObserver<Kobe.WatchStream> responseObserver) {
+      asyncServerStreamingCall(
           getChannel().newCall(METHOD_WATCH_RESULT, getCallOptions()), request, responseObserver);
     }
 
     @Override
     public void getResult(Kobe.GetResultRequest request,
-                          io.grpc.stub.StreamObserver<Kobe.GetResultResponse> responseObserver) {
-      ClientCalls.asyncUnaryCall(
+        io.grpc.stub.StreamObserver<Kobe.GetResultResponse> responseObserver) {
+      asyncUnaryCall(
           getChannel().newCall(METHOD_GET_RESULT, getCallOptions()), request, responseObserver);
     }
 
     @Override
     public void listResult(Kobe.ListResultRequest request,
-                           io.grpc.stub.StreamObserver<Kobe.ListResultResponse> responseObserver) {
-      ClientCalls.asyncUnaryCall(
+        io.grpc.stub.StreamObserver<Kobe.ListResultResponse> responseObserver) {
+      asyncUnaryCall(
           getChannel().newCall(METHOD_LIST_RESULT, getCallOptions()), request, responseObserver);
     }
   }

@@ -97,7 +97,8 @@ public class AdhocRequest {
 
     public void setProxy(String ip, Integer port, String username, String password) {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("-o ProxyCommand=\"sshpass -p ").append(password).append(" ssh -W %h:%p -q ").append(username).append("@").append(ip).append("\" -o Port=").append(port).append(" -o StrictHostKeyChecking=no");
+//        buffer.append("-o ProxyCommand=\"sshpass -p ").append(password).append(" ssh -W %h:%p -q ").append(username).append("@").append(ip).append("\" -o Port=").append(port).append(" -o StrictHostKeyChecking=no");
+        buffer.append("{\"ip\":\"").append(ip).append("\",\"port\":").append(port).append(",\"username\":\"").append(username).append("\",\"password\":\"").append(password).append("\"}");
         this.proxy = buffer.toString();
     }
 

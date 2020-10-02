@@ -6,6 +6,9 @@ import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * @Author gin
  * @Date 2020/8/25 4:31 下午
@@ -57,6 +60,13 @@ public class KobeService {
             args = "executable=" + executePath + " " + content;
         } else {
             args = content;
+        }
+        if (request.getVariables() != null) {
+            Iterator<Map.Entry<String, String>> iterator = request.getVariables().entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> next = iterator.next();
+                args = args.replaceAll("\\{\\{" + next.getKey() + "}}", next.getValue());
+            }
         }
 
         Kobe.RunAdhocRequest adhocRequest = Kobe.RunAdhocRequest.newBuilder()

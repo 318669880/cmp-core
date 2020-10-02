@@ -2,6 +2,7 @@ package com.fit2cloud.commons.server.kobe;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +24,7 @@ public class AdhocRequest {
     private Map<String, String> vars = new HashMap();
     private String executePath;
     private CloudServerCredentialType cloudServerCredentailType;
+    private Map<String, String> variables;
 
     public AdhocRequest() {
     }
@@ -162,5 +164,13 @@ public class AdhocRequest {
 
     public Long getTimeout() {
         return this.timeout;
+    }
+
+    public Map<String, String> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(Map<String, String> variables) {
+        this.variables = variables;
     }
 }

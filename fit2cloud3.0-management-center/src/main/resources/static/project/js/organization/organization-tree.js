@@ -186,6 +186,8 @@ ProjectApp.controller('OrganizationTreeController', function ($scope, $filter, H
                 }, function (rep) {
                     Notification.danger(rep.data.message)
                 })
+            },function () {
+                $scope.targetTree.removeAllChecked();
             })
         }
     };

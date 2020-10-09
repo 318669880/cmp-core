@@ -3,17 +3,14 @@ package com.fit2cloud.mc.controller;
 import com.fit2cloud.commons.server.base.domain.Organization;
 import com.fit2cloud.commons.server.base.domain.Workspace;
 import com.fit2cloud.commons.server.i18n.Translator;
-import com.fit2cloud.commons.server.model.OrgTreeNode;
 import com.fit2cloud.commons.server.model.SessionUser;
 import com.fit2cloud.commons.server.model.UserDTO;
 import com.fit2cloud.commons.server.utils.SessionUtils;
-import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
 import com.fit2cloud.mc.common.constants.PermissionConstants;
-import com.fit2cloud.mc.dto.OrganizationDTO;
 import com.fit2cloud.mc.dto.request.CreateOrganizationRequest;
-import com.fit2cloud.mc.dto.request.OrganizationRequest;
+import com.fit2cloud.mc.dto.request.DeleteOrgTreeRequest;
 import com.fit2cloud.mc.dto.request.UpdateOrganizationRequest;
 import com.fit2cloud.mc.service.OrganizationService;
 import com.fit2cloud.mc.service.WorkspaceService;
@@ -25,7 +22,6 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,13 +53,13 @@ public class OrganizationController {
         return organizationService.currentOrganization(sessionUser.getOrganizationId());
     }
 
-    @ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_list" + Translator.SUFFIX)
+    /*@ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_list" + Translator.SUFFIX)
     @PostMapping(value = "/{goPage}/{pageSize}")
     @RequiresPermissions(PermissionConstants.ORGANIZATION_READ)
     public Pager<List<OrganizationDTO>> paging(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody OrganizationRequest request) {
         Page page = PageHelper.startPage(goPage, pageSize, true);
         return PageUtils.setPageInfo(page, organizationService.paging(BeanUtils.objectToMap(request)));
-    }
+    }*/
 
     @RequiresPermissions(PermissionConstants.ROLE_READ)
     @PostMapping(value = "link/workspace/{organizationId}/{goPage}/{pageSize}")
@@ -80,12 +76,12 @@ public class OrganizationController {
         return PageUtils.setPageInfo(page, organizationService.linkOrgAdminPaging(organizationId));
     }
 
-    @ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_delete_batch" + Translator.SUFFIX)
+    /*@ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_delete_batch" + Translator.SUFFIX)
     @PostMapping(value = "/delete")
     @RequiresPermissions(PermissionConstants.ORGANIZATION_DELETE)
     public void delete(@RequestBody List<String> organizationIds) {
         organizationService.delete(organizationIds);
-    }
+    }*/
 
     @ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_create" + Translator.SUFFIX)
     @PostMapping("/add")
@@ -106,15 +102,15 @@ public class OrganizationController {
     @PostMapping(value = "/deleteTree")
     @RequiresPermissions(PermissionConstants.ORGANIZATION_DELETE)
     @Transactional
-    public void deleteTree(@RequestBody List<OrgTreeNode> deleteNodes){
-        Map<String,List<OrgTreeNode>> idsMap = deleteNodes.stream().collect(Collectors.groupingBy(OrgTreeNode::getNodeType));
+    public void deleteTree(@RequestBody List<DeleteOrgTreeRequest> deleteNodes){
+        Map<String,List<DeleteOrgTreeRequest>> idsMap = deleteNodes.stream().collect(Collectors.groupingBy(DeleteOrgTreeRequest::getNodeType));
 
         Optional.ofNullable(idsMap.get("wks")).ifPresent(wksNodes -> {
             wksNodes.forEach(wkNode -> workspaceService.delete(wkNode.getNodeId()));
         });
 
         Optional.ofNullable(idsMap.get("org")).ifPresent(orgNodes -> {
-            organizationService.delete(orgNodes.stream().map(OrgTreeNode::getNodeId).collect(Collectors.toList()));
+            organizationService.delete(orgNodes.stream().map(DeleteOrgTreeRequest::getNodeId).collect(Collectors.toList()));
         });
     }
 

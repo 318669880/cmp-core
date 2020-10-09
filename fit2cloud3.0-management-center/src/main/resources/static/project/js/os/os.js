@@ -1,7 +1,7 @@
 ProjectApp.controller('OSController', function ($scope, $mdDialog, $document, $mdBottomSheet, HttpUtils, FilterSearch, Notification, AuthService, Translator) {
 
     $scope.list = function () {
-        $scope.loadingLayer = HttpUtils.get('dictionary/category/os/list', function (response) {
+        $scope.loadingLayer = HttpUtils.post('dictionary/category/os/list',null, function (response) {
             $scope.osList = response.data;
             $scope.osTreeNode = [];
             angular.forEach($scope.osList, function (os) {

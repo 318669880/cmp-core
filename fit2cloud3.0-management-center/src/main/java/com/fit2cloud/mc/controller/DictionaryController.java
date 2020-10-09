@@ -21,24 +21,27 @@ public class DictionaryController {
     private DictionaryService dictionaryService;
 
     @ApiOperation(Translator.PREFIX + "i18n_mc_swagger_os_list" + Translator.SUFFIX)
-    @GetMapping("category/os/list")
+    @PostMapping("category/os/list")
     @RequiresPermissions(PermissionConstants.DICTIONARY_OS_READ)
     public List<DictionaryOsDTO> getOsCategoryList() {
         return dictionaryService.getOsCategoryList();
     }
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_os_read_create" + Translator.SUFFIX)
     @PostMapping("category/os/add")
     @RequiresPermissions(PermissionConstants.DICTIONARY_OS_CREATE)
     public void addOsCategory(@RequestBody Dictionary dictionary) {
         dictionaryService.addOrEditOsCategory(dictionary, true);
     }
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_os_read_edit" + Translator.SUFFIX)
     @PostMapping("category/os/update")
     @RequiresPermissions(PermissionConstants.DICTIONARY_OS_EDIT)
     public void editOsCategory(@RequestBody Dictionary dictionary) {
         dictionaryService.addOrEditOsCategory(dictionary, false);
     }
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_os_read_delete" + Translator.SUFFIX)
     @PostMapping("category/os/delete/{id}")
     @RequiresPermissions(PermissionConstants.DICTIONARY_OS_DELETE)
     public void deleteOsCategory(@PathVariable String id) {
@@ -46,12 +49,14 @@ public class DictionaryController {
     }
 
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_os_version_delete" + Translator.SUFFIX)
     @PostMapping("category/os/version/delete/{id}")
     @RequiresPermissions(PermissionConstants.DICTIONARY_OS_VERSION_DELETE)
     public void deleteOsVersion(@PathVariable String id) {
         dictionaryService.deleteOsVersion(id);
     }
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_os_version_create" + Translator.SUFFIX)
     @PostMapping("category/os/{osId}/add/{version}")
     @RequiresPermissions(PermissionConstants.DICTIONARY_OS_VERSION_CREATE)
     public void addOsVersion(@PathVariable String osId, @PathVariable String version) {

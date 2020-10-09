@@ -92,7 +92,7 @@ ProjectApp.controller('RoleController', function ($scope, $mdDialog, HttpUtils, 
                 }
             };
             $scope.treeData = {};
-            $scope.roleDetailLoadingLayer = HttpUtils.get("role/authorizePermission/" + item.id, function (rep) {
+            $scope.roleDetailLoadingLayer = HttpUtils.post("role/authorizePermission/" + item.id, null , function (rep) {
                 $scope.treeData = rep.data;
                 angular.forEach($scope.treeData, function (tree) {
                     $scope.moduleIdList.push(tree.id);
@@ -108,7 +108,8 @@ ProjectApp.controller('RoleController', function ($scope, $mdDialog, HttpUtils, 
 
         $scope.delete = function (role) {
             Notification.confirm(Translator.get("i18n_menu_delete_confirm"), function () {
-                $http.get("role/delete/" + role.id).then(function () {
+                /*$http.get("role/delete/" + role.id).then(function () {*/
+                $http.post("role/delete/" + role.id).then(function () {
                     Notification.success(Translator.get("i18n_mc_delete_success"));
                     $scope.list();
                 }, function (rep) {
@@ -124,7 +125,7 @@ ProjectApp.controller('RoleController', function ($scope, $mdDialog, HttpUtils, 
 
         $scope.changeRole = function (roleId) {
             $scope.treeData = {};
-            $scope.roleDetailLoadingLayer = HttpUtils.get("role/permissionTree/" + roleId, function (rep) {
+            $scope.roleDetailLoadingLayer = HttpUtils.post("role/permissionTree/" + roleId , null , function (rep) {
                 $scope.treeData = rep.data;
             });
         };

@@ -35,10 +35,10 @@
                 OR user.email like #{map.username})
             </if>
             <if test="map.resourceName!=null">
-                and operation_log.resource_name = #{map.resourceName}
+                and operation_log.resource_name like #{map.resourceName}
             </if>
             <if test="map.operation!=null">
-                and operation_log.operation = #{map.operation}
+                and operation_log.operation like #{map.operation}
             </if>
             <if test="map.module != null">
                 and operation_log.module = #{map.module}

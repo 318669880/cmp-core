@@ -80,12 +80,12 @@ public class OrganizationController {
         return PageUtils.setPageInfo(page, organizationService.linkOrgAdminPaging(organizationId));
     }
 
-    @ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_delete_batch" + Translator.SUFFIX)
+    /*@ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_delete_batch" + Translator.SUFFIX)
     @PostMapping(value = "/delete")
     @RequiresPermissions(PermissionConstants.ORGANIZATION_DELETE)
     public void delete(@RequestBody List<String> organizationIds) {
         organizationService.delete(organizationIds);
-    }
+    }*/
 
     @ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_create" + Translator.SUFFIX)
     @PostMapping("/add")

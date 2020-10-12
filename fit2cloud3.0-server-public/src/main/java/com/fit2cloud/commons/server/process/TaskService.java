@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,18 +57,21 @@ public class TaskService {
     private UserCommonService userCommonService;
 
     @Resource
+    @Lazy
     private ProcessService processService;
 
     @Resource
     private ProcessLogService processLogService;
 
     @Resource
+    @Lazy
     private ProcessModelService processModelService;
 
     @Resource
     private ProcessEventService processEventService;
 
     @Resource
+    @Lazy
     private ProcessMessageService processMessageService;
 
     @Resource

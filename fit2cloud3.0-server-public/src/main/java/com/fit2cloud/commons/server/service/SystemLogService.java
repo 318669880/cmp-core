@@ -27,8 +27,8 @@ import java.util.Map;
 public class SystemLogService {
     @Resource
     private SystemLogRepository systemLogRepository;
-    @Resource
-    private ElasticsearchTemplate elasticsearchTemplate;
+    /*@Resource
+    private ElasticsearchTemplate elasticsearchTemplate;*/
 
     public Pager<List<SystemLog>> querySystemLog(int goPage, int pageSize, Map<String, Object> params) {
         List<SystemLog> results = new ArrayList<>();
@@ -59,7 +59,7 @@ public class SystemLogService {
 
 
     public void cleanHistoryLog(Long logTime) {
-        String indexName = elasticsearchTemplate.getPersistentEntityFor(SystemLog.class).getIndexName();
+        /*String indexName = elasticsearchTemplate.getPersistentEntityFor(SystemLog.class).getIndexName();
         RangeQueryBuilder queryBuilder = QueryBuilders.rangeQuery("logTime").lte(logTime);
         Client client = elasticsearchTemplate.getClient();
         DeleteByQueryRequestBuilder deleteByQueryRequestBuilder = new DeleteByQueryRequestBuilder(client, DeleteByQueryAction.INSTANCE);
@@ -67,7 +67,7 @@ public class SystemLogService {
                 .filter(queryBuilder)
                 .source(indexName)
                 .get();
-        LogUtil.info("Total delete：{} system logs", bulkByScrollResponse.getDeleted());
+        LogUtil.info("Total delete：{} system logs", bulkByScrollResponse.getDeleted());*/
     }
 
 }

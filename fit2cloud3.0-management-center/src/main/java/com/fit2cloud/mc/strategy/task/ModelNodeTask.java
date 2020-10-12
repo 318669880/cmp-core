@@ -19,6 +19,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.eureka.EurekaClientConfigBean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -53,6 +54,7 @@ public class ModelNodeTask {
     private ModelNodeMapper modelNodeMapper;
 
     @Resource
+    @Lazy
     private ModelManagerService modelManagerService;
 
     @Resource

@@ -12,6 +12,7 @@ import com.fit2cloud.mc.strategy.factory.NodeOperateStrategyFactory;
 import com.fit2cloud.mc.strategy.service.ModelOperateStrategy;
 import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.fit2cloud.mc.strategy.service.NetFileService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ public class NodeOpServiceImp implements NodeOperateService {
     private NetFileService netFileService;
 
     @Resource
+    @Lazy
     private ModelManagerService modelManagerService;
 
     @Resource

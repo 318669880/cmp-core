@@ -16,8 +16,11 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.DeleteQuery;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -33,7 +36,7 @@ public class ElasticsearchTest {
     }
 
     @Resource
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private ElasticsearchRestTemplate elasticsearchTemplate;
     //    @Resource
 //    private CloudServerMetricRepository cloudServerMetricRepository;
     @Resource
@@ -93,9 +96,11 @@ public class ElasticsearchTest {
     public void test7() {
         // .lte(1530513236984L);
         RangeQueryBuilder queryBuilder = QueryBuilders.rangeQuery("logTime").lte(1531822248000L);
+
         DeleteQuery deleteQuery = new DeleteQuery();
         deleteQuery.setQuery(queryBuilder);
-        elasticsearchTemplate.delete(deleteQuery, SystemLog.class);
+        //elasticsearchTemplate.delete(deleteQuery, SystemLog.class);
+        //elasticsearchTemplate.delete(deleteQuery, SystemLog.class, IndexCoordinates.of(""));
     }
 
     @Test

@@ -15,9 +15,9 @@ import java.util.Map;
  */
 @Service
 public class KobeService {
-    @Value("${kobe.host}")
+    //@Value("${kobe.host:127.0.0.1}")
     private String kobeHost;
-    @Value("${kobe.port}")
+    //@Value("${kobe.port}:6602")
     private Integer kobePort;
 
     public Kobe.RunAdhocResult runAdhoc(AdhocRequest request) {

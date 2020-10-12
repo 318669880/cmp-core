@@ -34,6 +34,7 @@ import com.fit2cloud.mc.dto.request.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +52,7 @@ import java.util.stream.Collectors;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
+
 public class UserService {
 
     @Resource
@@ -61,7 +63,9 @@ public class UserService {
     private RoleMapper roleMapper;
     @Resource
     private UserRoleMapper userRoleMapper;
+
     @Resource
+    @Lazy
     private WorkspaceService workspaceService;
     @Resource
     private UserCommonService userCommonService;

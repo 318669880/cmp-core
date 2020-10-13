@@ -194,4 +194,8 @@ public class WorkspaceService {
         return list;
     }
 
+    public long countWorkSpace(){
+        return workspaceMapper.countByExample(null);
+    }
+
 }

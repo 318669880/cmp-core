@@ -29,8 +29,8 @@ public class CommonConfig {
         if (GlobalConfigurations.isReleaseMode()) {
             System.out.println("init License");
             try {
-                ApplicationContext applicationContext = event.getApplicationContext();
-                applicationContext.getBean(DefaultLicenseService.class).createLicense();
+//                ApplicationContext applicationContext = event.getApplicationContext();
+//                applicationContext.getBean(DefaultLicenseService.class).createLicense();
             } catch (Exception e) {
                 e.printStackTrace();
             }

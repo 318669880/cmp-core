@@ -37,7 +37,7 @@ ProjectApp.controller('AboutController', function ($scope, HttpUtils, Notificati
 
     $scope.update = function () {
         $scope.loadingLayer = HttpUtils.post("about/license/update", {license: $scope.licenseKey}, function (response) {
-            if (response.data.status === 'Success') {
+            if (response.data.status === 'valid') {
                 Notification.info(Translator.get("i18n_mc_update_success"));
                 $scope.license = $scope.getLicense(response.data);
                 $scope.toggleForm();

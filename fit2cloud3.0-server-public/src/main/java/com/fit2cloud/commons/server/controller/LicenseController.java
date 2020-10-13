@@ -2,7 +2,7 @@ package com.fit2cloud.commons.server.controller;
 
 import com.fit2cloud.commons.server.license.DefaultLicenseService;
 import com.fit2cloud.commons.utils.ResultHolder;
-import com.fit2cloud.license.core.model.F2CLicenseResponse;
+import com.fit2cloud.commons.server.license.F2CLicenseResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,12 +20,12 @@ public class LicenseController {
         F2CLicenseResponse f2CLicenseResponse = defaultLicenseService.validateLicense();
 
         switch (f2CLicenseResponse.getStatus()) {
-            case Success:
+            case valid:
                 return ResultHolder.success(null);
-            case Expired:
+            case expired:
                 String expired = f2CLicenseResponse.getLicense().getExpired();
                 throw new Exception("License has expired since " + expired + ", please update license.");
-            case Fail:
+            case invalid:
                 throw new Exception(f2CLicenseResponse.getMessage());
             default:
                 throw new Exception("Invalid License.");

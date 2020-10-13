@@ -1,7 +1,7 @@
 package com.fit2cloud.mc.controller;
 
 
-import com.fit2cloud.license.core.model.F2CLicenseResponse;
+import com.fit2cloud.commons.server.license.F2CLicenseResponse;
 import com.fit2cloud.mc.common.constants.PermissionConstants;
 import com.fit2cloud.mc.service.AboutService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

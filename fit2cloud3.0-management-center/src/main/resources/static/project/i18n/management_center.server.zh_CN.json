@@ -203,5 +203,6 @@
   "i18n_mc_delete_role": "删除角色",
   "i18n_mc_user_api_list": "查询用户API Key",
   "i18n_mc_user_api_create": "创建用户API Key",
-  "i18n_mc_user_api_delete": "删除用户API Key"
+  "i18n_mc_user_api_delete": "删除用户API Key",
+  "i18n_plu_limit": "工作空间资产数量大于License的限制!"
 }

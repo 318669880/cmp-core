@@ -202,5 +202,6 @@
   "i18n_mc_delete_role": "Delete Role",
   "i18n_mc_user_api_list": "List API Key",
   "i18n_mc_user_api_create": "Create API Key",
-  "i18n_mc_user_api_delete": "Delete API Key"
+  "i18n_mc_user_api_delete": "Delete API Key",
+  "i18n_plu_limit": "Workspace assets are larger than the limit of license!"
 }

@@ -203,5 +203,6 @@
   "i18n_mc_delete_role": "刪除角色",
   "i18n_mc_user_api_list": "查詢用戶API Key",
   "i18n_mc_user_api_create": "創建用戶API Key",
-  "i18n_mc_user_api_delete": "刪除用戶API Key"
+  "i18n_mc_user_api_delete": "刪除用戶API Key",
+  "i18n_plu_limit": "工作空間資產數量超出License限制!"
 }

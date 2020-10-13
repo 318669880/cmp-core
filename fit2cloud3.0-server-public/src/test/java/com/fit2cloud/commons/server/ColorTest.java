@@ -1,7 +1,5 @@
 package com.fit2cloud.commons.server;
 
-import com.fit2cloud.commons.utils.CodingUtil;
-import com.fit2cloud.commons.utils.UUIDUtil;
 
 /**
  * Author: chunxing
@@ -11,9 +9,12 @@ import com.fit2cloud.commons.utils.UUIDUtil;
 public class ColorTest {
 
     public static void main(String[] args) {
-        String accessKey = "J7Xly6m7pdxWOGL3";
-        String secretKey = "H2toemn5SVYfnlCq";
-        String signature = CodingUtil.aesEncrypt(accessKey + "|" + UUIDUtil.newUUID() + "|" + System.currentTimeMillis(), secretKey, accessKey);
-        System.out.println(signature);
+        System.out.println(System.getProperty("os.name"));
+        System.out.println(System.getProperty("os.arch"));
+        System.out.println(System.getProperty("os.version"));
+//        String accessKey = "J7Xly6m7pdxWOGL3";
+//        String secretKey = "H2toemn5SVYfnlCq";
+//        String signature = CodingUtil.aesEncrypt(accessKey + "|" + UUIDUtil.newUUID() + "|" + System.currentTimeMillis(), secretKey, accessKey);
+//        System.out.println(signature);
     }
 }

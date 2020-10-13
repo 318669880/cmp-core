@@ -18,8 +18,8 @@
                                     <tr>
                                         <th>{{'i18n_license_expire' | translator:'过期时间'}}</th>
                                         <td>
-                                            <label ng-if="license.status === 'Expired'" style="color: red">{{license.expired}} (已过期)</label>
-                                            <label ng-if="license.status === 'Success'">{{license.expired}}</label>
+                                            <label ng-if="license.status === 'expired'" style="color: red">{{license.expired}} (已过期)</label>
+                                            <label ng-if="license.status === 'valid'">{{license.expired}}</label>
                                         </td>
                                     </tr>
                                     <tr>

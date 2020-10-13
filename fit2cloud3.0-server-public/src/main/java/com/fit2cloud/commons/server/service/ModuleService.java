@@ -10,8 +10,6 @@ import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.license.DefaultLicenseService;
 import com.fit2cloud.commons.server.model.DashBoardTextDTO;
-import com.fit2cloud.license.core.constants.LicenseConstants;
-import com.fit2cloud.license.core.model.F2CLicenseResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
@@ -37,28 +35,28 @@ public class ModuleService {
     /**
      * 如果权限里没有此模块，则直接停止当前模块
      */
-    private boolean authModule(Module module) {
-
-        /**
-         * 如果license为空，则不校验
-         */
-        if (StringUtils.isBlank(module.getLicense())) {
-            return true;
-        }
-
-        F2CLicenseResponse f2CLicenseResponse = defaultLicenseService.validateLicense();
-        //如果校验失败,停掉所有加了license的模块
-        if (LicenseConstants.Status.Fail.equals(f2CLicenseResponse.getStatus())) {
-            return false;
-        }
-
-        LicenseConstants.Edition edition = f2CLicenseResponse.getLicense().getEdition();
-        if (LicenseConstants.Edition.Standard.equals(edition)) {
-            return module.getLicense().equals(LicenseConstants.Edition.Standard.name());
-        }
-
-        return true;
-    }
+//    private boolean authModule(Module module) {
+//
+//        /**
+//         * 如果license为空，则不校验
+//         */
+//        if (StringUtils.isBlank(module.getLicense())) {
+//            return true;
+//        }
+//
+//        F2CLicenseResponse f2CLicenseResponse = defaultLicenseService.validateLicense();
+//        //如果校验失败,停掉所有加了license的模块
+//        if (LicenseConstants.Status.Fail.equals(f2CLicenseResponse.getStatus())) {
+//            return false;
+//        }
+//
+//        LicenseConstants.Edition edition = f2CLicenseResponse.getLicense().getEdition();
+//        if (LicenseConstants.Edition.Standard.equals(edition)) {
+//            return module.getLicense().equals(LicenseConstants.Edition.Standard.name());
+//        }
+//
+//        return true;
+//    }
 
     /**
      * 初始化模块信息

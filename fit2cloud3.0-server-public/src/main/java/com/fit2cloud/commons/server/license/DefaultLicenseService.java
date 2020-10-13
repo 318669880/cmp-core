@@ -1,53 +1,100 @@
 package com.fit2cloud.commons.server.license;
 
-import com.alibaba.fastjson.JSONObject;
 import com.fit2cloud.commons.server.base.domain.License;
-import com.fit2cloud.commons.server.i18n.Translator;
-import com.fit2cloud.commons.utils.CodingUtil;
-import com.fit2cloud.commons.utils.DateUtil;
-import com.fit2cloud.license.core.constants.LicenseConstants;
-import com.fit2cloud.license.core.exception.LicenseException;
-import com.fit2cloud.license.core.exception.LicenseExceptionCode;
-import com.fit2cloud.license.core.model.F2CLicense;
-import com.fit2cloud.license.core.model.F2CLicenseExpand;
-import com.fit2cloud.license.core.model.F2CLicenseResponse;
-import com.fit2cloud.license.core.service.BasicLicenseService;
+import com.fit2cloud.commons.server.exception.F2CException;
+import com.fit2cloud.commons.utils.CommonBeanFactory;
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
 
 @Service
 public class DefaultLicenseService {
     @Resource
-    private BasicLicenseService basicLicenseService;
-    @Resource
     private InnerLicenseService innerLicenseService;
-    private static final String LICENSE_ID = "fit2cloud_license";
-    private static final String EXPIRED_FORMAT = LicenseConstants.EXPIRED_FORMAT;
-    private static final String EXPIRED_FORMAT_PATTERN = LicenseConstants.EXPIRED_FORMAT_PATTERN;
-    private static final String VERSION = "01";
+    @Value("${spring.application.name:null}")
+    private String moduleId;
 
+    private static final String LICENSE_ID = "fit2cloud_license";
+    private static final String linuxValidatorUtil = "/usr/bin/validator_linux_amd64";
+    private static final String macValidatorUtil = "/usr/local/bin/validator_darwin_amd64";
+    private static final String product = "cmp";
+    private static final String[] NO_PLU_LIMIT_MODULES = new String[]{"dashboard", "gateway"};
+
+    public F2CLicenseResponse validateLicense(String product, String licenseKey){
+        List<String> command = new ArrayList<String>();
+        StringBuilder result = new StringBuilder();
+        if(System.getProperty("os.name").contains("Mac")){
+            command.add(macValidatorUtil);
+        }else {
+            command.add(linuxValidatorUtil);
+        }
+        command.add(licenseKey);
+        try{
+            execCommand(result, command);
+            System.out.println(result.toString());
+            F2CLicenseResponse f2CLicenseResponse = new Gson().fromJson(result.toString(), F2CLicenseResponse.class);
+            if(f2CLicenseResponse.getStatus() != F2CLicenseResponse.Status.valid){
+                return f2CLicenseResponse;
+            }
+            if(!StringUtils.equals(f2CLicenseResponse.getLicense().getProduct(), product)){
+                f2CLicenseResponse.setStatus(F2CLicenseResponse.Status.invalid);
+                f2CLicenseResponse.setLicense(null);
+                f2CLicenseResponse.setMessage("The license is unavailable for this product.");
+                return f2CLicenseResponse;
+            }
+            //检查每个模块的PLU限制
+
+            if(!Arrays.asList(NO_PLU_LIMIT_MODULES).contains(moduleId)){
+                AuthorizationUnit authorizationUnit= CommonBeanFactory.getBean(AuthorizationUnit.class);
+                try{
+                    authorizationUnit.calculateAssets(f2CLicenseResponse.getLicense().getCount());
+                    return f2CLicenseResponse;
+                }catch (Exception e){
+                    f2CLicenseResponse.setStatus(F2CLicenseResponse.Status.invalid);
+                    f2CLicenseResponse.setMessage(e.getMessage());
+                }
+            }
+            return f2CLicenseResponse;
+        }catch (Exception e){
+            return F2CLicenseResponse.invalid(e.getMessage());
+        }
+    }
+
+
+    private static int execCommand(StringBuilder result, List<String> command) throws Exception{
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.command(command);
+        Process process = builder.start();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = null;
+        while ((line=bufferedReader.readLine()) != null){
+            result.append(line).append("\n");
+        }
+        int exitCode = process.waitFor();
+        command.clear();
+        return exitCode;
+    }
 
     public F2CLicenseResponse validateLicense() {
         try {
             String licenseKey = readLicense();
-            return basicLicenseService.validateLicenseKey(LicenseConstants.Product.CMP, licenseKey);
+            return validateLicense(product, licenseKey);
         } catch (Exception e) {
-            return F2CLicenseResponse.fail(e.getMessage());
+            return F2CLicenseResponse.invalid(e.getMessage());
         }
     }
 
-    public F2CLicenseResponse updateLicense(LicenseConstants.Product product, String licenseKey) {
+    public F2CLicenseResponse updateLicense(String product, String licenseKey) {
         // 验证license
-        F2CLicenseResponse response = basicLicenseService.validateLicenseKey(product, licenseKey);
-        if (response.getStatus() == LicenseConstants.Status.Fail) {
+        F2CLicenseResponse response = validateLicense(product, licenseKey);
+        if (response.getStatus() != F2CLicenseResponse.Status.valid) {
             return response;
         }
         // 覆盖原license
@@ -55,75 +102,14 @@ public class DefaultLicenseService {
         return response;
     }
 
-
-    public void createLicense() {
-        // 只有License记录不存或者内容为空时创建Demo License
-        if (!innerLicenseService.existLicense(LICENSE_ID)) {
-            generateDemoLicense();
-        }
-    }
-
-    // 生成Demo License的license key记录
-    private void generateDemoLicense() {
-        Date expired = DateUtil.addDays(new Date(), LicenseConstants.DEMO_EXPIRED_DAY);
-        F2CLicense license = new F2CLicense(LicenseConstants.DEMO_CORPORATION,
-                DateUtil.getDate2String(EXPIRED_FORMAT, expired),
-                LicenseConstants.Edition.Standard,
-                LicenseConstants.Product.CMP,
-                LicenseConstants.DEMO_COUNT);
-        String licenseKey = basicLicenseService.generateLicenseKey(license);
-        writeLicense(licenseKey);
-    }
-
-    // BASE64字符串转换为F2CLicense
-    private F2CLicense convertLicense(String base64) {
-        String json = CodingUtil.base64Decoding(base64);
-        F2CLicenseExpand expand = JSONObject.parseObject(json, F2CLicenseExpand.class);
-        return expand.getLicense();
-    }
-
-    // F2CLicense转换为BASE64字符串
-    private String convertString(F2CLicense license) {
-        String name = license.getCorporation();
-        if (StringUtils.isBlank(name)) {
-            throw new LicenseException(Translator.get("i18n_ex_corporation_empty"));
-        }
-        String expired = license.getExpired();
-        Pattern p = Pattern.compile(EXPIRED_FORMAT_PATTERN);
-        Matcher m = p.matcher(expired);
-        if (!m.matches()) {
-            throw new LicenseException(Translator.get("i18n_ex_expire_date_invalid"));
-        }
-        try {
-            Date date = DateUtil.truncate(DateUtil.parseDate(expired, EXPIRED_FORMAT), Calendar.DAY_OF_MONTH);
-            if (date.before(new Date())) {
-                throw new LicenseException(Translator.get("i18n_ex_expire_date_must_greater_than_current"));
-            }
-        } catch (ParseException e) {
-            throw new LicenseException(Translator.get("i18n_ex_expire_date_incorrect"));
-        }
-
-        F2CLicenseExpand expand = new F2CLicenseExpand();
-        expand.setCreate(DateUtil.getCurrentFormatDate(DateUtil.YYYY_MM_DD_HH_MM_SS));
-        expand.setVersion(VERSION);
-        expand.setLicense(license);
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 20; i++) {
-            builder.append(UUID.randomUUID().toString());
-        }
-        expand.setRandom(builder.toString());
-
-        return CodingUtil.base64Encoding(JSONObject.toJSONString(expand));
-    }
-
     // 从数据库读取License
     private String readLicense() {
         License license = innerLicenseService.getLicense(LICENSE_ID);
         if (license == null) {
-            throw new LicenseException(LicenseExceptionCode.NoLicense);
+            F2CException.throwException("没有License记录");
         }
         if (StringUtils.isBlank(license.getLicense())) {
-            throw new LicenseException(LicenseExceptionCode.EmptyLicense);
+            F2CException.throwException("License 为空");
         }
         return license.getLicense();
     }
@@ -131,7 +117,7 @@ public class DefaultLicenseService {
     // 创建或更新License
     private void writeLicense(String licenseKey) {
         if (StringUtils.isBlank(licenseKey)) {
-            throw new LicenseException(LicenseExceptionCode.EmptyKey);
+            F2CException.throwException("License 为空");
         }
         License license = new License();
         license.setId(LICENSE_ID);

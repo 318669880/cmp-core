@@ -53,37 +53,45 @@ public class TagController {
         return PageUtils.setPageInfo(page, tags);
     }
 
+
+    @ApiOperation(Translator.PREFIX + "i18n_permission_tag_read_create" + Translator.SUFFIX)
     @PostMapping("add")
     @RequiresPermissions(PermissionConstants.TAG_CREATE)
     public void createTag(@RequestBody Tag tag) {
         tagService.saveTag(tag);
     }
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_tag_read_edit" + Translator.SUFFIX)
     @PostMapping("update")
     @RequiresPermissions(PermissionConstants.TAG_EDIT)
     public void updateTag(@RequestBody Tag tag) {
         tagService.saveTag(tag);
     }
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_tag_value_read_create" + Translator.SUFFIX)
     @PostMapping("value/add")
     @RequiresPermissions(PermissionConstants.TAG_VALUE_EDIT)
     public void createTagValue(@RequestBody TagValue tagValue) {
         tagService.saveTagValue(tagValue);
     }
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_tag_value_read_edit" + Translator.SUFFIX)
     @PostMapping("value/update")
     @RequiresPermissions(PermissionConstants.TAG_VALUE_CREATE)
     public void updateTagValue(@RequestBody TagValue tagValue) {
         tagService.saveTagValue(tagValue);
     }
 
-    @GetMapping("delete/{tagKey}")
+    @ApiOperation(Translator.PREFIX + "i18n_permission_tag_read_delete" + Translator.SUFFIX)
+    @PostMapping("delete/{tagKey}")
     @RequiresPermissions(PermissionConstants.TAG_DELETE)
     public void deleteTag(@PathVariable String tagKey) throws Exception {
         tagService.deleteTag(tagKey);
     }
 
-    @GetMapping("value/delete/{id}")
+
+    @ApiOperation(Translator.PREFIX + "i18n_permission_tag_value_read_delete" + Translator.SUFFIX)
+    @PostMapping("value/delete/{id}")
     @RequiresPermissions(PermissionConstants.TAG_VALUE_DELETE)
     public void deleteTagValue(@PathVariable String id) {
         tagService.deleteTagValue(id);

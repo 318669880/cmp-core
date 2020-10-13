@@ -216,14 +216,14 @@ ProjectApp.controller('UserController', function ($scope, HttpUtils, FilterSearc
                         if ($scope.currentRole === $scope.roleConst.orgAdmin) {
                             if (parentId === $scope.roleConst.orgAdmin) {
                                 roleInfo.roleType = $scope.roleConst.orgAdmin;
-                                Loading.add(HttpUtils.get("user/ids/" + data.id, function (rep) {
+                                Loading.add(HttpUtils.post("user/ids/" + data.id, null, function (rep) {
                                     $scope.select.organizationIds = rep.data;
                                 }));
                                 $scope.item.roleInfoList.push(roleInfo)
                             }
                             if (parentId === $scope.roleConst.user) {
                                 roleInfo.roleType = $scope.roleConst.user;
-                                Loading.add(HttpUtils.get("user/ids/" + data.id, function (rep) {
+                                Loading.add(HttpUtils.post("user/ids/" + data.id, null, function (rep) {
                                     $scope.select.workspaceIds = rep.data;
                                 }));
                                 $scope.item.roleInfoList.push(roleInfo)
@@ -233,13 +233,13 @@ ProjectApp.controller('UserController', function ($scope, HttpUtils, FilterSearc
                         if ($scope.currentRole === $scope.roleConst.admin) {
                             if (parentId === $scope.roleConst.orgAdmin) {
                                 roleInfo.roleType = $scope.roleConst.orgAdmin;
-                                Loading.add(HttpUtils.get("user/ids/" + data.id, function (rep) {
+                                Loading.add(HttpUtils.post("user/ids/" + data.id, null, function (rep) {
                                     $scope.select.organizationIds = rep.data;
                                 }));
                             }
                             if (parentId === $scope.roleConst.user) {
                                 roleInfo.roleType = $scope.roleConst.user;
-                                Loading.add(HttpUtils.get("user/ids/" + data.id, function (rep) {
+                                Loading.add(HttpUtils.post("user/ids/" + data.id, null, function (rep) {
                                     $scope.select.workspaceIds = rep.data;
                                 }));
                             }
@@ -362,7 +362,7 @@ ProjectApp.controller('UserController', function ($scope, HttpUtils, FilterSearc
 
         $scope.delete = function (user) {
             Notification.confirm(Translator.get("i18n_menu_delete_confirm"), function () {
-                $http.get("user/delete/" + user.id).then(function () {
+                $http.post("user/delete/" + user.id).then(function () {
                     Notification.success(Translator.get("i18n_mc_delete_success"));
                     $scope.list();
                 }, function (rep) {

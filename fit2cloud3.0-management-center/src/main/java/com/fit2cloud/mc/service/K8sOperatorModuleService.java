@@ -8,6 +8,7 @@ import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class K8sOperatorModuleService {
     @Resource
+    @Lazy
     private ModelManagerService modelManagerService;
     @Resource
     private DiscoveryClient discoveryClient;

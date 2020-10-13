@@ -51,6 +51,7 @@ public class AccountController {
         return accountService.editAccount(request);
     }
 
+    @ApiOperation(Translator.PREFIX + "i18n_permission_cloud_account_read_validate" + Translator.SUFFIX)
     @PostMapping("validate/{id}")
     @RequiresPermissions(PermissionConstants.CLOUD_ACCOUNT_VALIDATE)
     public Boolean validate(@PathVariable String id) {

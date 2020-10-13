@@ -50,18 +50,27 @@ public class RoleController {
         return PageUtils.setPageInfo(page, roleService.paging(map));
     }
 
-    @GetMapping(value = "/delete/{roleId}")
+    @ApiOperation(value = Translator.PREFIX + "i18n_mc_delete_role" + Translator.SUFFIX)
+    @PostMapping(value = "/delete/{roleId}")
     @RequiresPermissions(PermissionConstants.ROLE_DELETE)
     public void delete(@PathVariable String roleId) {
         roleService.delete(roleId);
     }
 
+    /*@GetMapping(value = "/delete/{roleId}")
+    @RequiresPermissions(PermissionConstants.ROLE_DELETE)
+    public void delete(@PathVariable String roleId) {
+        roleService.delete(roleId);
+    }*/
+
+    @ApiOperation(value = Translator.PREFIX + "i18n_mc_add_role" + Translator.SUFFIX)
     @PostMapping("/add")
     @RequiresPermissions(PermissionConstants.ROLE_CREATE)
     public void insert(@RequestBody RoleOperate role) {
         roleService.insert(role);
     }
 
+    @ApiOperation(value = Translator.PREFIX + "i18n_permission_role_edit" + Translator.SUFFIX)
     @PostMapping("/update")
     @RequiresPermissions(PermissionConstants.ROLE_EDIT)
     public void update(@RequestBody RoleOperate role) {
@@ -77,13 +86,13 @@ public class RoleController {
     }
 
     @RequiresPermissions(PermissionConstants.ROLE_CREATE)
-    @GetMapping(value = "permissionTree/{roleId}")
+    @PostMapping(value = "permissionTree/{roleId}")
     public List<TreeNode> getPermissionTree(@PathVariable String roleId) {
         return menuService.getPermissionByRoleId(roleId);
     }
 
     @RequiresPermissions(PermissionConstants.ROLE_EDIT)
-    @GetMapping(value = "authorizePermission/{roleId}")
+    @PostMapping(value = "authorizePermission/{roleId}")
     public List<McTreeNode> authorizePermission(@PathVariable String roleId) {
         return roleService.authorizePermission(roleId);
     }

@@ -70,7 +70,7 @@ public class UserController {
 
 
     @ApiOperation(value = Translator.PREFIX + "i18n_mc_user_delete" + Translator.SUFFIX)
-    @GetMapping(value = "/delete/{userId}")
+    @PostMapping(value = "/delete/{userId}")
     @RequiresPermissions(PermissionConstants.USER_DELETE)
     public void deleteUser(@PathVariable(value = "userId") String userId) {
         userService.delete(userId);
@@ -116,12 +116,15 @@ public class UserController {
         return userService.deleteRoleFromUser(request);
     }
 
+    @ApiOperation(value = Translator.PREFIX + "i18n_permission_user_read_edit" + Translator.SUFFIX)
     @PostMapping("/update")
     @RequiresPermissions(PermissionConstants.USER_EDIT)
     public void updateUser(@RequestBody UserOperateDTO user) {
         userService.update(user);
     }
 
+
+    @ApiOperation(value = Translator.PREFIX + "i18n_mc_add_role" + Translator.SUFFIX)
     @PostMapping("/role/add")
     @RequiresPermissions(PermissionConstants.USER_ADD_ROLE)
     public void addUserRole(@RequestBody UserRoleOperateDTO roleOperateDTO) {
@@ -129,7 +132,7 @@ public class UserController {
     }
 
 
-    @GetMapping(value = "/ids/{userId}")
+    @PostMapping(value = "/ids/{userId}")
     @RequiresPermissions(PermissionConstants.USER_DELETE)
     public Object resourceIds(@PathVariable String userId) {
         return userService.resourceIds(userId);

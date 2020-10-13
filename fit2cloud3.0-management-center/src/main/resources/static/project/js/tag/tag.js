@@ -65,7 +65,7 @@ ProjectApp.controller('TagController', function ($scope, $mdDialog, $document, $
     $scope.deleteTag = function (item) {
         Notification.confirm(translator('i18n_label_delete_confirm', '确认删除此标签?'), function () {
             // 确认删除
-            HttpUtils.get('tag/delete/' + item.tagKey, function (response) {
+            HttpUtils.post('tag/delete/' + item.tagKey, null, function (response) {
                 $scope.list();
                 Notification.success(translator('i18n_label_delete_success', '删除成功'));
             });
@@ -145,7 +145,7 @@ ProjectApp.controller('TagValuesController', function ($scope, $mdDialog, $state
     $scope.deleteTagValue = function (item) {
         Notification.confirm(translator('i18n_label_value_delete_confirm', '确认删除此标签值?'), function () {
             // 确认删除
-            HttpUtils.get('tag/value/delete/' + item.id, function (response) {
+            HttpUtils.post('tag/value/delete/' + item.id ,null , function (response) {
                 Notification.success(translator('i18n_label_delete_success', '删除成功'));
                 $scope.list();
             });

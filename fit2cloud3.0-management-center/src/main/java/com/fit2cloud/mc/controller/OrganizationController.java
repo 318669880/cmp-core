@@ -3,8 +3,11 @@ package com.fit2cloud.mc.controller;
 import com.fit2cloud.commons.server.base.domain.Organization;
 import com.fit2cloud.commons.server.base.domain.Workspace;
 import com.fit2cloud.commons.server.i18n.Translator;
+import com.fit2cloud.commons.server.model.OrgTreeNode;
+import com.fit2cloud.commons.server.model.OrgTreeQueryDto;
 import com.fit2cloud.commons.server.model.SessionUser;
 import com.fit2cloud.commons.server.model.UserDTO;
+import com.fit2cloud.commons.server.service.UserCommonService;
 import com.fit2cloud.commons.server.utils.SessionUtils;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
@@ -37,6 +40,9 @@ public class OrganizationController {
     @Resource
     private WorkspaceService workspaceService;
 
+    @Resource
+    private UserCommonService userCommonService;
+
 
     @RequiresPermissions(value = {PermissionConstants.USER_READ,
             PermissionConstants.WORKSPACE_EDIT,
@@ -60,6 +66,12 @@ public class OrganizationController {
         Page page = PageHelper.startPage(goPage, pageSize, true);
         return PageUtils.setPageInfo(page, organizationService.paging(BeanUtils.objectToMap(request)));
     }*/
+
+    @ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_list" + Translator.SUFFIX)
+    @PostMapping("/query")
+    public List<OrgTreeNode> orgTree(@RequestBody OrgTreeQueryDto orgTreeQueryDto){
+        return userCommonService.orgTreeNodeList(orgTreeQueryDto.getRootId(), orgTreeQueryDto.getOrgName(), orgTreeQueryDto.getExcludeWs());
+    }
 
     @RequiresPermissions(PermissionConstants.ROLE_READ)
     @PostMapping(value = "link/workspace/{organizationId}/{goPage}/{pageSize}")

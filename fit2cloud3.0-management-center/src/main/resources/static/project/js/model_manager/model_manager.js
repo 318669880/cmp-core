@@ -785,8 +785,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             item.enable = false;
             item.runningPods = runningPods;
             item.statuInfo = runningPods + "/" + podNum;
-            let prefix = runningPods > podNum ? "i18n_model_k8s-status_expand"
-                : runningPods == podNum ? false : "i18n_model_k8s-status_shrinke";
+            let prefix = runningPods > podNum ? "i18n_model_k8s-status_shrinke"
+                : runningPods == podNum ? false : "i18n_model_k8s-status_expand";
             let _dynamic = runningPods + " -> "+ podNum;
             item.dynamicInfo = !!prefix && (Translator.get(prefix) + ": ("+_dynamic+")") || item.statuInfo;
         })

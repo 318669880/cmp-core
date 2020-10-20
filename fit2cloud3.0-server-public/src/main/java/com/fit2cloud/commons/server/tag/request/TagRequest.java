@@ -1,4 +1,4 @@
-package com.fit2cloud.mc.dto.request;
+package com.fit2cloud.commons.server.tag.request;
 
 import com.fit2cloud.commons.annotation.FuzzyQuery;
 import io.swagger.annotations.ApiModelProperty;

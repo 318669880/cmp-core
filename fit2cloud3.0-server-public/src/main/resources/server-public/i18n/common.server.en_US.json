@@ -98,5 +98,9 @@
   "i18n_link_id_exist": "Link ID is already occupied",
   "i18n_link_value_exist": "Link value is already occupied",
   "i18n_link_value_priority_exist": "Link item priority is already occupied",
-  "i18n_link_item_not_exist": "Link item is not exist: "
+  "i18n_link_item_not_exist": "Link item is not exist: ",
+
+  "i18n_mc_tag_tag": "Tag",
+  "i18n_mc_tag_tag_list": "List",
+  "i18n_mc_tag_tag_value_list": "List Tag Value"
 }

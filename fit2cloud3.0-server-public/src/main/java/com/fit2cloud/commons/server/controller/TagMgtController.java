@@ -1,42 +1,55 @@
-package com.fit2cloud.mc.controller;
+package com.fit2cloud.commons.server.controller;
 
 import com.fit2cloud.commons.server.base.domain.Tag;
+import com.fit2cloud.commons.server.base.domain.TagMapping;
+import com.fit2cloud.commons.server.base.domain.TagMappingExample;
 import com.fit2cloud.commons.server.base.domain.TagValue;
+import com.fit2cloud.commons.server.base.mapper.TagMappingMapper;
+import com.fit2cloud.commons.server.constants.PermissionConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
+import com.fit2cloud.commons.server.model.TagDTO;
+import com.fit2cloud.commons.server.service.TagMappingService;
 import com.fit2cloud.commons.server.service.TagService;
+import com.fit2cloud.commons.server.tag.request.TagRequest;
+import com.fit2cloud.commons.server.tag.request.TagValueRequest;
+import com.fit2cloud.commons.server.utils.ValidatorUtil;
 import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
-import com.fit2cloud.mc.common.constants.PermissionConstants;
-import com.fit2cloud.mc.dto.request.TagRequest;
-import com.fit2cloud.mc.dto.request.TagValueRequest;
-import com.fit2cloud.mc.utils.ValidatorUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("tag")
 @Api(tags = {Translator.PREFIX + "i18n_mc_tag_tag" + Translator.SUFFIX})
-public class TagController {
+public class TagMgtController {
     @Resource
     private TagService tagService;
+    @Resource
+    private TagMappingService tagMappingService;
+    @Resource
+    private TagMappingMapper tagMappingMapper;
 
     @PostMapping("list/{goPage}/{pageSize}")
     @RequiresPermissions(PermissionConstants.TAG_READ)
     @ApiOperation(Translator.PREFIX + "i18n_mc_tag_tag_list" + Translator.SUFFIX)
     public Pager<List<Tag>> selectTags(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody TagRequest request) {
         //为防止sql注入，对排序变量sort做正则校验
-        if (StringUtils.isNotBlank(request.getSort()) && ValidatorUtil.isSort(request.getSort()) == false) {
+        if (StringUtils.isNotBlank(request.getSort()) && !ValidatorUtil.isSort(request.getSort())) {
             F2CException.throwException("field 'sort' does not match to the regular [A-Z, A-Z, 0-9,] specification!");
         }
         Page<Object> page = PageHelper.startPage(goPage, pageSize, true);
@@ -83,10 +96,10 @@ public class TagController {
     }
 
     @ApiOperation(Translator.PREFIX + "i18n_permission_tag_read_delete" + Translator.SUFFIX)
-    @PostMapping("delete/{tagKey}")
+    @PostMapping("delete/{tagId}")
     @RequiresPermissions(PermissionConstants.TAG_DELETE)
-    public void deleteTag(@PathVariable String tagKey) throws Exception {
-        tagService.deleteTag(tagKey);
+    public void deleteTag(@PathVariable String tagId) throws Exception {
+        tagService.deleteTag(tagId);
     }
 
 
@@ -99,7 +112,64 @@ public class TagController {
 
     @PostMapping(value = "value/import")
     @RequiresPermissions(PermissionConstants.TAG_VALUE_IMPORT)
-    public void importTagValue(@RequestParam("file") MultipartFile file, @RequestParam String tagKey, @RequestParam(defaultValue = "false") boolean isClear) throws Exception {
-        tagService.importTagValue(file, tagKey, isClear);
+    public Integer importTagValue(@RequestParam("file") MultipartFile file, @RequestParam String tagKey, @RequestParam String tagId, @RequestParam(defaultValue = "false") boolean isClear) throws Exception {
+        return tagService.importTagValue(file, tagKey, tagId, isClear);
+    }
+
+
+    @PostMapping("listAlls")
+    public List<TagDTO> selectAllTags() {
+        return tagService.selectAllTags();
+    }
+
+    @PostMapping("listAll")
+    public List<TagDTO> selectAllTags(@RequestBody List<String> tagKeys) {
+        return tagService.selectAllTags().stream().filter(tagDTO -> {
+            for (String tagKey : tagKeys) {
+                if (tagKey.equals(tagDTO.getTagKey())) {
+                    return true;
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
+    }
+
+    @PostMapping("mapping/save")
+    public void saveTagMapping(@RequestBody List<TagMapping> tagMappings) throws Exception {
+        List<TagMapping> deleteTagMapping = null;
+        List<TagMapping> saveTagMapping = null;
+        if (CollectionUtils.isNotEmpty(tagMappings)) {
+            deleteTagMapping = tagMappings.stream().filter(tagMapping -> tagMapping.getResourceType().equalsIgnoreCase("DELETE"))
+                    .collect(Collectors.toList());
+            saveTagMapping = tagMappings.stream().filter(tagMapping -> !tagMapping.getResourceType().equalsIgnoreCase("DELETE"))
+                    .collect(Collectors.toList());
+        }
+        tagMappingService.saveTagMappings(saveTagMapping);
+        tagMappingService.deleteTagMappings(deleteTagMapping);
+    }
+
+    @PostMapping(value = "mapping/batchSave")
+    public void batchSaveTagMapping(@RequestBody List<TagMapping> tagMappings) throws Exception {
+        List<TagMapping> saveTagMapping = null;
+        if (org.apache.commons.collections.CollectionUtils.isEmpty(tagMappings)) {
+            return;
+        }
+        List<String> serverIds = tagMappings.stream().map(TagMapping::getResourceId).distinct().collect(Collectors.toList());
+        TagMappingExample tagMappingExample = new TagMappingExample();
+        tagMappingExample.createCriteria().andResourceIdIn(serverIds).andTagIdEqualTo(tagMappings.get(0).getTagId());
+        tagMappingMapper.deleteByExample(tagMappingExample);
+        tagMappingService.saveTagMappings(tagMappings);
+    }
+
+    @PostMapping("getValues/{tagId}")
+    public List<TagValue> getTagValues(@PathVariable String tagId) {
+        Map params = new HashMap();
+        params.put("tagId", tagId);
+        return tagService.selectTagValues(params);
+    }
+
+    @PostMapping(value = "mapping/list")
+    public List<TagMapping> listTagMapping(@RequestBody Map<String, String> params) {
+        return tagMappingService.selectTagMappings(params);
     }
 }

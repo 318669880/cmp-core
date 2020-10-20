@@ -1,9 +1,12 @@
-package com.fit2cloud.mc.dto.request;
+package com.fit2cloud.commons.server.tag.request;
 
 import com.fit2cloud.commons.annotation.FuzzyQuery;
 import io.swagger.annotations.ApiModelProperty;
 
 public class TagValueRequest {
+
+    @ApiModelProperty("标签ID")
+    private String tagId;
 
     @ApiModelProperty("标签Key")
     private String tagKey;
@@ -18,6 +21,14 @@ public class TagValueRequest {
 
     @ApiModelProperty(hidden = true)
     private String sort;
+
+    public String getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
+    }
 
     public String getTagKey() {
         return tagKey;

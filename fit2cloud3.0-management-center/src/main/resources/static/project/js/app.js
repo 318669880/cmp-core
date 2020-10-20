@@ -1,12 +1,12 @@
 /**
  * 启动app，加载菜单
  */
-let ProjectApp = angular.module('ProjectApp', ['f2c.common', 'ngSanitize', 'ui.codemirror', 'ngFileUpload']);
+let ProjectApp = angular.module('ProjectApp', ['f2c.common', 'f2c.tag', 'ngSanitize', 'ui.codemirror', 'ngFileUpload']);
 
 ProjectApp.controller('IndexCtrl', function ($scope) {
 
     $scope.menus = [
-        {
+        /*{
             name: "tag-values-edit",
             url: "/tag/values",
             params: {
@@ -14,7 +14,7 @@ ProjectApp.controller('IndexCtrl', function ($scope) {
                 tagParam: null
             },
             templateUrl: "project/html/tag/tag-value-list.html" + '?_t=' + window.appversion
-        }, {
+        },*/ {
             name: "import-user",
             url: "/import/user",
             templateUrl: "project/html/user/extra-users.html" + '?_t=' + window.appversion
@@ -22,7 +22,7 @@ ProjectApp.controller('IndexCtrl', function ($scope) {
     ];
 });
 
-ProjectApp.directive("podLineChart", function ($timeout, HttpUtils,Translator) {
+ProjectApp.directive("podLineChart", function ($timeout, HttpUtils, Translator) {
     return {
         restrict: 'E',
         templateUrl: function (element, attr) {
@@ -175,10 +175,10 @@ ProjectApp.directive("podLineChart", function ($timeout, HttpUtils,Translator) {
                 option.yAxis[0].name = 'CPU \n' + data[0].values[data[0].values.length - 1] + "%";
 
                 option.series.push(makeGridData(1, 1, 'line', Translator.get("i18n_SYS_MEMORY_USAGE"), data[1].values));
-                option.yAxis[1].name = Translator.get("i18n_Memory")+' \r\n' + data[1].values[data[1].values.length - 1] + "%";
+                option.yAxis[1].name = Translator.get("i18n_Memory") + ' \r\n' + data[1].values[data[1].values.length - 1] + "%";
 
                 option.series.push(makeGridData(2, 2, 'line', Translator.get("i18n_SYS_DISK_USAGE"), data[2].values));
-                option.yAxis[2].name = Translator.get("i18n_Disk")+' \n' + data[2].values[data[2].values.length - 1] + "%";
+                option.yAxis[2].name = Translator.get("i18n_Disk") + ' \n' + data[2].values[data[2].values.length - 1] + "%";
                 $scope.echart = echarts.init(element.find("#es_chart")[0], 'fit2cloud-echarts-theme');
 
 

@@ -2,6 +2,7 @@ package com.fit2cloud.commons.server.service;
 
 import com.fit2cloud.commons.server.base.domain.TagMapping;
 import com.fit2cloud.commons.server.base.domain.TagMappingExample;
+import com.fit2cloud.commons.server.base.mapper.TagMapper;
 import com.fit2cloud.commons.server.base.mapper.TagMappingMapper;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
@@ -26,6 +27,8 @@ public class TagMappingService {
     private TagMappingMapper tagMappingMapper;
     @Resource
     private TagService tagService;
+    @Resource
+    private TagMapper tagMapper;
 
     public void saveTagMapping(TagMapping tagMapping) throws Exception {
         valid(tagMapping, true);
@@ -42,6 +45,7 @@ public class TagMappingService {
         }
         for (TagMapping tagMapping : tagMappings) {
             tagMapping.setCreateTime(System.currentTimeMillis());
+            tagMapping.setTagKey(tagMapper.selectByPrimaryKey(tagMapping.getTagId()).getTagKey());
             saveTagMapping(tagMapping);
         }
     }

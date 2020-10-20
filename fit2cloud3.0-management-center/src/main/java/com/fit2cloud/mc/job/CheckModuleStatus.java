@@ -18,6 +18,8 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -31,8 +33,6 @@ public class CheckModuleStatus {
     @Resource
     private ModuleNodeService moduleNodeService;
 
-    @Resource
-    private ModelNodeBatchMapper modelNodeBatchMapper;
 
     @Resource
     private ModelManagerService modelManagerService;
@@ -49,10 +49,18 @@ public class CheckModuleStatus {
     //每30s执行一次检测
     @Scheduled(cron = "0/30 * * * * ? ")
     public void check(){
+        checkStatus();
+    }
+
+    public void checkStatus(){
         if(SyncEurekaServer.IS_KUBERNETES){
             checkPodsNum();return;
         }
         checkNodes();
+        /*DateTimeFormatter ofPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        String format = LocalDateTime.now().format(ofPattern);
+        System.out.println(format);
+        LogUtil.info(format);*/
     }
 
     private void checkNodes(){

@@ -654,6 +654,146 @@ public class TagExample {
             return (Criteria) this;
         }
 
+        public Criteria andScopeIsNull() {
+            addCriterion("scope is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeIsNotNull() {
+            addCriterion("scope is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeEqualTo(String value) {
+            addCriterion("scope =", value, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeNotEqualTo(String value) {
+            addCriterion("scope <>", value, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeGreaterThan(String value) {
+            addCriterion("scope >", value, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeGreaterThanOrEqualTo(String value) {
+            addCriterion("scope >=", value, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeLessThan(String value) {
+            addCriterion("scope <", value, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeLessThanOrEqualTo(String value) {
+            addCriterion("scope <=", value, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeLike(String value) {
+            addCriterion("scope like", value, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeNotLike(String value) {
+            addCriterion("scope not like", value, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeIn(List<String> values) {
+            addCriterion("scope in", values, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeNotIn(List<String> values) {
+            addCriterion("scope not in", values, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeBetween(String value1, String value2) {
+            addCriterion("scope between", value1, value2, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andScopeNotBetween(String value1, String value2) {
+            addCriterion("scope not between", value1, value2, "scope");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdIsNull() {
+            addCriterion("resource_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdIsNotNull() {
+            addCriterion("resource_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdEqualTo(String value) {
+            addCriterion("resource_id =", value, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdNotEqualTo(String value) {
+            addCriterion("resource_id <>", value, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdGreaterThan(String value) {
+            addCriterion("resource_id >", value, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdGreaterThanOrEqualTo(String value) {
+            addCriterion("resource_id >=", value, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdLessThan(String value) {
+            addCriterion("resource_id <", value, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdLessThanOrEqualTo(String value) {
+            addCriterion("resource_id <=", value, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdLike(String value) {
+            addCriterion("resource_id like", value, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdNotLike(String value) {
+            addCriterion("resource_id not like", value, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdIn(List<String> values) {
+            addCriterion("resource_id in", values, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdNotIn(List<String> values) {
+            addCriterion("resource_id not in", values, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdBetween(String value1, String value2) {
+            addCriterion("resource_id between", value1, value2, "resourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceIdNotBetween(String value1, String value2) {
+            addCriterion("resource_id not between", value1, value2, "resourceId");
+            return (Criteria) this;
+        }
+
         public Criteria andSqlCriterion(String value) {
             addCriterion("(" + value + ")");
             return (Criteria) this;

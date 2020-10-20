@@ -3,6 +3,8 @@ package com.fit2cloud.mc.controller;
 
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
+import com.fit2cloud.mc.job.CheckModuleStatus;
+import com.fit2cloud.mc.job.DynamicTaskJob;
 import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
@@ -29,6 +31,12 @@ public class ModelNodeController {
 
     @Resource
     private ModelManagerService modelManagerService;
+
+    @Resource
+    private DynamicTaskJob dynamicTaskJob;
+
+    @Resource
+    private CheckModuleStatus checkModuleStatus;
 
 
     @PostMapping("/readyInstall")
@@ -70,5 +78,7 @@ public class ModelNodeController {
     @PostMapping("/node/stop")
     public void nodeStop( String module, String nodeId) throws Exception{
         nodeOperateService.stop(modelManagerService.select(), module, nodeId);
+        //执行停止操作后 每5s执行一次检测 30s后销毁定时器
+        dynamicTaskJob.addTaskWithTime(() -> checkModuleStatus.checkStatus(), "0/5 * * * * ? ", 30000L);
     }
 }

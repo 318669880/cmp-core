@@ -106,6 +106,12 @@ CREATE TABLE IF NOT EXISTS `cloud_disk` (
   KEY `IDX_DISK_ID` (`disk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE `cloud_disk`
+ADD COLUMN `workspace_id` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '工作空间ID' AFTER `instance_uuid`,
+ADD COLUMN `project_id` VARCHAR(50) NULL DEFAULT NULL COMMENT 'Project ID' AFTER `workspace_id`,
+ADD COLUMN `bootable` TINYINT(1) NULL DEFAULT 0 COMMENT '是否启动盘' AFTER `project_id`,
+ADD COLUMN `image_id` VARCHAR(50) NULL DEFAULT NULL COMMENT '镜像ID' AFTER `bootable`;
+
 CREATE TABLE IF NOT EXISTS `cloud_event` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account_id` varchar(50) DEFAULT NULL COMMENT '云账号 ID',
@@ -235,6 +241,9 @@ CREATE TABLE IF NOT EXISTS `cloud_server` (
   KEY `IDX_LAST_SYNC` (`last_sync_timestamp`),
   KEY `IDX_REMARK` (`remark`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `cloud_server`
+ADD COLUMN `project_id` VARCHAR(50) NULL DEFAULT NULL COMMENT 'Project ID' AFTER `workspace_id`;
 
 CREATE TABLE IF NOT EXISTS `cloud_server_credential` (
   `id` varchar(50) NOT NULL,

@@ -40,7 +40,7 @@ public class DbLockUtilService {
      * @return
      */
     public boolean lock(String lock_key, long overTime, long waitime) throws Exception{
-        log.info("start");
+        //log.info("start");
         boolean lockResult = false;
         String request_id = getRequestId();
 
@@ -80,7 +80,7 @@ public class DbLockUtilService {
             }
         }
 
-        log.info("end");
+        //log.info("end");
         return lockResult;
     }
 
@@ -131,7 +131,7 @@ public class DbLockUtilService {
             requestId = randomUUID().toString();
             requestIdTL.set(requestId);
         }
-        log.info("requestId:{}", requestId);
+        //log.info("requestId:{}", requestId);
         return requestId;
     }
 

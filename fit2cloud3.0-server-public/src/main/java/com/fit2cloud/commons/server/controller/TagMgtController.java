@@ -1,17 +1,17 @@
-package com.fit2cloud.mc.controller;
+package com.fit2cloud.commons.server.controller;
 
 import com.fit2cloud.commons.server.base.domain.Tag;
 import com.fit2cloud.commons.server.base.domain.TagValue;
+import com.fit2cloud.commons.server.constants.PermissionConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.service.TagService;
+import com.fit2cloud.commons.server.tag.request.TagRequest;
+import com.fit2cloud.commons.server.tag.request.TagValueRequest;
+import com.fit2cloud.commons.server.utils.ValidatorUtil;
 import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
-import com.fit2cloud.mc.common.constants.PermissionConstants;
-import com.fit2cloud.mc.dto.request.TagRequest;
-import com.fit2cloud.mc.dto.request.TagValueRequest;
-import com.fit2cloud.mc.utils.ValidatorUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("tag")
 @Api(tags = {Translator.PREFIX + "i18n_mc_tag_tag" + Translator.SUFFIX})
-public class TagController {
+public class TagMgtController {
     @Resource
     private TagService tagService;
 
@@ -36,7 +36,7 @@ public class TagController {
     @ApiOperation(Translator.PREFIX + "i18n_mc_tag_tag_list" + Translator.SUFFIX)
     public Pager<List<Tag>> selectTags(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody TagRequest request) {
         //为防止sql注入，对排序变量sort做正则校验
-        if (StringUtils.isNotBlank(request.getSort()) && ValidatorUtil.isSort(request.getSort()) == false) {
+        if (StringUtils.isNotBlank(request.getSort()) && !ValidatorUtil.isSort(request.getSort())) {
             F2CException.throwException("field 'sort' does not match to the regular [A-Z, A-Z, 0-9,] specification!");
         }
         Page<Object> page = PageHelper.startPage(goPage, pageSize, true);
@@ -83,10 +83,10 @@ public class TagController {
     }
 
     @ApiOperation(Translator.PREFIX + "i18n_permission_tag_read_delete" + Translator.SUFFIX)
-    @PostMapping("delete/{tagKey}")
+    @PostMapping("delete/{tagId}")
     @RequiresPermissions(PermissionConstants.TAG_DELETE)
-    public void deleteTag(@PathVariable String tagKey) throws Exception {
-        tagService.deleteTag(tagKey);
+    public void deleteTag(@PathVariable String tagId) throws Exception {
+        tagService.deleteTag(tagId);
     }
 
 
@@ -99,7 +99,7 @@ public class TagController {
 
     @PostMapping(value = "value/import")
     @RequiresPermissions(PermissionConstants.TAG_VALUE_IMPORT)
-    public void importTagValue(@RequestParam("file") MultipartFile file, @RequestParam String tagKey, @RequestParam(defaultValue = "false") boolean isClear) throws Exception {
-        tagService.importTagValue(file, tagKey, isClear);
+    public Integer importTagValue(@RequestParam("file") MultipartFile file, @RequestParam String tagKey, @RequestParam String tagId, @RequestParam(defaultValue = "false") boolean isClear) throws Exception {
+        return tagService.importTagValue(file, tagKey, tagId, isClear);
     }
 }

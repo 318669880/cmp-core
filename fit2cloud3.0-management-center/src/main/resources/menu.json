@@ -173,15 +173,45 @@
       "title": "i18n_menu_metadata_management",
       "icon": "bookmark",
       "children": [
+//        {
+//          "order": 1,
+//          "title": "i18n_menu_tag",
+//          "name": "tag",
+//          "url": "/tag",
+//          "templateUrl": "project/html/tag/tag-list.html",
+//          "requiredPermissions": [
+//            {
+//              "role": "ADMIN",
+//              "logical": "OR",
+//              "permissions": [
+//                "TAG:READ"
+//              ]
+//            }
+//          ]
+//        },
         {
           "order": 1,
-          "title": "i18n_menu_tag",
+          "title": "$[{i18n_menu_tag}]",
           "name": "tag",
           "url": "/tag",
-          "templateUrl": "project/html/tag/tag-list.html",
+          "templateUrl": "web-public/fit2cloud/html/tag/tag-list.html",
           "requiredPermissions": [
             {
               "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "TAG:READ"
+              ]
+            },
+            {
+              "role": "ORGADMIN",
+              "logical": "OR",
+              "permissions": [
+                "TAG:READ"
+              ]
+            },
+            {
+              "role": "USER",
               "logical": "OR",
               "permissions": [
                 "TAG:READ"

@@ -623,8 +623,10 @@ CREATE TABLE IF NOT EXISTS `tag` (
   `enable` tinyint(1) DEFAULT '1' COMMENT '是否启用',
   `create_time` bigint(13) DEFAULT NULL COMMENT '创建时间',
   `required` tinyint(1) DEFAULT '0' COMMENT '是否必选',
+  `scope` varchar(50) NOT NULL DEFAULT 'ADMIN' COMMENT '作用域',
+  `resource_id` varchar (64) NOT NULL DEFAULT '' COMMENT 'ws or org id',
   PRIMARY KEY (`tag_id`),
-  UNIQUE KEY `IDX_TAG_KEY` (`tag_key`),
+  UNIQUE KEY `IDX_TAG_KEY` (`tag_key`,`scope`,`resource_id`),
   KEY `UNQ_TAGS` (`tag_type`,`tag_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -649,6 +651,7 @@ CREATE TABLE IF NOT EXISTS `tag_value` (
   `tag_value` varchar(100) DEFAULT NULL COMMENT '标签值',
   `tag_value_alias` varchar(100) DEFAULT NULL COMMENT '标签值别名',
   `create_time` bigint(13) DEFAULT NULL COMMENT '创建时间',
+  `tag_id` varchar(50) NOT NULL DEFAULT '' COMMENT '标签ID'
   PRIMARY KEY (`id`),
   KEY `IDX_ALIAS_KEY` (`tag_key`),
   KEY `IDX_ALIAS_VALUE` (`tag_value`)

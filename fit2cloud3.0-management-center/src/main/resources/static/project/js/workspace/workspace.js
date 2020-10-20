@@ -112,7 +112,8 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
     $scope.delete = function (workspace) {
         Notification.confirm(Translator.get("i18n_workspace_delete_pre") + workspace.name + Translator.get("i18n_workspace_delete_suffix"), function () {
 
-            HttpUtils.post("workspace/delete?workspaceId="+workspace.id , null ,res => {
+            // HttpUtils.post("workspace/delete?workspaceId="+workspace.id , null ,res => {
+            HttpUtils.post("workspace/delete/"+workspace.id , null ,res => {
                 Notification.success(Translator.get("i18n_mc_delete_success"));
                 $scope.list();
             }, err => {

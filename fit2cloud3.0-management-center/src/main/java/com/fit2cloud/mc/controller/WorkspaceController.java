@@ -100,11 +100,12 @@ public class WorkspaceController {
     }*/
 
     @ApiOperation(value = Translator.PREFIX + "i18n_mc_workspace_delete" + Translator.SUFFIX)
-    @PostMapping(value = "/delete")
+    @PostMapping(value = "/delete/{workspaceId}")
     @RequiresPermissions(PermissionConstants.WORKSPACE_DELETE)
-    public void delete(@RequestParam("workspaceId") String workspaceId) {
+    public void delete(@PathVariable String workspaceId) {
         workspaceService.delete(workspaceId);
     }
+
     @ApiOperation(value = Translator.PREFIX + "i18n_mc_workspace_get_user" + Translator.SUFFIX)
     @RequiresPermissions(PermissionConstants.WORKSPACE_READ)
     @PostMapping(value = "user/{workspaceId}/{goPage}/{pageSize}")

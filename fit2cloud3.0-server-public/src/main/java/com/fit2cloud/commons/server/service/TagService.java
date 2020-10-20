@@ -51,21 +51,36 @@ public class TagService {
             example.setOrderByClause((String) params.get("sort"));
         }
         SessionUser user = SessionUtils.getUser();
-        if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), user.getParentRoleId())) {
-            criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
-        } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
-            criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name()));
-            criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId()));
-        } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
-            criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name(), RoleConstants.Id.USER.name()));
-            criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId(), user.getWorkspaceId()));
+        if (user != null) {
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), user.getParentRoleId())) {
+                criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
+                criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name()));
+                criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId()));
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
+                criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name(), RoleConstants.Id.USER.name()));
+                criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId(), user.getWorkspaceId()));
+            }
         }
         return tagMapper.selectByExample(example);
     }
 
     public List<TagDTO> selectAllTags() {
         TagExample tagExample = new TagExample();
-        tagExample.createCriteria().andEnableEqualTo(Boolean.TRUE);
+        TagExample.Criteria criteria = tagExample.createCriteria();
+        criteria.andEnableEqualTo(Boolean.TRUE);
+        SessionUser user = SessionUtils.getUser();
+        if (user != null) {
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), user.getParentRoleId())) {
+                criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
+                criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name()));
+                criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId()));
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
+                criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name(), RoleConstants.Id.USER.name()));
+                criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId(), user.getWorkspaceId()));
+            }
+        }
         List<Tag> tags = tagMapper.selectByExample(tagExample);
         List<TagValue> tagValues = tagValueMapper.selectByExample(null);
 
@@ -76,17 +91,17 @@ public class TagService {
         Map<String, List<TagValue>> valueMap = new HashMap<>();
 
         tagValues.forEach(tagValue -> {
-            valueMap.putIfAbsent(tagValue.getTagKey(), new ArrayList<>());
-            valueMap.get(tagValue.getTagKey()).add(tagValue);
+            valueMap.putIfAbsent(tagValue.getTagId(), new ArrayList<>());
+            valueMap.get(tagValue.getTagId()).add(tagValue);
         });
 
         List<TagDTO> result = new ArrayList<>();
 
         tags.forEach(tag -> {
-            if (CollectionUtils.isNotEmpty(valueMap.get(tag.getTagKey()))) {
+            if (CollectionUtils.isNotEmpty(valueMap.get(tag.getTagId()))) {
                 TagDTO tagDTO = new TagDTO();
                 BeanUtils.copyBean(tagDTO, tag);
-                tagDTO.setTagValues(valueMap.get(tag.getTagKey()));
+                tagDTO.setTagValues(valueMap.get(tag.getTagId()));
                 result.add(tagDTO);
             }
         });
@@ -112,21 +127,27 @@ public class TagService {
             criteria.andTagKeyEqualTo(tag.getTagKey());
 
             SessionUser user = SessionUtils.getUser();
-            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), user.getParentRoleId())) {
-                criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
+            if (user != null) {
+                if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), user.getParentRoleId())) {
+                    criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
+                    tag.setScope(RoleConstants.Id.ADMIN.name());
+                    tag.setResourceId("");
+                } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
+                    criteria.andScopeEqualTo(RoleConstants.Id.ORGADMIN.name());
+                    criteria.andResourceIdEqualTo(user.getOrganizationId());
+                    tag.setScope(RoleConstants.Id.ORGADMIN.name());
+                    tag.setResourceId(user.getOrganizationId());
+                } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
+                    criteria.andScopeEqualTo(RoleConstants.Id.USER.name());
+                    criteria.andResourceIdEqualTo(user.getWorkspaceId());
+                    tag.setScope(RoleConstants.Id.USER.name());
+                    tag.setResourceId(user.getWorkspaceId());
+                }
+            } else {
                 tag.setScope(RoleConstants.Id.ADMIN.name());
                 tag.setResourceId("");
-            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
-                criteria.andScopeEqualTo(RoleConstants.Id.ORGADMIN.name());
-                criteria.andResourceIdEqualTo(user.getOrganizationId());
-                tag.setScope(RoleConstants.Id.ORGADMIN.name());
-                tag.setResourceId(user.getOrganizationId());
-            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
-                criteria.andScopeEqualTo(RoleConstants.Id.USER.name());
-                criteria.andResourceIdEqualTo(user.getWorkspaceId());
-                tag.setScope(RoleConstants.Id.USER.name());
-                tag.setResourceId(user.getWorkspaceId());
             }
+
 
             if (tagMapper.countByExample(tagsExample) > 0) {
                 F2CException.throwException(Translator.get("i18n_ex_tag_exist"));

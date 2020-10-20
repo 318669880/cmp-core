@@ -637,6 +637,7 @@ CREATE TABLE IF NOT EXISTS `tag_mapping` (
   `tag_key` varchar(50) NOT NULL DEFAULT '' COMMENT '标签标识',
   `tag_value_id` varchar(64) DEFAULT NULL COMMENT '标签值ID',
   `create_time` bigint(13) NOT NULL COMMENT '创建时间',
+  `tag_id` varchar (50) NOT NULL DEFAULT '' COMMENT '标签ID',
   PRIMARY KEY (`id`),
   KEY `IDX_RES_ID` (`resource_id`),
   KEY `IDX_RES_TYPE` (`resource_type`),

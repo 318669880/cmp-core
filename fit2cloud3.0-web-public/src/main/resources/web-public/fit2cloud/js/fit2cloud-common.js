@@ -1211,6 +1211,7 @@
             link: function ($scope) {
                 let API_GET_MODULES = "module/menus";
                 let USER_CURRENT_ROLE = "user/current/parent/role";
+                let USER_CURRENT_ROLE_ID = "user/current/parent/roleId";
 
                 $scope.init = function () {
                     if ($scope.dev) {
@@ -1221,6 +1222,9 @@
                     }
                     HttpUtils.get(USER_CURRENT_ROLE, function (response) {
                         $rootScope.currentRole = response.data;
+                    });
+                    HttpUtils.get(USER_CURRENT_ROLE_ID, function (response) {
+                        $rootScope.currentRoleId = response.data;
                     });
                     $rootScope.roleConst = {
                         admin: "ADMIN",

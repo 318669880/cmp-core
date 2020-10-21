@@ -7,6 +7,7 @@ import java.util.List;
 
 public class TagDTO extends Tag {
     private List<TagValue> tagValues;
+    private String resourceName;
 
     public List<TagValue> getTagValues() {
         return tagValues;
@@ -14,5 +15,13 @@ public class TagDTO extends Tag {
 
     public void setTagValues(List<TagValue> tagValues) {
         this.tagValues = tagValues;
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 }

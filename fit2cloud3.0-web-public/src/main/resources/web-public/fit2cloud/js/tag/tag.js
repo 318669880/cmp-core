@@ -116,7 +116,7 @@
             if (sortObj) {
                 $scope.sort = sortObj;
             } else {
-                $scope.sort = {sql: 'tag_key asc'};
+                $scope.sort = {sql: 'scope asc'};
             }
             // 保留排序条件，用于分页
             if ($scope.sort) {

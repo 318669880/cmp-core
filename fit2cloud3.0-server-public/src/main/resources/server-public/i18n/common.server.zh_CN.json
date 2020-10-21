@@ -102,5 +102,6 @@
 
   "i18n_mc_tag_tag": "标签",
   "i18n_mc_tag_tag_list": "查看标签",
-  "i18n_mc_tag_tag_value_list": "查看标签值"
+  "i18n_mc_tag_tag_value_list": "查看标签值",
+  "i18n_all_scope": "全局"
 }

@@ -47,13 +47,13 @@ public class TagMgtController {
     @PostMapping("list/{goPage}/{pageSize}")
     @RequiresPermissions(PermissionConstants.TAG_READ)
     @ApiOperation(Translator.PREFIX + "i18n_mc_tag_tag_list" + Translator.SUFFIX)
-    public Pager<List<Tag>> selectTags(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody TagRequest request) {
+    public Pager<List<TagDTO>> selectTags(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody TagRequest request) {
         //为防止sql注入，对排序变量sort做正则校验
         if (StringUtils.isNotBlank(request.getSort()) && !ValidatorUtil.isSort(request.getSort())) {
             F2CException.throwException("field 'sort' does not match to the regular [A-Z, A-Z, 0-9,] specification!");
         }
         Page<Object> page = PageHelper.startPage(goPage, pageSize, true);
-        List<Tag> tags = tagService.selectTags(BeanUtils.objectToMap(request));
+        List<TagDTO> tags = tagService.selectTags(BeanUtils.objectToMap(request));
         return PageUtils.setPageInfo(page, tags);
     }
 
@@ -171,5 +171,10 @@ public class TagMgtController {
     @PostMapping(value = "mapping/list")
     public List<TagMapping> listTagMapping(@RequestBody Map<String, String> params) {
         return tagMappingService.selectTagMappings(params);
+    }
+
+    @GetMapping(value = "list/tag")
+    public List<TagDTO> getTagList() {
+        return tagService.selectTags(new HashMap<>());
     }
 }

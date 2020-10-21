@@ -1,6 +1,7 @@
 package com.fit2cloud.commons.server.controller;
 
 import com.fit2cloud.commons.server.base.domain.User;
+import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.handle.annotation.I18n;
 import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.model.SessionUser;
@@ -12,6 +13,7 @@ import com.fit2cloud.commons.server.utils.SessionUtils;
 import com.fit2cloud.commons.utils.BeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -74,6 +76,20 @@ public class UserCommonController {
         return SessionUtils.getUser().getParentRoleId();
     }
 
+    @RequestMapping("current/parent/roleId")
+    public String currentParentRoleId() {
+        SessionUser user = SessionUtils.getUser();
+        if (user != null) {
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), user.getParentRoleId())) {
+                return "";
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
+                return SessionUtils.getUser().getOrganizationId();
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
+                return SessionUtils.getUser().getWorkspaceId();
+            }
+        }
+        return null;
+    }
 
     /**
      * 获取用户能切换的角色

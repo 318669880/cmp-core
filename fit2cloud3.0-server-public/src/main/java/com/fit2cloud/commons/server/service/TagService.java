@@ -40,7 +40,7 @@ public class TagService {
     @Resource
     private WorkspaceMapper workspaceMapper;
 
-    public List<TagDTO> selectTags(Map<String, Object> params) {
+    public List<TagDTO> selectTags(Map<String, Object> params, List<String> orgTree) {
         TagExample example = new TagExample();
         TagExample.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank((String) params.get("tagKey"))) {
@@ -58,11 +58,9 @@ public class TagService {
                 criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
             } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
                 criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name()));
-                List<String> orgTree = getOrgTree(user.getOrganizationId());
                 criteria.andResourceIdIn(orgTree);
             } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
                 criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name(), RoleConstants.Id.USER.name()));
-                List<String> orgTree = getOrgTree(user.getOrganizationId());
                 orgTree.add(user.getWorkspaceId());
                 criteria.andResourceIdIn(orgTree);
             }
@@ -396,7 +394,7 @@ public class TagService {
         return count;
     }
 
-    private List<String> getOrgTree(String orgId) {
+    public List<String> getOrgTree(String orgId) {
         List<String> orgIds = new ArrayList<>();
         orgIds.add("");
         orgIds.add(orgId);

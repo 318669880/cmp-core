@@ -8,16 +8,16 @@
                 <div>
                     {{'i18n_label_value_list' | translator:'标签值管理'}}
                 </div>
-                <md-button class="md-primary" ng-click="editTagValueForm({})" ng-if="$root.currentRole === tag.scope"
+                <md-button class="md-primary" ng-click="editTagValueForm({})" ng-if="$root.currentRoleId === tag.resourceId"
                            has-permission="TAG:READ+TAG_VALUE:READ+CREATE">
                     <md-icon>add_circle_outline</md-icon>
                     {{'i18n_create' | translator:'创建'}}
                 </md-button>
-                <md-button class="md-primary" ng-click="import()" has-permission="TAG:READ+TAG_VALUE:READ+IMPORT" ng-if="$root.currentRole === tag.scope">
+                <md-button class="md-primary" ng-click="import()" has-permission="TAG:READ+TAG_VALUE:READ+IMPORT" ng-if="$root.currentRoleId === tag.resourceId">
                     <md-icon>save_alt</md-icon>
                     {{'i18n_label_import' | translator:'导入标签值'}}
                 </md-button>
-                <md-button class="md-primary" href="web-public/fit2cloud/html/tag/import-tag.csv" download="import-tag.csv" ng-if="$root.currentRole === tag.scope">
+                <md-button class="md-primary" href="web-public/fit2cloud/html/tag/import-tag.csv" download="import-tag.csv" ng-if="$root.currentRoleId === tag.resourceId">
                     <md-icon>attachment</md-icon>
                     {{'i18n_label_file' | translator:'示例文件'}}
                 </md-button>
@@ -44,7 +44,7 @@
                             <td>{{item.tagValueAlias}}</td>
                             <td has-permissions="TAG:READ+TAG_VALUE:READ+EDIT,TAG:READ+TAG_VALUE:READ+DELETE">
                                 <!--设置名成加op="'其他名称'"，默认的名称为"操作"；设置宽度加width="4 或其他整数"-->
-                                <table-menus disabled="$root.currentRole !== tag.scope">
+                                <table-menus disabled="$root.currentRoleId !== tag.resourceId">
                                     <md-menu-item has-permission="TAG:READ+TAG_VALUE:READ+EDIT">
                                         <md-button ng-click="editTagValueForm(item)">
                                             <md-icon class="md-18">edit</md-icon>

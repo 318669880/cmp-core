@@ -1,9 +1,7 @@
 package com.fit2cloud.commons.server.service;
 
 import com.fit2cloud.commons.server.base.domain.*;
-import com.fit2cloud.commons.server.base.mapper.TagMapper;
-import com.fit2cloud.commons.server.base.mapper.TagMappingMapper;
-import com.fit2cloud.commons.server.base.mapper.TagValueMapper;
+import com.fit2cloud.commons.server.base.mapper.*;
 import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
@@ -37,8 +35,12 @@ public class TagService {
     private TagMappingMapper tagMappingMapper;
     @Resource
     private CharsetUtils charsetUtils;
+    @Resource
+    private OrganizationMapper organizationMapper;
+    @Resource
+    private WorkspaceMapper workspaceMapper;
 
-    public List<Tag> selectTags(Map<String, Object> params) {
+    public List<TagDTO> selectTags(Map<String, Object> params, List<String> orgTree) {
         TagExample example = new TagExample();
         TagExample.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank((String) params.get("tagKey"))) {
@@ -56,13 +58,36 @@ public class TagService {
                 criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
             } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
                 criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name()));
-                criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId()));
+                criteria.andResourceIdIn(orgTree);
             } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
                 criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name(), RoleConstants.Id.USER.name()));
-                criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId(), user.getWorkspaceId()));
+                orgTree.add(user.getWorkspaceId());
+                criteria.andResourceIdIn(orgTree);
             }
         }
-        return tagMapper.selectByExample(example);
+        List<Tag> tags = tagMapper.selectByExample(example);
+        List<TagDTO> result = new ArrayList<>();
+        tags.forEach(tag -> {
+            TagDTO tagDTO = new TagDTO();
+            BeanUtils.copyBean(tagDTO, tag);
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), tag.getScope())) {
+                tagDTO.setResourceName(Translator.get("i18n_all_scope"));
+            }
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), tag.getScope())) {
+                Organization organization = organizationMapper.selectByPrimaryKey(tag.getResourceId());
+                if (organization != null) {
+                    tagDTO.setResourceName(organization.getName());
+                }
+            }
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), tag.getScope())) {
+                Workspace workspace = workspaceMapper.selectByPrimaryKey(tag.getResourceId());
+                if (workspace != null) {
+                    tagDTO.setResourceName(workspace.getName());
+                }
+            }
+            result.add(tagDTO);
+        });
+        return result;
     }
 
     public List<TagDTO> selectAllTags() {
@@ -75,12 +100,16 @@ public class TagService {
                 criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
             } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
                 criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name()));
-                criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId()));
+                List<String> orgTree = getOrgTree(user.getOrganizationId());
+                criteria.andResourceIdIn(orgTree);
             } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
                 criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name(), RoleConstants.Id.USER.name()));
-                criteria.andResourceIdIn(Arrays.asList("", user.getOrganizationId(), user.getWorkspaceId()));
+                List<String> orgTree = getOrgTree(user.getOrganizationId());
+                orgTree.add(user.getWorkspaceId());
+                criteria.andResourceIdIn(orgTree);
             }
         }
+        tagExample.setOrderByClause("scope asc");
         List<Tag> tags = tagMapper.selectByExample(tagExample);
         List<TagValue> tagValues = tagValueMapper.selectByExample(null);
 
@@ -101,6 +130,21 @@ public class TagService {
             if (CollectionUtils.isNotEmpty(valueMap.get(tag.getTagId()))) {
                 TagDTO tagDTO = new TagDTO();
                 BeanUtils.copyBean(tagDTO, tag);
+                if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), tag.getScope())) {
+                    tagDTO.setResourceName(Translator.get("i18n_all_scope"));
+                }
+                if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), tag.getScope())) {
+                    Organization organization = organizationMapper.selectByPrimaryKey(tag.getResourceId());
+                    if (organization != null) {
+                        tagDTO.setResourceName(organization.getName());
+                    }
+                }
+                if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), tag.getScope())) {
+                    Workspace workspace = workspaceMapper.selectByPrimaryKey(tag.getResourceId());
+                    if (workspace != null) {
+                        tagDTO.setResourceName(workspace.getName());
+                    }
+                }
                 tagDTO.setTagValues(valueMap.get(tag.getTagId()));
                 result.add(tagDTO);
             }
@@ -348,5 +392,24 @@ public class TagService {
         }
 
         return count;
+    }
+
+    public List<String> getOrgTree(String orgId) {
+        List<String> orgIds = new ArrayList<>();
+        orgIds.add("");
+        orgIds.add(orgId);
+        while (StringUtils.isNotEmpty(orgId)) {
+            Organization organization = organizationMapper.selectByPrimaryKey(orgId);
+            if (StringUtils.isNotEmpty(organization.getPid())) {
+                Organization organizationParent = organizationMapper.selectByPrimaryKey(organization.getPid());
+                if (organizationParent != null) {
+                    orgIds.add(organizationParent.getId());
+                    orgId = organizationParent.getPid();
+                }
+            } else {
+                orgId = null;
+            }
+        }
+        return orgIds;
     }
 }

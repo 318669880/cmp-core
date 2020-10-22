@@ -1,12 +1,17 @@
 package com.fit2cloud.commons.server.service;
 
-import com.fit2cloud.commons.server.base.domain.TagMapping;
-import com.fit2cloud.commons.server.base.domain.TagMappingExample;
+import com.fit2cloud.commons.server.base.domain.*;
+import com.fit2cloud.commons.server.base.mapper.OrganizationMapper;
 import com.fit2cloud.commons.server.base.mapper.TagMapper;
 import com.fit2cloud.commons.server.base.mapper.TagMappingMapper;
+import com.fit2cloud.commons.server.base.mapper.WorkspaceMapper;
+import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
+import com.fit2cloud.commons.server.model.SessionUser;
 import com.fit2cloud.commons.server.model.TagDTO;
+import com.fit2cloud.commons.server.utils.SessionUtils;
+import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,9 +28,9 @@ public class TagMappingService {
     @Resource
     private TagMappingMapper tagMappingMapper;
     @Resource
-    private TagService tagService;
-    @Resource
     private TagMapper tagMapper;
+    @Resource
+    private OrganizationMapper organizationMapper;
 
     public void saveTagMapping(TagMapping tagMapping) throws Exception {
         valid(tagMapping, true);
@@ -71,10 +73,10 @@ public class TagMappingService {
         tagMappingExample.setOrderByClause("create_time");
 
         //只返回enable的标签对应的映射关系
-        List<TagDTO> tags = tagService.selectAllTags();
-        List<String> collect = Optional.ofNullable(tags).orElse(new ArrayList<>()).stream().map(TagDTO::getTagKey).collect(Collectors.toList());
+        List<Tag> tags = selectAllTags();
+        List<String> collect = Optional.ofNullable(tags).orElse(new ArrayList<>()).stream().map(Tag::getTagId).collect(Collectors.toList());
         collect.add("-1");
-        criteria.andTagKeyIn(collect);
+        criteria.andTagIdIn(collect);
 
         return tagMappingMapper.selectByExample(tagMappingExample);
     }
@@ -118,5 +120,48 @@ public class TagMappingService {
                 F2CException.throwException(Translator.get("i18n_ex_relationship_exist"));
             }
         }
+    }
+
+    public List<Tag> selectAllTags() {
+        TagExample tagExample = new TagExample();
+        TagExample.Criteria criteria = tagExample.createCriteria();
+        criteria.andEnableEqualTo(Boolean.TRUE);
+        SessionUser user = SessionUtils.getUser();
+        if (user != null) {
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), user.getParentRoleId())) {
+                criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
+                criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name()));
+                List<String> orgTree = getOrgTree(user.getOrganizationId());
+                criteria.andResourceIdIn(orgTree);
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
+                criteria.andScopeIn(Arrays.asList(RoleConstants.Id.ADMIN.name(), RoleConstants.Id.ORGADMIN.name(), RoleConstants.Id.USER.name()));
+                List<String> orgTree = getOrgTree(user.getOrganizationId());
+                orgTree.add(user.getWorkspaceId());
+                criteria.andResourceIdIn(orgTree);
+            }
+        }
+        tagExample.setOrderByClause("scope asc");
+        List<Tag> tags = tagMapper.selectByExample(tagExample);
+        return tags;
+    }
+
+    private List<String> getOrgTree(String orgId) {
+        List<String> orgIds = new ArrayList<>();
+        orgIds.add("");
+        orgIds.add(orgId);
+        while (StringUtils.isNotEmpty(orgId)) {
+            Organization organization = organizationMapper.selectByPrimaryKey(orgId);
+            if (StringUtils.isNotEmpty(organization.getPid())) {
+                Organization organizationParent = organizationMapper.selectByPrimaryKey(organization.getPid());
+                if (organizationParent != null) {
+                    orgIds.add(organizationParent.getId());
+                    orgId = organizationParent.getPid();
+                }
+            } else {
+                orgId = null;
+            }
+        }
+        return orgIds;
     }
 }

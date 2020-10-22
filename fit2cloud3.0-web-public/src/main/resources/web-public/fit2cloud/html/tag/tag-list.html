@@ -26,22 +26,16 @@
                         <tbody>
                         <tr ng-repeat="item in items">
                             <td>
-                                <span has-permission="TAG:READ+TAG_VALUE:READ" ng-switch="item.scope">
+                                <span has-permission="TAG:READ+TAG_VALUE:READ">
                                     <a class="md-primary" href="" style="cursor:pointer; text-decoration: underline;"
                                        ng-click="editValues(item)">
                                     {{item.tagKey}}
-                                    <span ng-switch-when="ADMIN">[{{'i18n_tag_scope_admin' | translator}}]</span>
-                                    <span ng-switch-when="ORGADMIN">[{{'i18n_tag_scope_orgadmin' | translator}}]</span>
-                                    <span ng-switch-when="USER">[{{'i18n_tag_scope_user' | translator}}]</span>
-                                    <span ng-switch-default>[Other]</span>
+                                        <span ng-if="$root.currentRoleId !== item.resourceId">[{{item.resourceName}}]</span>
                                     </a>
                                 </span>
-                                <span lack-permission="TAG:READ+TAG_VALUE:READ" ng-switch="item.scope">
+                                <span lack-permission="TAG:READ+TAG_VALUE:READ">
                                     {{item.tagKey}}
-                                    <span ng-switch-when="ADMIN">[{{'i18n_tag_scope_admin' | translator}}]</span>
-                                    <span ng-switch-when="ORGADMIN">[{{'i18n_tag_scope_orgadmin' | translator}}]</span>
-                                    <span ng-switch-when="USER">[{{'i18n_tag_scope_user' | translator}}]</span>
-                                    <span ng-switch-default>[Other]</span>
+                                    <span ng-if="$root.currentRoleId !== item.resourceId">[{{item.resourceName}}]</span>
                                 </span>
                             </td>
                             <td>{{item.tagAlias}}</td>
@@ -49,7 +43,7 @@
                             <td>
                                 <md-switch class="md-primary" aria-label="enable" ng-model="item.enable"
                                            ng-change="editTagStatus(item)"
-                                           ng-disabled="$root.currentRole !== item.scope"
+                                           ng-disabled="$root.currentRoleId !== item.resourceId"
                                            has-permission="TAG:READ+EDIT">
                                 </md-switch>
                                 <span lack-permission="TAG:READ+EDIT">{{item.enable}}</span>
@@ -57,14 +51,14 @@
                             <td>
                                 <md-switch class="md-primary" aria-label="enable" ng-model="item.required"
                                            ng-change="editTagStatus(item)"
-                                           ng-disabled="$root.currentRole !== item.scope"
+                                           ng-disabled="$root.currentRoleId !== item.resourceId"
                                            has-permission="TAG:READ+EDIT">
                                 </md-switch>
                                 <span lack-permission="TAG:READ+EDIT">{{item.required}}</span>
                             </td>
                             <td has-permissions="TAG:READ+DELETE,TAG:READ+EDIT,TAG:READ+TAG_VALUE:READ">
                                 <!--设置名成加op="'其他名称'"，默认的名称为"操作"；设置宽度加width="4 或其他整数"-->
-                                <table-menus disabled="$root.currentRole !== item.scope">
+                                <table-menus disabled="$root.currentRoleId !== item.resourceId">
                                     <md-menu-item has-permission="TAG:READ+EDIT">
                                         <md-button ng-click="editTagForm(item)">
                                             <md-icon class="md-18">edit</md-icon>

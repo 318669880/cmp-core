@@ -3,12 +3,15 @@ package com.fit2cloud.autoconfigure;
 import com.fasterxml.classmate.TypeResolver;
 import com.fit2cloud.commons.server.module.ServerInfo;
 import com.fit2cloud.commons.server.swagger.F2cRequestHandlerSelectors;
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -28,6 +31,8 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 @EnableSwagger2
 @Configuration
+@EnableKnife4j
+@Import(BeanValidatorPluginsConfiguration.class)
 public class BasicSwaggerConfig {
 
     @Resource

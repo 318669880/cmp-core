@@ -102,5 +102,6 @@
 
   "i18n_mc_tag_tag": "Tag",
   "i18n_mc_tag_tag_list": "List",
-  "i18n_mc_tag_tag_value_list": "List Tag Value"
+  "i18n_mc_tag_tag_value_list": "List Tag Value",
+  "i18n_all_scope": "All"
 }

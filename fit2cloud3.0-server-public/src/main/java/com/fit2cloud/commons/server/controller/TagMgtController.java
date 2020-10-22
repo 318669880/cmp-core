@@ -175,6 +175,7 @@ public class TagMgtController {
 
     @GetMapping(value = "list/tag")
     public List<TagDTO> getTagList() {
-        return tagService.selectTags(new HashMap<>());
+        List<TagDTO> tagDTOS = tagService.selectTags(new HashMap<>());
+        return tagDTOS.stream().peek(tag -> tag.setTagAlias(tag.getTagAlias() + "[" + tag.getResourceName() + "]")).collect(Collectors.toList());
     }
 }

@@ -186,7 +186,7 @@ public class TagMgtController {
     public List<TagDTO> getTagList() {
         SessionUser user = SessionUtils.getUser();
         List<String> orgTree = new ArrayList<>();
-        if (user != null && StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
+        if (user != null) {
             orgTree = tagService.getOrgTree(user.getOrganizationId());
         }
         List<TagDTO> tagDTOS = tagService.selectTags(new HashMap<>(), orgTree);

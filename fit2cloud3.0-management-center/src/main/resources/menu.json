@@ -245,6 +245,22 @@
       "children": [
         {
           "order": 1,
+          "title": "i18n_model_manager",
+          "name": "model_manage",
+          "url": "/model_manage",
+          "templateUrl": "project/html/model_manager/model_manager.html",
+          "requiredPermissions": [
+            {
+              "role": "ADMIN",
+              "logical": "OR",
+              "permissions": [
+                "MODEL_MANAGER:READ"
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
           "title": "i18n_menu_idp_settings",
           "name": "keycloak",
           "url": "/keycloak",
@@ -261,7 +277,7 @@
           ]
         },
         {
-          "order": 2,
+          "order": 3,
           "title": "i18n_menu_display_settings",
           "name": "ui",
           "url": "/ui",
@@ -277,7 +293,7 @@
           ]
         },
         {
-          "order": 3,
+          "order": 4,
           "title": "i18n_menu_email_settings",
           "name": "mail",
           "url": "/mail",
@@ -293,7 +309,7 @@
           ]
         },
         {
-          "order": 4,
+          "order": 5,
           "title": "i18n_menu_sys_state",
           "name": "sys",
           "url": "/sys",
@@ -309,7 +325,7 @@
           ]
         },
         {
-          "order": 5,
+          "order": 6,
           "title": "i18n_menu_sys_log",
           "name": "log/system",
           "url": "/log/system",
@@ -325,7 +341,7 @@
           ]
         },
         {
-          "order": 6,
+          "order": 7,
           "title": "i18n_menu_about",
           "name": "about",
           "url": "/about",
@@ -336,22 +352,6 @@
               "logical": "OR",
               "permissions": [
                 "LICENSE:READ"
-              ]
-            }
-          ]
-        },
-        {
-          "order": 7,
-          "title": "i18n_model_manager",
-          "name": "model_manage",
-          "url": "/model_manage",
-          "templateUrl": "project/html/model_manager/model_manager.html",
-          "requiredPermissions": [
-            {
-              "role": "ADMIN",
-              "logical": "OR",
-              "permissions": [
-                "MODEL_MANAGER:READ"
               ]
             }
           ]

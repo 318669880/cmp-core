@@ -661,7 +661,7 @@ CREATE TABLE IF NOT EXISTS `tag_value` (
   `tag_value` varchar(100) DEFAULT NULL COMMENT '标签值',
   `tag_value_alias` varchar(100) DEFAULT NULL COMMENT '标签值别名',
   `create_time` bigint(13) DEFAULT NULL COMMENT '创建时间',
-  `tag_id` varchar(50) NOT NULL DEFAULT '' COMMENT '标签ID'
+  `tag_id` varchar(50) NOT NULL DEFAULT '' COMMENT '标签ID',
   PRIMARY KEY (`id`),
   KEY `IDX_ALIAS_KEY` (`tag_key`),
   KEY `IDX_ALIAS_VALUE` (`tag_value`)

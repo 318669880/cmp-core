@@ -1,12 +1,11 @@
 package com.fit2cloud.mc.strategy.service.imp;
 
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
-import com.fit2cloud.mc.model.ModelBasic;
-import com.fit2cloud.mc.model.ModelManager;
-import com.fit2cloud.mc.model.ModelNode;
-import com.fit2cloud.mc.model.ModelVersion;
+import com.fit2cloud.mc.job.CheckModuleStatus;
+import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
+import com.fit2cloud.mc.service.WsService;
 import com.fit2cloud.mc.strategy.entity.ResultInfo;
 import com.fit2cloud.mc.strategy.factory.NodeOperateStrategyFactory;
 import com.fit2cloud.mc.strategy.service.ModelOperateStrategy;
@@ -19,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +43,10 @@ public class NodeOpServiceImp implements NodeOperateService {
 
     @Resource
     private ModuleNodeService moduleNodeService;
+
+
+    @Resource
+    private WsService wsService;
 
     @Async
     @Transactional
@@ -92,12 +97,18 @@ public class NodeOpServiceImp implements NodeOperateService {
         operateStrategy.executeDelete(module);
     }
 
+
     private void changestatus(String nodeId,String status) throws Exception{
         if (ObjectUtils.isEmpty(nodeId)) return ;
         ModelNode modelNode = new ModelNode();
         modelNode.setNodeStatus(status);
         modelNode.setModelNodeUuid(nodeId);
         moduleNodeService.addOrUpdateModelNode(modelNode);
+
+        Map<String, List<ModelNode>> message = new HashMap<String, List<ModelNode>>();
+        message.put(modelNode.getModelNodeUuid(),new ArrayList<ModelNode>(){{add(modelNode);}});
+        WsMessage<Map<String, List<ModelNode>>> wsMessage = new WsMessage<Map<String, List<ModelNode>>>(null, CheckModuleStatus.model_node_fresh_topic,message);
+        wsService.releaseMessage(wsMessage);
     }
 
     private String downLoad (ModelBasic modelBasic) throws Exception{

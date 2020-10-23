@@ -98,12 +98,20 @@ public class CheckModuleStatus {
     }
 
     private List<ModelNode> off_line_node(List<ModelNode> nodes){
-        // 找到running或者installing状态的节点 且 状态改为stoppped
+        // 找到running或者installing或者startting状态的节点 且 状态改为stoppped
         List<String> status = new ArrayList<>();
         status.add(ModuleStatusConstants.running.value());
         status.add(ModuleStatusConstants.installing.value());
+        status.add(ModuleStatusConstants.startting.value());
         nodes = nodes.stream().filter(node -> status.contains(node.getNodeStatus())).map(item -> {
+            String nodeStatus = item.getNodeStatus();
             item.setNodeStatus(ModuleStatusConstants.stopped.value());
+            if (StringUtils.equals(ModuleStatusConstants.installing.value(), nodeStatus) ) {
+                item.setNodeStatus(ModuleStatusConstants.installing.nextFaild());
+            }
+            if (StringUtils.equals(ModuleStatusConstants.startting.value(), nodeStatus) ) {
+                item.setNodeStatus(ModuleStatusConstants.startting.nextFaild());
+            }
             return item;
         }).collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(nodes)){

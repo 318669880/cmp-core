@@ -6,6 +6,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
      * @constructor
      */
     let IndexServer = function() {
+        this._loadAddressUrl = 'modelManager/indexServer/address';
         this._init_address = null;
         this._loadDataUrl = 'modelManager/indexServer/query';
         this._saveDataUrl = 'modelManager/indexServer/save';
@@ -16,6 +17,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         this.onLine = true;
         this.dockerRegistry = {};
         this._dockerRegistry = {};
+        this.manager_uuid = null;
         this.initialize.apply(this , arguments);
     };
 
@@ -26,11 +28,16 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     IndexServer.prototype = {
         initialize: function () {
         },
+        initAddress: function () {
+            HttpUtils.post(this._loadAddressUrl, {} ,function (res) {
+                this.address = res.data;
+            }.bind(this))
+        },
 
         loadData: function() {
             let _self = this;
             $scope.executeAjax(this._loadDataUrl,'GET',{},response => {
-
+                _self.manager_uuid = response.uuid;
                 _self._init_address = response.modelAddress
                 _self.address = response.modelAddress;
                 _self.model_env = response.env;
@@ -44,6 +51,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                     // 如果验证通过 默认展示第2页
                     _self.validateAddress(true);
                 }
+                _self.initAddress();
             })
         },
 
@@ -123,7 +131,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         },
 
         validateSave: function() {
-            if(this._init_address === this.address  && this._init_onLine === this.onLine && angular.toJson(this._dockerRegistry) === angular.toJson(this.dockerRegistry)){
+            if(!!this.manager_uuid && this._init_address === this.address  && this._init_onLine === this.onLine && angular.toJson(this._dockerRegistry) === angular.toJson(this.dockerRegistry)){
                 // 这说明 索引服务没有改过 为提升那么一点客户体验 那就不走后台了保存了
                 this.validate = true;
                 $scope.wizard.continue();

@@ -57,6 +57,11 @@ public class ModelManagerController {
         return modelManagerService.queryModelManager();
     }
 
+    @PostMapping("/indexServer/address")
+    public String address(){
+        return modelManagerService.address();
+    }
+
     @PostMapping(value = "/runner/{goPage}/{pageSize}")
     public Pager<List<ModelInstall>> paging(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody ModelInstalledRequest request) {
         Page page = PageHelper.startPage(goPage, pageSize, true);

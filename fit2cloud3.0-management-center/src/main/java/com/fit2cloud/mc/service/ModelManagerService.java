@@ -14,6 +14,7 @@ import com.fit2cloud.mc.strategy.task.EurekaInstanceMonitor;
 import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ import java.util.*;
 
 @Service
 public class ModelManagerService {
+
+    @Value("${modelAddress:https://f2c-index.oss-cn-beijing.aliyuncs.com}")
+    private String modelAddress;
 
     @Resource
     private ModelManagerMapper modelManagerMapper;
@@ -82,8 +86,14 @@ public class ModelManagerService {
             } else {
                 modelManager.setEnv(RuntimeEnvironment.HOST);
             }
+            //modelManager.setModelAddress(modelAddress);
+            modelManager.setOnLine(true);
         }
         return modelManager;
+    }
+
+    public String address(){
+        return modelAddress;
     }
 
 

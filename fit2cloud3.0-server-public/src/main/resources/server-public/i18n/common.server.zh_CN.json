@@ -99,9 +99,10 @@
   "i18n_link_value_exist": "环节值已经存在",
   "i18n_link_value_priority_exist": "环节项优先级已经存在",
   "i18n_link_item_not_exist": "环节项不存在: ",
-
   "i18n_mc_tag_tag": "标签",
   "i18n_mc_tag_tag_list": "查看标签",
   "i18n_mc_tag_tag_value_list": "查看标签值",
-  "i18n_all_scope": "全局"
+  "i18n_all_scope": "全局",
+  "i18n_no_license_record": "没有 License 记录",
+  "i18n_license_is_empty": "License 为空"
 }

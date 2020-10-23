@@ -30,7 +30,7 @@ class InnerLicenseService {
     void saveLicense(License license) {
         license.setUpdateTime(new Date());
         if (existLicense(license.getId())) {
-            licenseMapper.updateByPrimaryKeyWithBLOBs(license);
+            licenseMapper.updateByPrimaryKey(license);
         } else {
             licenseMapper.insert(license);
         }

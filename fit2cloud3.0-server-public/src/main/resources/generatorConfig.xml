@@ -43,6 +43,9 @@
         </javaClientGenerator>
 
         <!-- 要生成的数据库表 -->
-        <table tableName="organization"/>
+        <table tableName="license">
+            <columnOverride column="license" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <columnOverride column="f2c_license" javaType="java.lang.String" jdbcType="VARCHAR" />
+        </table>
     </context>
 </generatorConfiguration>

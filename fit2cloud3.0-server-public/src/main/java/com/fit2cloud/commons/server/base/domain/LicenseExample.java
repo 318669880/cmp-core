@@ -325,6 +325,146 @@ public class LicenseExample {
             return (Criteria) this;
         }
 
+        public Criteria andLicenseIsNull() {
+            addCriterion("license is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseIsNotNull() {
+            addCriterion("license is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseEqualTo(String value) {
+            addCriterion("license =", value, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseNotEqualTo(String value) {
+            addCriterion("license <>", value, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseGreaterThan(String value) {
+            addCriterion("license >", value, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseGreaterThanOrEqualTo(String value) {
+            addCriterion("license >=", value, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseLessThan(String value) {
+            addCriterion("license <", value, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseLessThanOrEqualTo(String value) {
+            addCriterion("license <=", value, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseLike(String value) {
+            addCriterion("license like", value, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseNotLike(String value) {
+            addCriterion("license not like", value, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseIn(List<String> values) {
+            addCriterion("license in", values, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseNotIn(List<String> values) {
+            addCriterion("license not in", values, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseBetween(String value1, String value2) {
+            addCriterion("license between", value1, value2, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseNotBetween(String value1, String value2) {
+            addCriterion("license not between", value1, value2, "license");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseIsNull() {
+            addCriterion("f2c_license is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseIsNotNull() {
+            addCriterion("f2c_license is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseEqualTo(String value) {
+            addCriterion("f2c_license =", value, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseNotEqualTo(String value) {
+            addCriterion("f2c_license <>", value, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseGreaterThan(String value) {
+            addCriterion("f2c_license >", value, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseGreaterThanOrEqualTo(String value) {
+            addCriterion("f2c_license >=", value, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseLessThan(String value) {
+            addCriterion("f2c_license <", value, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseLessThanOrEqualTo(String value) {
+            addCriterion("f2c_license <=", value, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseLike(String value) {
+            addCriterion("f2c_license like", value, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseNotLike(String value) {
+            addCriterion("f2c_license not like", value, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseIn(List<String> values) {
+            addCriterion("f2c_license in", values, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseNotIn(List<String> values) {
+            addCriterion("f2c_license not in", values, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseBetween(String value1, String value2) {
+            addCriterion("f2c_license between", value1, value2, "f2cLicense");
+            return (Criteria) this;
+        }
+
+        public Criteria andF2cLicenseNotBetween(String value1, String value2) {
+            addCriterion("f2c_license not between", value1, value2, "f2cLicense");
+            return (Criteria) this;
+        }
+
         public Criteria andSqlCriterion(String value) {
             addCriterion("(" + value + ")");
             return (Criteria) this;

@@ -2,6 +2,7 @@ package com.fit2cloud.commons.server.license;
 
 import com.fit2cloud.commons.server.base.domain.License;
 import com.fit2cloud.commons.server.exception.F2CException;
+import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +39,6 @@ public class DefaultLicenseService {
         command.add(licenseKey);
         try{
             execCommand(result, command);
-            System.out.println(result.toString());
             F2CLicenseResponse f2CLicenseResponse = new Gson().fromJson(result.toString(), F2CLicenseResponse.class);
             if(f2CLicenseResponse.getStatus() != F2CLicenseResponse.Status.valid){
                 return f2CLicenseResponse;
@@ -49,18 +49,18 @@ public class DefaultLicenseService {
                 f2CLicenseResponse.setMessage("The license is unavailable for this product.");
                 return f2CLicenseResponse;
             }
-            //检查每个模块的PLU限制
 
-            if(!Arrays.asList(NO_PLU_LIMIT_MODULES).contains(moduleId)){
-                AuthorizationUnit authorizationUnit= CommonBeanFactory.getBean(AuthorizationUnit.class);
-                try{
-                    authorizationUnit.calculateAssets(f2CLicenseResponse.getLicense().getCount());
-                    return f2CLicenseResponse;
-                }catch (Exception e){
-                    f2CLicenseResponse.setStatus(F2CLicenseResponse.Status.invalid);
-                    f2CLicenseResponse.setMessage(e.getMessage());
-                }
-            }
+//            检查每个模块的PLU限制
+//            if(!Arrays.asList(NO_PLU_LIMIT_MODULES).contains(moduleId)){
+//                AuthorizationUnit authorizationUnit= CommonBeanFactory.getBean(AuthorizationUnit.class);
+//                try{
+//                    authorizationUnit.calculateAssets(f2CLicenseResponse.getLicense().getCount());
+//                    return f2CLicenseResponse;
+//                }catch (Exception e){
+//                    f2CLicenseResponse.setStatus(F2CLicenseResponse.Status.invalid);
+//                    f2CLicenseResponse.setMessage(e.getMessage());
+//                }
+//            }
             return f2CLicenseResponse;
         }catch (Exception e){
             return F2CLicenseResponse.invalid(e.getMessage());
@@ -84,11 +84,17 @@ public class DefaultLicenseService {
 
     public F2CLicenseResponse validateLicense() {
         try {
-            String licenseKey = readLicense();
-            return validateLicense(product, licenseKey);
+            License license  = readLicense();
+            return validateLicense(product, license.getLicense());
         } catch (Exception e) {
             return F2CLicenseResponse.invalid(e.getMessage());
         }
+    }
+
+    public void validateF2cLicense(){
+        License license  = readLicense();
+        F2CLicenseResponse f2CLicenseResponse = validateLicense(product, license.getLicense());
+        writeLicense(license.getLicense(), f2CLicenseResponse);
     }
 
     public F2CLicenseResponse updateLicense(String product, String licenseKey) {
@@ -98,30 +104,31 @@ public class DefaultLicenseService {
             return response;
         }
         // 覆盖原license
-        writeLicense(licenseKey);
+        writeLicense(licenseKey, response);
         return response;
     }
 
     // 从数据库读取License
-    private String readLicense() {
+    public License readLicense() {
         License license = innerLicenseService.getLicense(LICENSE_ID);
         if (license == null) {
-            F2CException.throwException("没有License记录");
+            F2CException.throwException(Translator.get("i18n_no_license_record"));
         }
         if (StringUtils.isBlank(license.getLicense())) {
-            F2CException.throwException("License 为空");
+            F2CException.throwException(Translator.get("i18n_license_is_empty"));
         }
-        return license.getLicense();
+        return license;
     }
 
     // 创建或更新License
-    private void writeLicense(String licenseKey) {
+    private void writeLicense(String licenseKey, F2CLicenseResponse response) {
         if (StringUtils.isBlank(licenseKey)) {
-            F2CException.throwException("License 为空");
+            F2CException.throwException(Translator.get("i18n_license_is_empty"));
         }
         License license = new License();
         license.setId(LICENSE_ID);
         license.setLicense(licenseKey);
+        license.setF2cLicense(new Gson().toJson(response));
         innerLicenseService.saveLicense(license);
     }
 }

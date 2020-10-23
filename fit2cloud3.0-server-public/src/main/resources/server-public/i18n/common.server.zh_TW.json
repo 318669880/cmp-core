@@ -99,9 +99,10 @@
   "i18n_link_value_exist": "環節值已經存在",
   "i18n_link_value_priority_exist": "環節項優先級已經存在",
   "i18n_link_item_not_exist": "環節項不存在: ",
-
   "i18n_mc_tag_tag": "標簽",
   "i18n_mc_tag_tag_list": "查看標簽",
   "i18n_mc_tag_tag_value_list": "查看標簽值",
-  "i18n_all_scope": "全局"
+  "i18n_all_scope": "全局",
+  "i18n_no_license_record": "沒有 License 紀錄",
+  "i18n_license_is_empty": "License 為空"
 }

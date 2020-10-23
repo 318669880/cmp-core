@@ -6,7 +6,6 @@ import com.fit2cloud.commons.server.base.domain.TagMappingExample;
 import com.fit2cloud.commons.server.base.domain.TagValue;
 import com.fit2cloud.commons.server.base.mapper.TagMappingMapper;
 import com.fit2cloud.commons.server.constants.PermissionConstants;
-import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.model.SessionUser;
@@ -56,13 +55,8 @@ public class TagMgtController {
         if (StringUtils.isNotBlank(request.getSort()) && !ValidatorUtil.isSort(request.getSort())) {
             F2CException.throwException("field 'sort' does not match to the regular [A-Z, A-Z, 0-9,] specification!");
         }
-        SessionUser user = SessionUtils.getUser();
-        List<String> orgTree = new ArrayList<>();
-        if (user != null) {
-            orgTree = tagService.getOrgTree(user.getOrganizationId());
-        }
         Page<Object> page = PageHelper.startPage(goPage, pageSize, true);
-        List<TagDTO> tags = tagService.selectTags(BeanUtils.objectToMap(request), orgTree);
+        List<TagDTO> tags = tagService.selectTagsList(BeanUtils.objectToMap(request));
         return PageUtils.setPageInfo(page, tags);
     }
 

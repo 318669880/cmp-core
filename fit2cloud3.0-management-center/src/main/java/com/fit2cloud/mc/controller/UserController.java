@@ -100,7 +100,7 @@ public class UserController {
         return userService.insert(request);
     }
 
-    @ApiOperation(value = Translator.PREFIX + "i18n_mc_add_role" + Translator.SUFFIX)
+    //@ApiOperation(value = Translator.PREFIX + "i18n_mc_add_role" + Translator.SUFFIX)
     @PostMapping(value = "/add/role")
     @RequiresPermissions(PermissionConstants.USER_CREATE)
     @I18n

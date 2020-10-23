@@ -2,6 +2,7 @@ package com.fit2cloud.mc.service;
 
 import com.fit2cloud.commons.server.dcslock.annotation.DcsLock;
 import com.fit2cloud.commons.server.exception.F2CException;
+import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelBasicMapper;
@@ -122,6 +123,11 @@ public class ModuleNodeService {
         });
     }
 
+    public void addOrUpdateNodeClear(ModelNode node) throws Exception{
+        ModuleNodeService proxy = CommonBeanFactory.getBean(ModuleNodeService.class);
+        proxy.addOrUpdateModelNode(node);
+    }
+
 
     public void addOrUpdateMcNode(String node_status){
         ModelNode node = currentMcNode();
@@ -155,11 +161,11 @@ public class ModuleNodeService {
         ModelNode modelNode = nodeInfo(nodeId);
         modelNode.setNodeStatus(ModuleStatusConstants.installing.value());
         try{
-            addOrUpdateModelNode(modelNode);
+            addOrUpdateNodeClear(modelNode);
             eurekaInstanceMonitor.execute(module, nodeId,"/modelNode/node/install",nodeInfo(nodeId));
         }catch (Exception e){
             modelNode.setNodeStatus(ModuleStatusConstants.installFaild.value());
-            addOrUpdateModelNode(modelNode);
+            addOrUpdateNodeClear(modelNode);
             F2CException.throwException(e);
         }
     }
@@ -168,11 +174,11 @@ public class ModuleNodeService {
         ModelNode modelNode = nodeInfo(nodeId);
         modelNode.setNodeStatus(ModuleStatusConstants.startting.value());
         try{
-            addOrUpdateModelNode(modelNode);
+            addOrUpdateNodeClear(modelNode);
             eurekaInstanceMonitor.execute(module, nodeId,"/modelNode/node/start",nodeInfo(module));
         }catch (Exception e){
             modelNode.setNodeStatus(ModuleStatusConstants.startFaild.value());
-            addOrUpdateModelNode(modelNode);
+            addOrUpdateNodeClear(modelNode);
             F2CException.throwException(e);
         }
     }
@@ -181,11 +187,11 @@ public class ModuleNodeService {
         ModelNode modelNode = nodeInfo(nodeId);
         modelNode.setNodeStatus(ModuleStatusConstants.stopping.value());
         try{
-            addOrUpdateModelNode(modelNode);
+            addOrUpdateNodeClear(modelNode);
             eurekaInstanceMonitor.execute(module, nodeId,"/modelNode/node/stop",nodeInfo(module));
         }catch (Exception e){
             modelNode.setNodeStatus(ModuleStatusConstants.stopFaild.value());
-            addOrUpdateModelNode(modelNode);
+            addOrUpdateNodeClear(modelNode);
             F2CException.throwException(e);
         }
     }

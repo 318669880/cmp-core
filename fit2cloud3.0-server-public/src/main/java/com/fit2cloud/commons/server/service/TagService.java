@@ -40,6 +40,55 @@ public class TagService {
     @Resource
     private WorkspaceMapper workspaceMapper;
 
+    public List<TagDTO> selectTagsList(Map<String, Object> params) {
+        TagExample example = new TagExample();
+        TagExample.Criteria criteria = example.createCriteria();
+        if (StringUtils.isNotBlank((String) params.get("tagKey"))) {
+            criteria.andTagKeyLike((String) params.get("tagKey"));
+        }
+        if (StringUtils.isNotBlank((String) params.get("tagAlias"))) {
+            criteria.andTagAliasLike((String) params.get("tagAlias"));
+        }
+        if (StringUtils.isNotBlank((String) params.get("sort"))) {
+            example.setOrderByClause((String) params.get("sort"));
+        }
+        SessionUser user = SessionUtils.getUser();
+        if (user != null) {
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), user.getParentRoleId())) {
+                criteria.andScopeEqualTo(RoleConstants.Id.ADMIN.name());
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), user.getParentRoleId())) {
+                criteria.andScopeEqualTo(RoleConstants.Id.ORGADMIN.name());
+                criteria.andResourceIdEqualTo(user.getOrganizationId());
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), user.getParentRoleId())) {
+                criteria.andScopeEqualTo(RoleConstants.Id.USER.name());
+                criteria.andResourceIdEqualTo(user.getWorkspaceId());
+            }
+        }
+        List<Tag> tags = tagMapper.selectByExample(example);
+        List<TagDTO> result = new ArrayList<>();
+        tags.forEach(tag -> {
+            TagDTO tagDTO = new TagDTO();
+            BeanUtils.copyBean(tagDTO, tag);
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), tag.getScope())) {
+                tagDTO.setResourceName(Translator.get("i18n_all_scope"));
+            }
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), tag.getScope())) {
+                Organization organization = organizationMapper.selectByPrimaryKey(tag.getResourceId());
+                if (organization != null) {
+                    tagDTO.setResourceName(organization.getName());
+                }
+            }
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), tag.getScope())) {
+                Workspace workspace = workspaceMapper.selectByPrimaryKey(tag.getResourceId());
+                if (workspace != null) {
+                    tagDTO.setResourceName(workspace.getName());
+                }
+            }
+            result.add(tagDTO);
+        });
+        return result;
+    }
+
     public List<TagDTO> selectTags(Map<String, Object> params, List<String> orgTree) {
         TagExample example = new TagExample();
         TagExample.Criteria criteria = example.createCriteria();

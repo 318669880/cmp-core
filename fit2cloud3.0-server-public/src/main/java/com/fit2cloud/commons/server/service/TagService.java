@@ -100,6 +100,8 @@ public class TagService {
         }
         if (StringUtils.isNotBlank((String) params.get("sort"))) {
             example.setOrderByClause((String) params.get("sort"));
+        } else {
+            example.setOrderByClause("scope asc");
         }
         SessionUser user = SessionUtils.getUser();
         if (user != null) {

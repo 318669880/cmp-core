@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.utils;
 
+import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
@@ -53,7 +54,7 @@ public class ModuleUtil {
         execCommand(result, command);
     }
 
-    public static void installOrUpdateModule(String moduleName, String moduleFileName, boolean onLine) throws Exception {
+    public static String installOrUpdateModule(String moduleName, String moduleFileName, boolean onLine) throws Exception {
         List<String> command = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
         String random_dir_name = UUID.randomUUID().toString();
@@ -72,7 +73,7 @@ public class ModuleUtil {
 
         if(!onLine){
             // 离线环境，需要事先把docker images 导入，这里不做处理
-//            handleWithInternalDockerRegistry(extensionTmpDir);
+            // handleWithInternalDockerRegistry(extensionTmpDir);
         }
 
         List<String> newModuleNameList = new ArrayList<>();
@@ -143,6 +144,11 @@ public class ModuleUtil {
         }
 
         deleteFile(command, result, tmp_dir);
+        if(action.equalsIgnoreCase(moduleActionUpdate)){
+           return ResourceOperation.UPDATE;
+        }else {
+            return ResourceOperation.INSTALL;
+        }
     }
 
     private static void handleWithInternalDockerRegistry(String extensionTmpDir) throws IOException {

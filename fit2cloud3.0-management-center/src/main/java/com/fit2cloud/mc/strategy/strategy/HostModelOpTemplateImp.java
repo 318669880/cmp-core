@@ -21,12 +21,12 @@ import java.util.Map;
 public class HostModelOpTemplateImp implements ModelOperateStrategy {
 
     @Override
-    public void executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params) throws Exception{
+    public String executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params) throws Exception{
         try{
-            ModuleUtil.installOrUpdateModule(module, filePath, modelManager.getOnLine());
+            return ModuleUtil.installOrUpdateModule(module, filePath, modelManager.getOnLine());
         }catch (Exception e){
             LogUtil.error("Failed to install module: " + module, e);
-            F2CException.throwException(e);
+            throw e;
         }
     }
 

@@ -11,5 +11,6 @@ public enum ResourceTypeConstants {
     CLOUD_ACCOUNT,
     CLOUD_DISK,
     QUOTA,
-    VM_ORDER
+    VM_ORDER,
+    MODULE
 }

@@ -24,7 +24,7 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
 
     @DcsLock
     @Override
-    public void executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params)throws Exception {
+    public String executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params)throws Exception {
         try{
             if(ObjectUtils.isEmpty(params) || !params.containsKey("pod_number")){
                 F2CException.throwException("Pod number can not be empty! ");
@@ -33,9 +33,10 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
             modelManagerService.updateModelBasicPodNum(module, podNum);
             ModuleParamData moduleParamData = K8sUtil.installOrUpdateModule(module, filePath, modelManager, params);
             modelManagerService.updateModelBasicCustomData(module, moduleParamData);
+            return moduleParamData.getAction();
         }catch (Exception e){
             LogUtil.error("Failed to install module: " + module, e);
-            F2CException.throwException(e);
+            throw e;
         }
     }
 

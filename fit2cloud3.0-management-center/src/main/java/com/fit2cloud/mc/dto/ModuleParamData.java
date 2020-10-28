@@ -6,6 +6,15 @@ import java.util.List;
 public class ModuleParamData {
     private List<String> deployment = new ArrayList<>();
     private List<String> statefulset = new ArrayList<>();
+    private String action = "";
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 
 
     public List<String> getStatefulset() {

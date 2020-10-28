@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.utils;
 
+import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
@@ -37,10 +38,9 @@ public class K8sUtil {
         String chartsDir = tmp_dir + "/helm-charts/";
         String templatesDir = "templates/";
 
-//        if(checkServiceExist(serviceName, command, result)){
-//            uninstallService(serviceName);
-//        }
-//        result.setLength(0);
+        String action = checkServiceExist(serviceName, command, result) ? ResourceOperation.INSTALL : ResourceOperation.UPDATE;
+        result.setLength(0);
+
         try{
             uncompress(moduleFileName, tmp_dir);
         }catch (Exception e) {
@@ -86,6 +86,7 @@ public class K8sUtil {
         result.setLength(0);
         ModuleParamData moduleParamData = new ModuleParamData();
         filterDeployments(moduleParamData, chartsDir + templatesDir);
+        moduleParamData.setAction(action);
         return moduleParamData;
     }
 

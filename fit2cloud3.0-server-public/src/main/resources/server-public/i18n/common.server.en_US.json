@@ -104,5 +104,10 @@
   "i18n_mc_tag_tag_value_list": "List Tag Value",
   "i18n_all_scope": "All",
   "i18n_no_license_record": "No License Record",
-  "i18n_license_is_empty": "License is empty."
+  "i18n_license_is_empty": "License is empty.",
+  "i18n_install": "Install",
+  "i18n_update": "Update",
+  "i18n_uninstall": "Uninstall",
+  "i18n_expansion": "Expansion",
+  "i18n_shrink": "Shrink"
 }

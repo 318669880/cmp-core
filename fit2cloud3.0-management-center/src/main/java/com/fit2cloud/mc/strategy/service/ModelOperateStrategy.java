@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public interface ModelOperateStrategy {
 
-    public void executeInstall(ModelManager modelManager, String modeule, String filePath, Map<String, Object> params) throws Exception;
+    public String executeInstall(ModelManager modelManager, String modeule, String filePath, Map<String, Object> params) throws Exception;
 
     public void executeDelete(String modeule)throws Exception;
 

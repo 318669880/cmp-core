@@ -1,5 +1,8 @@
 package com.fit2cloud.mc.service;
 
+import com.fit2cloud.commons.server.constants.ResourceOperation;
+import com.fit2cloud.commons.server.constants.ResourceTypeConstants;
+import com.fit2cloud.commons.server.service.OperationLogService;
 import com.fit2cloud.commons.utils.CommonThreadPool;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.dto.ModuleParamData;
@@ -36,28 +39,32 @@ public class K8sOperatorModuleService {
         Integer podNumber = operatorModuleRequest.getParams() == null || operatorModuleRequest.getParams().get("pod_number") == null ? 1 : Integer.valueOf(operatorModuleRequest.getParams().get("pod_number").toString());
         params.put("pod_number", podNumber);
         operatorModuleRequest.setParams(params);
-        actionModules("start", managerInfo, operatorModuleRequest);
+        actionModules(managerInfo, operatorModuleRequest);
     }
 
     public void stop(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
         Map<String, Object> params = operatorModuleRequest.getParams() == null ? new HashMap<String, Object>() : operatorModuleRequest.getParams();
         params.put("pod_number", 0);
         operatorModuleRequest.setParams(params);
-        actionModules("stop", managerInfo, operatorModuleRequest);
+        actionModules( managerInfo, operatorModuleRequest);
     }
 
-    private void actionModules(String action, ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
+    private void actionModules(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
         Integer podNumber = Integer.valueOf(operatorModuleRequest.getParams().get("pod_number").toString());
         operatorModuleRequest.getModules().forEach(module -> {
             commonThreadPool.addTask(() ->{
                 try{
-                    LogUtil.info("Begin to {} module: " + module, action);
-                    modelManagerService.updateModelBasicPodNum(module, podNumber);
                     ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
+                    String action = modelBasic.getPodNum() > podNumber ? ResourceOperation.EXPANSION : ResourceOperation.SHRINK;
+                    String msg = "scale pod from " + modelBasic.getPodNum() + " to " + podNumber;
+                    LogUtil.info("Begin to operation {} ,: " + msg, module);
+                    modelManagerService.updateModelBasicPodNum(module, podNumber);
+                    modelBasic = modelManagerService.modelBasicInfo(module);
                     K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
-                    LogUtil.info("End of {} module: " + module, action);
+                    LogUtil.info("Success to operation {} ,: " + msg, module);
+                    OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), action, null);
                 }catch (Exception e){
-                    LogUtil.error("Faild to {} module: {}" + module, action,  e);
+                    LogUtil.error("Faild to operation module: " + module, e.getMessage());
                 }
             });
         });
@@ -70,6 +77,8 @@ public class K8sOperatorModuleService {
                 modelManagerService.deleteModelBasic(module);
                 K8sUtil.uninstallService(module);
                 LogUtil.info("End of uninstall module: " + module);
+                ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
+                OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), ResourceOperation.UNINSTALL, null);
             }catch (Exception e){
                 LogUtil.error("Faild to uninstall module: " + module, e);
             }

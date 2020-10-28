@@ -88,15 +88,15 @@ public class PermissionConstants {
     public static final String UI_SETTING_EDIT = "UI_SETTING:READ+EDIT";
     // end mail设置
 
-    // start mail设置
-    public static final String MAIL_SETTING_READ = "MAIL_SETTING:READ";
-    public static final String MAIL_SETTING_EDIT = "MAIL_SETTING:READ+EDIT";
-    // end mail设置
+    // start message设置
+    public static final String MESSAGE_SETTING_READ = "MESSAGE_SETTING:READ";
+    public static final String MESSAGE_SETTING_EDIT = "MESSAGE_SETTING:READ+EDIT";
+    // end message设置
 
-    // start mail设置
+    // start license设置
     public static final String LICENSE_READ = "LICENSE:READ";
     public static final String LICENSE_UPDATE = "LICENSE:READ+UPDATE";
-    // end mail设置
+    // end license设置
 
     // module
     public static final String MODULE_READ = "MODULE:READ";

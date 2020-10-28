@@ -445,17 +445,17 @@
       ]
     },
     {
-      "id": "MAIL_SETTING:READ",
-      "name": "i18n_permission_mail_settings_read",
-      "resourceId": "MAIL_SETTING",
+      "id": "MESSAGE_SETTING:READ",
+      "name": "i18n_permission_message_settings_read",
+      "resourceId": "MESSAGE_SETTING",
       "parentRoles": [
         "ADMIN"
       ]
     },
     {
-      "id": "MAIL_SETTING:READ+EDIT",
-      "name": "i18n_permission_mail_settings_read_edit",
-      "resourceId": "MAIL_SETTING",
+      "id": "MESSAGE_SETTING:READ+EDIT",
+      "name": "i18n_permission_message_settings_read_edit",
+      "resourceId": "MESSAGE_SETTING",
       "parentRoles": [
         "ADMIN"
       ]
@@ -588,8 +588,8 @@
       "name": "i18n_permission_resource_display"
     },
     {
-      "id": "MAIL_SETTING",
-      "name": "i18n_permission_resource_mail"
+      "id": "MESSAGE_SETTING",
+      "name": "i18n_permission_resource_message"
     },
     {
       "id": "SYS_STATS_READ",

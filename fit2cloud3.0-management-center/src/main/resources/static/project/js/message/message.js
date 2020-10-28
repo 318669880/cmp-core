@@ -1,4 +1,4 @@
-ProjectApp.controller('MailController', function ($scope, $http, Notification, eyeService, HttpUtils, Translator) {
+ProjectApp.controller('MessageController', function ($scope, $http, Notification, eyeService, HttpUtils, Translator) {
     $scope.isSave = false;
 
     $scope.clickSave = function () {

@@ -173,22 +173,6 @@
       "title": "i18n_menu_metadata_management",
       "icon": "bookmark",
       "children": [
-//        {
-//          "order": 1,
-//          "title": "i18n_menu_tag",
-//          "name": "tag",
-//          "url": "/tag",
-//          "templateUrl": "project/html/tag/tag-list.html",
-//          "requiredPermissions": [
-//            {
-//              "role": "ADMIN",
-//              "logical": "OR",
-//              "permissions": [
-//                "TAG:READ"
-//              ]
-//            }
-//          ]
-//        },
         {
           "order": 1,
           "title": "$[{i18n_menu_tag}]",
@@ -294,16 +278,16 @@
         },
         {
           "order": 4,
-          "title": "i18n_menu_email_settings",
-          "name": "mail",
-          "url": "/mail",
-          "templateUrl": "project/html/mail/mail.html",
+          "title": "i18n_menu_message_settings",
+          "name": "message",
+          "url": "/message",
+          "templateUrl": "project/html/message/message.html",
           "requiredPermissions": [
             {
               "role": "ADMIN",
               "logical": "OR",
               "permissions": [
-                "MAIL_SETTING:READ"
+                "MESSAGE_SETTING:READ"
               ]
             }
           ]

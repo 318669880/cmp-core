@@ -53,20 +53,20 @@ public class SystemParameterController {
     }
 
     @GetMapping("/mail/info")
-    @RequiresPermissions(PermissionConstants.MAIL_SETTING_READ)
+    @RequiresPermissions(PermissionConstants.MESSAGE_SETTING_READ)
     public Object mailInfo() {
         return systemParameterService.mailInfo(ParamConstants.Classify.MAIL.getValue());
     }
 
 
     @PostMapping("/mail/info/enable")
-    @RequiresPermissions(PermissionConstants.MAIL_SETTING_EDIT)
+    @RequiresPermissions(PermissionConstants.MESSAGE_SETTING_EDIT)
     public void editMailInfoEnable(@RequestBody SystemParameter parameter) {
         systemParameterService.editMailInfoAble(parameter);
     }
 
     @PostMapping("/mail/info")
-    @RequiresPermissions(PermissionConstants.MAIL_SETTING_EDIT)
+    @RequiresPermissions(PermissionConstants.MESSAGE_SETTING_EDIT)
     public void editMailInfo(@RequestBody List<SystemParameter> parameters) {
         systemParameterService.editMailInfo(parameters);
     }

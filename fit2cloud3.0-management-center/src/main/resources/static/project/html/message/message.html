@@ -105,7 +105,7 @@
 
                         <md-button class="md-raised md-primary" ng-disabled="!connectionEnable || UIFrom.$invalid"
                                    ng-click="testConnection()">
-                            {{'i18n_test_connection' | translator:'测试连接'}}
+                            {{'i18n_test' | translator:'测试'}}
                         </md-button>
 
                         <md-button class="md-raised md-primary" ng-disabled="UIFrom.$invalid"
@@ -154,7 +154,9 @@
                                                 ng-if="param.paramKey===wechat.secret">
                                 <!-- Use floating label instead of placeholder -->
                                 <label>secret</label>
-                                <input type="text"
+                                <i id="eye1" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('secret','eye1')" ng-if="isSave"></i>
+                                <input id="secret"
+                                       type="password"
                                        ng-model="param.paramValue"
                                        placeholder="secret"
                                        ng-disabled="!isSave"
@@ -173,12 +175,19 @@
                                        autocomplete="new-password">
                             </md-input-container>
                         </div>
+                        <div>
+                            <a href="https://work.weixin.qq.com/api/doc/90000/90135/90665"
+                               target="_blank" style="color:#004A71">企业微信基本概念</a>
+                            <br/>
+                            <a href="https://work.weixin.qq.com/api/doc/90000/90135/90312"
+                               target="_blank" style="color:#004A71">企业微信消息频率限制</a>
+                        </div>
                     </form>
                     <div layout="row" layout-align="center" layout-margin has-permission="MESSAGE_SETTING:READ+EDIT">
 
                         <md-button class="md-raised md-primary" ng-disabled="!connectionEnable || WechatForm.$invalid"
                                    ng-click="testConnection()">
-                            {{'i18n_test_connection' | translator:'测试连接'}}
+                            {{'i18n_test' | translator:'测试'}}
                         </md-button>
 
                         <md-button class="md-raised md-primary" ng-disabled="WechatForm.$invalid"

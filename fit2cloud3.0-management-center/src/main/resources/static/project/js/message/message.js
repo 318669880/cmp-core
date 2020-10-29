@@ -4,6 +4,7 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
 
     $scope.clickTab = function (tab) {
         $scope.tab = tab;
+        $scope.isSave = false;
         $scope.uiInfo();
     };
 
@@ -42,7 +43,7 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
         //     anon: "smtp.anon",
         // };
 
-        $scope.loadingLayer = HttpUtils.get("system/parameter/mail/info/" + $scope.tab, function (rep) {
+        $scope.loadingLayer = HttpUtils.get("system/parameter/message/info/" + $scope.tab, function (rep) {
             $scope.params = rep.data;
             $scope.params2 = angular.copy(rep.data);
         });
@@ -51,7 +52,7 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
 
 
     $scope.submit = function (data) {
-        $scope.loadingLayer = HttpUtils.post("system/parameter/mail/info/" + $scope.tab, data, function () {
+        $scope.loadingLayer = HttpUtils.post("system/parameter/message/info/" + $scope.tab, data, function () {
             Notification.success(Translator.get("i18n_mc_update_success"));
             $scope.uiInfo();
             $scope.clickSave();
@@ -90,12 +91,16 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
             data[param.paramKey] = param.paramValue;
         });
 
-        $scope.loadingLayer = HttpUtils.post("system/parameter/mail/testConnection", data, function () {
-            Notification.success(Translator.get("i18n_mail_connect_success"));
+        $scope.loadingLayer = HttpUtils.post("system/parameter/message/testConnection/" + $scope.tab, data, function () {
+            Notification.success(Translator.get("i18n_test_success"));
             $scope.connectionEnable = true;
         }, function (rep) {
-            Notification.danger(Translator.get("i18n_mail_connect_fail") + ", " + rep.message);
+            Notification.danger(Translator.get("i18n_test_fail") + ", " + rep.message);
             $scope.connectionEnable = true;
         })
-    }
+    };
+
+    $scope.view = function (password, eye) {
+        eyeService.view("#" + password, "#" + eye);
+    };
 });

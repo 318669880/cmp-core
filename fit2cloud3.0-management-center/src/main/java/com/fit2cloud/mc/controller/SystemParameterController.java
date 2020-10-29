@@ -52,7 +52,7 @@ public class SystemParameterController {
         systemParameterService.editUiInfo(files, parameter);
     }
 
-    @GetMapping("/mail/info/{type}")
+    @GetMapping("/message/info/{type}")
     @RequiresPermissions(PermissionConstants.MESSAGE_SETTING_READ)
     public Object mailInfo(@PathVariable String type) {
         switch (type) {
@@ -74,7 +74,7 @@ public class SystemParameterController {
         systemParameterService.editMailInfoAble(parameter);
     }
 
-    @PostMapping("/mail/info/{type}")
+    @PostMapping("/message/info/{type}")
     @RequiresPermissions(PermissionConstants.MESSAGE_SETTING_EDIT)
     public void editMailInfo(@PathVariable String type, @RequestBody List<SystemParameter> parameters) {
         switch (type) {
@@ -90,11 +90,21 @@ public class SystemParameterController {
             default:
                 break;
         }
-
     }
 
-    @PostMapping("/mail/testConnection")
-    public void testConnection(@RequestBody HashMap<String, String> hashMap) {
-        systemParameterService.testConnection(hashMap);
+    @PostMapping("/message/testConnection/{type}")
+    public void testConnection(@PathVariable String type, @RequestBody HashMap<String, String> hashMap) {
+        switch (type) {
+            case "mail":
+                systemParameterService.testConnection(hashMap);
+                break;
+            case "wechat":
+                systemParameterService.testWechat(hashMap);
+                break;
+            case "dingtalk":
+                break;
+            default:
+                break;
+        }
     }
 }

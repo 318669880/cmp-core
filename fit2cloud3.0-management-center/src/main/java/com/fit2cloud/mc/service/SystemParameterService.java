@@ -105,21 +105,43 @@ public class SystemParameterService {
         return dtoList;
     }
 
-    public Object mailInfo(String type) {
+    public Object messageInfo(String type) {
         List<SystemParameter> paramList = this.getParamList(type);
         if (CollectionUtils.isEmpty(paramList)) {
             paramList = new ArrayList<>();
-            ParamConstants.MAIL[] values = ParamConstants.MAIL.values();
-            for (ParamConstants.MAIL value : values) {
-                SystemParameter systemParameter = new SystemParameter();
-                if (value.equals(ParamConstants.MAIL.PASSWORD)) {
-                    systemParameter.setType(ParamConstants.Type.PASSWORD.getValue());
-                } else {
-                    systemParameter.setType(ParamConstants.Type.TEXT.getValue());
+            if (type.equalsIgnoreCase(ParamConstants.Classify.MAIL.getValue())) {
+                ParamConstants.MAIL[] values = ParamConstants.MAIL.values();
+                for (ParamConstants.MAIL value : values) {
+                    SystemParameter systemParameter = new SystemParameter();
+                    if (value.equals(ParamConstants.MAIL.PASSWORD)) {
+                        systemParameter.setType(ParamConstants.Type.PASSWORD.getValue());
+                    } else {
+                        systemParameter.setType(ParamConstants.Type.TEXT.getValue());
+                    }
+                    systemParameter.setParamKey(value.getKey());
+                    systemParameter.setSort(value.getValue());
+                    paramList.add(systemParameter);
                 }
-                systemParameter.setParamKey(value.getKey());
-                systemParameter.setSort(value.getValue());
-                paramList.add(systemParameter);
+            }
+            if (type.equalsIgnoreCase(ParamConstants.Classify.WECHAT.getValue())) {
+                ParamConstants.WECHAT[] values = ParamConstants.WECHAT.values();
+                for (ParamConstants.WECHAT value : values) {
+                    SystemParameter systemParameter = new SystemParameter();
+                    systemParameter.setType(ParamConstants.Type.TEXT.getValue());
+                    systemParameter.setParamKey(value.getKey());
+                    systemParameter.setSort(value.getValue());
+                    paramList.add(systemParameter);
+                }
+            }
+            if (type.equalsIgnoreCase(ParamConstants.Classify.DINGTALK.getValue())) {
+                ParamConstants.DINGTALK[] values = ParamConstants.DINGTALK.values();
+                for (ParamConstants.DINGTALK value : values) {
+                    SystemParameter systemParameter = new SystemParameter();
+                    systemParameter.setType(ParamConstants.Type.TEXT.getValue());
+                    systemParameter.setParamKey(value.getKey());
+                    systemParameter.setSort(value.getValue());
+                    paramList.add(systemParameter);
+                }
             }
         } else {
             paramList.stream().filter(param -> param.getParamKey().equals(ParamConstants.MAIL.PASSWORD.getKey())).forEach(param -> {
@@ -131,8 +153,8 @@ public class SystemParameterService {
         return paramList;
     }
 
-    public void editMailInfo(List<SystemParameter> parameters) {
-        List<SystemParameter> paramList = this.getParamList(ParamConstants.Classify.MAIL.getValue());
+    public void editMessageInfo(List<SystemParameter> parameters, String type) {
+        List<SystemParameter> paramList = this.getParamList(type);
         boolean empty = paramList.size() < 2;
         parameters.forEach(parameter -> {
             if (parameter.getParamKey().equals(ParamConstants.MAIL.PASSWORD.getKey())) {

@@ -1,5 +1,11 @@
 ProjectApp.controller('MessageController', function ($scope, $http, Notification, eyeService, HttpUtils, Translator) {
     $scope.isSave = false;
+    $scope.tab = 'mail';
+
+    $scope.clickTab = function (tab) {
+        $scope.tab = tab;
+        $scope.uiInfo();
+    };
 
     $scope.clickSave = function () {
         $scope.isSave = !$scope.isSave;
@@ -20,8 +26,23 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
             tls: "smtp.tls",
             anon: "smtp.anon",
         };
+        $scope.wechat = {
+            cropId: "wechat.cropId",
+            agentId: "wechat.agentId",
+            secret: "wechat.secret",
+            testUser: "wechat.testUser",
+        };
+        // $scope.dingtalk = {
+        //     port: "smtp.port",
+        //     account: "smtp.account",
+        //     password: "smtp.password",
+        //     server: "smtp.server",
+        //     ssl: "smtp.ssl",
+        //     tls: "smtp.tls",
+        //     anon: "smtp.anon",
+        // };
 
-        $scope.loadingLayer = HttpUtils.get("system/parameter/mail/info", function (rep) {
+        $scope.loadingLayer = HttpUtils.get("system/parameter/mail/info/" + $scope.tab, function (rep) {
             $scope.params = rep.data;
             $scope.params2 = angular.copy(rep.data);
         });
@@ -30,7 +51,7 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
 
 
     $scope.submit = function (data) {
-        $scope.loadingLayer = HttpUtils.post("system/parameter/mail/info", data, function () {
+        $scope.loadingLayer = HttpUtils.post("system/parameter/mail/info/" + $scope.tab, data, function () {
             Notification.success(Translator.get("i18n_mc_update_success"));
             $scope.uiInfo();
             $scope.clickSave();

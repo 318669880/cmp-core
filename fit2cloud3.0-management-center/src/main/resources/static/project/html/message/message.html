@@ -7,7 +7,7 @@
             </div>
         </md-toolbar>
         <md-tabs md-border-bottom layout-fill="">
-            <md-tab label="{{'i18n_mail_settings' | translator:'邮件服务设置'}}">
+            <md-tab label="{{'i18n_mail_settings' | translator:'邮件服务设置'}}" ng-click="clickTab('mail')">
                 <md-content flex="100">
                     <form name="UIFrom" class="md-padding">
                         <div ng-repeat=" param in params">
@@ -122,10 +122,80 @@
                     </div>
                 </md-content>
             </md-tab>
-            <md-tab label="{{'i18n_wechat_settings' | translator:'企业微信设置'}}">
-                wechat
+            <md-tab label="{{'i18n_wechat_settings' | translator:'企业微信设置'}}" ng-click="clickTab('wechat')">
+                <md-content flex="100">
+                    <form name="WechatForm" class="md-padding">
+                        <div ng-repeat="param in params">
+                            <md-input-container class="md-icon-float md-block"
+                                                ng-if="param.paramKey===wechat.cropId">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>cropid</label>
+                                <input type="text"
+                                       ng-model="param.paramValue"
+                                       placeholder="cropid"
+                                       ng-disabled="!isSave"
+                                       autocomplete="new-password"
+                                       required>
+                            </md-input-container>
+
+                            <md-input-container class="md-icon-float md-block"
+                                                ng-if="param.paramKey===wechat.agentId">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>agentid</label>
+                                <input type="text"
+                                       ng-model="param.paramValue"
+                                       placeholder="agentid"
+                                       ng-disabled="!isSave"
+                                       autocomplete="new-password"
+                                       required>
+                            </md-input-container>
+
+                            <md-input-container class="md-icon-float md-block"
+                                                ng-if="param.paramKey===wechat.secret">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>secret</label>
+                                <input type="text"
+                                       ng-model="param.paramValue"
+                                       placeholder="secret"
+                                       ng-disabled="!isSave"
+                                       autocomplete="new-password"
+                                       required>
+                            </md-input-container>
+
+                            <md-input-container class="md-icon-float md-block"
+                                                ng-if="param.paramKey===wechat.testUser">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>{{'i18n_test_user'|translator:'测试用户'}}</label>
+                                <input type="text"
+                                       ng-model="param.paramValue"
+                                       placeholder="{{'i18n_test_user'|translator:'测试用户'}}"
+                                       ng-disabled="!isSave"
+                                       autocomplete="new-password">
+                            </md-input-container>
+                        </div>
+                    </form>
+                    <div layout="row" layout-align="center" layout-margin has-permission="MESSAGE_SETTING:READ+EDIT">
+
+                        <md-button class="md-raised md-primary" ng-disabled="!connectionEnable || WechatForm.$invalid"
+                                   ng-click="testConnection()">
+                            {{'i18n_test_connection' | translator:'测试连接'}}
+                        </md-button>
+
+                        <md-button class="md-raised md-primary" ng-disabled="WechatForm.$invalid"
+                                   ng-click="submit(params)" ng-if="isSave">
+                            {{'i18n_save' | translator:'保存'}}
+                        </md-button>
+                        <md-button class="md-raised" ng-click="clickSave()" ng-if="isSave">
+                            {{'i18n_cancel' | translator:'取消'}}
+                        </md-button>
+                        <md-button class="md-raised md-primary"
+                                   ng-click="edit()" ng-if="!isSave">
+                            {{'i18n_edit' | translator:'编辑'}}
+                        </md-button>
+                    </div>
+                </md-content>
             </md-tab>
-            <md-tab label="{{'i18n_dingtalk_settings' | translator:'钉钉设置'}}">
+            <md-tab label="{{'i18n_dingtalk_settings' | translator:'钉钉设置'}}" ng-click="clickTab('dingtalk')">
                 dingtalk
             </md-tab>
         </md-tabs>

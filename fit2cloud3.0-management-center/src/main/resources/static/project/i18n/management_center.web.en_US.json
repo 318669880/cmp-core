@@ -283,5 +283,6 @@
   "i18n_organization_operate_delete": "Delete",
   "i18n_wechat_settings": "Wechat Settings",
   "i18n_dingtalk_settings": "Dingtalk Settings",
-  "i18n_menu_message_settings": "Message Notification"
+  "i18n_menu_message_settings": "Message Notification",
+  "i18n_test_user": "Test User"
 }

@@ -282,5 +282,6 @@
   "i18n_organization_operate_delete": "删除",
   "i18n_wechat_settings": "企业微信设置",
   "i18n_dingtalk_settings": "钉钉设置",
-  "i18n_menu_message_settings": "消息通知"
+  "i18n_menu_message_settings": "消息通知",
+  "i18n_test_user": "测试用户"
 }

@@ -1,6 +1,15 @@
 package com.fit2cloud.mc.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiGettokenRequest;
+import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
+import com.dingtalk.api.request.OapiUserGetByMobileRequest;
+import com.dingtalk.api.response.OapiGettokenResponse;
+import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
+import com.dingtalk.api.response.OapiUserGetByMobileResponse;
 import com.fit2cloud.commons.server.base.domain.FileStore;
 import com.fit2cloud.commons.server.base.domain.SystemParameter;
 import com.fit2cloud.commons.server.base.domain.SystemParameterExample;
@@ -17,12 +26,18 @@ import com.fit2cloud.commons.utils.EncryptUtils;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.dto.SystemParameterDTO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -50,9 +65,7 @@ public class SystemParameterService {
     @Resource
     private FileStoreMapper fileStoreMapper;
     @Resource
-    private WechatService wechatService;
-    @Resource
-    private DingtalkService dingtalkService;
+    private RestTemplate restTemplate;
 
     public String getValue(String key) {
         SystemParameter systemParameter = parameterMapper.selectByPrimaryKey(key);
@@ -218,16 +231,85 @@ public class SystemParameterService {
     }
 
     public void testWechat(HashMap<String, String> hashMap) {
-        NotificationBasicResponse response = wechatService.sendTextMessageToUser("本条消息由CMP平台发送，仅为测试。", hashMap.get(ParamConstants.WECHAT.TESTUSER.getKey()));
-        if (response.getErrcode() != 0) {
-            F2CException.throwException(response.getErrmsg());
+        String cropId = hashMap.get(ParamConstants.WECHAT.CROPID.getKey());
+        String secret = hashMap.get(ParamConstants.WECHAT.SECRET.getKey());
+        Map<String, String> params = new HashMap<>();
+        params.put("corpid", cropId);
+        params.put("corpsecret", secret);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={corpid}&corpsecret={corpsecret}", String.class, params);
+        if (responseEntity.getStatusCodeValue() != 200) {
+            F2CException.throwException("request failed.");
+        }
+        String body = responseEntity.getBody();
+        JSONObject jsonObject = JSONObject.parseObject(body);
+        if (jsonObject.getIntValue("errcode") != 0) {
+            F2CException.throwException(jsonObject.getString("errmsg"));
+        }
+        String token = jsonObject.getString("access_token");
+        String url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + token;
+        String agentId = hashMap.get(ParamConstants.WECHAT.AGENTID.getKey());
+        long l = 0;
+        try {
+            l = Long.parseLong(agentId);
+        } catch (Exception e) {
+            F2CException.throwException("agentId is not valid.");
+        }
+        Map<String, Object> paramsStr = new HashMap<>();
+        Map<String, String> contentStr = new HashMap<>();
+        contentStr.put("content", "本消息由CMP发送，仅为测试。");
+        paramsStr.put("msgtype", "text");
+        paramsStr.put("agentid", l);
+        paramsStr.put("text", contentStr);
+        paramsStr.put("touser", hashMap.get(ParamConstants.WECHAT.TESTUSER.getKey()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsStr, headers);
+
+        ResponseEntity<NotificationBasicResponse> responseResponseEntity = restTemplate.postForEntity(url, request, NotificationBasicResponse.class);
+        if (responseResponseEntity.getBody().getErrcode() != 0) {
+            F2CException.throwException(responseResponseEntity.getBody().getErrmsg());
         }
     }
 
     public void testDingtalk(HashMap<String, String> hashMap) throws Exception {
-        NotificationBasicResponse response = dingtalkService.sendTextMessageToUser("本条消息由CMP平台发送，仅为测试。", hashMap.get(ParamConstants.DINGTALK.TESTUSER.getKey()));
+        String ak = hashMap.get(ParamConstants.DINGTALK.APPKEY.getKey());
+        String sk = hashMap.get(ParamConstants.DINGTALK.APPSECRET.getKey());
+        DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
+        OapiGettokenRequest request = new OapiGettokenRequest();
+        request.setAppkey(ak);
+        request.setAppsecret(sk);
+        request.setHttpMethod("GET");
+        OapiGettokenResponse response = client.execute(request);
         if (response.getErrcode() != 0) {
             F2CException.throwException(response.getErrmsg());
+        }
+        String token = response.getAccessToken();
+
+        DingTalkClient client1 = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get_by_mobile");
+        OapiUserGetByMobileRequest request1 = new OapiUserGetByMobileRequest();
+        request1.setMobile(hashMap.get(ParamConstants.DINGTALK.TESTUSER.getKey()));
+        OapiUserGetByMobileResponse execute = client1.execute(request1, token);
+        if (execute.getErrcode() != 0) {
+            F2CException.throwException(execute.getErrmsg());
+        }
+        String userId = execute.getUserid();
+        String agentId = hashMap.get(ParamConstants.DINGTALK.AGENTID.getKey());
+
+        DingTalkClient client2 = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2");
+        OapiMessageCorpconversationAsyncsendV2Request request2 = new OapiMessageCorpconversationAsyncsendV2Request();
+        request2.setUseridList(userId);
+        request2.setAgentId(Long.valueOf(agentId));
+        request2.setToAllUser(false);
+
+        OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
+        msg.setMsgtype("text");
+        msg.setText(new OapiMessageCorpconversationAsyncsendV2Request.Text());
+        msg.getText().setContent("本条消息由CMP平台发送，仅为测试。");
+        request2.setMsg(msg);
+        OapiMessageCorpconversationAsyncsendV2Response execute1 = client2.execute(request2, token);
+        if (execute1.getErrcode() != 0) {
+            F2CException.throwException(execute1.getErrmsg());
         }
     }
 

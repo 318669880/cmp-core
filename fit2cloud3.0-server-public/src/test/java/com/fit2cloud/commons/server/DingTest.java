@@ -10,6 +10,7 @@ import com.dingtalk.api.response.OapiGettokenResponse;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.dingtalk.api.response.OapiRobotSendResponse;
 import com.dingtalk.api.response.OapiUserGetByMobileResponse;
+import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Mac;
@@ -62,6 +63,7 @@ public class DingTest {
         OapiUserGetByMobileRequest request1 = new OapiUserGetByMobileRequest();
         request1.setMobile("18368109081");
         OapiUserGetByMobileResponse execute = client1.execute(request1, response.getAccessToken());
+        System.out.println(new Gson().toJson(execute));
 
         DingTalkClient client2 = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2");
         OapiMessageCorpconversationAsyncsendV2Request request2 = new OapiMessageCorpconversationAsyncsendV2Request();
@@ -75,6 +77,7 @@ public class DingTest {
         msg.getText().setContent("test123");
         request2.setMsg(msg);
         OapiMessageCorpconversationAsyncsendV2Response response2 = client2.execute(request2, response.getAccessToken());
+        System.out.println(new Gson().toJson(response2));
     }
 
 }

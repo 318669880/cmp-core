@@ -13,6 +13,7 @@ import com.fit2cloud.commons.server.base.mapper.SystemParameterMapper;
 import com.fit2cloud.commons.server.constants.ParamConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.model.NotificationBasicResponse;
+import com.fit2cloud.sdk.model.F2CECSMetric;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,9 @@ public class DingtalkService {
         request.setAppsecret(sk);
         request.setHttpMethod("GET");
         OapiGettokenResponse response = client.execute(request);
+        if (response.getErrcode() != 0) {
+            F2CException.throwException(response.getErrmsg());
+        }
         return response.getAccessToken();
     }
 
@@ -45,6 +49,9 @@ public class DingtalkService {
         OapiUserGetByMobileRequest request = new OapiUserGetByMobileRequest();
         request.setMobile(mobile);
         OapiUserGetByMobileResponse execute = client.execute(request, token);
+        if (execute.getErrcode() != 0) {
+            F2CException.throwException(execute.getErrmsg());
+        }
         return execute.getUserid();
     }
 
@@ -73,6 +80,9 @@ public class DingtalkService {
         msg.getText().setContent(content);
         request.setMsg(msg);
         OapiMessageCorpconversationAsyncsendV2Response execute = client.execute(request, token);
+        if (execute.getErrcode() != 0) {
+            F2CException.throwException(execute.getErrmsg());
+        }
         NotificationBasicResponse response = new NotificationBasicResponse();
         response.setErrcode(execute.getErrcode());
         response.setErrmsg(execute.getErrmsg());

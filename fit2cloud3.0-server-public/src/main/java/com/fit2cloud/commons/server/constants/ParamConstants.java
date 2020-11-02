@@ -160,13 +160,10 @@ public interface ParamConstants {
     }
 
     enum DINGTALK {
-        SERVER("smtp.server", 1),
-        PORT("smtp.port", 2),
-        ACCOUNT("smtp.account", 3),
-        PASSWORD("smtp.password", 4),
-        SSL("smtp.ssl", 5),
-        TLS("smtp.tls", 6),
-        ANON("smtp.anon",7);
+        APPKEY("dingtalk.appKey", 1),
+        AGENTID("dingtalk.agentId", 2),
+        APPSECRET("dingtalk.appSecret", 3),
+        TESTUSER("dingtalk.testUser", 4);
 
         private String key;
         private Integer value;

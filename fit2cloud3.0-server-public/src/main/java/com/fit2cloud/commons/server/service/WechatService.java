@@ -5,8 +5,7 @@ import com.fit2cloud.commons.server.base.domain.SystemParameter;
 import com.fit2cloud.commons.server.base.mapper.SystemParameterMapper;
 import com.fit2cloud.commons.server.constants.ParamConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
-import com.fit2cloud.commons.server.model.wechat.BasicResponse;
-import com.google.gson.Gson;
+import com.fit2cloud.commons.server.model.NotificationBasicResponse;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
@@ -49,7 +48,7 @@ public class WechatService {
         return jsonObject.getString("access_token");
     }
 
-    public BasicResponse sendTextMessageToUser(String content, String... to) {
+    public NotificationBasicResponse sendTextMessageToUser(String content, String... to) {
         if (StringUtils.isEmpty(content) || ArrayUtils.isEmpty(to)) {
             F2CException.throwException("required params can not be empty.");
         }
@@ -74,7 +73,7 @@ public class WechatService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<BasicResponse> responseResponseEntity = restTemplate.postForEntity(url, request, BasicResponse.class);
+        ResponseEntity<NotificationBasicResponse> responseResponseEntity = restTemplate.postForEntity(url, request, NotificationBasicResponse.class);
         return responseResponseEntity.getBody();
     }
 

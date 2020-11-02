@@ -1,18 +1,18 @@
-package com.fit2cloud.commons.server.model.wechat;
+package com.fit2cloud.commons.server.model;
 
 /**
  * @Author gin
  * @Date 2020/10/29 2:10 下午
  */
-public class BasicResponse {
-    private Integer errcode;
+public class NotificationBasicResponse {
+    private Long errcode;
     private String errmsg;
 
-    public Integer getErrcode() {
+    public Long getErrcode() {
         return errcode;
     }
 
-    public void setErrcode(Integer errcode) {
+    public void setErrcode(Long errcode) {
         this.errcode = errcode;
     }
 

@@ -93,7 +93,7 @@ public class SystemParameterController {
     }
 
     @PostMapping("/message/testConnection/{type}")
-    public void testConnection(@PathVariable String type, @RequestBody HashMap<String, String> hashMap) {
+    public void testConnection(@PathVariable String type, @RequestBody HashMap<String, String> hashMap) throws Exception {
         switch (type) {
             case "mail":
                 systemParameterService.testConnection(hashMap);
@@ -102,6 +102,7 @@ public class SystemParameterController {
                 systemParameterService.testWechat(hashMap);
                 break;
             case "dingtalk":
+                systemParameterService.testDingtalk(hashMap);
                 break;
             default:
                 break;

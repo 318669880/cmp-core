@@ -284,5 +284,10 @@
   "i18n_wechat_settings": "Wechat Settings",
   "i18n_dingtalk_settings": "Dingtalk Settings",
   "i18n_menu_message_settings": "Message Notification",
-  "i18n_test_user": "Test User"
+  "i18n_test_user": "Test User",
+  "i18n_pls_input_user": "Please input test user.",
+  "i18n_wechat_basic_url": "Wechat Info",
+  "i18n_wechat_limit_url": "Wechat Api Limit",
+  "i18n_dingtalk_basic_url": "Dingtalk Info",
+  "i18n_dingtalk_limit_url": "Dingtalk Api Limit"
 }

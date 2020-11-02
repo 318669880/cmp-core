@@ -9,7 +9,8 @@ import com.fit2cloud.commons.server.base.mapper.SystemParameterMapper;
 import com.fit2cloud.commons.server.constants.ParamConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
-import com.fit2cloud.commons.server.model.wechat.BasicResponse;
+import com.fit2cloud.commons.server.model.NotificationBasicResponse;
+import com.fit2cloud.commons.server.service.DingtalkService;
 import com.fit2cloud.commons.server.service.WechatService;
 import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.EncryptUtils;
@@ -18,7 +19,6 @@ import com.fit2cloud.mc.dto.SystemParameterDTO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
@@ -51,6 +51,8 @@ public class SystemParameterService {
     private FileStoreMapper fileStoreMapper;
     @Resource
     private WechatService wechatService;
+    @Resource
+    private DingtalkService dingtalkService;
 
     public String getValue(String key) {
         SystemParameter systemParameter = parameterMapper.selectByPrimaryKey(key);
@@ -216,9 +218,16 @@ public class SystemParameterService {
     }
 
     public void testWechat(HashMap<String, String> hashMap) {
-        BasicResponse basicResponse = wechatService.sendTextMessageToUser("测试消息...", hashMap.get(ParamConstants.WECHAT.TESTUSER.getKey()));
-        if (basicResponse.getErrcode() != 0) {
-            F2CException.throwException(basicResponse.getErrmsg());
+        NotificationBasicResponse response = wechatService.sendTextMessageToUser("本条消息由CMP平台发送，仅为测试。", hashMap.get(ParamConstants.WECHAT.TESTUSER.getKey()));
+        if (response.getErrcode() != 0) {
+            F2CException.throwException(response.getErrmsg());
+        }
+    }
+
+    public void testDingtalk(HashMap<String, String> hashMap) throws Exception {
+        NotificationBasicResponse response = dingtalkService.sendTextMessageToUser("本条消息由CMP平台发送，仅为测试。", hashMap.get(ParamConstants.DINGTALK.TESTUSER.getKey()));
+        if (response.getErrcode() != 0) {
+            F2CException.throwException(response.getErrmsg());
         }
     }
 

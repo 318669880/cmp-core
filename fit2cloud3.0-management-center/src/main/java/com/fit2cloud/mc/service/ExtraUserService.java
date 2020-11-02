@@ -148,7 +148,7 @@ public class ExtraUserService {
                         }
                     }
                 });
-                LogUtil.info("End sync user," + sum + "10 records in total");
+                LogUtil.info("End sync user," + sum + " records in total");
             } catch (Exception e) {
                 LogUtil.error("Synchronization user exception", e);
             }

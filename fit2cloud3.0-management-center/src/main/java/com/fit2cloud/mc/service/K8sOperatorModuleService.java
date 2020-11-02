@@ -55,7 +55,7 @@ public class K8sOperatorModuleService {
             commonThreadPool.addTask(() ->{
                 try{
                     ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
-                    String action = modelBasic.getPodNum() > podNumber ? ResourceOperation.EXPANSION : ResourceOperation.SHRINK;
+                    String action = podNumber > modelBasic.getPodNum() ? ResourceOperation.EXPANSION : ResourceOperation.SHRINK;
                     String msg = "scale pod from " + modelBasic.getPodNum() + " to " + podNumber;
                     LogUtil.info("Begin to operation {} ,: " + msg, module);
                     modelManagerService.updateModelBasicPodNum(module, podNumber);

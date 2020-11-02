@@ -38,7 +38,7 @@ public class K8sUtil {
         String chartsDir = tmp_dir + "/helm-charts/";
         String templatesDir = "templates/";
 
-        String action = checkServiceExist(serviceName, command, result) ? ResourceOperation.INSTALL : ResourceOperation.UPDATE;
+        String action = checkServiceExist(serviceName, command, result) ? ResourceOperation.UPDATE : ResourceOperation.INSTALL;
         result.setLength(0);
 
         try{

@@ -13,7 +13,6 @@ import com.fit2cloud.commons.server.base.mapper.SystemParameterMapper;
 import com.fit2cloud.commons.server.constants.ParamConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.model.NotificationBasicResponse;
-import com.fit2cloud.sdk.model.F2CECSMetric;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

@@ -29,9 +29,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         initialize: function () {
         },
         initAddress: function () {
-            HttpUtils.post(this._loadAddressUrl, {} ,function (res) {
-                this.address = res.data;
-            }.bind(this))
+            if(!this.address){
+                this.address = 'https://f2c-index.oss-cn-beijing.aliyuncs.com';
+            }
+            // HttpUtils.post(this._loadAddressUrl, {} ,function (res) {
+            //     this.address = res.data;
+            // }.bind(this))
         },
 
         loadData: function() {

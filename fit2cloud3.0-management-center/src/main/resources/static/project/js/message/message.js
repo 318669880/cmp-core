@@ -33,15 +33,12 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
             secret: "wechat.secret",
             testUser: "wechat.testUser",
         };
-        // $scope.dingtalk = {
-        //     port: "smtp.port",
-        //     account: "smtp.account",
-        //     password: "smtp.password",
-        //     server: "smtp.server",
-        //     ssl: "smtp.ssl",
-        //     tls: "smtp.tls",
-        //     anon: "smtp.anon",
-        // };
+        $scope.dingtalk = {
+            appKey: "dingtalk.appKey",
+            agentId: "dingtalk.agentId",
+            appSecret: "dingtalk.appSecret",
+            testUser: "dingtalk.testUser",
+        };
 
         $scope.loadingLayer = HttpUtils.get("system/parameter/message/info/" + $scope.tab, function (rep) {
             $scope.params = rep.data;
@@ -90,6 +87,21 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
         angular.forEach($scope.params, function (param) {
             data[param.paramKey] = param.paramValue;
         });
+
+        if ($scope.tab === 'wechat'){
+            if (!data['wechat.testUser']){
+                Notification.danger(Translator.get("i18n_pls_input_user"));
+                $scope.connectionEnable = true;
+                return;
+            }
+        }
+        if ($scope.tab === 'dingtalk'){
+            if (!data['dingtalk.testUser']){
+                Notification.danger(Translator.get("i18n_pls_input_user"));
+                $scope.connectionEnable = true;
+                return;
+            }
+        }
 
         $scope.loadingLayer = HttpUtils.post("system/parameter/message/testConnection/" + $scope.tab, data, function () {
             Notification.success(Translator.get("i18n_test_success"));

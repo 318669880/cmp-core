@@ -154,7 +154,8 @@
                                                 ng-if="param.paramKey===wechat.secret">
                                 <!-- Use floating label instead of placeholder -->
                                 <label>secret</label>
-                                <i id="eye1" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('secret','eye1')" ng-if="isSave"></i>
+                                <i id="eye1" class="fa fa-eye f2c-eye" aria-hidden="true"
+                                   ng-click="view('secret','eye1')" ng-if="isSave"></i>
                                 <input id="secret"
                                        type="password"
                                        ng-model="param.paramValue"
@@ -170,17 +171,19 @@
                                 <label>{{'i18n_test_user'|translator:'测试用户'}}</label>
                                 <input type="text"
                                        ng-model="param.paramValue"
-                                       placeholder="{{'i18n_test_user'|translator:'测试用户'}}"
+                                       placeholder="User Id"
                                        ng-disabled="!isSave"
                                        autocomplete="new-password">
                             </md-input-container>
                         </div>
                         <div>
                             <a href="https://work.weixin.qq.com/api/doc/90000/90135/90665"
-                               target="_blank" style="color:#004A71">企业微信基本概念</a>
+                               target="_blank"
+                               style="color:#004A71">{{'i18n_wechat_basic_url'|translator:'企业微信基本概念'}}</a>
                             <br/>
                             <a href="https://work.weixin.qq.com/api/doc/90000/90135/90312"
-                               target="_blank" style="color:#004A71">企业微信消息频率限制</a>
+                               target="_blank"
+                               style="color:#004A71">{{'i18n_wechat_limit_url'|translator:'企业微信消息频率限制'}}</a>
                         </div>
                     </form>
                     <div layout="row" layout-align="center" layout-margin has-permission="MESSAGE_SETTING:READ+EDIT">
@@ -205,7 +208,89 @@
                 </md-content>
             </md-tab>
             <md-tab label="{{'i18n_dingtalk_settings' | translator:'钉钉设置'}}" ng-click="clickTab('dingtalk')">
-                dingtalk
+                <md-content flex="100">
+                    <form name="DingtalkForm" class="md-padding">
+                        <div ng-repeat="param in params">
+                            <md-input-container class="md-icon-float md-block"
+                                                ng-if="param.paramKey===dingtalk.appKey">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>AppKey</label>
+                                <input type="text"
+                                       ng-model="param.paramValue"
+                                       placeholder="AppKey"
+                                       ng-disabled="!isSave"
+                                       autocomplete="new-password"
+                                       required>
+                            </md-input-container>
+
+                            <md-input-container class="md-icon-float md-block"
+                                                ng-if="param.paramKey===dingtalk.agentId">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>AgentId</label>
+                                <input type="text"
+                                       ng-model="param.paramValue"
+                                       placeholder="AgentId"
+                                       ng-disabled="!isSave"
+                                       autocomplete="new-password"
+                                       required>
+                            </md-input-container>
+
+                            <md-input-container class="md-icon-float md-block"
+                                                ng-if="param.paramKey===dingtalk.appSecret">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>AppSecret</label>
+                                <i id="eye2" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('sk','eye2')"
+                                   ng-if="isSave"></i>
+                                <input id="sk"
+                                       type="password"
+                                       ng-model="param.paramValue"
+                                       placeholder="AppSecret"
+                                       ng-disabled="!isSave"
+                                       autocomplete="new-password"
+                                       required>
+                            </md-input-container>
+
+                            <md-input-container class="md-icon-float md-block"
+                                                ng-if="param.paramKey===dingtalk.testUser">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>{{'i18n_test_user'|translator:'测试用户'}}</label>
+                                <input type="text"
+                                       ng-model="param.paramValue"
+                                       placeholder="mobile"
+                                       ng-disabled="!isSave"
+                                       autocomplete="new-password">
+                            </md-input-container>
+                        </div>
+                        <div>
+                            <a href="https://ding-doc.dingtalk.com/doc#/serverapi2/pgoxpy"
+                               target="_blank"
+                               style="color:#004A71">{{'i18n_dingtalk_basic_url'|translator:'钉钉基本概念'}}</a>
+                            <br/>
+                            <a href="https://ding-doc.dingtalk.com/doc#/faquestions/eovtrt"
+                               target="_blank"
+                               style="color:#004A71">{{'i18n_dingtalk_limit_url'|translator:'钉钉消息频率限制'}}</a>
+                        </div>
+                    </form>
+                    <div layout="row" layout-align="center" layout-margin has-permission="MESSAGE_SETTING:READ+EDIT">
+
+                        <md-button class="md-raised md-primary" ng-disabled="!connectionEnable || DingtalkForm.$invalid"
+                                   ng-click="testConnection()">
+                            {{'i18n_test' | translator:'测试'}}
+                        </md-button>
+
+                        <md-button class="md-raised md-primary" ng-disabled="DingtalkForm.$invalid"
+                                   ng-click="submit(params)" ng-if="isSave">
+                            {{'i18n_save' | translator:'保存'}}
+                        </md-button>
+                        <md-button class="md-raised" ng-click="clickSave()" ng-if="isSave">
+                            {{'i18n_cancel' | translator:'取消'}}
+                        </md-button>
+                        <md-button class="md-raised md-primary"
+                                   ng-click="edit()" ng-if="!isSave">
+                            {{'i18n_edit' | translator:'编辑'}}
+                        </md-button>
+                    </div>
+                </md-content>
             </md-tab>
         </md-tabs>
 

@@ -283,5 +283,10 @@
   "i18n_wechat_settings": "企业微信设置",
   "i18n_dingtalk_settings": "钉钉设置",
   "i18n_menu_message_settings": "消息通知",
-  "i18n_test_user": "测试用户"
+  "i18n_test_user": "测试用户",
+  "i18n_pls_input_user": "请输入测试用户",
+  "i18n_wechat_basic_url": "企业微信基本概念",
+  "i18n_wechat_limit_url": "企业微信消息频率限制",
+  "i18n_dingtalk_basic_url": "钉钉基本概念",
+  "i18n_dingtalk_limit_url": "钉钉消息频率限制"
 }

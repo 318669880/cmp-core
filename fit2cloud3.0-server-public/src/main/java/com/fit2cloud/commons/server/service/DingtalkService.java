@@ -55,11 +55,11 @@ public class DingtalkService {
     }
 
     public NotificationBasicResponse sendTextMessageToUser(String content, String... to) throws Exception {
+        if (ArrayUtils.isEmpty(to)) {
+            F2CException.throwException("Mobile can not be empty.");
+        }
         String token = getAccessToken();
         String agentId = getNotNullValue(ParamConstants.DINGTALK.AGENTID.getKey());
-        if (ArrayUtils.isEmpty(to)) {
-            F2CException.throwException("mobile can not be empty.");
-        }
         StringBuilder stringBuilder = new StringBuilder();
         for (String mobile : to) {
             String userId = getUserIdByMobile(token, mobile);

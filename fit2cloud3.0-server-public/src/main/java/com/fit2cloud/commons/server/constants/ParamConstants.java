@@ -59,6 +59,8 @@ public interface ParamConstants {
 
         KEYCLOAK("keycloak"),
         MAIL("smtp"),
+        WECHAT("wechat"),
+        DINGTALK("dingtalk"),
         UI("ui"),
         REGISTRY("registry");
 
@@ -121,6 +123,55 @@ public interface ParamConstants {
         private Integer value;
 
         MAIL(String key, Integer value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+    }
+
+    enum WECHAT {
+        CROPID("wechat.cropId", 1),
+        AGENTID("wechat.agentId", 2),
+        SECRET("wechat.secret", 3),
+        TESTUSER("wechat.testUser", 4);
+
+        private String key;
+        private Integer value;
+
+        WECHAT(String key, Integer value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+    }
+
+    enum DINGTALK {
+        SERVER("smtp.server", 1),
+        PORT("smtp.port", 2),
+        ACCOUNT("smtp.account", 3),
+        PASSWORD("smtp.password", 4),
+        SSL("smtp.ssl", 5),
+        TLS("smtp.tls", 6),
+        ANON("smtp.anon",7);
+
+        private String key;
+        private Integer value;
+
+        DINGTALK(String key, Integer value) {
             this.key = key;
             this.value = value;
         }

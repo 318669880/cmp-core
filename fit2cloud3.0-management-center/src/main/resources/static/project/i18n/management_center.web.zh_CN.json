@@ -52,7 +52,7 @@
   "i18n_mc_log_save_months": "日志保存月数",
   "i18n_mc_log_details": "日志详情",
   "i18n_mail_settings": "邮件服务设置",
-  "i18n_test_connection": "测试连接",
+  "i18n_test": "测试",
   "i18n_mail_smtp_host": "SMTP主机",
   "i18n_mail_smtp_password": "SMTP密码",
   "i18n_mail_smtp_account": "SMTP账户",
@@ -189,8 +189,8 @@
   "i18n_log_detail": "详情",
   "i18n_log_host": "主机",
   "i18n_log_save_success": "日志保存策略设置成功",
-  "i18n_mail_connect_success": "连接成功",
-  "i18n_mail_connect_fail": "连接失败",
+  "i18n_test_success": "测试成功",
+  "i18n_test_fail": "测试失败",
   "i18n_mc_add_success": "添加成功",
   "i18n_mc_add_fail": "添加失败",
   "i18n_plugin_name": "插件名称",
@@ -282,5 +282,6 @@
   "i18n_organization_operate_delete": "删除",
   "i18n_wechat_settings": "企业微信设置",
   "i18n_dingtalk_settings": "钉钉设置",
-  "i18n_menu_message_settings": "消息通知"
+  "i18n_menu_message_settings": "消息通知",
+  "i18n_test_user": "测试用户"
 }

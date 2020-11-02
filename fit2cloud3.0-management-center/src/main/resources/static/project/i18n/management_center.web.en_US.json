@@ -52,7 +52,7 @@
   "i18n_mc_log_save_months": "months",
   "i18n_mc_log_details": "Log Details",
   "i18n_mail_settings": "Mail Sender",
-  "i18n_test_connection": "Test connection",
+  "i18n_test": "Test",
   "i18n_mail_smtp_host": "SMTP Host",
   "i18n_mail_smtp_password": "SMTP Password",
   "i18n_mail_smtp_account": "SMTP Account",
@@ -189,8 +189,8 @@
   "i18n_log_detail": "Detail",
   "i18n_log_host": "Host",
   "i18n_log_save_success": "Log saving policy set successfully",
-  "i18n_mail_connect_success": "Successful connection",
-  "i18n_mail_connect_fail": "connection failed",
+  "i18n_test_success": "Successful",
+  "i18n_test_fail": "Failed",
   "i18n_mc_add_success": "Add Success",
   "i18n_mc_add_fail": "Add failed",
   "i18n_plugin_name": "Name",
@@ -283,5 +283,6 @@
   "i18n_organization_operate_delete": "Delete",
   "i18n_wechat_settings": "Wechat Settings",
   "i18n_dingtalk_settings": "Dingtalk Settings",
-  "i18n_menu_message_settings": "Message Notification"
+  "i18n_menu_message_settings": "Message Notification",
+  "i18n_test_user": "Test User"
 }

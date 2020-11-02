@@ -52,10 +52,19 @@ public class SystemParameterController {
         systemParameterService.editUiInfo(files, parameter);
     }
 
-    @GetMapping("/mail/info")
+    @GetMapping("/message/info/{type}")
     @RequiresPermissions(PermissionConstants.MESSAGE_SETTING_READ)
-    public Object mailInfo() {
-        return systemParameterService.mailInfo(ParamConstants.Classify.MAIL.getValue());
+    public Object mailInfo(@PathVariable String type) {
+        switch (type) {
+            case "mail":
+                return systemParameterService.messageInfo(ParamConstants.Classify.MAIL.getValue());
+            case "wechat":
+                return systemParameterService.messageInfo(ParamConstants.Classify.WECHAT.getValue());
+            case "dingtalk":
+                return systemParameterService.messageInfo(ParamConstants.Classify.DINGTALK.getValue());
+            default:
+                return null;
+        }
     }
 
 
@@ -65,14 +74,37 @@ public class SystemParameterController {
         systemParameterService.editMailInfoAble(parameter);
     }
 
-    @PostMapping("/mail/info")
+    @PostMapping("/message/info/{type}")
     @RequiresPermissions(PermissionConstants.MESSAGE_SETTING_EDIT)
-    public void editMailInfo(@RequestBody List<SystemParameter> parameters) {
-        systemParameterService.editMailInfo(parameters);
+    public void editMailInfo(@PathVariable String type, @RequestBody List<SystemParameter> parameters) {
+        switch (type) {
+            case "mail":
+                systemParameterService.editMessageInfo(parameters, ParamConstants.Classify.MAIL.getValue());
+                break;
+            case "wechat":
+                systemParameterService.editMessageInfo(parameters, ParamConstants.Classify.WECHAT.getValue());
+                break;
+            case "dingtalk":
+                systemParameterService.editMessageInfo(parameters, ParamConstants.Classify.DINGTALK.getValue());
+                break;
+            default:
+                break;
+        }
     }
 
-    @PostMapping("/mail/testConnection")
-    public void testConnection(@RequestBody HashMap<String, String> hashMap) {
-        systemParameterService.testConnection(hashMap);
+    @PostMapping("/message/testConnection/{type}")
+    public void testConnection(@PathVariable String type, @RequestBody HashMap<String, String> hashMap) {
+        switch (type) {
+            case "mail":
+                systemParameterService.testConnection(hashMap);
+                break;
+            case "wechat":
+                systemParameterService.testWechat(hashMap);
+                break;
+            case "dingtalk":
+                break;
+            default:
+                break;
+        }
     }
 }

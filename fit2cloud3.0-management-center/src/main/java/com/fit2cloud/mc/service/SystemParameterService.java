@@ -126,7 +126,20 @@ public class SystemParameterService {
     }
 
     public Object messageInfo(String type) {
-        List<SystemParameter> paramList = this.getParamList(type);
+        List<SystemParameter> paramList = new ArrayList<>();
+        switch (type) {
+            case "mail":
+                paramList = this.getParamList(ParamConstants.Classify.MAIL.getValue());
+                break;
+            case "wechat":
+                paramList = this.getParamList(ParamConstants.Classify.WECHAT.getValue());
+                break;
+            case "dingtalk":
+                paramList = this.getParamList(ParamConstants.Classify.DINGTALK.getValue());
+                break;
+            default:
+                break;
+        }
         if (CollectionUtils.isEmpty(paramList)) {
             paramList = new ArrayList<>();
             if (type.equalsIgnoreCase(ParamConstants.Classify.MAIL.getValue())) {
@@ -174,7 +187,20 @@ public class SystemParameterService {
     }
 
     public void editMessageInfo(List<SystemParameter> parameters, String type) {
-        List<SystemParameter> paramList = this.getParamList(type);
+        List<SystemParameter> paramList = new ArrayList<>();
+        switch (type) {
+            case "mail":
+                paramList = this.getParamList(ParamConstants.Classify.MAIL.getValue());
+                break;
+            case "wechat":
+                paramList = this.getParamList(ParamConstants.Classify.WECHAT.getValue());
+                break;
+            case "dingtalk":
+                paramList = this.getParamList(ParamConstants.Classify.DINGTALK.getValue());
+                break;
+            default:
+                break;
+        }
         boolean empty = paramList.size() < 2;
         parameters.forEach(parameter -> {
             if (parameter.getParamKey().equals(ParamConstants.MAIL.PASSWORD.getKey())) {

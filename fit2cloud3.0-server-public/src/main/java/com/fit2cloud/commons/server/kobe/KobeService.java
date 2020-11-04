@@ -3,6 +3,7 @@ package com.fit2cloud.commons.server.kobe;
 import com.alibaba.fastjson.JSONObject;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,7 @@ public class KobeService {
             content = header + content;
         }
         String args;
-        if (executePath != null) {
+        if (StringUtils.isNotEmpty(executePath)) {
             args = "executable=" + executePath + " " + content;
         } else {
             args = content;

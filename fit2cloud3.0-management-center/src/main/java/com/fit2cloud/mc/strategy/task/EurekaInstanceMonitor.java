@@ -10,6 +10,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.*;
 import org.springframework.web.client.RestTemplate;
@@ -39,6 +40,7 @@ public class EurekaInstanceMonitor {
 
 
 
+    @Async
     public List<Object> execute(String module, String nodeId, String urlSuffix, ModelNode modelNode){
         String mc_module = environment.getProperty("spring.application.name");
         List<String> serverInfos = eurekaClusterIps(mc_module, modelNode);

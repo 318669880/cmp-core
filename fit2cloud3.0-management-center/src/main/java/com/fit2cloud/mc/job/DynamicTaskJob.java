@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.job;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class DynamicTaskJob {
         future.cancel(true);
     }
 
+    @Async
     public void addTaskWithTime(Runnable runnable, String cron, Long outTime) throws Exception{
         ScheduledFuture<?> future = add(runnable, cron);
         Thread.sleep(outTime);

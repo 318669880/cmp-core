@@ -78,7 +78,8 @@ public class ModelNodeController {
     @PostMapping("/node/stop")
     public void nodeStop( String module, String nodeId) throws Exception{
         nodeOperateService.stop(modelManagerService.select(), module, nodeId);
+        ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
         //执行停止操作后 每5s执行一次检测 30s后销毁定时器
-        dynamicTaskJob.addTaskWithTime(() -> checkModuleStatus.checkStatus(), "0/5 * * * * ? ", 30000L);
+        dynamicTaskJob.addTaskWithTime(() -> checkModuleStatus.checkSingleNode(modelNode), "0/5 * * * * ? ", 30000L);
     }
 }

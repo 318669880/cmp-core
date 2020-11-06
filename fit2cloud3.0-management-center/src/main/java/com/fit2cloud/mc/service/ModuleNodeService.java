@@ -17,6 +17,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -104,6 +106,7 @@ public class ModuleNodeService {
         Optional.ofNullable(modelNodeUuid).ifPresent(model_node_uuid -> {
             AtomicBoolean is_new = new AtomicBoolean(true);
             ModelNode template = modelNodeMapper.selectByPrimaryKey(modelNodeUuid);
+            node.setUpdateTime(LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
             Optional.ofNullable(template).ifPresent(temp -> {
                 node.setModelNodeUuid(template.getModelNodeUuid());
                 modelNodeMapper.updateByPrimaryKeySelective(node);
@@ -116,7 +119,7 @@ public class ModuleNodeService {
             }
             node.setNodeHost(Optional.ofNullable(node.getNodeHost()).orElse(mc_hostName));
             node.setNodeIp(Optional.ofNullable(node.getNodeIp()).orElse(mc_ip));
-            node.setNodeCreateTime(new Date().getTime());
+            node.setNodeCreateTime(LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
             node.setIsMc(false);
             node.setMcNodeUuid(mc_node.getModelNodeUuid());
             modelNodeMapper.insert(node);
@@ -132,6 +135,7 @@ public class ModuleNodeService {
     public void addOrUpdateMcNode(String node_status){
         ModelNode node = currentMcNode();
         AtomicBoolean is_new = new AtomicBoolean(true);
+        node.setUpdateTime(LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
         Optional.ofNullable(node).ifPresent(mc_node -> {
             node.setNodeStatus(node_status);
             modelNodeMapper.updateByPrimaryKey(node);
@@ -147,7 +151,7 @@ public class ModuleNodeService {
         modelNode.setIsMc(true);
         modelNode.setModelBasicUuid(module);
         modelNode.setNodeStatus(node_status);
-        modelNode.setNodeCreateTime(new Date().getTime());
+        modelNode.setNodeCreateTime(LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
         modelNodeMapper.insert(modelNode);
     }
     public String domain_host(){

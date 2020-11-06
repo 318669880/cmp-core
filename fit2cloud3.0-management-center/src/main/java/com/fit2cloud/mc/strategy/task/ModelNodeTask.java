@@ -45,6 +45,7 @@ public class ModelNodeTask {
 
 
     @Resource
+    @Lazy
     private ModuleNodeService moduleNodeService;
 
     @Resource

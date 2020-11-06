@@ -16,6 +16,7 @@ import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class ModelManagerController {
 
 
     @Resource
+    @Lazy
     private ModuleNodeService moduleNodeService;
 
 

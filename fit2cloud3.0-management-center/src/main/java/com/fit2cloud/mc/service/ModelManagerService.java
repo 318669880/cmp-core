@@ -17,6 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -48,6 +49,7 @@ public class ModelManagerService {
     @Resource
     private ModelVersionMapper modelVersionMapper;
 
+    @Lazy
     @Resource
     private EurekaInstanceMonitor eurekaInstanceMonitor;
 

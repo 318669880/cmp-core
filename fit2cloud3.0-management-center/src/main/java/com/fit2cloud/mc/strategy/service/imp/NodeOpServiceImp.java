@@ -45,6 +45,7 @@ public class NodeOpServiceImp implements NodeOperateService {
     private ModelManagerService modelManagerService;
 
     @Resource
+    @Lazy
     private ModuleNodeService moduleNodeService;
 
 

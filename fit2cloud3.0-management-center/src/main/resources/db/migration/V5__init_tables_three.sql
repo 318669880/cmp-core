@@ -51,5 +51,6 @@ CREATE TABLE IF NOT EXISTS `model_node` (
   `node_create_time` bigint(13) DEFAULT NULL COMMENT '节点创建时间',
   `is_mc` tinyint(1) NOT NULL COMMENT '是否管理中心',
   `mc_node_uuid` varchar(64) DEFAULT NULL COMMENT '所属管理中心节点',
+  `update_time` bigint(13) NOT NULL COMMENT '节点更新时间',
   PRIMARY KEY (`model_node_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -156,7 +156,7 @@ public class CheckModuleStatus {
      */
     private Boolean isTimeOut(Long actionTime, Long outTime){
         Long now = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        return actionTime - now > outTime;
+        return now - actionTime > outTime;
     }
 
     private List<ModelNode> off_line_node(List<ModelNode> nodes){

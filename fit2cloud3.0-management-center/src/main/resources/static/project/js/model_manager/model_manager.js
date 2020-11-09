@@ -928,6 +928,19 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         })
     }
 
+    $scope.mcReload = function () {
+        let url = "modelManager/model/reload";
+        $scope.loadingLayer = HttpUtils.post(url, null, function (resp) {
+            if (resp.success && resp.data){
+                Notification.info(Translator.get("i18n_reload_mc_success"));
+            }else {
+                Notification.warn(Translator.get("i18n_reload_mc_faild"));
+            }
+        }, function (resp) {
+            Notification.warn(Translator.get("i18n_reload_mc_faild"));
+        });
+    }
+
 
 });
 

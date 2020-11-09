@@ -5,7 +5,6 @@ import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
-import com.fit2cloud.mc.dao.ModelBasicMapper;
 import com.fit2cloud.mc.dao.ModelBasicPageMapper;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
 import com.fit2cloud.mc.model.*;
@@ -21,7 +20,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @Company: FIT2CLOUD 飞致云
@@ -135,16 +133,18 @@ public class ModuleNodeService {
     public void addOrUpdateMcNode(String node_status){
         ModelNode node = currentMcNode();
         AtomicBoolean is_new = new AtomicBoolean(true);
-        node.setUpdateTime(LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
         Optional.ofNullable(node).ifPresent(mc_node -> {
+            node.setUpdateTime(LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
             node.setNodeStatus(node_status);
             modelNodeMapper.updateByPrimaryKey(node);
             is_new.set(false);
         });
         if (!is_new.get()) return;
+
         String hostName = domain_host();
         String module = environment.getProperty("spring.application.name");
         ModelNode modelNode = new ModelNode();
+        modelNode.setUpdateTime(LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
         modelNode.setNodeHost(hostName);
         modelNode.setModelNodeUuid(UUIDUtil.newUUID());
         modelNode.setNodeIp(environment.getProperty("eureka.instance.ip-address"));

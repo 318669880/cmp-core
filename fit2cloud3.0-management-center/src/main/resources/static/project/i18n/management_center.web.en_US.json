@@ -242,6 +242,7 @@
   "i18n_model_op_uninstall": "Uninstall",
   "i18n_model_op_update": "Update",
   "i18n_model_op_start": "Start",
+  "i18n_model_mc_reload": "Node Reload",
   "i18n_model_op_stop": "Stop",
   "i18n_model_op_pod_eidt": "Node Edit",
   "i18n_model_op_node": "ShowNode",
@@ -289,5 +290,7 @@
   "i18n_wechat_basic_url": "Wechat Info",
   "i18n_wechat_limit_url": "Wechat Api Limit",
   "i18n_dingtalk_basic_url": "Dingtalk Info",
-  "i18n_dingtalk_limit_url": "Dingtalk Api Limit"
+  "i18n_dingtalk_limit_url": "Dingtalk Api Limit",
+  "i18n_reload_mc_success": "Reload Success",
+  "i18n_reload_mc_faild": "Reload Faild"
 }

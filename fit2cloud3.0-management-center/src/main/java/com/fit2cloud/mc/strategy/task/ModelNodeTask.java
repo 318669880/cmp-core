@@ -1,19 +1,18 @@
 package com.fit2cloud.mc.strategy.task;
 
 import com.fit2cloud.commons.server.exception.F2CException;
+import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.BusinessCacheConstants;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
-import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.dto.request.OperatorModuleRequest;
 import com.fit2cloud.mc.job.SyncEurekaServer;
 import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.service.K8sOperatorModuleService;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
-import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +21,7 @@ import org.springframework.cloud.netflix.eureka.EurekaClientConfigBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -64,8 +64,6 @@ public class ModelNodeTask {
     @Resource
     private K8sOperatorModuleService k8sOperatorModuleService;
 
-
-
     /**
      * 注册当前服务到eureka集群
      * @throws Exception
@@ -76,6 +74,12 @@ public class ModelNodeTask {
             return;
         }
         moduleNodeService.addOrUpdateMcNode(ModuleStatusConstants.running.value());
+        ModelNodeTask proxy = CommonBeanFactory.getBean(ModelNodeTask.class);
+        proxy.syncNode();
+    }
+
+    @Async
+    public void syncNode() throws Exception{
         syncFromDb();
         chainStart();//关联启动下属所有子模块
     }
@@ -127,7 +131,7 @@ public class ModelNodeTask {
     /**
      * 加入eureka集群
      */
-    @Scheduled(fixedDelay = 10000,initialDelay = 5000)
+    @Scheduled(fixedDelay = 10000,initialDelay = 10000)
     public void joinEurekaCluster(){
         if (SyncEurekaServer.IS_KUBERNETES) return;
         final String eureka_instance_ip_address = environment.getProperty("eureka.instance.ip-address");
@@ -144,7 +148,7 @@ public class ModelNodeTask {
                 //如果服务器配置的不是127.0.0.1 那么 剔除 127.0.0.1的节点
                 //如果本地配置的是127.0.0.1 则不会剔除
                 //注意：本地如果和服务器使用同一个数据库 并且同时运行 本地会受影响
-                if (localIps.contains(nodeIp) && StringUtils.equals(configMcIp, nodeIp)){
+                if (localIps.contains(nodeIp) && !StringUtils.equals(configMcIp, nodeIp)){
                     isReachable = false;
                 }
                 if(!isReachable){

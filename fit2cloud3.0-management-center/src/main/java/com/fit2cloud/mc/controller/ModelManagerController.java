@@ -5,21 +5,17 @@ import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
-import com.fit2cloud.mc.common.constants.RuntimeEnvironment;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.dto.request.ModelInstalledRequest;
-import com.fit2cloud.mc.job.SyncEurekaServer;
 import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
-import com.fit2cloud.mc.strategy.service.NodeOperateService;
+import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +43,8 @@ public class ModelManagerController {
     private ModuleNodeService moduleNodeService;
 
 
+    @Resource
+    private ModelNodeTask modelNodeTask;
 
     //  无敏感信息 无需使用dto
     @PostMapping("/indexServer/save")
@@ -152,6 +150,17 @@ public class ModelManagerController {
         return PageUtils.setPageInfo(page, paging);
     }
 
+    @PostMapping("/model/reload")
+    public boolean reloadMcInfo() {
+        try {
+            modelNodeTask.clearRedisCache();
+            modelNodeTask.registerCurrentMc();
+            return true;
+        } catch (Exception e) {
+            F2CException.throwException(e);
+            return false;
+        }
+    }
 
 
 }

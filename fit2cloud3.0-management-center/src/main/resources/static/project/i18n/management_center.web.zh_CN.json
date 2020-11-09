@@ -242,6 +242,7 @@
   "i18n_model_op_uninstall": "卸载",
   "i18n_model_op_update": "更新",
   "i18n_model_op_start": "启动",
+  "i18n_model_mc_reload": "节点重载",
   "i18n_model_op_stop": "停止",
   "i18n_model_op_pod_eidt": "节点调整",
   "i18n_model_op_node": "显示节点",
@@ -288,5 +289,7 @@
   "i18n_wechat_basic_url": "企业微信基本概念",
   "i18n_wechat_limit_url": "企业微信消息频率限制",
   "i18n_dingtalk_basic_url": "钉钉基本概念",
-  "i18n_dingtalk_limit_url": "钉钉消息频率限制"
+  "i18n_dingtalk_limit_url": "钉钉消息频率限制",
+  "i18n_reload_mc_success": "重载成功",
+  "i18n_reload_mc_faild": "重载失败"
 }

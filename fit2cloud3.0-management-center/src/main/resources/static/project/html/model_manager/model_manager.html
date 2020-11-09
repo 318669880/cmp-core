@@ -64,14 +64,14 @@
                 </wizard-step>
                 <wizard-step id="2">
                     <md-content flex="100" >
-                        <div class="reload-node" style="left: 90%;position: relative;z-index: 9999;">
+                        <div class="reload-node" style="left: 90%;position: relative;z-index: 50;">
                             <md-button ng-click="mcReload()">
                                 <md-icon class="md-18">play_arrow</md-icon>
                                 {{'i18n_model_mc_reload' | translator:'节点重载'}}
                             </md-button>
                         </div>
 
-                        <md-tabs style="top: -55px;z-index: 1000;" md-dynamic-height md-border-bottom>
+                        <md-tabs style="top: -55px;z-index: 40;" md-dynamic-height md-border-bottom>
                             <md-tab ng-click="modelInstaller.loadData()" label="{{'i18n_model_tab_title_Installable' | translator:'可安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
                                 <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
                                     <filter-tools conditions="modelInstaller.conditions" results="modelInstaller.filters" search="'true'" execute="modelInstaller.loadData()">

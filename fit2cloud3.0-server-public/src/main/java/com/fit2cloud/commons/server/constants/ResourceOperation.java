@@ -27,7 +27,7 @@ public class ResourceOperation {
     public static final String TASK_REJECT = "i18n_task_reject";
     public static final String PROCESS_CANCEL = "i18n_process_cancel";
 
-    public static final String INSTALL = "i18n_install_";
+    public static final String INSTALL = "i18n_install";
     public static final String UNINSTALL = "i18n_uninstall";
     public static final String EXPANSION = "i18n_expansion";
     public static final String SHRINK = "i18n_shrink";

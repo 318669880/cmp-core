@@ -33,9 +33,10 @@ public class DynamicTaskJob {
     }
 
     @Async
-    public void addTaskWithTime(Runnable runnable, String cron, Long outTime) throws Exception{
+    public void addTaskWithTime(Runnable runnable, String cron, Long outTime, Long delay) throws Exception{
+        Thread.sleep(delay);
         ScheduledFuture<?> future = add(runnable, cron);
-        Thread.sleep(outTime);
+        Thread.sleep(outTime + delay);
         delete(future);
     }
 

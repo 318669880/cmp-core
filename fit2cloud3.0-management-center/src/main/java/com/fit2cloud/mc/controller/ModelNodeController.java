@@ -11,11 +11,14 @@ import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.strategy.service.NodeOperateService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,6 +75,8 @@ public class ModelNodeController {
     @PostMapping("/node/start")
     public void nodeStart( String module, String nodeId) throws Exception{
         nodeOperateService.start(modelManagerService.select(), module, nodeId);
+        //执行停止操作后 每5s执行一次检测 30s后销毁定时器
+        dynamicTaskJob.addTaskWithTime(() -> checkModuleStatus.checkSingleNode(moduleNodeService.nodeInfo(nodeId)), "0/5 * * * * ? ", 30000L, 15000L);
     }
 
 
@@ -80,6 +85,16 @@ public class ModelNodeController {
         nodeOperateService.stop(modelManagerService.select(), module, nodeId);
         ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
         //执行停止操作后 每5s执行一次检测 30s后销毁定时器
-        dynamicTaskJob.addTaskWithTime(() -> checkModuleStatus.checkSingleNode(modelNode), "0/5 * * * * ? ", 30000L);
+        dynamicTaskJob.addTaskWithTime(() -> checkModuleStatus.checkSingleNode(modelNode), "0/5 * * * * ? ", 30000L, 5000L);
+    }
+
+    @GetMapping("node/test")
+    public void test() throws Exception {
+        DateTimeFormatter ofPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        dynamicTaskJob.addTaskWithTime(() -> {
+            String format = LocalDateTime.now().format(ofPattern);
+            System.out.println(format);
+        }, "0/5 * * * * ? " , 30000L, 5000L);
+        System.out.println("2222222");
     }
 }

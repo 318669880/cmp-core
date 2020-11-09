@@ -37,7 +37,7 @@ public class CheckModuleStatus {
     @Value("${fit2cloud.node_install_time_out:90000}")
     private Long node_install_time_out;
 
-    @Value("${fit2cloud.node_stop_time_out:30000}")
+    @Value("${fit2cloud.node_stop_time_out:25000}")
     private Long node_stop_time_out;
 
     @Resource
@@ -85,31 +85,25 @@ public class CheckModuleStatus {
             Boolean runningInEureka = is_node_available(cacheNode);
             String nodeStatus = cacheNode.getNodeStatus();
             Long updateTime = cacheNode.getUpdateTime();
-            if (runningInEureka){
-                cacheNode.setNodeStatus(ModuleStatusConstants.running.value());
-                if (StringUtils.equals(ModuleStatusConstants.stopping.value(), nodeStatus)){
-                    atoChanged.set(isTimeOut(updateTime, node_stop_time_out));
-                }else if (!StringUtils.equals(ModuleStatusConstants.running.value(), nodeStatus)){
-                    atoChanged.set(true);
-                }
-            }
-            if (!runningInEureka){
-
-                if (StringUtils.equals(ModuleStatusConstants.installing.value(), nodeStatus)){
-                    cacheNode.setNodeStatus(ModuleStatusConstants.installing.nextFaild());
-                    atoChanged.set(isTimeOut(updateTime, node_install_time_out));
-                }
-                if (StringUtils.equals(ModuleStatusConstants.startting.value(), nodeStatus)){
-                    cacheNode.setNodeStatus(ModuleStatusConstants.startting.nextFaild());
-                    atoChanged.set(isTimeOut(updateTime, node_start_time_out));
-                }
-                if (StringUtils.equals(ModuleStatusConstants.stopping.value(), nodeStatus)){
+            if (StringUtils.equals(ModuleStatusConstants.stopping.value(), nodeStatus)) {
+                if (runningInEureka) {
+                    if (isTimeOut(updateTime, node_stop_time_out)) {
+                        cacheNode.setNodeStatus(ModuleStatusConstants.running.value());
+                        atoChanged.set(true);
+                    }
+                }else {
                     cacheNode.setNodeStatus(ModuleStatusConstants.stopped.value());
                     atoChanged.set(true);
                 }
-                if (StringUtils.equals(ModuleStatusConstants.running.value(), nodeStatus)){
-                    cacheNode.setNodeStatus(ModuleStatusConstants.stopped.value());
+            } else if (StringUtils.equals(ModuleStatusConstants.startting.value(), nodeStatus)){
+                if (runningInEureka) {
+                    cacheNode.setNodeStatus(ModuleStatusConstants.running.value());
                     atoChanged.set(true);
+                }else {
+                    if (isTimeOut(updateTime, node_start_time_out)) {
+                        cacheNode.setNodeStatus(ModuleStatusConstants.startFaild.value());
+                        atoChanged.set(true);
+                    }
                 }
             }
             if (atoChanged.get()){

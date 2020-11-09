@@ -52,7 +52,7 @@ public class DynamicTaskTest extends BeforeTest {
         dynamicTaskJob.addTaskWithTime(() -> {
             String format = LocalDateTime.now().format(ofPattern);
             System.out.println(format);
-        }, "0/5 * * * * *", 15000L);
+        }, "0/5 * * * * *", 15000L , 5000L);
 
     }
 }

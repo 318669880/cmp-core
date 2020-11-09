@@ -37,6 +37,9 @@ public class CheckModuleStatus {
     @Value("${fit2cloud.node_install_time_out:90000}")
     private Long node_install_time_out;
 
+    @Value("${fit2cloud.node_stop_time_out:5000}")
+    private Long node_stop_time_out;
+
     @Resource
     private DiscoveryClient discoveryClient;
 
@@ -81,12 +84,17 @@ public class CheckModuleStatus {
         modelNodes.stream().filter(cacheNode -> StringUtils.equals(cacheNode.getModelNodeUuid(), modelNodeUuid)).findFirst().ifPresent(cacheNode -> {
             Boolean runningInEureka = is_node_available(cacheNode);
             String nodeStatus = cacheNode.getNodeStatus();
-            if (runningInEureka && !StringUtils.equals(ModuleStatusConstants.running.value(), nodeStatus)){
+            Long updateTime = cacheNode.getUpdateTime();
+            if (runningInEureka){
                 cacheNode.setNodeStatus(ModuleStatusConstants.running.value());
-                atoChanged.set(true);
+                if (StringUtils.equals(ModuleStatusConstants.stopping.value(), nodeStatus)){
+                    atoChanged.set(isTimeOut(updateTime, node_stop_time_out));
+                }else if (!StringUtils.equals(ModuleStatusConstants.running.value(), nodeStatus)){
+                    atoChanged.set(true);
+                }
             }
             if (!runningInEureka){
-                Long updateTime = cacheNode.getUpdateTime();
+
                 if (StringUtils.equals(ModuleStatusConstants.installing.value(), nodeStatus)){
                     cacheNode.setNodeStatus(ModuleStatusConstants.installing.nextFaild());
                     atoChanged.set(isTimeOut(updateTime, node_install_time_out));
@@ -94,6 +102,10 @@ public class CheckModuleStatus {
                 if (StringUtils.equals(ModuleStatusConstants.startting.value(), nodeStatus)){
                     cacheNode.setNodeStatus(ModuleStatusConstants.startting.nextFaild());
                     atoChanged.set(isTimeOut(updateTime, node_start_time_out));
+                }
+                if (StringUtils.equals(ModuleStatusConstants.stopping.value(), nodeStatus)){
+                    cacheNode.setNodeStatus(ModuleStatusConstants.stopped.value());
+                    atoChanged.set(true);
                 }
                 if (StringUtils.equals(ModuleStatusConstants.running.value(), nodeStatus)){
                     cacheNode.setNodeStatus(ModuleStatusConstants.stopped.value());
@@ -174,6 +186,9 @@ public class CheckModuleStatus {
             if (StringUtils.equals(ModuleStatusConstants.startting.value(), nodeStatus)){
                 return isTimeOut(updateTime, node_start_time_out);
             }
+            if (StringUtils.equals(ModuleStatusConstants.stopping.value(), nodeStatus)){
+                return true;
+            }
             if (StringUtils.equals(ModuleStatusConstants.running.value(), nodeStatus)){
                 return true;
             }
@@ -205,11 +220,19 @@ public class CheckModuleStatus {
 
     private List<ModelNode> on_line_nodes(List<ModelNode> nodes){
         // 找到非running状态的即诶单改为running状态
-        nodes = nodes.stream().filter(node -> !StringUtils.equals(node.getNodeStatus(), ModuleStatusConstants.running.value()))
-                .map(item -> {
-                    item.setNodeStatus(ModuleStatusConstants.running.value());
-                    return item;
-                }).collect(Collectors.toList());
+        nodes = nodes.stream().filter(node -> {
+            String nodeStatus = node.getNodeStatus();
+            Long updateTime = node.getUpdateTime();
+            if (StringUtils.equals(nodeStatus, ModuleStatusConstants.stopping.value())){
+                return isTimeOut(updateTime, node_stop_time_out);
+            } else if (!StringUtils.equals(nodeStatus, ModuleStatusConstants.running.value())){
+                return true;
+            }
+            return false;
+        }).map(item -> {
+            item.setNodeStatus(ModuleStatusConstants.running.value());
+            return item;
+        }).collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(nodes)){
             nodes.forEach(node -> {
                 try{

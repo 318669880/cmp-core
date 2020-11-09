@@ -37,7 +37,7 @@ public class CheckModuleStatus {
     @Value("${fit2cloud.node_install_time_out:90000}")
     private Long node_install_time_out;
 
-    @Value("${fit2cloud.node_stop_time_out:5000}")
+    @Value("${fit2cloud.node_stop_time_out:30000}")
     private Long node_stop_time_out;
 
     @Resource

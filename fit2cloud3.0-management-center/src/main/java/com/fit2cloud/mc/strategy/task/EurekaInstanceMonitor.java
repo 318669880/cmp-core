@@ -9,9 +9,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.*;
 import org.springframework.web.client.RestTemplate;
@@ -41,7 +39,6 @@ public class EurekaInstanceMonitor {
 
 
 
-    @Async
     public List<Object> execute(String module, String nodeId, String urlSuffix, ModelNode modelNode){
         String mc_module = environment.getProperty("spring.application.name");
         List<String> serverInfos = eurekaClusterIps(mc_module, modelNode);
@@ -63,14 +60,9 @@ public class EurekaInstanceMonitor {
                 param.add("nodeId",StringUtils.isEmpty(nodeId) ? UUIDUtil.newUUID() : nodeId);
                 HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(param,httpHeaders);
                 ResponseEntity<String> entity = restTemplate.postForEntity(url, request, String.class);
-                if (entity== null || entity.getStatusCode() != HttpStatus.OK){
-                    LogUtil.error("restTemplate 请求失败");
-                    return null;
-                }
                 result = entity.getBody();
                 return result;
             }catch (Exception e){
-                e.printStackTrace();
                 LogUtil.error(e.getMessage(),e);
                 // 如果不是批量操作 那么直接抛出异常 否则继续运行
                 if(!ObjectUtils.isEmpty(modelNode)) F2CException.throwException(e);

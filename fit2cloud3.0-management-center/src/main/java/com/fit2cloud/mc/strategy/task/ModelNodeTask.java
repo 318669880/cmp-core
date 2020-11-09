@@ -184,7 +184,7 @@ public class ModelNodeTask {
             String portstr = nodeIp.substring(end+1);
             int port = Integer.valueOf(portstr);
             socket.connect(new InetSocketAddress(host, port));
-        } catch (IOException e) {
+        } catch (Exception e) {
             LogUtil.error(e.getMessage(),e);
             return false;
         } finally {

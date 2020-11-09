@@ -135,10 +135,18 @@ public class ModelNodeTask {
         ModelNodeExample modelNodeExample = new ModelNodeExample();
         modelNodeExample.createCriteria().andIsMcEqualTo(true);
         List<ModelNode> modelNodes = modelNodeMapper.selectByExample(modelNodeExample);
+        String configMcIp = environment.getProperty("eureka.instance.ip-address");
+        List<String> localIps = new ArrayList<String>(){{add("127.0.0.1");add("localhost");}};
         modelNodes = modelNodes.stream().filter(node -> {
             try {
                 String nodeIp = node.getNodeIp();
                 boolean isReachable = InetAddress.getByName(nodeIp).isReachable(3000) && isHostConnectable(node.getNodeHost());
+                //如果服务器配置的不是127.0.0.1 那么 剔除 127.0.0.1的节点
+                //如果本地配置的是127.0.0.1 则不会剔除
+                //注意：本地如果和服务器使用同一个数据库 并且同时运行 本地会受影响
+                if (localIps.contains(nodeIp) && StringUtils.equals(configMcIp, nodeIp)){
+                    isReachable = false;
+                }
                 if(!isReachable){
                     String mc_modelNode_uuid = node.getModelNodeUuid();
                     //不可用 删除mc节点记录

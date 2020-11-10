@@ -19,6 +19,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,14 +72,15 @@ public class K8sOperatorModuleService {
         });
     }
 
+    @Transactional
     public void uninstall(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
         operatorModuleRequest.getModules().forEach(module -> {
             try{
                 LogUtil.info("Begin to uninstall module: " + module);
-                modelManagerService.deleteModelBasic(module);
                 K8sUtil.uninstallService(module);
-                LogUtil.info("End of uninstall module: " + module);
                 ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
+                modelManagerService.deleteModelBasic(module);
+                LogUtil.info("End of uninstall module: " + module);
                 OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), ResourceOperation.UNINSTALL, null);
             }catch (Exception e){
                 LogUtil.error("Faild to uninstall module: " + module, e);

@@ -140,18 +140,12 @@ public class KobeService {
         }
     }
 
-    public String watchTaskResult(String taskId) throws Exception {
+    public Iterator<Kobe.WatchStream> watchTaskResult(String taskId) throws Exception {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(kobeHost, kobePort).usePlaintext().build();
         KobeApiGrpc.KobeApiBlockingStub blockingStub = KobeApiGrpc.newBlockingStub(channel);
         Kobe.WatchRequest watchRequest = Kobe.WatchRequest.newBuilder().setTaskId(taskId).build();
         Iterator<Kobe.WatchStream> watchStreamIterator = blockingStub.watchResult(watchRequest);
-        StringBuilder stringBuilder = new StringBuilder();
-        while (watchStreamIterator.hasNext()) {
-            Kobe.WatchStream next = watchStreamIterator.next();
-            ByteString stream = next.getStream();
-            stringBuilder.append(stream.toStringUtf8());
-        }
-        return stringBuilder.toString();
+        return watchStreamIterator;
     }
 
     public Kobe.GetResultResponse runAdhocGetResult(AdhocRequest request) throws Exception {

@@ -29,6 +29,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/eureka/**", "anon");
         filterChainDefinitionMap.put("/web-public/**", "anon");
         filterChainDefinitionMap.put("/project/**", "anon");
+        filterChainDefinitionMap.put("/modelNode/**", "anon");
+
+
 
         // for swagger
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");

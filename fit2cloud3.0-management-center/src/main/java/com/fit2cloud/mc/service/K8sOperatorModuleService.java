@@ -3,15 +3,21 @@ package com.fit2cloud.mc.service;
 import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.server.constants.ResourceTypeConstants;
 import com.fit2cloud.commons.server.service.OperationLogService;
+import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.CommonThreadPool;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.dto.request.OperatorModuleRequest;
+import com.fit2cloud.mc.job.CheckModuleStatus;
+import com.fit2cloud.mc.job.DynamicTaskJob;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelManager;
+import com.fit2cloud.mc.model.ModelNode;
+import com.fit2cloud.mc.model.WsMessage;
 import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,10 +30,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
 public class K8sOperatorModuleService {
+
     @Resource
     @Lazy
     private ModelManagerService modelManagerService;
@@ -35,6 +44,12 @@ public class K8sOperatorModuleService {
     private DiscoveryClient discoveryClient;
     @Resource
     private CommonThreadPool commonThreadPool;
+
+    @Resource
+    private WsService wsService;
+
+    @Resource
+    private DynamicTaskJob dynamicTaskJob;
 
     public void start(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest){
         Map<String, Object> params = operatorModuleRequest.getParams() == null ? new HashMap<String, Object>() : operatorModuleRequest.getParams();
@@ -78,8 +93,11 @@ public class K8sOperatorModuleService {
             try{
                 LogUtil.info("Begin to uninstall module: " + module);
                 K8sUtil.uninstallService(module);
+                modelManagerService.updateModelBasicPodNum(module, 0);
                 ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
-                modelManagerService.deleteModelBasic(module);
+                //modelManagerService.deleteModelBasic(module);
+                K8sOperatorModuleService proxy = CommonBeanFactory.getBean(K8sOperatorModuleService.class);
+                proxy.removeK8sModel(modelBasic);
                 LogUtil.info("End of uninstall module: " + module);
                 OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), ResourceOperation.UNINSTALL, null);
             }catch (Exception e){
@@ -88,13 +106,30 @@ public class K8sOperatorModuleService {
         });
     }
 
+
+
+    @Async
+    public void removeK8sModel(ModelBasic modelBasic){
+        AtomicReference<ScheduledFuture<?>> futureReference = new AtomicReference();
+        ScheduledFuture<?> add = dynamicTaskJob.add(() -> {
+            List<ServiceInstance> instances = discoveryClient.getInstances(modelBasic.getModule());
+            if (CollectionUtils.isEmpty(instances)){
+                modelManagerService.deleteModelBasic(modelBasic.getModule());
+                dynamicTaskJob.delete(futureReference.get());
+                K8sOperatorModuleService proxy = CommonBeanFactory.getBean(K8sOperatorModuleService.class);
+                proxy.clearCache();
+                WsMessage<Map<String, List<ModelNode>>> wsMessage = new WsMessage<Map<String, List<ModelNode>>>(null, CheckModuleStatus.model_node_fresh_topic,new HashMap<>());
+                wsService.releaseMessage(wsMessage);
+            }
+        }, "0/5 * * * * ? ");
+        futureReference.set(add);
+    }
+
     @Cacheable(value = "k8s-pod-cache" ,condition = "#user_cache==true")
     public Map<String, List<String>> pods(boolean user_cache){
         Map<String,List<String>> result = new HashMap<>();
         discoveryClient.getServices().forEach(module -> {
             List<ServiceInstance> instances = discoveryClient.getInstances(module);
-            instances.forEach(instance ->{
-            });
             if(!CollectionUtils.isEmpty(instances)){
                 result.put(module,instances.stream().map(ServiceInstance::getHost).collect(Collectors.toList()));
             }

@@ -1,6 +1,7 @@
 package com.fit2cloud.commons.server.kobe;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -137,6 +138,20 @@ public class KobeService {
         } else {
             return taskResult;
         }
+    }
+
+    public String watchTaskResult(String taskId) throws Exception {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(kobeHost, kobePort).usePlaintext().build();
+        KobeApiGrpc.KobeApiBlockingStub blockingStub = KobeApiGrpc.newBlockingStub(channel);
+        Kobe.WatchRequest watchRequest = Kobe.WatchRequest.newBuilder().setTaskId(taskId).build();
+        Iterator<Kobe.WatchStream> watchStreamIterator = blockingStub.watchResult(watchRequest);
+        StringBuilder stringBuilder = new StringBuilder();
+        while (watchStreamIterator.hasNext()) {
+            Kobe.WatchStream next = watchStreamIterator.next();
+            ByteString stream = next.getStream();
+            stringBuilder.append(stream.toStringUtf8());
+        }
+        return stringBuilder.toString();
     }
 
     public Kobe.GetResultResponse runAdhocGetResult(AdhocRequest request) throws Exception {

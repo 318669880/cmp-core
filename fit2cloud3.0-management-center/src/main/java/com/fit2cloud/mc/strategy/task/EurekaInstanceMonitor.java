@@ -4,6 +4,7 @@ import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.model.ModelNode;
+import com.google.gson.Gson;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.env.Environment;
@@ -61,6 +62,7 @@ public class EurekaInstanceMonitor {
                 HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(param,httpHeaders);
                 ResponseEntity<String> entity = restTemplate.postForEntity(url, request, String.class);
                 result = entity.getBody();
+                LogUtil.info("restTemplate执行返回值："+new Gson().toJson(entity));
                 return result;
             }catch (Exception e){
                 LogUtil.error(e.getMessage(),e);

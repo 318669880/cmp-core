@@ -46,15 +46,15 @@ public class EurekaInstanceMonitor {
             String url = serverInfo + urlSuffix;
             Object result = null;
             try{
-                ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+                HttpHeaders httpHeaders = new HttpHeaders();
+                /*ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
                 HttpServletRequest httpServletRequest = servletRequestAttributes.getRequest();
                 Cookie[] cookies = httpServletRequest.getCookies();
-                HttpHeaders httpHeaders = new HttpHeaders();
                 List<String> cookieLists = new ArrayList<>();
                 for (Cookie cookie : cookies) {
                     cookieLists.add(cookie.getName() + "=" + cookie.getValue());
                 }
-                httpHeaders.put("Cookie", cookieLists);
+                httpHeaders.put("Cookie", cookieLists);*/
                 MultiValueMap<String,Object> param = new LinkedMultiValueMap<>();
                 param.add("module",module);
                 param.add("nodeId",StringUtils.isEmpty(nodeId) ? UUIDUtil.newUUID() : nodeId);

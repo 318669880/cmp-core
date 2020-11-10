@@ -1,6 +1,6 @@
 package com.fit2cloud.mc.service;
 
-import com.fit2cloud.commons.server.dcslock.annotation.DcsLock;
+
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.UUIDUtil;
@@ -60,6 +60,13 @@ public class ModuleNodeService {
         });
         criteria.andIsMcEqualTo(false);
         modelNodeExample.setOrderByClause("node_create_time desc");
+        return modelNodeMapper.selectByExample(modelNodeExample);
+    }
+
+
+    public List<ModelNode> allBusiNodes(){
+        ModelNodeExample modelNodeExample = new ModelNodeExample();
+        modelNodeExample.createCriteria().andIsMcEqualTo(false);
         return modelNodeMapper.selectByExample(modelNodeExample);
     }
 

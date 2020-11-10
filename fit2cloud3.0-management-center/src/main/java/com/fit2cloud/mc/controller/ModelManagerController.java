@@ -138,7 +138,7 @@ public class ModelManagerController {
 
     @PostMapping("/model/nodes")
     public List<ModelNode> modelNodes(){
-        return moduleNodeService.queryNodes(null);
+        return moduleNodeService.allBusiNodes();
     }
 
     @PostMapping(value = "/node/{module}/{goPage}/{pageSize}")

@@ -95,7 +95,7 @@ public class ModuleNodeService {
      * 新增或修改模块节点状态
      *
      */
-    @DcsLock
+    /*@DcsLock*/
     @CacheEvict(value = "host-nodes-cache",allEntries = true)
     public void addOrUpdateModelNode (ModelNode node) throws Exception{
         String mc_hostName = domain_host();

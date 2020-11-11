@@ -17,6 +17,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EurekaClientConfigBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
@@ -64,6 +66,9 @@ public class ModelNodeTask {
     @Resource
     private K8sOperatorModuleService k8sOperatorModuleService;
 
+    @Resource
+    private DiscoveryClient discoveryClient;
+
     /**
      * 注册当前服务到eureka集群
      * @throws Exception
@@ -96,6 +101,13 @@ public class ModelNodeTask {
             Set keys = redisTemplate.keys(prefix);
             redisTemplate.delete(keys);
         });
+    }
+
+    private boolean is_node_available(ModelNode node){
+        List<ServiceInstance> instances = discoveryClient.getInstances(node.getModelBasicUuid());
+        if(CollectionUtils.isEmpty(instances)) return false;
+        String nodeIp = node.getNodeIp();
+        return instances.stream().anyMatch(instance -> instance.getUri().toString().indexOf(nodeIp) != -1);
     }
 
 
@@ -222,7 +234,9 @@ public class ModelNodeTask {
             if (CollectionUtils.isEmpty(modelNodes)) return;
             modelNodes.forEach(node -> {
                 try {
-                    moduleNodeService.startNode(node.getModelBasicUuid(), node.getModelNodeUuid());
+                    if (!is_node_available(node)){
+                        moduleNodeService.startNode(node.getModelBasicUuid(), node.getModelNodeUuid());
+                    }
                 } catch (Exception e) {
                     LogUtil.error(e.getMessage() ,e);
                 }

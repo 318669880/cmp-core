@@ -15,6 +15,8 @@ import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -170,6 +172,21 @@ public class ModelManagerController {
         WsTopicConstants[] values = WsTopicConstants.values();
         List<Map<String, String>> resultLists = Arrays.stream(values).map(WsTopicConstants::toMap).collect(Collectors.toList());
         return resultLists;
+    }
+
+
+    @Resource
+    private DiscoveryClient discoveryClient;
+
+    @PostMapping("/model/services")
+    public List<ServiceInstance> showAllService(){
+        List<String> services = discoveryClient.getServices();
+        List<ServiceInstance> collect = services.stream().flatMap(service -> {
+            return discoveryClient.getInstances(service).stream();
+        }).collect(Collectors.toList());
+        return collect;
+
+
     }
 
 

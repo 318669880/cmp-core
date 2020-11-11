@@ -282,7 +282,7 @@
                                                     <md-icon class="md-18">edit</md-icon>
                                                     {{'i18n_model_op_pod_eidt' | translator:'节点调整'}}
                                                 </md-button>
-                                                <md-button ng-click="uninstallK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
+                                                <md-button ng-click="uninstallK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">
                                                     <md-icon class="md-18">delete_forever</md-icon>
                                                     {{'i18n_model_op_uninstall' | translator:'卸载'}}
                                                 </md-button>

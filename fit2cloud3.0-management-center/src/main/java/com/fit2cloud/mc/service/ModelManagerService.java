@@ -19,7 +19,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.*;
 
@@ -209,6 +208,11 @@ public class ModelManagerService {
     }
 
 
+    public int updateModelBasic(ModelBasic modelBasic){
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleEqualTo(modelBasic.getModule());
+        return modelBasicMapper.updateByExampleSelective(modelBasic, example);
+    }
 
 
     @Cacheable(value = "model_baisc_lists")

@@ -10,16 +10,18 @@ package com.fit2cloud.mc.common.constants;
 public enum ModuleStatusConstants {
     offLine("offLine"),
     readyInstall("readyInstall"),
-    installing("installing","running","installFaild"),
+    installing("installing","stopped","installFaild"),
     installFaild("installFaild"),
     running("running"),
 
     startting("startting","running","startFaild"),
     startFaild("startFaild"),
+    startTimeOut("startTimeOut"),
 
     stopping("stopping","stopped","running"),
     stopFaild("stopFaild"),
-    stopped("stopped");
+    stopped("stopped"),
+    stopTimeOut("stopTimeOut");
 
     private String value;
 

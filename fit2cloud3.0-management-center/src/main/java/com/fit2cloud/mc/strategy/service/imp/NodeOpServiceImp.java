@@ -4,11 +4,9 @@ import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.server.constants.ResourceTypeConstants;
 import com.fit2cloud.commons.server.service.OperationLogService;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
-import com.fit2cloud.mc.job.CheckModuleStatus;
 import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
-import com.fit2cloud.mc.service.WsService;
 import com.fit2cloud.mc.strategy.entity.ResultInfo;
 import com.fit2cloud.mc.strategy.factory.NodeOperateStrategyFactory;
 import com.fit2cloud.mc.strategy.service.ModelOperateStrategy;
@@ -19,11 +17,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,9 +43,6 @@ public class NodeOpServiceImp implements NodeOperateService {
     @Lazy
     private ModuleNodeService moduleNodeService;
 
-
-    @Resource
-    private WsService wsService;
 
     @Async
     @Transactional
@@ -114,11 +106,6 @@ public class NodeOpServiceImp implements NodeOperateService {
         modelNode.setNodeStatus(status);
         modelNode.setModelNodeUuid(nodeId);
         moduleNodeService.addOrUpdateModelNode(modelNode);
-
-        Map<String, List<ModelNode>> message = new HashMap<String, List<ModelNode>>();
-        message.put(modelNode.getModelNodeUuid(),new ArrayList<ModelNode>(){{add(modelNode);}});
-        WsMessage<Map<String, List<ModelNode>>> wsMessage = new WsMessage<Map<String, List<ModelNode>>>(null, CheckModuleStatus.model_node_fresh_topic,message);
-        wsService.releaseMessage(wsMessage);
     }
 
     private String downLoad (ModelBasic modelBasic) throws Exception{

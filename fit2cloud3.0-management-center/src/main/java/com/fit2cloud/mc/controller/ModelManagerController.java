@@ -5,6 +5,7 @@ import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
+import com.fit2cloud.mc.common.constants.WsTopicConstants;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.dto.request.ModelInstalledRequest;
 import com.fit2cloud.mc.model.*;
@@ -17,9 +18,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Company: FIT2CLOUD 飞致云
@@ -160,6 +163,13 @@ public class ModelManagerController {
             F2CException.throwException(e);
             return false;
         }
+    }
+
+    @PostMapping("/model/topics")
+    public List<Map<String,String>> topics(){
+        WsTopicConstants[] values = WsTopicConstants.values();
+        List<Map<String, String>> resultLists = Arrays.stream(values).map(WsTopicConstants::toMap).collect(Collectors.toList());
+        return resultLists;
     }
 
 

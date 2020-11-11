@@ -3,13 +3,19 @@ package com.fit2cloud.mc.listener;
 import com.fit2cloud.commons.server.service.StatsService;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
+import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import com.netflix.appinfo.InstanceInfo;
 import org.springframework.cloud.netflix.eureka.server.event.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
 @Component
 public class EurekaStateChangeListener {
+
+    @Resource
+    private ModelNodeTask modelNodeTask;
 
     @EventListener(condition = "#event.replication")
     public void listen(EurekaInstanceCanceledEvent event) {
@@ -38,5 +44,11 @@ public class EurekaStateChangeListener {
     @EventListener
     public void listen(EurekaServerStartedEvent event) {
         LogUtil.info("Eureka Server Startup");
+        try {
+            modelNodeTask.registerCurrentMc();//注册自己
+            modelNodeTask.clearRedisCache();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

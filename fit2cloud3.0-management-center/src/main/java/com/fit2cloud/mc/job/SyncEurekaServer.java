@@ -5,7 +5,6 @@ import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.dao.McSysStatsMapper;
 import com.fit2cloud.mc.model.McSysStats;
 import com.fit2cloud.mc.model.McSysStatsExample;
-import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
@@ -14,7 +13,6 @@ import org.springframework.cloud.netflix.eureka.EurekaClientConfigBean;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.URL;
@@ -44,8 +42,6 @@ public class SyncEurekaServer implements ApplicationRunner {
     @Resource
     private EurekaClientConfigBean eurekaClientConfigBean;
 
-    @Resource
-    private ModelNodeTask modelNodeTask;
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
@@ -73,8 +69,6 @@ public class SyncEurekaServer implements ApplicationRunner {
     }
 
     public void init() throws Exception {
-        modelNodeTask.registerCurrentMc();//注册自己
-        modelNodeTask.clearRedisCache();
         if (!isKubernetes()) {
             LogUtil.info("Not Kubernetes Deployment.");
             return;

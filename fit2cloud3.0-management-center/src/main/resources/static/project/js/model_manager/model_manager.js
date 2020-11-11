@@ -618,7 +618,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 if ($scope.indexServer.model_env === 'k8s'){
                     //  k8s模块卸载完成后刷新列表
                     this.stompClient.subscribe('/topic/k8s/uninstall',function(response){
-                        $scope.list();
+                        //$scope.list();
+                        $scope.modelInstaller.loadData();
                     }.bind(this));
                 }
             }.bind(this));

@@ -58,6 +58,7 @@ public class CheckModuleStatus {
 
 
     final public static String model_node_fresh_topic = "/topic/getResponse";
+    final public static String model_k8s_uninstall_topic = "/topic/k8s/uninstall";
 
     //每30s执行一次检测
     @Scheduled(cron = "0/30 * * * * ? ")

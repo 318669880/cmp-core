@@ -209,6 +209,11 @@ public class ModelManagerService {
     }
 
 
+    public int updateModelBasic(ModelBasic modelBasic){
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleEqualTo(modelBasic.getModule());
+        return modelBasicMapper.updateByExampleSelective(modelBasic, example);
+    }
 
 
     @Cacheable(value = "model_baisc_lists")

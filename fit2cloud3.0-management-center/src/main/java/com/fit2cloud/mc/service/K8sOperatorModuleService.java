@@ -12,7 +12,6 @@ import com.fit2cloud.mc.job.CheckModuleStatus;
 import com.fit2cloud.mc.job.DynamicTaskJob;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelManager;
-import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.model.WsMessage;
 import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
@@ -93,9 +92,10 @@ public class K8sOperatorModuleService {
             try{
                 LogUtil.info("Begin to uninstall module: " + module);
                 K8sUtil.uninstallService(module);
-                modelManagerService.updateModelBasicPodNum(module, 0);
                 ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
-                //modelManagerService.deleteModelBasic(module);
+                modelBasic.setCurrentStatus("uninstalling");
+                modelBasic.setPodNum(0);
+                modelManagerService.updateModelBasic(modelBasic);
                 K8sOperatorModuleService proxy = CommonBeanFactory.getBean(K8sOperatorModuleService.class);
                 proxy.removeK8sModel(modelBasic);
                 LogUtil.info("End of uninstall module: " + module);
@@ -115,11 +115,11 @@ public class K8sOperatorModuleService {
             List<ServiceInstance> instances = discoveryClient.getInstances(modelBasic.getModule());
             if (CollectionUtils.isEmpty(instances)){
                 modelManagerService.deleteModelBasic(modelBasic.getModule());
-                dynamicTaskJob.delete(futureReference.get());
                 K8sOperatorModuleService proxy = CommonBeanFactory.getBean(K8sOperatorModuleService.class);
                 proxy.clearCache();
-                WsMessage<Map<String, List<ModelNode>>> wsMessage = new WsMessage<Map<String, List<ModelNode>>>(null, CheckModuleStatus.model_node_fresh_topic,new HashMap<>());
+                WsMessage<String> wsMessage = new WsMessage<String>(null, CheckModuleStatus.model_k8s_uninstall_topic,modelBasic.getCurrentStatus());
                 wsService.releaseMessage(wsMessage);
+                dynamicTaskJob.delete(futureReference.get());
             }
         }, "0/5 * * * * ? ");
         futureReference.set(add);

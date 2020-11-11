@@ -615,6 +615,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                     let res = JSON.parse(response.body);
                     $scope.indexServer.model_env==='host' && this.parseHostMessage(res) || this.parseK8sMessage(res);
                 }.bind(this));
+                if ($scope.indexServer.model_env === 'k8s'){
+                    //  k8s模块卸载完成后刷新列表
+                    this.stompClient.subscribe('/topic/k8s/uninstall',function(response){
+                        $scope.list();
+                    }.bind(this));
+                }
             }.bind(this));
         },
         disconnect: function () {
@@ -791,13 +797,15 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         $scope.items.forEach(item => {
             let podNum = item.podNum;
             let podInstances = $scope._eurekaData[item.module];
-
             let runningPods = !!podInstances && podInstances.length || 0;
             item.enable = false;
             item.runningPods = runningPods;
             item.statuInfo = runningPods + "/" + podNum;
             let prefix = runningPods > podNum ? "i18n_model_k8s-status_shrinke"
                 : runningPods == podNum ? false : "i18n_model_k8s-status_expand";
+            if (item.currentStatus && item.currentStatus=='uninstalling'){
+                prefix = "i18n_model_k8s-status_uninstall";
+            }
             let _dynamic = runningPods + " -> "+ podNum;
             item.dynamicInfo = !!prefix && (Translator.get(prefix) + ": ("+_dynamic+")") || item.statuInfo;
         })

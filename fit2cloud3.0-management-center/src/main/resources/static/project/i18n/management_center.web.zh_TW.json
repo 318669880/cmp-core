@@ -232,6 +232,7 @@
   "i18n_model_field_name": "名稱",
   "i18n_model_k8s-status_expand": "擴容中",
   "i18n_model_k8s-status_shrinke": "縮容中",
+  "i18n_model_k8s-status_uninstall": "卸載中",
   "i18n_model_field_module": "模塊",
   "i18n_model_field_status": "狀態",
   "i18n_model_field_current_version": "當前版本",

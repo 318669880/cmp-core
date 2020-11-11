@@ -592,6 +592,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     }
 
     let ModelNodeWs = function(){
+        this.topic_url = "modelManager/model/topics";
         this.ws_url = null;
         this.ws_uid = "1";//这里与后台对应
         this.ws = null;
@@ -603,25 +604,32 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         initialize: function () {
             this.ws_url = window.location.origin+"/management-center/websocket";
             //this.ws_url = window.location.origin+"/websocket";
-            this.connect();
+            HttpUtils.post(this.topic_url, null, function(res){
+                this.connect(res.data);
+            }.bind(this), error => {
+
+            })
+
         },
-        connect: function () {
+        connect: function (topics) {
             this.socket = new SockJS(this.ws_url);
             this.stompClient = Stomp.over(this.socket);//使用STMOP子协议的WebSocket客户端
             this.stompClient.connect({},function(frame){//连接WebSocket服务端
                 //console.log('Connected:' + frame);
                 //通过stompClient.subscribe订阅/topic/getResponse 目标(destination)发送的消息
-                this.stompClient.subscribe('/topic/getResponse',function(response){
-                    let res = JSON.parse(response.body);
-                    $scope.indexServer.model_env==='host' && this.parseHostMessage(res) || this.parseK8sMessage(res);
+                topics.forEach(function(topic) {
+                    if (topic.name.startsWith($scope.indexServer.model_env.toLocaleUpperCase())){
+                        this.stompClient.subscribe(topic.value,function(response){
+                            let res = JSON.parse(response.body);
+                            if(!!$scope.selected ){
+                                $scope.$broadcast('onNodeRefresh', 'true');
+                            }
+                            $scope.modelInstaller.loadData();
+                        }.bind(this));
+                    }
                 }.bind(this));
-                if ($scope.indexServer.model_env === 'k8s'){
-                    //  k8s模块卸载完成后刷新列表
-                    this.stompClient.subscribe('/topic/k8s/uninstall',function(response){
-                        //$scope.list();
-                        $scope.modelInstaller.loadData();
-                    }.bind(this));
-                }
+
+
             }.bind(this));
         },
         disconnect: function () {
@@ -630,7 +638,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             }
             //console.log("Disconnected");
         },
-        parseHostMessage: function (obj) {
+        /*parseHostMessage: function (obj) {
 
             $scope.formatModuleStatus();
             if(!!$scope.selected ){
@@ -643,7 +651,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             if(!!$scope.selected ){
                 $scope.$broadcast('onNodeRefresh', 'true');
             }
-        }
+        }*/
     };
 
     $scope.background = "/web-public/fit2cloud/html/background/background.html?_t" + window.appversion;
@@ -987,7 +995,7 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
                 item.showLog = !$scope.is_mc && item.nodeStatus.indexOf("Faild") != -1;
                 item.showStart = !$scope.is_mc && (item.nodeStatus == 'stopped' || item.nodeStatus == 'startFaild');
                 item.buttonClass = $scope.classMap[item.nodeStatus] || $scope.classMap['stopped'];
-                item.loading = (item.nodeStatus.indexOf("ing") != -1 ) && item.nodeStatus != 'running';
+                item.loading = (item.nodeStatus.indexOf("ing") != -1 ) && item.nodeStatus != 'running' || (item.nodeStatus.indexOf("TimeOut") != -1 );
             })
         })
     };

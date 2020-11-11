@@ -255,6 +255,8 @@
   "i18n_model_node_field_status": "状态",
   "i18n_model_node_field_create_time": "创建时间",
   "i18n_model_status_running": "运行",
+  "i18n_model_status_startTimeOut": "启动超时",
+  "i18n_model_status_stopTimeOut": "停止超时",
   "i18n_model_status_stopped": "停止",
   "i18n_model_status_stopFaild": "停止失败",
   "i18n_model_status_installFaild": "安装失败",

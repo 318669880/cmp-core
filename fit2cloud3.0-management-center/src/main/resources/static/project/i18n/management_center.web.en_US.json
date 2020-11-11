@@ -256,6 +256,8 @@
   "i18n_model_node_field_status": "Status",
   "i18n_model_node_field_create_time": "CreateTime",
   "i18n_model_status_running": "Running",
+  "i18n_model_status_startTimeOut": "StartTimeOut",
+  "i18n_model_status_stopTimeOut": "StopTimeOut",
   "i18n_model_status_stopped": "Stoped",
   "i18n_model_status_stopFaild": "Stop Faild",
   "i18n_model_status_installFaild": "Install Faild",

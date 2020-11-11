@@ -5,20 +5,24 @@ import com.fit2cloud.commons.server.elastic.domain.SystemLog;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.Pager;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.client.Client;
+import org.elasticsearch.client.*;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
+import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort;;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +31,10 @@ import java.util.Map;
 public class SystemLogService {
     @Resource
     private SystemLogRepository systemLogRepository;
-    /*@Resource
-    private ElasticsearchTemplate elasticsearchTemplate;*/
+    @Resource
+    private RestHighLevelClient restHighLevelClient;
+
+
 
     public Pager<List<SystemLog>> querySystemLog(int goPage, int pageSize, Map<String, Object> params) {
         List<SystemLog> results = new ArrayList<>();
@@ -59,15 +65,20 @@ public class SystemLogService {
 
 
     public void cleanHistoryLog(Long logTime) {
-        /*String indexName = elasticsearchTemplate.getPersistentEntityFor(SystemLog.class).getIndexName();
+        String indexName = "fit2cloud-cmp-logs";
         RangeQueryBuilder queryBuilder = QueryBuilders.rangeQuery("logTime").lte(logTime);
-        Client client = elasticsearchTemplate.getClient();
-        DeleteByQueryRequestBuilder deleteByQueryRequestBuilder = new DeleteByQueryRequestBuilder(client, DeleteByQueryAction.INSTANCE);
-        BulkByScrollResponse bulkByScrollResponse = deleteByQueryRequestBuilder
-                .filter(queryBuilder)
-                .source(indexName)
-                .get();
-        LogUtil.info("Total delete：{} system logs", bulkByScrollResponse.getDeleted());*/
+        DeleteByQueryRequest request = new DeleteByQueryRequest(indexName);
+        request.setConflicts("proceed");
+        request.setQuery(queryBuilder);
+        request.setScroll(TimeValue.timeValueMinutes(10));
+        request.setTimeout(TimeValue.timeValueMinutes(10));
+        request.setRefresh(true);
+        try{
+            BulkByScrollResponse response = restHighLevelClient.deleteByQuery(request, RequestOptions.DEFAULT);
+            LogUtil.info("Total delete：{} system logs", response.getStatus().getDeleted());
+        }catch (Exception e){
+            LogUtil.error("Failed delete system logs, {}", e.getMessage());
+        }
     }
 
 }

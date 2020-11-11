@@ -47,7 +47,12 @@ public class TagMappingService {
         }
         for (TagMapping tagMapping : tagMappings) {
             tagMapping.setCreateTime(System.currentTimeMillis());
-            tagMapping.setTagKey(tagMapper.selectByPrimaryKey(tagMapping.getTagId()).getTagKey());
+            if(StringUtils.isEmpty(tagMapping.getTagId()) && StringUtils.isEmpty(tagMapping.getTagKey())){
+                throw new Exception("The TagID and Tagkey cannot be empty at the same time.");
+            }
+            if(StringUtils.isEmpty(tagMapping.getTagKey()) && StringUtils.isNoneEmpty(tagMapping.getTagId())){
+                tagMapping.setTagKey(tagMapper.selectByPrimaryKey(tagMapping.getTagId()).getTagKey());
+            }
             saveTagMapping(tagMapping);
         }
     }

@@ -105,7 +105,7 @@ public class ElasticsearchTest {
 
     @Test
     public void test8() throws Exception {
-        long time = 1531908648000L;
+        long time = 1604994181000L;
 
         systemLogService.cleanHistoryLog(time);
     }

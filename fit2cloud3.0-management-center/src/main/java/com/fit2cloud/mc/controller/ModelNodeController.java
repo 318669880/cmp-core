@@ -128,6 +128,10 @@ public class ModelNodeController {
                 checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_START);
                 return true;
             }
+            if (StringUtils.equals(currentStatus, ModuleStatusConstants.startFaild.value())){
+                checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_START);
+                return true;
+            }
             if (checkModuleStatus.isTimeOut(updateTime, node_start_time_out) ) {
                 if (!StringUtils.equals(currentStatus, ModuleStatusConstants.startTimeOut.value())){
                     currentNode.setNodeStatus(ModuleStatusConstants.startTimeOut.value());

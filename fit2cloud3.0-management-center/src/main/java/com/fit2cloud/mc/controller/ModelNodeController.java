@@ -107,6 +107,7 @@ public class ModelNodeController {
 
     @PostMapping("/node/start")
     public void nodeStart(String module, String nodeId) throws Exception {
+        LogUtil.info("Start execute [/modelNode/node/start]");
         ModelManager select = modelManagerService.select();
         nodeOperateService.start(select, module, nodeId);
         ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);

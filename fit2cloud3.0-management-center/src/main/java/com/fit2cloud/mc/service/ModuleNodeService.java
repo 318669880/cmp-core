@@ -51,7 +51,7 @@ public class ModuleNodeService {
      * @param module
      * @return
      */
-    @Cacheable(value = "host-nodes-cache",condition = "#module==null")
+    /*@Cacheable(value = "host-nodes-cache",condition = "#module==null")*/
     public List<ModelNode> queryNodes(String module){
         ModelNodeExample modelNodeExample = new ModelNodeExample();
         ModelNodeExample.Criteria criteria = modelNodeExample.createCriteria();
@@ -70,8 +70,8 @@ public class ModuleNodeService {
         return modelNodeMapper.selectByExample(modelNodeExample);
     }
 
-    @CacheEvict(value = "host-nodes-cache",allEntries = true)
-    public void clearCache(){}
+    /*@CacheEvict(value = "host-nodes-cache",allEntries = true)
+    public void clearCache(){}*/
 
 
     public ModelNode currentMcNode(){
@@ -103,7 +103,7 @@ public class ModuleNodeService {
      *
      */
     /*@DcsLock*/
-    @CacheEvict(value = "host-nodes-cache",allEntries = true)
+    /*@CacheEvict(value = "host-nodes-cache",allEntries = true)*/
     public void addOrUpdateModelNode (ModelNode node) throws Exception{
         String mc_hostName = domain_host();
         String mc_ip = environment.getProperty("eureka.instance.ip-address");

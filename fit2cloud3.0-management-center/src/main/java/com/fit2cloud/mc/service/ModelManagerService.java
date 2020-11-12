@@ -172,7 +172,7 @@ public class ModelManagerService {
      * @param modelInstalledDto
      * 删除所有model_baisc_lists中缓存
      */
-    @CacheEvict(value = "model_baisc_lists",allEntries = true)
+    /*@CacheEvict(value = "model_baisc_lists",allEntries = true)*/
     public void readyInstallModule(ModelInstalledDto modelInstalledDto, ModelNode node, boolean isUpdate) throws Exception{
         ModelBasic modelBasic = modelInstalledDto.getModelBasic();
         String module = modelBasic.getModule();
@@ -215,7 +215,7 @@ public class ModelManagerService {
     }
 
 
-    @Cacheable(value = "model_baisc_lists")
+    /*@Cacheable(value = "model_baisc_lists")*/
     public List<ModelBasic> modelBasics(){
         ModelBasicExample example = new ModelBasicExample();
         example.createCriteria().andModuleIsNotNull();

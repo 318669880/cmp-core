@@ -79,7 +79,7 @@ public class ModelNodeController {
     @PostMapping("/node/install")
     public void nodeInstall(String module, String nodeId) throws Exception {
         nodeOperateService.installOrUpdate(modelManagerService.select(), module, nodeId);
-        ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
+        /*ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
         Long updateTime = modelNode.getUpdateTime();
         checkModuleStatus.checkNode(modelNode, node -> {
             ModelNode currentNode = moduleNodeService.nodeInfo(nodeId);
@@ -101,7 +101,7 @@ public class ModelNodeController {
                 return true;
             }
             return false;
-        }, 10000L);
+        }, 10000L);*/
     }
 
 
@@ -110,32 +110,16 @@ public class ModelNodeController {
         ModelManager select = modelManagerService.select();
         nodeOperateService.start(select, module, nodeId);
         ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
-
+        Long updateTime = modelNode.getUpdateTime();
         checkModuleStatus.checkNode(modelNode, node -> {
-            Long updateTime = modelNode.getUpdateTime();
             ModelNode currentNode = moduleNodeService.nodeInfo(nodeId);
-            if (StringUtils.equals(currentNode.getNodeStatus(), ModuleStatusConstants.startFaild.value())) {
-                //执行ModelOperateStrategy方法异常 状态已经改变了 那么结束检测任务
-                moduleNodeService.clearCache();
-                checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_START);
+            boolean node_available = checkModuleStatus.is_node_available(node);
+            String currentStatus = currentNode.getNodeStatus();
+            if (node_available || StringUtils.equals(currentStatus, ModuleStatusConstants.running.value())){
                 return true;
             }
-            if (checkModuleStatus.isTimeOut(updateTime, node_start_time_out)) {
-                moduleNodeService.clearCache();
+            if (checkModuleStatus.isTimeOut(updateTime, node_start_time_out+60000) && !StringUtils.equals(currentStatus, ModuleStatusConstants.startTimeOut.value())) {
                 currentNode.setNodeStatus(ModuleStatusConstants.startTimeOut.value());
-                try {
-                    moduleNodeService.addOrUpdateModelNode(currentNode);
-                    //nodeOperateService.stop(select, module, nodeId);//启动超时 立刻停止
-                    nodeStop(module, nodeId);
-                } catch (Exception e) {
-                    LogUtil.error(e.getMessage(), e);
-                }
-                checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_START);
-                return true;
-            }
-            if (checkModuleStatus.is_node_available(currentNode)) {
-                moduleNodeService.clearCache();
-                currentNode.setNodeStatus(ModuleStatusConstants.running.value());
                 try {
                     moduleNodeService.addOrUpdateModelNode(currentNode);
                 } catch (Exception e) {
@@ -145,9 +129,7 @@ public class ModelNodeController {
                 return true;
             }
             return false;
-        }, 15000L);
-        //执行停止操作后 每5s执行一次检测 30s后销毁定时器
-        //dynamicTaskJob.addTaskWithTime(() -> checkModuleStatus.checkSingleNode(moduleNodeService.nodeInfo(nodeId)), "0/5 * * * * ? ", 30000L, 15000L);
+        }, 60000L);
     }
 
 
@@ -156,32 +138,16 @@ public class ModelNodeController {
         ModelManager select = modelManagerService.select();
         nodeOperateService.stop(select, module, nodeId);
         ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
-
+        Long updateTime = modelNode.getUpdateTime();
         checkModuleStatus.checkNode(modelNode, node -> {
-            Long updateTime = modelNode.getUpdateTime();
             ModelNode currentNode = moduleNodeService.nodeInfo(nodeId);
-            if (StringUtils.equals(currentNode.getNodeStatus(), ModuleStatusConstants.stopFaild.value())) {
-                //执行ModelOperateStrategy方法异常 状态已经改变了 那么结束检测任务
-                moduleNodeService.clearCache();
-                checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_STOP);
+            boolean node_available = checkModuleStatus.is_node_available(node);
+            String currentStatus = currentNode.getNodeStatus();
+            if (!node_available || StringUtils.equals(currentStatus, ModuleStatusConstants.stopped.value())){
                 return true;
             }
-            if (checkModuleStatus.isTimeOut(updateTime, node_stop_time_out)) {
-                moduleNodeService.clearCache();
+            if (checkModuleStatus.isTimeOut(updateTime, node_stop_time_out+30000) && !StringUtils.equals(currentStatus, ModuleStatusConstants.stopTimeOut.value())) {
                 currentNode.setNodeStatus(ModuleStatusConstants.stopTimeOut.value());
-                try {
-                    moduleNodeService.addOrUpdateModelNode(currentNode);
-                    //nodeOperateService.start(select, module, nodeId);//停止超时 重新启动
-                    nodeStop(module, nodeId);
-                } catch (Exception e) {
-                    LogUtil.error(e.getMessage(), e);
-                }
-                checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_STOP);
-                return true;
-            }
-            if (!checkModuleStatus.is_node_available(currentNode)) {
-                moduleNodeService.clearCache();
-                currentNode.setNodeStatus(ModuleStatusConstants.stopped.value());
                 try {
                     moduleNodeService.addOrUpdateModelNode(currentNode);
                 } catch (Exception e) {
@@ -191,9 +157,7 @@ public class ModelNodeController {
                 return true;
             }
             return false;
-        }, 10000L);
-        //执行停止操作后 每5s执行一次检测 30s后销毁定时器
-        //dynamicTaskJob.addTaskWithTime(() -> checkModuleStatus.checkSingleNode(modelNode), "0/5 * * * * ? ", 30000L, 5000L);
+        }, 30000L);
     }
 
 }

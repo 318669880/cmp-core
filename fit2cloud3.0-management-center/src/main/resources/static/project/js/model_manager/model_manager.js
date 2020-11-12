@@ -621,10 +621,16 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                     if (topic.name.startsWith($scope.indexServer.model_env.toLocaleUpperCase())){
                         this.stompClient.subscribe(topic.value,function(response){
                             let res = JSON.parse(response.body);
-                            if(!!$scope.selected ){
-                                $scope.$broadcast('onNodeRefresh', 'true');
+                            if (res.type == 'K8S_MODEL_UNINSTALL'){
+                                $scope.modelInstaller.loadData();
+                                return
                             }
-                            $scope.modelInstaller.loadData();
+                            if ($scope.indexServer.model_env == 'host'){
+                                this.parseHostMessage(res);
+                            }else{
+                                this.parseK8sMessage(res);
+                            }
+
                         }.bind(this));
                     }
                 }.bind(this));
@@ -638,20 +644,18 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             }
             //console.log("Disconnected");
         },
-        /*parseHostMessage: function (obj) {
-
+        parseHostMessage: function (obj) {
             $scope.formatModuleStatus();
             if(!!$scope.selected ){
                 $scope.$broadcast('onNodeRefresh', 'true');
             }
         },
         parseK8sMessage: function (obj) {
-            let changeData = obj;
             $scope.formatModuleStatus();
             if(!!$scope.selected ){
                 $scope.$broadcast('onNodeRefresh', 'true');
             }
-        }*/
+        }
     };
 
     $scope.background = "/web-public/fit2cloud/html/background/background.html?_t" + window.appversion;

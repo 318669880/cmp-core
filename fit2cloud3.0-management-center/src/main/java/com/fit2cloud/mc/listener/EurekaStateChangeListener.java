@@ -3,6 +3,7 @@ package com.fit2cloud.mc.listener;
 import com.fit2cloud.commons.server.service.StatsService;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
+import com.fit2cloud.mc.job.CheckModuleStatus;
 import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import com.netflix.appinfo.InstanceInfo;
 import org.springframework.cloud.netflix.eureka.server.event.*;
@@ -17,14 +18,19 @@ public class EurekaStateChangeListener {
     @Resource
     private ModelNodeTask modelNodeTask;
 
+    @Resource
+    private CheckModuleStatus checkModuleStatus;
+
     @EventListener(condition = "#event.replication")
     public void listen(EurekaInstanceCanceledEvent event) {
+        checkModuleStatus.nodeStatuesTrigger(event.getAppName(), event.getServerId(), false);
         LogUtil.info("Service offline:" + event.getAppName() + "," + event.getServerId());
     }
 
     @EventListener(condition = "#event.replication")
     public void listen(EurekaInstanceRegisteredEvent event) {
         InstanceInfo info = event.getInstanceInfo();
+        checkModuleStatus.nodeStatuesTrigger(info.getAppName(), info.getId(), true);
         LogUtil.info("Service registration:" + info.getAppName() + "," + info.getIPAddr()+":" + info.getPort());
         //注册后验证连接
         CommonBeanFactory.getBean(StatsService.class).validateModuleConnection(info.getAppName(), info.getIPAddr(), info.getPort());

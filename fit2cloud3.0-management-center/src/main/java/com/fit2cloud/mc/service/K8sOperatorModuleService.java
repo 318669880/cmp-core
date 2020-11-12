@@ -47,6 +47,7 @@ public class K8sOperatorModuleService {
     @Resource
     private CommonThreadPool commonThreadPool;
     @Resource
+    @Lazy
     private CheckModuleStatus checkModuleStatus;
 
     @Value("${fit2cloud.k8s_operate_time_out:120000}")
@@ -81,7 +82,7 @@ public class K8sOperatorModuleService {
                     modelBasic = modelManagerService.modelBasicInfo(module);
                     K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
                     LogUtil.info("Success to operation {} ,: " + msg, module);
-                    checkModuleStatus.checkModule(modelBasic, model -> {
+                    /*checkModuleStatus.checkModule(modelBasic, model -> {
                         Map<String, List<String>> pods = pods(true);
                         List<String> cache_pods = pods.get(module);
                         List<String> instances = discoveryClient.getInstances(module).stream().map(ServiceInstance::getHost).collect(Collectors.toList());
@@ -98,7 +99,7 @@ public class K8sOperatorModuleService {
                             return true;
                         }
                         return false;
-                    }, 30000L);
+                    }, 30000L);*/
                     OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), action, null);
                 } catch (Exception e) {
                     LogUtil.error("Faild to operation module: " + module, e.getMessage());
@@ -122,7 +123,7 @@ public class K8sOperatorModuleService {
                     if (CollectionUtils.isEmpty(instances)) {
                         modelManagerService.deleteModelBasic(modelBasic.getModule());
                         K8sOperatorModuleService proxy = CommonBeanFactory.getBean(K8sOperatorModuleService.class);
-                        proxy.clearCache();
+                        /*proxy.clearCache();*/
                         checkModuleStatus.sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_UNINSTALL);
                         return true;
                     }
@@ -137,7 +138,7 @@ public class K8sOperatorModuleService {
     }
 
 
-    @Cacheable(value = "k8s-pod-cache", condition = "#user_cache==true")
+    /*@Cacheable(value = "k8s-pod-cache", condition = "#user_cache==true")*/
     public Map<String, List<String>> pods(boolean user_cache) {
         Map<String, List<String>> result = new HashMap<>();
         discoveryClient.getServices().forEach(module -> {
@@ -149,8 +150,8 @@ public class K8sOperatorModuleService {
         return result;
     }
 
-    @CacheEvict(value = "k8s-pod-cache", allEntries = true)
+    /*@CacheEvict(value = "k8s-pod-cache", allEntries = true)
     public void clearCache() {
-    }
+    }*/
 
 }

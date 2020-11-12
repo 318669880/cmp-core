@@ -76,7 +76,6 @@ public class CheckModuleStatus {
         LogUtil.info("eurekaEvent was triggered");
         LogUtil.info("Start operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));
         modelNodes.stream().filter(node -> StringUtils.equals(node.getNodeHost(), serviceId)).findFirst().ifPresent(node -> {
-            String sourceStatus = node.getNodeStatus();
             String status = ModuleStatusConstants.running.value();
             WsTopicConstants wsTopicConstants = WsTopicConstants.HOST_NODE_START;
             if (!onLine){
@@ -84,12 +83,11 @@ public class CheckModuleStatus {
                 wsTopicConstants = WsTopicConstants.HOST_NODE_STOP;
             }
             node.setNodeStatus(status);
-            if (!StringUtils.equals(sourceStatus, status)){
-                try {
-                    moduleNodeService.addOrUpdateNodeClear(node);
-                } catch (Exception e) {
-                    LogUtil.error(e.getMessage() , e);
-                }
+            try {
+                moduleNodeService.addOrUpdateNodeClear(node);
+                LogUtil.info("End operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));
+            } catch (Exception e) {
+                LogUtil.error(e.getMessage() , e);
             }
             sendMessage(node, wsTopicConstants);
         });

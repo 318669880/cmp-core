@@ -88,6 +88,9 @@ public class CheckModuleStatus {
         LogUtil.info("Start operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));
         modelNodes.stream().filter(node -> {
             ServiceInstance serviceInstance = instanceByNode(node);
+            LogUtil.info("The node mapping ServiceId is: "+serviceInstance.getInstanceId());
+            LogUtil.info("The event target ServiceId is: "+serviceId);
+            LogUtil.info("The node mapping serviceId equals event target ServiceId is : "+ StringUtils.equals(serviceInstance.getInstanceId(), serviceId));
             return null != serviceInstance && StringUtils.equals(serviceInstance.getInstanceId(), serviceId);
         }).findFirst().ifPresent(node -> {
             String status = ModuleStatusConstants.running.value();

@@ -115,7 +115,14 @@ public class ModelNodeController {
             ModelNode currentNode = moduleNodeService.nodeInfo(nodeId);
             boolean node_available = checkModuleStatus.is_node_available(node);
             String currentStatus = currentNode.getNodeStatus();
-            if (node_available || StringUtils.equals(currentStatus, ModuleStatusConstants.running.value())){
+            if (node_available && !StringUtils.equals(currentStatus, ModuleStatusConstants.running.value())){
+                currentNode.setNodeStatus(ModuleStatusConstants.running.value());
+                try {
+                    moduleNodeService.addOrUpdateModelNode(currentNode);
+                } catch (Exception e) {
+                    LogUtil.error(e.getMessage(), e);
+                }
+                checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_START);
                 return true;
             }
             if (checkModuleStatus.isTimeOut(updateTime, node_start_time_out+60000) && !StringUtils.equals(currentStatus, ModuleStatusConstants.startTimeOut.value())) {
@@ -144,6 +151,13 @@ public class ModelNodeController {
             boolean node_available = checkModuleStatus.is_node_available(node);
             String currentStatus = currentNode.getNodeStatus();
             if (!node_available || StringUtils.equals(currentStatus, ModuleStatusConstants.stopped.value())){
+                currentNode.setNodeStatus(ModuleStatusConstants.stopped.value());
+                try {
+                    moduleNodeService.addOrUpdateModelNode(currentNode);
+                } catch (Exception e) {
+                    LogUtil.error(e.getMessage(), e);
+                }
+                checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_STOP);
                 return true;
             }
             if (checkModuleStatus.isTimeOut(updateTime, node_stop_time_out+30000) && !StringUtils.equals(currentStatus, ModuleStatusConstants.stopTimeOut.value())) {

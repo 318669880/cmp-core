@@ -77,11 +77,11 @@ public class CheckModuleStatus {
 
 
     public void nodeStatuesTrigger(String appName, String serviceId, Boolean onLine){
+        String model = appName.toLowerCase();
         if (SyncEurekaServer.IS_KUBERNETES){
             moduleStatusTrigger(appName, serviceId, onLine);
             return;
         }
-        String model = appName.toLowerCase();
         List<ModelNode> modelNodes = moduleNodeService.queryNodes(model);
         if (CollectionUtils.isEmpty(modelNodes)) return;
         LogUtil.info("eurekaEvent was triggered");

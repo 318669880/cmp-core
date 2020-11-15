@@ -95,9 +95,22 @@ public class CheckModuleStatus {
         }).findFirst().ifPresent(node -> {
             String status = ModuleStatusConstants.running.value();
             WsTopicConstants wsTopicConstants = WsTopicConstants.HOST_NODE_START;
+            String currentStatus = node.getNodeStatus();
+            if (StringUtils.equals(currentStatus, ModuleStatusConstants.startting.value()) && !onLine){
+                return;
+            }
+            if (StringUtils.equals(currentStatus, ModuleStatusConstants.stopping.value()) && onLine){
+                return;
+            }
             if (!onLine){
                 status = ModuleStatusConstants.stopped.value();
                 wsTopicConstants = WsTopicConstants.HOST_NODE_STOP;
+                if (StringUtils.equals(currentStatus, ModuleStatusConstants.stopped.value())){
+                    return;
+                }
+            }
+            if (StringUtils.equals(currentStatus, ModuleStatusConstants.running.value())){
+                return;
             }
             node.setNodeStatus(status);
             try {

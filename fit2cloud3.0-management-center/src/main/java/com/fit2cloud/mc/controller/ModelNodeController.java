@@ -40,7 +40,7 @@ public class ModelNodeController {
     private CheckModuleStatus checkModuleStatus;
 
     //节点启动超时时间 默认是90s
-    @Value("${fit2cloud.node_start_time_out:90000}")
+    @Value("${fit2cloud.node_start_time_out:120000}")
     private Long node_start_time_out;
 
     //节点安装超时时间
@@ -124,8 +124,8 @@ public class ModelNodeController {
                     } catch (Exception e) {
                         LogUtil.error(e.getMessage(), e);
                     }
+                    checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_START);
                 }
-                checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_START);
                 return true;
             }
             if (StringUtils.equals(currentStatus, ModuleStatusConstants.startFaild.value())){
@@ -154,7 +154,7 @@ public class ModelNodeController {
         ModelManager select = modelManagerService.select();
         nodeOperateService.stop(select, module, nodeId);
         ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
-        Long updateTime = modelNode.getUpdateTime();
+        //Long updateTime = modelNode.getUpdateTime();
         checkModuleStatus.checkNode(modelNode, node -> {
             ModelNode currentNode = moduleNodeService.nodeInfo(nodeId);
             boolean node_available = checkModuleStatus.is_node_available(node);
@@ -167,11 +167,15 @@ public class ModelNodeController {
                     } catch (Exception e) {
                         LogUtil.error(e.getMessage(), e);
                     }
+                    checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_STOP);
                 }
+                return true;
+            }
+            if (StringUtils.equals(currentStatus, ModuleStatusConstants.stopFaild.value())){
                 checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_STOP);
                 return true;
             }
-            if (checkModuleStatus.isTimeOut(updateTime, node_stop_time_out)) {
+            /*if (checkModuleStatus.isTimeOut(updateTime, node_stop_time_out)) {
                 if (!StringUtils.equals(currentStatus, ModuleStatusConstants.stopTimeOut.value())){
                     currentNode.setNodeStatus(ModuleStatusConstants.stopTimeOut.value());
                     try {
@@ -182,7 +186,7 @@ public class ModelNodeController {
                 }
                 checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_STOP);
                 return true;
-            }
+            }*/
             return false;
         }, 0L);
     }

@@ -997,7 +997,7 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
         HttpUtils.paging($scope,  url, {}, resp => {
             $scope.items.forEach(item => {
                 item.showLog = !$scope.is_mc && item.nodeStatus.indexOf("Faild") != -1;
-                item.showStart = !$scope.is_mc && (item.nodeStatus == 'stopped' || item.nodeStatus == 'startFaild');
+                item.showStart = !$scope.is_mc && (item.nodeStatus == 'stopped' || item.nodeStatus == 'startFaild' || item.nodeStatus == 'startTimeOut');
                 item.buttonClass = $scope.classMap[item.nodeStatus] || $scope.classMap['stopped'];
                 item.loading = (item.nodeStatus.indexOf("ing") != -1 ) && item.nodeStatus != 'running' || (item.nodeStatus.indexOf("TimeOut") != -1 );
             })

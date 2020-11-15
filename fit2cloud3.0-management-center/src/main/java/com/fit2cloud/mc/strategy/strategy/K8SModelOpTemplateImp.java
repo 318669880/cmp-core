@@ -22,7 +22,7 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
     @Resource
     private ModelManagerService modelManagerService;
 
-    @DcsLock
+//    @DcsLock
     @Override
     public String executeInstall(ModelManager modelManager, String module, String filePath, Map<String, Object> params)throws Exception {
         try{
@@ -40,18 +40,18 @@ public class K8SModelOpTemplateImp implements ModelOperateStrategy {
         }
     }
 
-    @DcsLock
+//    @DcsLock
     @Override
     public void executeStart(String modeule) {
 
     }
 
-    @DcsLock
+//    @DcsLock
     @Override
     public void executeStop(String modeule)throws Exception {
     }
 
-    @DcsLock
+//    @DcsLock
     @Override
     public void executeDelete(String modeule) {
 

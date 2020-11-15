@@ -3,6 +3,7 @@ package com.fit2cloud.mc.strategy.service.imp;
 import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.server.constants.ResourceTypeConstants;
 import com.fit2cloud.commons.server.service.OperationLogService;
+import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.model.*;
 import com.fit2cloud.mc.service.ModelManagerService;
@@ -64,29 +65,33 @@ public class NodeOpServiceImp implements NodeOperateService {
     }
 
     @Async
-    @Transactional
     @Override
     public void start(ModelManager managerInfo, String module, String nodeId) throws Exception {
         ModelOperateStrategy operateStrategy = NodeOperateStrategyFactory.build(managerInfo.getEnv());
         try{
+            LogUtil.info("Start operateStrategy.executeStart("+module+");");
             operateStrategy.executeStart(module);
             ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
+            LogUtil.info("End operateStrategy.executeStart("+module+");");
             OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), ResourceOperation.START, null);
         }catch (Exception e){
+            LogUtil.error("Error operateStrategy.executeStart("+module+");", e);
             changestatus(nodeId,ModuleStatusConstants.startFaild.value());
         }
     }
 
     @Async
-    @Transactional
     @Override
     public void stop(ModelManager managerInfo, String module ,String nodeId) throws Exception {
         ModelOperateStrategy operateStrategy = NodeOperateStrategyFactory.build(managerInfo.getEnv());
         try{
+            LogUtil.info("Start operateStrategy.executeStop("+module+");");
             operateStrategy.executeStop(module);
             ModelBasic modelBasic = modelManagerService.modelBasicInfo(module);
+            LogUtil.info("End operateStrategy.executeStop("+module+");");
             OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), ResourceOperation.STOP, null);
         }catch (Exception e){
+            LogUtil.error("Error operateStrategy.executeStop("+module+");", e);
             changestatus(nodeId,ModuleStatusConstants.stopFaild.value());
         }
     }

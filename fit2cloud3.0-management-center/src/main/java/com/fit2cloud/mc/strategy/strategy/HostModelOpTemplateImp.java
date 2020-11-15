@@ -32,13 +32,13 @@ public class HostModelOpTemplateImp implements ModelOperateStrategy {
 
     // 集群环境避免各节点同时执行
     // 锁住该方法1分钟 避免同时启动导致报错
-    @DcsLock(overtime = 60000,waitime = 5000)
+    /*@DcsLock(overtime = 60000,waitime = 5000)*/
     @Override
     public void executeStart(String modeule) {
         try {
             ModuleUtil.startService(modeule);
             // 执行命令后等待50s 因为模块启动是一个过程
-            Thread.sleep(50000);
+            //Thread.sleep(50000);
         } catch (Exception e) {
             LogUtil.error("Failed to start module: " + modeule, e);
             F2CException.throwException(e);

@@ -886,14 +886,18 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             text: $filter('translator')('i18n_pod_number', 'Pod 数量'),
             required: true,
             type:'number',
-            init: 1,
-            positive: true
+            init: 1
+            //positive: true
             /*min: 0,
             max:20*/
         };
 
         Notification.prompt(obj, function (result) {
             let pod_number = result;
+            if (pod_number < 0){
+                Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于0'));
+                return;
+            }
             if(pod_number < 1){
                 //Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于1'));
                 $scope.stopK8sModule(item);

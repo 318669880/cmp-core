@@ -222,5 +222,11 @@ public class ModelManagerService {
         return modelBasicMapper.selectByExample(example);
     }
 
+    public List<ModelBasic> modelByStatus(String status){
+        ModelBasicExample example = new ModelBasicExample();
+        example.createCriteria().andModuleIsNotNull().andCurrentStatusEqualTo(status);
+        return modelBasicMapper.selectByExample(example);
+    }
+
 
 }

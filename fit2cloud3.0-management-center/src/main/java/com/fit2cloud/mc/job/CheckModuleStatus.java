@@ -18,6 +18,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -49,6 +50,26 @@ public class CheckModuleStatus {
     @Resource
     @Lazy
     private ModelManagerService modelManagerService;
+
+    @Scheduled(cron = "0/5 * * * * ? ")
+    public void resetK8sModuleStatus(){
+        if (!SyncEurekaServer.IS_KUBERNETES){
+            return;
+        }
+        List<ModelBasic> modules = modelManagerService.modelByStatus("timeOut");
+        if (CollectionUtils.isEmpty(modules)) return;
+        modules.forEach(modelBasic -> {
+            String module = modelBasic.getModule();
+            List<ServiceInstance> instances = discoveryClient.getInstances(module);
+            int eurekaPodNum = CollectionUtils.isEmpty(instances) ? 0 : instances.size();
+            Integer podNum = modelBasic.getPodNum();
+            if (podNum == eurekaPodNum){
+                modelBasic.setCurrentStatus(null);
+                modelManagerService.updateModelBasic(modelBasic);
+                sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_START);
+            }
+        });
+    }
 
     public void moduleStatusTrigger(String appName, String serviceId, Boolean onLine) {
 

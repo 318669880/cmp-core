@@ -67,7 +67,7 @@ public class CheckModuleStatus {
             if (!onLine){
                 wsTopicConstants = WsTopicConstants.K8S_MODEL_STOP;
             }
-            if (discoveryClient.getInstances(modelBaisc.getModule()).size() == modelBaisc.getPodNum() && StringUtils.equals("timeOut", modelBaisc.getCurrentStatus())){
+            if (discoveryClient.getInstances(modelBaisc.getModule()).size() == modelBaisc.getPodNum()){
                 modelBaisc.setCurrentStatus(null);
                 modelManagerService.updateModelBasic(modelBaisc);
                 LogUtil.info("The status of module["+appName+"] has been reset by eureka");

@@ -86,9 +86,10 @@ public class K8sOperatorModuleService {
                     K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
                     LogUtil.info("Success to operation {} ,: " + msg, module);
                     checkModuleStatus.checkModule(modelBasic, model -> {
-                        ModelBasic currentModel = modelManagerService.modelBasicInfo(module);
-                        int dbPodNum = currentModel.getPodNum();
+                        int dbPodNum = model.getPodNum();
+
                         int eurekaPodNum = discoveryClient.getInstances(module).size();
+                        int abs = Math.abs(dbPodNum - eurekaPodNum);
                         if ( dbPodNum == eurekaPodNum ){
                             LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);
                             LogUtil.info("Timer detected ["+module+"] "+action+" success");
@@ -98,7 +99,7 @@ public class K8sOperatorModuleService {
                             LogUtil.info("The status of module["+module+"] has been reset");
                             return true;
                         }
-                        if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out)) {
+                        if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out * abs)) {
                             LogUtil.info("Timer detected ["+module+"] "+action+" timeout");
                             LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);
                             modelBasic.setCurrentStatus("timeOut");

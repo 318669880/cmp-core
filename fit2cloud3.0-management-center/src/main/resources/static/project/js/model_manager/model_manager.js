@@ -887,9 +887,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             required: true,
             type:'number',
             init: 1
-            //positive: true
-            /*min: 0,
-            max:20*/
         };
 
         Notification.prompt(obj, function (result) {

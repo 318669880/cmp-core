@@ -715,7 +715,6 @@
                 init: obj.init,
                 required: obj.required,
                 type: obj.type || 'text',
-                // positive: obj.positive || false,
 
                 selectValue: obj.selectValue,
                 selectKey: obj.selectKey,
@@ -741,7 +740,6 @@
                     $scope.showInput = text? true : false;
                     $scope.value = init || null;
                     $scope.type = type;
-                    // $scope.positive = positive;
 
                     $scope.selected = null;
                     $scope.selectValue =  selectValue;

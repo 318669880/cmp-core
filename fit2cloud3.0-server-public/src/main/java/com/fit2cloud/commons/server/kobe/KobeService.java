@@ -1,7 +1,6 @@
 package com.fit2cloud.commons.server.kobe;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.apache.commons.lang3.StringUtils;

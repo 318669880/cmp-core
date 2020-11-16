@@ -72,7 +72,7 @@ public class CheckModuleStatus {
     }*/
 
     private int currentPodNum(String module, String serviceId, Boolean onLine){
-        List<ServiceInstance> instances = discoveryClient.getInstances(module);
+        List<ServiceInstance> instances = Optional.ofNullable(discoveryClient.getInstances(module)).orElse(new ArrayList<ServiceInstance>());
         Boolean inEureka = instances.stream().anyMatch(instance -> StringUtils.equals(serviceId, instance.getInstanceId()));
         if (onLine && !inEureka){
             return instances.size() + 1;
@@ -126,9 +126,24 @@ public class CheckModuleStatus {
         return null;
     }
 
+    private Boolean isEurekaStable(String model, String serviceId, Boolean onLine) {
+        List<ServiceInstance> instances = Optional.ofNullable(discoveryClient.getInstances(model)).orElse(new ArrayList<ServiceInstance>());
+        boolean inEureka = instances.stream().anyMatch(instance -> StringUtils.equals(instance.getInstanceId(), serviceId));
+        return (onLine && inEureka) || (!onLine && !inEureka);
+    }
 
     public void nodeStatuesTrigger(String appName, String serviceId, Boolean onLine){
         String model = appName.toLowerCase();
+        while (true){
+            if (isEurekaStable(model, serviceId, onLine)){
+                break;
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         if (SyncEurekaServer.IS_KUBERNETES){
             moduleStatusTrigger(appName, serviceId, onLine);
             return;

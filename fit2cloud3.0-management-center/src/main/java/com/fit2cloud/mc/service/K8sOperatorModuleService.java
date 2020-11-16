@@ -86,6 +86,9 @@ public class K8sOperatorModuleService {
                     checkModuleStatus.checkModule(modelBasic, model -> {
                         ModelBasic currentModel = modelManagerService.modelBasicInfo(module);
                         if (currentModel.getPodNum() == discoveryClient.getInstances(module).size()){
+                            modelBasic.setCurrentStatus(null);
+                            modelManagerService.updateModelBasic(modelBasic);
+                            checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
                             return true;
                         }
                         if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out)) {

@@ -96,7 +96,7 @@ public class K8sOperatorModuleService {
                             modelBasic.setCurrentStatus(null);
                             modelManagerService.updateModelBasic(modelBasic);
                             checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
-                            LogUtil.info("The status of module["+module+"] has been reset");
+                            LogUtil.info("The status of module["+module+"] has been reset by Timer");
                             return true;
                         }
                         if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out * abs)) {
@@ -105,7 +105,7 @@ public class K8sOperatorModuleService {
                             modelBasic.setCurrentStatus("timeOut");
                             modelManagerService.updateModelBasic(modelBasic);
                             checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
-                            LogUtil.info("The status of module["+module+"] has been set to timeout");
+                            LogUtil.info("The status of module["+module+"] has been set to timeout by Timer");
                             return true;
                         }
                         return false;

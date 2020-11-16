@@ -753,7 +753,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     // 用于传入后台的参数
     $scope.filters = [];
     $scope.columns = [
-        {
+        /*{
             default: true,
             sort: false,
             type: "checkbox",
@@ -764,7 +764,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 });
             }.bind(this),
             width: "40px"
-        },
+        },*/
         {value: Translator.get("i18n_model_field_name"), key: "name", sort: false},
         {value: Translator.get("i18n_model_field_module"), key: "module", sort: false},
         {value: Translator.get("i18n_model_field_status"), key: "currentStatus", sort: false},

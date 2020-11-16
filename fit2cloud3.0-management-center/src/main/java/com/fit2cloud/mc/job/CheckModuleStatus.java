@@ -51,7 +51,7 @@ public class CheckModuleStatus {
     @Lazy
     private ModelManagerService modelManagerService;
 
-    @Scheduled(cron = "0/5 * * * * ? ")
+    /*@Scheduled(cron = "0/5 * * * * ? ")
     public void resetK8sModuleStatus(){
         if (!SyncEurekaServer.IS_KUBERNETES){
             return;
@@ -69,6 +69,18 @@ public class CheckModuleStatus {
                 sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_START);
             }
         });
+    }*/
+
+    private int currentPodNum(String module, String serviceId, Boolean onLine){
+        List<ServiceInstance> instances = discoveryClient.getInstances(module);
+        Boolean inEureka = instances.stream().anyMatch(instance -> StringUtils.equals(serviceId, instance.getInstanceId()));
+        if (onLine && !inEureka){
+            return instances.size() + 1;
+        }
+        if (!onLine && inEureka){
+            return instances.size() -1;
+        }
+        return instances.size();
     }
 
     public void moduleStatusTrigger(String appName, String serviceId, Boolean onLine) {
@@ -88,7 +100,8 @@ public class CheckModuleStatus {
             if (!onLine){
                 wsTopicConstants = WsTopicConstants.K8S_MODEL_STOP;
             }
-            int eurekaPodNum = discoveryClient.getInstances(modelBaisc.getModule()).size();
+            //int eurekaPodNum = discoveryClient.getInstances(modelBaisc.getModule()).size();
+            int eurekaPodNum = currentPodNum(model, serviceId, onLine);
             Integer dbPodNum = modelBaisc.getPodNum();
 
             LogUtil.info("eureka Event show dbPodNum = ["+dbPodNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");

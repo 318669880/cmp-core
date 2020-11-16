@@ -819,6 +819,9 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             if (item.currentStatus && item.currentStatus=='uninstalling'){
                 prefix = "i18n_model_k8s-status_uninstall";
             }
+            if (item.currentStatus && item.currentStatus=='timeOut'){
+                prefix = "i18n_model_k8s-status_timeout";
+            }
             let _dynamic = runningPods + " -> "+ podNum;
             item.dynamicInfo = !!prefix && (Translator.get(prefix) + ": ("+_dynamic+")") || item.statuInfo;
         })

@@ -50,7 +50,7 @@ public class K8sOperatorModuleService {
     @Lazy
     private CheckModuleStatus checkModuleStatus;
 
-    @Value("${fit2cloud.k8s_operate_time_out:120000}")
+    @Value("${fit2cloud.k8s_operate_time_out:300000}")
     private Long k8s_operate_time_out;
 
     public void start(ModelManager managerInfo, OperatorModuleRequest operatorModuleRequest) {
@@ -79,27 +79,23 @@ public class K8sOperatorModuleService {
                     String msg = "scale pod from " + modelBasic.getPodNum() + " to " + podNumber;
                     LogUtil.info("Begin to operation {} ,: " + msg, module);
                     modelManagerService.updateModelBasicPodNum(module, podNumber);
-                    modelBasic = modelManagerService.modelBasicInfo(module);
+                    modelBasic.setPodNum(podNumber);
+                    //modelBasic = modelManagerService.modelBasicInfo(module);
                     K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
                     LogUtil.info("Success to operation {} ,: " + msg, module);
-                    /*checkModuleStatus.checkModule(modelBasic, model -> {
-                        Map<String, List<String>> pods = pods(true);
-                        List<String> cache_pods = pods.get(module);
-                        List<String> instances = discoveryClient.getInstances(module).stream().map(ServiceInstance::getHost).collect(Collectors.toList());
-                        if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out)) {
-                            K8sOperatorModuleService proxy = CommonBeanFactory.getBean(K8sOperatorModuleService.class);
-                            proxy.clearCache();
-                            checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
+                    checkModuleStatus.checkModule(modelBasic, model -> {
+                        ModelBasic currentModel = modelManagerService.modelBasicInfo(module);
+                        if (currentModel.getPodNum() == discoveryClient.getInstances(module).size()){
                             return true;
                         }
-                        if (!ModelManagerUtil.sameList(cache_pods, instances, item -> item.toString())) {
-                            K8sOperatorModuleService proxy = CommonBeanFactory.getBean(K8sOperatorModuleService.class);
-                            proxy.clearCache();
+                        if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out)) {
+                            modelBasic.setCurrentStatus("timeOut");
+                            modelManagerService.updateModelBasic(modelBasic);
                             checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
                             return true;
                         }
                         return false;
-                    }, 30000L);*/
+                    }, 30000L);
                     OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), action, null);
                 } catch (Exception e) {
                     LogUtil.error("Faild to operation module: " + module, e.getMessage());

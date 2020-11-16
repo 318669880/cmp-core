@@ -59,6 +59,10 @@ public class CheckModuleStatus {
             if (!onLine){
                 wsTopicConstants = WsTopicConstants.K8S_MODEL_STOP;
             }
+            if (discoveryClient.getInstances(modelBaisc.getModule()).size() == modelBaisc.getPodNum() && StringUtils.equals("timeOut", modelBaisc.getCurrentStatus())){
+                modelBaisc.setCurrentStatus(null);
+                modelManagerService.updateModelBasic(modelBaisc);
+            }
             sendMessage(modelBaisc, wsTopicConstants);
             LogUtil.info("End operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));
         });

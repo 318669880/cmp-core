@@ -1,6 +1,7 @@
 package com.fit2cloud.mc.job;
 
 
+import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.common.constants.WsTopicConstants;
@@ -53,6 +54,12 @@ public class CheckModuleStatus {
 
         String model = appName.toLowerCase();
         Optional.ofNullable(modelManagerService.modelBasicInfo(model)).ifPresent(modelBaisc -> {
+            if (StringUtils.equals(modelBaisc.getCurrentStatus(), ResourceOperation.EXPANSION) && !onLine){
+                return;
+            }
+            if (StringUtils.equals(modelBaisc.getCurrentStatus(), ResourceOperation.SHRINK) && onLine){
+                return;
+            }
             LogUtil.info("eurekaEvent was triggered");
             LogUtil.info("Start operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));
             LogUtil.info("eureka detected ["+appName+"] "+onLine+" success");

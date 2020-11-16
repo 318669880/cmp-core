@@ -78,14 +78,19 @@ public class K8sOperatorModuleService {
                     String action = podNumber > modelBasic.getPodNum() ? ResourceOperation.EXPANSION : ResourceOperation.SHRINK;
                     String msg = "scale pod from " + modelBasic.getPodNum() + " to " + podNumber;
                     LogUtil.info("Begin to operation {} ,: " + msg, module);
-                    modelManagerService.updateModelBasicPodNum(module, podNumber);
+                    //modelManagerService.updateModelBasicPodNum(module, podNumber);
                     modelBasic.setPodNum(podNumber);
+                    modelBasic.setCurrentStatus(action);
+                    modelManagerService.updateModelBasic(modelBasic);
                     //modelBasic = modelManagerService.modelBasicInfo(module);
                     K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
                     LogUtil.info("Success to operation {} ,: " + msg, module);
                     checkModuleStatus.checkModule(modelBasic, model -> {
                         ModelBasic currentModel = modelManagerService.modelBasicInfo(module);
-                        if (currentModel.getPodNum() == discoveryClient.getInstances(module).size()){
+                        int dbPodNum = currentModel.getPodNum();
+                        int eurekaPodNum = discoveryClient.getInstances(module).size();
+                        if ( dbPodNum == eurekaPodNum ){
+                            LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);
                             LogUtil.info("Timer detected ["+module+"] "+action+" success");
                             modelBasic.setCurrentStatus(null);
                             modelManagerService.updateModelBasic(modelBasic);
@@ -95,6 +100,7 @@ public class K8sOperatorModuleService {
                         }
                         if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out)) {
                             LogUtil.info("Timer detected ["+module+"] "+action+" timeout");
+                            LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);
                             modelBasic.setCurrentStatus("timeOut");
                             modelManagerService.updateModelBasic(modelBasic);
                             checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
@@ -102,7 +108,7 @@ public class K8sOperatorModuleService {
                             return true;
                         }
                         return false;
-                    }, 30000L);
+                    }, 0L);
                     OperationLogService.log(null, module, modelBasic.getName(), ResourceTypeConstants.MODULE.name(), action, null);
                 } catch (Exception e) {
                     LogUtil.error("Faild to operation module: " + module, e.getMessage());

@@ -86,15 +86,19 @@ public class K8sOperatorModuleService {
                     checkModuleStatus.checkModule(modelBasic, model -> {
                         ModelBasic currentModel = modelManagerService.modelBasicInfo(module);
                         if (currentModel.getPodNum() == discoveryClient.getInstances(module).size()){
+                            LogUtil.info("Timer detected ["+module+"] "+action+" success");
                             modelBasic.setCurrentStatus(null);
                             modelManagerService.updateModelBasic(modelBasic);
                             checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
+                            LogUtil.info("The status of module["+module+"] has been reset");
                             return true;
                         }
                         if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out)) {
+                            LogUtil.info("Timer detected ["+module+"] "+action+" timeout");
                             modelBasic.setCurrentStatus("timeOut");
                             modelManagerService.updateModelBasic(modelBasic);
                             checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
+                            LogUtil.info("The status of module["+module+"] has been set to timeout");
                             return true;
                         }
                         return false;

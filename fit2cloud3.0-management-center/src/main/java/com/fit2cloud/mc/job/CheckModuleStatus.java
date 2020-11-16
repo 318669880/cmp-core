@@ -55,6 +55,7 @@ public class CheckModuleStatus {
         Optional.ofNullable(modelManagerService.modelBasicInfo(model)).ifPresent(modelBaisc -> {
             LogUtil.info("eurekaEvent was triggered");
             LogUtil.info("Start operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));
+            LogUtil.info("eureka detected ["+appName+"] "+onLine+" success");
             WsTopicConstants wsTopicConstants = WsTopicConstants.K8S_MODEL_START;
             if (!onLine){
                 wsTopicConstants = WsTopicConstants.K8S_MODEL_STOP;
@@ -62,6 +63,7 @@ public class CheckModuleStatus {
             if (discoveryClient.getInstances(modelBaisc.getModule()).size() == modelBaisc.getPodNum() && StringUtils.equals("timeOut", modelBaisc.getCurrentStatus())){
                 modelBaisc.setCurrentStatus(null);
                 modelManagerService.updateModelBasic(modelBaisc);
+                LogUtil.info("The status of module["+appName+"] has been reset by eureka");
             }
             sendMessage(modelBaisc, wsTopicConstants);
             LogUtil.info("End operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));

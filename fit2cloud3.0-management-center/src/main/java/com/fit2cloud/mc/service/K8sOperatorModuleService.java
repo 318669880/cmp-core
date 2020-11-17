@@ -86,15 +86,19 @@ public class K8sOperatorModuleService {
                     //modelBasic = modelManagerService.modelBasicInfo(module);
                     K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
                     LogUtil.info("Success to operation {} ,: " + msg, module);
+
+                    int dbPodNum = modelBasic.getPodNum();
+                    int eurekaPodNum = discoveryClient.getInstances(module).size();
+                    int abs = Math.abs(dbPodNum - eurekaPodNum);
+
                     checkModuleStatus.checkModule(modelBasic, model -> {
                         ModelBasic currentModel = modelManagerService.modelBasicInfo(module);
                         String currentStatus = currentModel.getCurrentStatus();
                         if (StringUtils.isEmpty(currentStatus)){
+                            LogUtil.info("Timer detected ["+module+"] "+action+" removed");
                             return true;
                         }
-                        int dbPodNum = model.getPodNum();
-                        int eurekaPodNum = discoveryClient.getInstances(module).size();
-                        int abs = Math.abs(dbPodNum - eurekaPodNum);
+
                         /*if ( dbPodNum == eurekaPodNum ){
                             LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);
                             LogUtil.info("Timer detected ["+module+"] "+action+" success");
@@ -111,6 +115,7 @@ public class K8sOperatorModuleService {
                             modelManagerService.updateModelBasic(modelBasic);
                             checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
                             LogUtil.info("The status of module["+module+"] has been set to timeout by Timer");
+                            LogUtil.info("Timer detected ["+module+"] "+action+" removed");
                             return true;
                         }
                         return false;

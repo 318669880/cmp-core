@@ -64,11 +64,12 @@ public class CheckModuleStatus {
             List<ServiceInstance> instances = discoveryClient.getInstances(module);
             int eurekaPodNum = CollectionUtils.isEmpty(instances) ? 0 : instances.size();
             Integer podNum = modelBasic.getPodNum();
-            LogUtil.info("currentStatus = ["+modelBasic.getCurrentStatus()+"] ,StringUtils.isEmpty(modelBasic.getCurrentStatus()) = " + StringUtils.isEmpty(modelBasic.getCurrentStatus()));
-            LogUtil.info("dbPodNum = ["+podNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");
-            if (podNum == eurekaPodNum && !StringUtils.isEmpty(modelBasic.getCurrentStatus())){
+            /*LogUtil.info("currentStatus = ["+modelBasic.getCurrentStatus()+"] ,StringUtils.isEmpty(modelBasic.getCurrentStatus()) = " + StringUtils.isEmpty(modelBasic.getCurrentStatus()));*/
+            /*LogUtil.info("dbPodNum = ["+podNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");*/
+            if (podNum == eurekaPodNum ){
                 modelBasic.setCurrentStatus(null);
-                modelManagerService.updateModelBasic(modelBasic);
+                int i = modelManagerService.updateModelBasic(modelBasic);
+                LogUtil.info("reset status "+i);
                 sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_START);
             }
         });

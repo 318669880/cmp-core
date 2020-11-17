@@ -15,6 +15,7 @@ import com.fit2cloud.mc.model.ModelManager;
 import com.fit2cloud.mc.strategy.util.ModelManagerUtil;
 import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -86,11 +87,15 @@ public class K8sOperatorModuleService {
                     K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
                     LogUtil.info("Success to operation {} ,: " + msg, module);
                     checkModuleStatus.checkModule(modelBasic, model -> {
+                        ModelBasic currentModel = modelManagerService.modelBasicInfo(module);
+                        String currentStatus = currentModel.getCurrentStatus();
+                        if (StringUtils.isEmpty(currentStatus)){
+                            return true;
+                        }
                         int dbPodNum = model.getPodNum();
-
                         int eurekaPodNum = discoveryClient.getInstances(module).size();
                         int abs = Math.abs(dbPodNum - eurekaPodNum);
-                        if ( dbPodNum == eurekaPodNum ){
+                        /*if ( dbPodNum == eurekaPodNum ){
                             LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);
                             LogUtil.info("Timer detected ["+module+"] "+action+" success");
                             modelBasic.setCurrentStatus(null);
@@ -98,7 +103,7 @@ public class K8sOperatorModuleService {
                             checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
                             LogUtil.info("The status of module["+module+"] has been reset by Timer");
                             return true;
-                        }
+                        }*/
                         if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out * abs)) {
                             LogUtil.info("Timer detected ["+module+"] "+action+" timeout");
                             LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);

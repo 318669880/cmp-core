@@ -51,11 +51,12 @@ public class CheckModuleStatus {
     @Lazy
     private ModelManagerService modelManagerService;
 
-    /*@Scheduled(cron = "0/5 * * * * ? ")
+    @Scheduled(cron = "0/5 * * * * ? ")
     public void resetK8sModuleStatus(){
         if (!SyncEurekaServer.IS_KUBERNETES){
             return;
         }
+        LogUtil.info("The global check Timer of k8s module status is running");
         List<ModelBasic> modules = modelManagerService.modelByStatus("timeOut");
         if (CollectionUtils.isEmpty(modules)) return;
         modules.forEach(modelBasic -> {
@@ -63,13 +64,13 @@ public class CheckModuleStatus {
             List<ServiceInstance> instances = discoveryClient.getInstances(module);
             int eurekaPodNum = CollectionUtils.isEmpty(instances) ? 0 : instances.size();
             Integer podNum = modelBasic.getPodNum();
-            if (podNum == eurekaPodNum){
+            if (podNum == eurekaPodNum && !StringUtils.isEmpty(modelBasic.getCurrentStatus())){
                 modelBasic.setCurrentStatus(null);
                 modelManagerService.updateModelBasic(modelBasic);
                 sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_START);
             }
         });
-    }*/
+    }
 
     private int currentPodNum(String module, String serviceId, Boolean onLine){
         List<ServiceInstance> instances = Optional.ofNullable(discoveryClient.getInstances(module)).orElse(new ArrayList<ServiceInstance>());
@@ -87,6 +88,9 @@ public class CheckModuleStatus {
 
         String model = appName.toLowerCase();
         Optional.ofNullable(modelManagerService.modelBasicInfo(model)).ifPresent(modelBaisc -> {
+            if (StringUtils.isEmpty(modelBaisc.getCurrentStatus())){
+                return;
+            }
             if (StringUtils.equals(modelBaisc.getCurrentStatus(), ResourceOperation.EXPANSION) && !onLine){
                 return;
             }

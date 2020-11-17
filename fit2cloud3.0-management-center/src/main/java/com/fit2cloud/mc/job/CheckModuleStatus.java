@@ -67,7 +67,7 @@ public class CheckModuleStatus {
             /*LogUtil.info("currentStatus = ["+modelBasic.getCurrentStatus()+"] ,StringUtils.isEmpty(modelBasic.getCurrentStatus()) = " + StringUtils.isEmpty(modelBasic.getCurrentStatus()));*/
             /*LogUtil.info("dbPodNum = ["+podNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");*/
             if (podNum == eurekaPodNum ){
-                modelBasic.setCurrentStatus(null);
+                modelBasic.setCurrentStatus("");
                 int i = modelManagerService.updateModelBasic(modelBasic);
                 LogUtil.info("reset status "+i);
                 sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_START);
@@ -113,7 +113,7 @@ public class CheckModuleStatus {
 
             LogUtil.info("eureka Event show dbPodNum = ["+dbPodNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");
             if (dbPodNum == eurekaPodNum){
-                modelBaisc.setCurrentStatus(null);
+                modelBaisc.setCurrentStatus("");
                 modelManagerService.updateModelBasic(modelBaisc);
                 LogUtil.info("The status of module["+appName+"] has been reset by eureka");
             }

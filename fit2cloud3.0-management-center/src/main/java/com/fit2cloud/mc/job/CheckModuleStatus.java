@@ -64,6 +64,8 @@ public class CheckModuleStatus {
             List<ServiceInstance> instances = discoveryClient.getInstances(module);
             int eurekaPodNum = CollectionUtils.isEmpty(instances) ? 0 : instances.size();
             Integer podNum = modelBasic.getPodNum();
+            LogUtil.info("currentStatus = ["+modelBasic.getCurrentStatus()+"] ,StringUtils.isEmpty(modelBasic.getCurrentStatus()) = " + StringUtils.isEmpty(modelBasic.getCurrentStatus()));
+            LogUtil.info("dbPodNum = ["+podNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");
             if (podNum == eurekaPodNum && !StringUtils.isEmpty(modelBasic.getCurrentStatus())){
                 modelBasic.setCurrentStatus(null);
                 modelManagerService.updateModelBasic(modelBasic);

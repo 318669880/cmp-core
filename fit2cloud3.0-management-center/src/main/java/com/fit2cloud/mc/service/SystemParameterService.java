@@ -142,7 +142,7 @@ public class SystemParameterService {
         }
         if (CollectionUtils.isEmpty(paramList)) {
             paramList = new ArrayList<>();
-            if (type.equalsIgnoreCase(ParamConstants.Classify.MAIL.getValue())) {
+            if (type.equalsIgnoreCase("mail")) {
                 ParamConstants.MAIL[] values = ParamConstants.MAIL.values();
                 for (ParamConstants.MAIL value : values) {
                     SystemParameter systemParameter = new SystemParameter();

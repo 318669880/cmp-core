@@ -1818,7 +1818,258 @@
         };
     });
 
-    F2CModule.directive("treeSelect", function () {
+
+
+    let TreeNode = function (id, name) {
+        this.id = null;
+        this.name = null;
+        this.open = false;
+        this.checked = false;
+        this.children = [];
+        this.initialize.apply(this , arguments);
+    }
+    TreeNode.prototype = {
+        initialize: function(id ,name){
+            this.id = id;
+            this.name = name;
+        },
+        setOpen: function (open) {
+            this.open = open;
+        },
+        setChecked: function (checked) {
+            this.checked = checked;
+        },
+        setChildren: function (children) {
+            this.children = children;
+        }
+    }
+    let treeSelectOptions = function(){
+        let options = {};
+        options.data = 'user/orgtreeselect'
+        options.type = 'post';
+        options.search = true;
+        options.zTreeSetting = { //zTree设置
+            check: {
+                enable: true,
+                chkboxType: { "Y": "", "N": "" }
+            },
+            data: {
+                simpleData: {
+                    enable: false
+                },
+                key: {
+                    name: 'name',
+                    children: 'children'
+                }
+            },
+            view: {
+                showIcon: false
+            }
+
+        }
+        options.single = false;
+        options.parseData = (res) => formatResult(res.data);
+        return options;
+    };
+    let formatResult = function(rootNodes) {
+        let treeNodes = [];
+        rootNodes.forEach((node) => {
+            let treeNode =  new TreeNode(node.nodeId, node.nodeName);
+            if (!node.childNodes || node.childNodes.length == 0){
+                treeNode.setChildren(null);
+                treeNodes.push(treeNode);
+                return true;
+            }
+            treeNode.setChildren(arguments.callee(node.childNodes));
+            treeNodes.push(treeNode);
+        })
+        return treeNodes;
+    }
+
+    F2CModule.directive("orgSelectSingle", function ($compile) {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree-select-single-org.html" + '?_t=' + window.appversion,
+            scope: {
+                selected: "=",
+                result: "=",
+                name: "@",
+                required: "@"
+            },
+            link: function ($scope, element, attr, ctrl) {
+                $scope.init = function () {
+                    let options = $scope.buildTsOptions();
+                    layui.config({
+                        base: 'web-public/external/layui/extend/zTreeSelectM/'
+                    }).use([ 'zTreeSelectM'], () => {
+                        let treeSelect = layui.zTreeSelectM;
+                        let _treeSelect = treeSelect(options);
+                    })
+                };
+
+                $scope.buildTsOptions = (treeSelect) => {
+                    let options = treeSelectOptions();
+                    options.elem = "#_treeSelectSingleOrg_";
+                    options.where = JSON.stringify({excludeWs: true});
+                    options.selected = $scope.selected;
+                    options.single = true;
+                    options.changed = values => {
+                        $scope.result = !!values ? values[0] : null;
+                        options.end();
+                    };
+
+                    options.start = () => {
+                        angular.element('#_treeSelectSingleOrg_').parent().addClass("md-input-focused");
+                    };
+                    options.end = () => {
+                        angular.element('#_treeSelectSingleOrg_').parent().removeClass("md-input-focused");
+                        let hasValue = !!$scope.result ;
+                        if (hasValue){
+                            angular.element('#_treeSelectSingleOrg_').parent().removeClass("md-input-invalid");
+                            angular.element('#_treeSelectSingleOrg_').parent().addClass("md-input-has-value");
+                        }else{
+                            angular.element('#_treeSelectSingleOrg_').parent().removeClass("md-input-has-value");
+                            if (!!$scope.required && $scope.required == 'true'){
+                                angular.element('#_treeSelectSingleOrg_').parent().addClass("md-input-invalid");
+                            }
+                        }
+                    };
+
+                    if (options.selected){
+                        options.end();
+                    }
+                    return options;
+                };
+                $scope.init();
+            }
+        }
+    });
+    F2CModule.directive("orgSelect", function ($compile) {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree-select-org.html" + '?_t=' + window.appversion,
+            scope: {
+                selected: "=",
+                results: "=",
+                name: "@",
+                required: "@",
+                single: "@"
+            },
+            link: function ($scope, element, attr, ctrl) {
+                $scope.init = function () {
+                    let options = $scope.buildTsOptions();
+                    layui.config({
+                        base: 'web-public/external/layui/extend/zTreeSelectM/'
+                    }).use([ 'zTreeSelectM'], () => {
+                        let treeSelect = layui.zTreeSelectM;
+                        let _treeSelect = treeSelect(options);
+                    })
+                };
+
+                $scope.buildTsOptions = (treeSelect) => {
+                    let options = treeSelectOptions();
+                    options.elem = "#_treeSelectOrg_";
+                    options.where = JSON.stringify({excludeWs: true});
+                    options.selected = $scope.selected;
+                    options.single = $scope.single || options.single;
+                    options.changed = values => {
+                        $scope.results = values;
+                        options.end();
+                    };
+
+                    options.start = () => {
+                        angular.element('#_treeSelectOrg_').parent().addClass("md-input-focused");
+                    };
+                    options.end = () => {
+                        angular.element('#_treeSelectOrg_').parent().removeClass("md-input-focused");
+                        let hasValue = !!$scope.results && $scope.results.length > 0;
+                        if (hasValue){
+                            angular.element('#_treeSelectOrg_').parent().removeClass("md-input-invalid");
+                            angular.element('#_treeSelectOrg_').parent().addClass("md-input-has-value");
+                        }else{
+                            angular.element('#_treeSelectOrg_').parent().removeClass("md-input-has-value");
+                            if (!!$scope.required && $scope.required == 'true'){
+                                angular.element('#_treeSelectOrg_').parent().addClass("md-input-invalid");
+                            }
+                        }
+                    };
+
+                    if (options.selected){
+                        options.end();
+                    }
+                    return options;
+                };
+                $scope.init();
+            }
+        }
+    });
+    F2CModule.directive("wksSelect", function ($compile) {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree-select-wks.html" + '?_t=' + window.appversion,
+            scope: {
+                selected: "=",
+                results: "=",
+                name: "@",
+                required: "@",
+                single: "@"
+            },
+            link: function ($scope, element, attr, ctrl) {
+                $scope.init = function () {
+                    let options = $scope.buildTsOptions();
+                    layui.config({
+                        base: 'web-public/external/layui/extend/zTreeSelectM/'
+                    }).use([ 'zTreeSelectM'], () => {
+                        let treeSelect = layui.zTreeSelectM;
+                        let _treeSelect = treeSelect(options);
+                    })
+                };
+                $scope.buildTsOptions = (treeSelect) => {
+                    let options = treeSelectOptions();
+                    options.elem = "#_treeSelectWks_";
+                    options.name = $scope.name;
+                    options.where = JSON.stringify({excludeWs: false});
+                    options.selected = $scope.selected;
+                    options.single = $scope.single || options.single;
+                    options.checkBoxCondition = function(node){
+                        return node.nodeType != 'wks';
+                    }
+                    options.changed = values => {
+                        $scope.results = values;
+                        options.end();
+                    }
+                    options.start = () => {
+                        angular.element('#_treeSelectWks_').parent().addClass("md-input-focused");
+                    };
+                    options.end = () => {
+                        angular.element('#_treeSelectWks_').parent().removeClass("md-input-focused");
+                        let hasValue = !!$scope.results && $scope.results.length > 0;
+                        if (hasValue){
+                            angular.element('#_treeSelectWks_').parent().removeClass("md-input-invalid");
+                            angular.element('#_treeSelectWks_').parent().addClass("md-input-has-value");
+                        }else{
+                            angular.element('#_treeSelectWks_').parent().removeClass("md-input-has-value");
+                            if (!!$scope.required && $scope.required == 'true'){
+                                angular.element('#_treeSelectWks_').parent().addClass("md-input-invalid");
+                            }
+                        }
+
+                    };
+                    if (options.selected){
+                        options.end();
+                    }
+
+                    return options;
+                };
+                $scope.init();
+            }
+        }
+    });
+
+    F2CModule.directive("treeSelect", function ($compile) {
         return {
             restrict: 'E',
             replace: true,
@@ -1835,15 +2086,13 @@
                 changed: "=",
                 single: "=",
                 selected: "="
+
             },
             link: function ($scope, element, attr, ctrl) {
-
                 $scope.init = function () {
                     let options = $scope.buildTsOptions();
                     layui.config({
-                        base: 'web-public/external/layui/extend/'
-                    }).extend({
-                        zTreeSelectM: 'zTreeSelectM/zTreeSelectM'
+                        base: 'web-public/external/layui/extend/zTreeSelectM/'
                     }).use([ 'zTreeSelectM'], () => {
                         let treeSelect = layui.zTreeSelectM;
                         let _treeSelect = treeSelect(options);
@@ -1851,56 +2100,35 @@
                 };
 
                 $scope.buildTsOptions = (treeSelect) => {
-                    let options = {};
+                    let options = treeSelectOptions();
                     options.elem = "#_treeSelectTs_";
                     options.data = options.data = $scope.tsUrl;
                     options.type = $scope.type || "get";
                     options.search = true;
-                    options.zTreeSetting = { //zTree设置
-                        check: {
-                            enable: true,
-                            chkboxType: { "Y": "", "N": "" }
-                        },
-                        data: {
-                            simpleData: {
-                                enable: false
-                            },
-                            key: {
-                                name: 'name',
-                                children: 'children'
-                            }
-                        },
-                        view: {
-                            showIcon: false
-                        }
 
-                    }
                     options.click = (d) => {
                         $scope.onClick && $scope.onClick(d);
                     };
                     options.success = (d) => {
                         $scope.onSuccess && $scope.onSuccess(d);
                     };
-
                     options.where = !!$scope.where? JSON.stringify($scope.where) : null;
-
                     $scope.start && (options.start = $scope.start);
                     $scope.end && (options.end = $scope.end);
                     options.changed = $scope.changed;
                     options.single = $scope.single;
                     options.selected = $scope.selected;
-                    options.parseData = (res) => {
+                    /*options.parseData = (res) => {
                         let result = $scope.formatResult(res.data);
                         return result;
-                    }
+                    }*/
                     if (options.selected){
                         $scope.end();
                     }
-
                     return options;
                 };
 
-                $scope.formatResult = function(rootNodes) {
+                /*$scope.formatResult = function(rootNodes) {
                     let treeNodes = [];
                     rootNodes.forEach((node) => {
                         let treeNode =  new TreeNode(node.nodeId, node.nodeName);
@@ -1913,34 +2141,8 @@
                         treeNodes.push(treeNode);
                     })
                     return treeNodes;
-                };
-
-                let TreeNode = function (id, name) {
-                    this.id = null;
-                    this.name = null;
-                    this.open = false;
-                    this.checked = false;
-                    this.children = [];
-                    this.initialize.apply(this , arguments);
-                }
-                TreeNode.prototype = {
-                    initialize: function(id ,name){
-                        this.id = id;
-                        this.name = name;
-                    },
-                    setOpen: function (open) {
-                        this.open = open;
-                    },
-                    setChecked: function (checked) {
-                        this.checked = checked;
-                    },
-                    setChildren: function (children) {
-                        this.children = children;
-                    }
-                }
+                };*/
                 $scope.init();
-
-
             }
         };
     });

@@ -226,5 +226,12 @@
 </script>
 <script th:src="@{'/web-public/external/angular/angular-sanitize.min.js?t='+${timestamp}}"></script>
 <script th:src="@{'web-public/project/js/menu.js?t='+${timestamp}}"></script>
+<script>
+    layui.config({
+        base: 'web-public/external/layui/extend/'
+    }).extend({
+        zTreeSelectM: 'zTreeSelectM/zTreeSelectM'
+    });
+</script>
 </body>
 </html>

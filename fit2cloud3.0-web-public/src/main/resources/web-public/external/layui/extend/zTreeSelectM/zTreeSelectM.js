@@ -42,8 +42,11 @@ layui.define(['jquery', 'layer'], function(exports){
             field: { idName: 'id', titleName: 'name', statusName: 'status' },
             //ztree设置
             zTreeSetting: {},
-			single: false
-		}
+			single: false ,
+			checkBoxCondition : null
+		};
+
+		this.sourceData = [];
 
 		this.config = $.extend(this.config,config);
 		//创建选项元素
@@ -52,7 +55,8 @@ layui.define(['jquery', 'layer'], function(exports){
 			var s = c.selected;
 			$E = $(c.elem);
 			var tips = c.tips.replace('{max}',c.max);
-			var inputName = c.name=='' ? c.elem.replace('#','').replace('.','') : c.name;
+			//var inputName = c.name=='' ? c.elem.replace('#','').replace('.','') : c.name;
+			var inputName = c.elem.replace('#','').replace('.','');
 			var verify = c.verify=='' ? '' : 'lay-verify="'+c.verify+'" ';
             var html = '<link rel=\"stylesheet\" href=\"web-public/external/layui/extend/zTreeSelectM/zTreeSelectM.css\">\n';
 	            html += '<link rel=\"stylesheet\" href=\"web-public/external/layui/extend/zTreeSelectM/zTree_v3/css/zTreeStyle/zTreeStyle.css\">\n';
@@ -69,6 +73,49 @@ layui.define(['jquery', 'layer'], function(exports){
 				html +=		'</dl>';
 				html +=	'</div>';
 			$E.html(html);
+		}
+
+		this.getNodeByDataId = function(dataId , nodes){
+			let resultNode = null;
+			let childs = new Array();
+			if(nodes.some(function(node) {
+				let temp = (node.id == dataId);
+				resultNode = node;
+				if (!!node.children){
+					childs = childs.concat(node.children);
+				}
+				return temp;
+			}.bind(this))){
+				return resultNode;
+			}
+			return this.getNodeByDataId(dataId, childs);
+		};
+
+		this.formatTree2List = function(dataNodes, nodeLists){
+			let _self = this;
+			if (null == nodeLists){
+				nodeLists = new Array();
+			}
+			dataNodes.forEach(node => {
+				nodeLists.push(node);
+				if (null != node.childNodes && node.childNodes.length > 0){
+					_self.formatTree2List(node.childNodes, nodeLists);
+				}
+			})
+		};
+
+		this.setChkDisabled = function () {
+			let _self = this;
+			if (!this.config.checkBoxCondition || (typeof this.config.checkBoxCondition) != 'function') return;
+			let conditionFunction = this.config.checkBoxCondition;
+			let nodeDats = new Array();
+			this.formatTree2List(this.sourceData, nodeDats);
+			let nodes = this.zTree.getNodes();
+			nodeDats.filter(nodeData => conditionFunction(nodeData)).forEach(cdata => {
+				let dataId = cdata.nodeId;
+				let node = _self.getNodeByDataId(dataId, nodes);
+				!!node && _self.zTree.setChkDisabled(node, true);
+			})
 		}
 
 		//设置选中值
@@ -136,6 +183,7 @@ layui.define(['jquery', 'layer'], function(exports){
 				async:false,
 				data: this.config.where,
 				success:function(json){
+					_self.sourceData = json.data;
 					if(_self.config.parseData){
 						json = _self.config.parseData(json);
 					}
@@ -200,6 +248,7 @@ layui.define(['jquery', 'layer'], function(exports){
         };
 		//设置选中值
 		o.set();
+		o.setChkDisabled();
 		
 		//展开/收起选项
         $E.on('click', '.layui-select-title,.multiple,.multiple.layui-edge', function (e) {

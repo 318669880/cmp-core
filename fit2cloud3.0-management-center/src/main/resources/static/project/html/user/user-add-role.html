@@ -26,7 +26,7 @@
                 <md-icon ng-if="item.roleInfoList.length <= 1">
                 </md-icon>
             </md-input-container>
-            <virtual-select-multiple
+            <!--<virtual-select-multiple
                     name="workspaceIds"
                     value="id"
                     label="name"
@@ -35,10 +35,10 @@
                     results="roleInfo.workspaceIds"
                     required="true"
                     ng-if="roleInfo.roleType===roleConst.user"
-            ></virtual-select-multiple>
+            ></virtual-select-multiple>-->
 
 
-            <virtual-select-multiple
+            <!--<virtual-select-multiple
                     name="organizationIds"
                     value="id"
                     label="name"
@@ -47,7 +47,26 @@
                     results="roleInfo.organizationIds"
                     required="true"
                     ng-if="roleInfo.roleType===roleConst.orgAdmin"
-            ></virtual-select-multiple>
+            ></virtual-select-multiple>-->
+
+            <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.user">
+                <label> {{'i18n_workspace_add' | translator}}</label>
+                <wks-select required="true" name="workspaceIds" results="roleInfo.workspaceIds"  ng-if="roleInfo.roleType===roleConst.user"></wks-select>
+                <div ng-messages="editUserForm.workspaceIds.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
+            </md-input-container>
+
+
+            <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.orgAdmin">
+                <label> {{'i18n_organization_add' | translator}}</label>
+                <org-select required="true" name="organizationIds" results="roleInfo.organizationIds" ng-if="roleInfo.roleType===roleConst.orgAdmin"></org-select>
+                <div ng-messages="editUserForm.organizationIds.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
+            </md-input-container>
+
+
         </div>
         <md-button layout="row" layout-align="center" class="md-raised md-success"
                    ng-disabled="addUserForm.$invalid || !isAddLineAble"

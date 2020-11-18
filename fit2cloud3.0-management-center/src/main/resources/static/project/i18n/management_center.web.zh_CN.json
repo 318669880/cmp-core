@@ -261,7 +261,7 @@
   "i18n_model_status_stopped": "停止",
   "i18n_model_status_stopFaild": "停止失败",
   "i18n_model_status_installFaild": "安装失败",
-  "i18n_model_status_startting": "启动中",
+  "i18n_model_status_starting": "启动中",
   "i18n_model_status_startFaild": "启动失败",
   "i18n_model_status_stopping": "停止中",
   "i18n_model_status_installing": "安装中",

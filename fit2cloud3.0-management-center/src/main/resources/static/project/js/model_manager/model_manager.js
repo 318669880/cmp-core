@@ -986,7 +986,7 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
         startFaild: 'status-button-error',
         stopped: 'status-button-error',
         installing: 'status-button-running',
-        startting: 'status-button-running',
+        starting: 'status-button-running',
         stopping: 'status-button-running',
         stopFaild: 'status-button-error'
     }

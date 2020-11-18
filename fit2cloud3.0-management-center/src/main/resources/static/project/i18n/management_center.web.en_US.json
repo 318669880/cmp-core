@@ -262,7 +262,7 @@
   "i18n_model_status_stopped": "Stoped",
   "i18n_model_status_stopFaild": "Stop Faild",
   "i18n_model_status_installFaild": "Install Faild",
-  "i18n_model_status_startting": "Starting",
+  "i18n_model_status_starting": "Starting",
   "i18n_model_status_startFaild": "Start Faild",
   "i18n_model_status_stopping": "Stopping",
   "i18n_model_status_installing": "Installing",

@@ -155,6 +155,7 @@ public class ModelNodeTask {
         List<String> localIps = new ArrayList<String>(){{add("127.0.0.1");add("localhost");}};
         modelNodes = modelNodes.stream().filter(node -> {
             try {
+                boolean is_current_mc_branch = (node.getNodeHost().indexOf(host) != -1);
                 String nodeIp = node.getNodeIp();
                 boolean isReachable = InetAddress.getByName(nodeIp).isReachable(3000) && isHostConnectable(node.getNodeHost());
                 //如果服务器配置的不是127.0.0.1 那么 剔除 127.0.0.1的节点
@@ -163,7 +164,7 @@ public class ModelNodeTask {
                 if (localIps.contains(nodeIp) && !StringUtils.equals(configMcIp, nodeIp)){
                     isReachable = false;
                 }
-                if(!isReachable){
+                if(!isReachable && !is_current_mc_branch){
                     String mc_modelNode_uuid = node.getModelNodeUuid();
                     //不可用 删除mc节点记录
                     modelNodeMapper.deleteByPrimaryKey(mc_modelNode_uuid);
@@ -173,7 +174,7 @@ public class ModelNodeTask {
                     modelNodeMapper.deleteByExample(modelNodeExample);
                     modelNodeExample.clear();
                 }
-                if(node.getNodeHost().indexOf(host) != -1)return false; //去除 本机地址 相互注册 无需注册自己
+                if(is_current_mc_branch)return false; //去除 本机地址 相互注册 无需注册自己
                 return isReachable;
             } catch (Exception e) {
                 LogUtil.error(e.getMessage(),e);
@@ -229,7 +230,7 @@ public class ModelNodeTask {
         ModelNode mcNode = moduleNodeService.currentMcNode();
         Optional.ofNullable(mcNode.getModelNodeUuid()).ifPresent(nodeId -> {
             ModelNodeExample example = new ModelNodeExample();
-            example.createCriteria().andMcNodeUuidEqualTo(nodeId);
+            example.createCriteria().andMcNodeUuidEqualTo(nodeId).andNodeStatusNotEqualTo(ModuleStatusConstants.installFaild.value());
             List<ModelNode> modelNodes = modelNodeMapper.selectByExample(example);
             if (CollectionUtils.isEmpty(modelNodes)) return;
             modelNodes.forEach(node -> {

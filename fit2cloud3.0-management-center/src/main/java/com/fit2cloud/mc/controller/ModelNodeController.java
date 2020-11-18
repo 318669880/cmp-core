@@ -44,7 +44,7 @@ public class ModelNodeController {
     private Long node_start_time_out;
 
     //节点安装超时时间
-    @Value("${fit2cloud.node_install_time_out:60000}")
+    @Value("${fit2cloud.node_install_time_out:3000}")
     private Long node_install_time_out;
 
     @Value("${fit2cloud.node_stop_time_out:30000}")
@@ -79,18 +79,15 @@ public class ModelNodeController {
     @PostMapping("/node/install")
     public void nodeInstall(String module, String nodeId) throws Exception {
         nodeOperateService.installOrUpdate(modelManagerService.select(), module, nodeId);
-        /*ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
+        ModelNode modelNode = moduleNodeService.nodeInfo(nodeId);
         Long updateTime = modelNode.getUpdateTime();
         checkModuleStatus.checkNode(modelNode, node -> {
             ModelNode currentNode = moduleNodeService.nodeInfo(nodeId);
             if (StringUtils.equals(currentNode.getNodeStatus(), ModuleStatusConstants.installFaild.value())) {
-                //执行ModelOperateStrategy方法异常 状态已经改变了 那么结束检测任务
-                moduleNodeService.clearCache();
                 checkModuleStatus.sendMessage(currentNode, WsTopicConstants.HOST_NODE_INSTALL);
                 return true;
             }
             if (checkModuleStatus.isTimeOut(updateTime, node_install_time_out)) {
-                moduleNodeService.clearCache();
                 currentNode.setNodeStatus(ModuleStatusConstants.stopped.value());
                 try {
                     moduleNodeService.addOrUpdateModelNode(currentNode);
@@ -101,7 +98,7 @@ public class ModelNodeController {
                 return true;
             }
             return false;
-        }, 10000L);*/
+        }, 0L);
     }
 
 

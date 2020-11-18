@@ -56,7 +56,6 @@ public class CheckModuleStatus {
         if (!SyncEurekaServer.IS_KUBERNETES){
             return;
         }
-        LogUtil.info("The global check Timer of k8s module status is running");
         List<ModelBasic> modules = modelManagerService.modelByStatus("timeOut");
         if (CollectionUtils.isEmpty(modules)) return;
         modules.forEach(modelBasic -> {
@@ -68,6 +67,7 @@ public class CheckModuleStatus {
             /*LogUtil.info("dbPodNum = ["+podNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");*/
             if (podNum == eurekaPodNum ){
                 modelBasic.setCurrentStatus("");
+                LogUtil.info("The global check Timer of k8s module status is running");
                 int i = modelManagerService.updateModelBasic(modelBasic);
                 LogUtil.info("reset status "+i);
                 sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_START);
@@ -169,7 +169,7 @@ public class CheckModuleStatus {
             String status = ModuleStatusConstants.running.value();
             WsTopicConstants wsTopicConstants = WsTopicConstants.HOST_NODE_START;
             String currentStatus = node.getNodeStatus();
-            if (StringUtils.equals(currentStatus, ModuleStatusConstants.startting.value()) && !onLine){
+            if (StringUtils.equals(currentStatus, ModuleStatusConstants.starting.value()) && !onLine){
                 return;
             }
             if (StringUtils.equals(currentStatus, ModuleStatusConstants.stopping.value()) && onLine){

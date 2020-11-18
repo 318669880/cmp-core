@@ -14,7 +14,7 @@ public enum ModuleStatusConstants {
     installFaild("installFaild"),
     running("running"),
 
-    startting("startting","running","startFaild"),
+    starting("starting","running","startFaild"),
     startFaild("startFaild"),
     startTimeOut("startTimeOut"),
 

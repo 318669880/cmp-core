@@ -183,7 +183,7 @@ public class ModuleNodeService {
 
     public void startNode(String module, String nodeId) throws Exception {
         ModelNode modelNode = nodeInfo(nodeId);
-        modelNode.setNodeStatus(ModuleStatusConstants.startting.value());
+        modelNode.setNodeStatus(ModuleStatusConstants.starting.value());
         try{
             addOrUpdateNodeClear(modelNode);
             eurekaInstanceMonitor.execute(module, nodeId,"/modelNode/node/start",nodeInfo(module));

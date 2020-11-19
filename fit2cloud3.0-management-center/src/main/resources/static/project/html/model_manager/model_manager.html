@@ -15,7 +15,7 @@
             <md-content flex="100" >
 
 
-                <md-tabs md-selected="selectedTableIndex" style="z-index: 40;" md-dynamic-height md-border-bottom>
+                <md-tabs md-selected="selectedTableIndex" md-dynamic-height md-border-bottom>
 
                     <md-tab ng-click="list()" label="{{'i18n_model_tab_title_installed' | translator:'已安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
                         <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}" >
@@ -332,7 +332,7 @@
         <!--<info-form width="50%"></info-form>
         <side-form></side-form>-->
         <side-form></side-form>
-        <info-form></info-form>
+        <info-form width="40%"></info-form>
     </div>
 
 </div>

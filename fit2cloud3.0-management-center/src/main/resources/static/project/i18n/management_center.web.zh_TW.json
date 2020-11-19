@@ -229,6 +229,7 @@
   "i18n_model_tab_title_updatable": "可更新",
   "i18n_model_tab_title_installed": "已安裝",
   "i18n_model_tab_title_customize": "自定義",
+  "i18n_model_tab_title_senior": "高級",
   "i18n_model_field_name": "名稱",
   "i18n_model_k8s-status_expand": "擴容中",
   "i18n_model_k8s-status_shrinke": "縮容中",

@@ -32,9 +32,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             if(!this.address){
                 this.address = 'https://f2c-index.oss-cn-beijing.aliyuncs.com';
             }
-            // HttpUtils.post(this._loadAddressUrl, {} ,function (res) {
-            //     this.address = res.data;
-            // }.bind(this))
         },
 
         loadData: function() {
@@ -117,7 +114,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                             })
                         }
                         if(isvalidate){
-                            $scope.wizard.api.next();
+                            $scope.switchTab(0);
                             this.autoNext = false;
                             return;
                         }
@@ -137,7 +134,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             if(!!this.manager_uuid && this._init_address === this.address  && this._init_onLine === this.onLine && angular.toJson(this._dockerRegistry) === angular.toJson(this.dockerRegistry)){
                 // 这说明 索引服务没有改过 为提升那么一点客户体验 那就不走后台了保存了
                 this.validate = true;
-                $scope.wizard.continue();
+                $scope.switchTab(0)
                 return true;
             }
             //let saveSuccess = false;
@@ -155,7 +152,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 _self._init_address = res.address;
                 _self._init_onLine = res.onLine;
                 _self.validate = true;
-                $scope.wizard.continue();
+                $scope.switchTab(0)
             })
             this.validate = false;
             return false;
@@ -340,23 +337,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
         executeInstall_k8s: function(){
             this.executeInstall(null, 0);
-
-            // let info = {
-            //     title: $filter('translator')('i18n_pod_number', 'Pod 数量'),
-            //     text: $filter('translator')('i18n_pod_number', 'Pod 数量'),
-            //     required: true,
-            //     type:'number',
-            //     init: 1
-            // };
-            //
-            // Notification.prompt(info, function (result) {
-            //     let pod_number = result;
-            //     if(pod_number < 1){
-            //         Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于1'));
-            //         return;
-            //     }
-            //     this.executeInstall(null, pod_number);
-            // }.bind(this));
         },
 
         //  执行安装
@@ -659,64 +639,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }
     };
 
-    $scope.background = "/web-public/fit2cloud/html/background/background.html?_t" + window.appversion;
+
     $scope.indexServer = new IndexServer();
     $scope.modelInstaller = new ModelInstaller();
-    $scope.modelShow = new ModelShow();
+    /*$scope.modelShow = new ModelShow();*/
     $scope.modelNodeWs = new ModelNodeWs();
-    $scope.wizard = {
-        setting: {
-            title: $filter('translator')('i18n_title', '标题'),
-            subtitle: $filter('translator')('i18n_sub_title', '子标题'),
-            closeText: $filter('translator')('i18n_cancel', '取消'),
-            submitText: $filter('translator')('i18n_save', '保存'),
-            nextText: $filter('translator')('i18n_next', '下一步'),
-            prevText: $filter('translator')('i18n_previous', '上一步'),
-        },
-        // 按顺序显示,id必须唯一并需要与页面中的id一致，select为分步初始化方法，next为下一步方法(最后一步时作为提交方法)
-        steps: [
-            {
-                id: "1",
-                name: $filter('translator')('i18n_index_server', '索引服务'),
-                select: function () {
-                    $scope.indexServer.loadData();
 
-                },
-                next: function () {
-                    return $scope.indexServer.saveData();
-                }
-            },
-            {
-                id: "2",
-                name: $filter('translator')('i18n_model_installer', '模块安装'),
-                select: function () {
-                    $scope.modelInstaller.loadData();
-
-                },
-                next: function () {
-
-                    return $scope.modelInstaller.saveData();
-                }
-            },
-            {
-                id: "3",
-                name: $filter('translator')('i18n_model_show', '模块展示'),
-                select: function () {
-                    for (let i = 0; i < 10; i++) {
-                        $scope.modelShow._initCards();
-                    }
-                },
-                next: function () {
-                    return true;
-                }
-            }
-        ],
-        // 嵌入页面需要指定关闭方法
-        close: function () {
-            $scope.closeToggleForm();
-            $scope.show = false;
-        }
-    };
 
     $scope.show = true;
 
@@ -971,6 +899,22 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         });
     }
 
+
+    $scope.selectedTableIndex = 3;
+
+    $scope.switchTab = function (index) {
+        if (index < 0 || index > 3) return;
+        $scope.selectedTableIndex = index;
+        if (index < 3){
+            $scope.modelInstaller.loadData();
+        }
+    }
+
+    $scope.pageInit = function () {
+        //1.首先加载索引服务资源
+        $scope.indexServer.loadData();
+    }
+    $scope.pageInit();
 
 });
 

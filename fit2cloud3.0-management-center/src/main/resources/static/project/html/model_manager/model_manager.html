@@ -1,415 +1,339 @@
 
 <div layout-fill ng-controller="ModelManagerController" class="content-backdrop license-panel" >
-    <div layout-fill ng-include="background" class="license-background" aria-hidden="true"></div>
-    <div layout="column" layout-fill class="model_manager_container">
+    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+        <md-toolbar class="content-toolbar">
+            <div class="md-toolbar-tools">
+                <div> {{'i18n_model_manager' | translator}}</div>
+                <md-button class="md-primary" ng-click="mcReload()">
+                    <md-icon>autorenew</md-icon>
+                    {{'i18n_model_mc_reload' | translator:'节点重载'}}
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div layout="row" flex>
 
-        <md-content flex="auto">
-            <div wizard="wizard" ng-if="show" class="model_class model_content_container">
-                <wizard-step id="1">
-                    <md-content flex="100">
+            <md-content flex="100" >
+
+
+                <md-tabs md-selected="selectedTableIndex" style="z-index: 40;" md-dynamic-height md-border-bottom>
+
+                    <md-tab ng-click="list()" label="{{'i18n_model_tab_title_installed' | translator:'已安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
+                        <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}" >
+                            <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
+                                <select-columns columns="columns"></select-columns>
+                                <!--<div class="filter-item" ng-if="indexServer.model_env == 'host'">
+                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStart()">
+                                        <md-tooltip md-delay="300">{{'i18n_model_op_start' | translator:'启动'}}</md-tooltip>
+                                        <md-icon>touch_app</md-icon>
+                                    </md-button>
+                                </div>
+                                <div class="filter-item" ng-if="indexServer.model_env == 'host'">
+                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStop()">
+                                        <md-tooltip md-delay="300">{{'i18n_model_op_stop' | translator:'停止'}}</md-tooltip>
+                                        <md-icon>stop</md-icon>
+                                    </md-button>
+                                </div>-->
+                                <div class="filter-item">
+                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
+                                        <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
+                                        <md-icon>refresh</md-icon>
+                                    </md-button>
+                                </div>
+                            </filter-tools>
+                            <table class="edit-table" dynamic-table columns="columns" execute="list({sql :sql})">
+                                <tbody>
+                                <tr ng-repeat="item in items">
+                                    <!--<td has-permissions="KEYCLOAK_SETTING:SYNC">
+                                        <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
+                                                     ng-model="item.enable"
+                                                     class="md-primary"></md-checkbox>
+                                    </td>-->
+                                    <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                    <td>{{item.module}}</td>
+                                    <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
+                                        <a class="edit-span" class="md-primary" style="cursor:pointer;text-decoration:none!important;" href="" >
+                                            <!--{{item.statuInfo}}-->
+                                            {{item.dynamicInfo}}
+                                            <md-tooltip md-direction="top" class="f2c-tooltip-version">
+                                                <table class="node_tip_table">
+                                                    <tr>
+                                                        <th align="left">{{'i18n_model_node_field_node_running' | translator:'在线节点'}}</th>
+                                                    </tr>
+
+                                                    <tr ng-repeat="node in _eurekaData[item.module]">
+                                                        <td>{{node}}</td>
+                                                    </tr>
+                                                </table>
+                                            </md-tooltip>
+                                        </a>
+                                    </td>
+                                    <td class="edit-td" ng-if="indexServer.model_env=='host'">
+                                        <a class="edit-span" class="md-primary" style="cursor:pointer;" href="" ng-click="openNodeInfo(item)">
+                                            {{item.statuInfo}}
+                                            <md-tooltip md-direction="top" class="f2c-tooltip-version">
+
+                                                <table class="node_tip_table">
+                                                    <tr>
+                                                        <th align="left">{{'i18n_model_node_field_node' | translator:'节点'}}</th>
+                                                        <th align="left">{{'i18n_model_node_field_status' | translator:'状态'}}</th>
+                                                        <th align="left">{{'i18n_model_node_field_create_time' | translator:'安装时间'}}</th>
+                                                    </tr>
+
+                                                    <tr ng-repeat="node in _nodeData[item.module]">
+                                                        <td>{{node.nodeHost}}</td>
+                                                        <td>{{node.nodeStatus}}</td>
+                                                        <td>{{node.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                                    </tr>
+                                                </table>
+                                            </md-tooltip>
+                                        </a>
+                                    </td>
+                                    <td>{{item.lastRevision}}</td>
+                                    <td>{{item.installTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                    <td>{{item.overview}}</td>
+                                    <td >
+
+
+                                        <table-menus>
+                                            <md-menu-item ng-if="indexServer.model_env=='host'">
+                                                <md-button ng-click="openNodeInfo(item)" ng-if="indexServer.model_env=='host'">
+                                                    <md-icon class="md-18">apps</md-icon>
+                                                    {{'i18n_model_op_pod_eidt' | translator:'服务实例'}}
+                                                </md-button>
+                                            </md-menu-item>
+
+                                            <md-menu-item ng-if="isRePassword(item)" ng-if="indexServer.model_env=='k8s'">
+                                                <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
+                                                    <md-icon class="md-18">edit</md-icon>
+                                                    {{'i18n_model_op_pod_eidt' | translator:'服务实例'}}
+                                                </md-button>
+                                            </md-menu-item>
+
+                                            <md-menu-item ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">
+                                                <md-button ng-click="uninstallK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">
+                                                    <md-icon class="md-18">delete_forever</md-icon>
+                                                    {{'i18n_model_op_uninstall' | translator:'卸载'}}
+                                                </md-button>
+                                            </md-menu-item>
+                                        </table-menus>
+
+
+
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table-pagination pagination="pagination"></table-pagination>
+                        </md-content>
+                    </md-tab>
+
+                    <md-tab ng-click="modelInstaller.loadData()" label="{{'i18n_model_tab_title_updatable' | translator:'可更新'}}" has-permission="KEYCLOAK_SETTING:SYNC">
                         <div>
-                            <form name="modelFrom" class="md-padding"
-                                  cg-busy="{promise:loadingLayer,minDuration:500}">
-                                <md-input-container md-no-float class="md-block"
-                                                    layout-gt-xs="row"
-                                                    style="margin-bottom: 0px" >
-                                    <label>{{'i18n_index_type' | translator:'使用在线索引服务'}}：</label>
-                                    <md-switch class="md-primary" aria-label="enable" ng-change="indexServer.changeOnline()" ng-model="indexServer.onLine" ></md-switch>
-
-                                </md-input-container>
-                                <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
-                                                    layout-gt-xs="row"
-                                                    style="margin-bottom: 0px" >
-                                    <label>{{'i18n_docker_registry' | translator:'镜像仓库'}}</label>
-                                    <input ng-model="indexServer.dockerRegistry.url" required
-                                           type="text"
-                                           placeholder="{{'i18n_docker_registry' | translator:'镜像仓库'}}">
-                                </md-input-container>
-
-                                <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
-                                                    layout-gt-xs="row"
-                                                    style="margin-bottom: 0px" >
-                                    <label>{{'i18n_docker_registry_user' | translator:'用户名'}}</label>
-                                    <input ng-model="indexServer.dockerRegistry.user" required
-                                           type="text"
-                                           placeholder="{{'i18n_docker_registry_user' | translator:'用户名'}}">
-                                </md-input-container>
-
-                                <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
-                                                    layout-gt-xs="row"
-                                                    style="margin-bottom: 0px" >
-                                    <label>{{'i18n_docker_registry_passws' | translator:'密码'}}</label>
-                                    <i layout-gt-xs id="eye" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('password','eye')"></i>
-                                    <input   id="password" ng-model="indexServer.dockerRegistry.passwd" required type="password"  name="password"
-                                           placeholder="{{'i18n_docker_registry_passws' | translator:'密码'}}">
-
-                                </md-input-container>
-
-                                <md-input-container ng-show="!!indexServer.onLine" md-no-float class="md-block"
-                                                    layout-gt-xs="row"
-                                                    style="margin-bottom: 0px" >
-                                    <md-icon>link</md-icon>
-                                    <input style="cursor:pointer;" ng-model="indexServer.address"
-                                           type="text"
-                                           placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}">
-                                </md-input-container>
-
-                                <md-content ng-show="!!indexServer.onLine" class="md-block" flex="100" style="margin-left: 30px">
-                                    <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
-                                    <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
-                                </md-content>
-                            </form>
-                        </div>
-                    </md-content>
-                </wizard-step>
-                <wizard-step id="2">
-                    <md-content flex="100" >
-                        <div class="reload-node" style="left: 92%;display:inline-block;min-width:90px;position: relative;z-index: 50;">
-                            <md-button ng-click="mcReload()">
-                                <md-icon class="md-18">autorenew</md-icon>
-                                {{'i18n_model_mc_reload' | translator:'节点重载'}}
-                            </md-button>
-                        </div>
-
-                        <md-tabs style="top: -55px;z-index: 40;" md-dynamic-height md-border-bottom>
-                            <md-tab ng-click="modelInstaller.loadData()" label="{{'i18n_model_tab_title_Installable' | translator:'可安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
-                                <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
-                                    <filter-tools conditions="modelInstaller.conditions" results="modelInstaller.filters" search="'true'" execute="modelInstaller.loadData()">
-                                        <div class="filter-item" ng-if="indexServer.model_env == 'host'">
-                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.executeInstall()">
-                                                <md-tooltip md-delay="300">{{'i18n_model_op_install' | translator:'安装'}}</md-tooltip>
-                                                <md-icon>build</md-icon>
-                                            </md-button>
-                                        </div>
-                                    </filter-tools>
-                                    <table class="edit-table" dynamic-table columns="modelInstaller.installableColumns" execute="modelInstaller.loadInstallable()">
-                                        <tbody>
-                                        <tr ng-repeat="item in installableItems">
-                                            <td has-permissions="KEYCLOAK_SETTING:SYNC">
-                                                <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
-                                                             ng-model="item.enable"
-                                                             class="md-primary"></md-checkbox>
-                                            </td>
-                                            <!--<td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>-->
-                                            <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
-                                            <!--<td>{{item.module}}</td>-->
-                                            <td class="edit-td">
-                                                <div layout="row">
-                                                    <a class="edit-span" class="md-primary" style="cursor:pointer;text-decoration: none!important;" href=""
-                                                       ng-if="!!item.lastRevision" ng-hide="item._versionEdit" >
-                                                        {{item.lastRevision}}
-                                                        <md-tooltip md-direction="top" class="f2c-tooltip-version">
-                                                            {{'i18n_model_node_version_info' | translator:'版本信息'}}：{{item.last_version.revision}}<br>
-                                                            {{'i18n_model_node_create_time' | translator:'创建时间'}}：{{item.last_version.created}}<br>
-                                                            {{'i18n_model_node_down_url' | translator:'下载地址'}}：{{item.last_version.downloadUrl}}<br>
-                                                            <span class="auto-break">{{'i18n_model_node_over_view' | translator:'描述信息'}}：{{item.last_version.description}}</span>
-                                                        </md-tooltip>
-                                                    </a>
-                                                    <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
-                                                    <md-select ng-show="item._versionEdit" ng-model="item.lastRevision" ng-change="modelInstaller.doneEditVersion(item)">
-                                                        <md-option ng-repeat="vitem in currentRevisions" value="{{vitem.revision}}">{{vitem.revision}}
-                                                        </md-option>
-                                                    </md-select>
-                                                    <span ng-if="item.revisions.length > 1" class="hide-content" >
-                                                            <md-icon ng-if="!item._versionEdit" ng-click="modelInstaller.editVersion(item)" >edit</md-icon>
-                                                            <md-icon ng-if="item._versionEdit" ng-click="modelInstaller.doneEditVersion(item)" >done</md-icon>
-                                                        </span>
-                                                </div>
-                                            </td>
-                                            <td>{{item.last_version.created}}</td>
-                                            <td>{{item.overview}}</td>
-                                            <td>
-                                                <table-menus>
-                                                    <md-menu-item ng-if="indexServer.model_env == 'host'">
-                                                        <md-button ng-click="item.enable = true;modelInstaller.executeInstall()" ng-if="indexServer.model_env == 'host'">
-                                                            <md-icon class="md-18">build</md-icon>
-                                                            {{'i18n_model_op_install' | translator:'安装'}}
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item ng-if="indexServer.model_env == 'k8s'">
-                                                        <md-button ng-click="item.enable = true;modelInstaller.executeInstall_k8s()" ng-if="indexServer.model_env == 'k8s'">
-                                                            <md-icon class="md-18">build</md-icon>
-                                                            {{'i18n_model_op_install' | translator:'安装'}}
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item ng-if="indexServer.model_env == 'host'">
-                                                        <md-button ng-click="mcNodeInfo(item)" ng-if="indexServer.model_env == 'host'">
-                                                            <md-icon class="md-18">apps</md-icon>
-                                                            {{'i18n_model_op_node' | translator:'显示节点'}}
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </table-menus>
-
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <!--<table-pagination pagination="pagination"></table-pagination>-->
-                                </md-content>
-
-                            </md-tab>
-                            <md-tab ng-click="modelInstaller.loadData()" label="{{'i18n_model_tab_title_updatable' | translator:'可更新'}}" has-permission="KEYCLOAK_SETTING:SYNC">
-                                <div>
-                                    <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
-                                        <table class="edit-table" dynamic-table columns="modelInstaller.installupdateColumns" execute="modelInstaller.loadUpdates()">
-                                            <tbody>
-                                            <tr ng-repeat="item in installupdateItems">
-                                                <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
-                                                <td>{{item.module}}</td>
-                                                <td>{{item.current_version}}</td>
-                                                <td>{{item.installTime | date:'yyyy-MM-dd HH:mm'}}</td>
-                                                <!--<td>{{item.lastRevision}}</td>-->
-                                                <td class="edit-td">
-                                                    <div layout="row">
-                                                        <a class="edit-span" class="md-primary" style="cursor:pointer" href=""
-                                                           ng-if="!!item.lastRevision" ng-hide="item._versionEdit" >
-                                                            {{item.lastRevision}}
-                                                            <md-tooltip md-direction="top" class="f2c-tooltip-version">
-                                                                {{'i18n_model_node_version_info' | translator:'版本信息'}}：{{item.last_version.revision}}<br>
-                                                                {{'i18n_model_node_create_time' | translator:'创建时间'}}：{{item.last_version.created}}<br>
-                                                                {{'i18n_model_node_down_url' | translator:'下载地址'}}：{{item.last_version.downloadUrl}}<br>
-                                                                <span class="auto-break">{{'i18n_model_node_over_view' | translator:'描述信息'}}：{{item.last_version.description}}</span>
-                                                            </md-tooltip>
-                                                        </a>
-                                                        <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
-                                                        <md-select ng-show="item._versionEdit" ng-model="item.lastRevision" ng-change="modelInstaller.doneEditVersion(item)">
-                                                            <md-option ng-repeat="vitem in currentUpdateRevisions" value="{{vitem.revision}}">{{vitem.revision}}
-                                                            </md-option>
-                                                        </md-select>
-                                                        <span class="hide-content" ng-if="item._update_options.length > 1">
+                            <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
+                                <table class="edit-table" dynamic-table columns="modelInstaller.installupdateColumns" execute="modelInstaller.loadUpdates()">
+                                    <tbody>
+                                    <tr ng-repeat="item in installupdateItems">
+                                        <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                        <td>{{item.module}}</td>
+                                        <td>{{item.current_version}}</td>
+                                        <td>{{item.installTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                                        <!--<td>{{item.lastRevision}}</td>-->
+                                        <td class="edit-td">
+                                            <div layout="row">
+                                                <a class="edit-span" class="md-primary" style="cursor:pointer" href=""
+                                                   ng-if="!!item.lastRevision" ng-hide="item._versionEdit" >
+                                                    {{item.lastRevision}}
+                                                    <md-tooltip md-direction="top" class="f2c-tooltip-version">
+                                                        {{'i18n_model_node_version_info' | translator:'版本信息'}}：{{item.last_version.revision}}<br>
+                                                        {{'i18n_model_node_create_time' | translator:'创建时间'}}：{{item.last_version.created}}<br>
+                                                        {{'i18n_model_node_down_url' | translator:'下载地址'}}：{{item.last_version.downloadUrl}}<br>
+                                                        <span class="auto-break">{{'i18n_model_node_over_view' | translator:'描述信息'}}：{{item.last_version.description}}</span>
+                                                    </md-tooltip>
+                                                </a>
+                                                <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
+                                                <md-select ng-show="item._versionEdit" ng-model="item.lastRevision" ng-change="modelInstaller.doneEditVersion(item)">
+                                                    <md-option ng-repeat="vitem in currentUpdateRevisions" value="{{vitem.revision}}">{{vitem.revision}}
+                                                    </md-option>
+                                                </md-select>
+                                                <span class="hide-content" ng-if="item._update_options.length > 1">
                                                             <md-icon ng-if="!item._versionEdit" ng-click="modelInstaller.editUpdateVersion(item)" >edit</md-icon>
                                                             <md-icon ng-if="item._versionEdit" ng-click="modelInstaller.doneEditVersion(item)" >done</md-icon>
                                                         </span>
-                                                    </div>
-                                                </td>
-
-                                                <td>{{item.overview}}</td>
-                                                <td>
-                                                    <md-button ng-click="item.enable = true;modelInstaller.executeUpdate()">
-                                                        <md-icon class="md-18">build</md-icon>
-                                                        {{'i18n_model_op_update' | translator:'更新'}}
-                                                    </md-button>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        <!--<table-pagination pagination="pagination"></table-pagination>-->
-                                    </md-content>
-                                </div>
-                            </md-tab>
-                            <md-tab ng-click="list()" label="{{'i18n_model_tab_title_installed' | translator:'已安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
-                                <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}" >
-                                    <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
-                                        <select-columns columns="columns"></select-columns>
-                                        <!--<div class="filter-item" ng-if="indexServer.model_env == 'host'">
-                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStart()">
-                                                <md-tooltip md-delay="300">{{'i18n_model_op_start' | translator:'启动'}}</md-tooltip>
-                                                <md-icon>touch_app</md-icon>
-                                            </md-button>
-                                        </div>
-                                        <div class="filter-item" ng-if="indexServer.model_env == 'host'">
-                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStop()">
-                                                <md-tooltip md-delay="300">{{'i18n_model_op_stop' | translator:'停止'}}</md-tooltip>
-                                                <md-icon>stop</md-icon>
-                                            </md-button>
-                                        </div>-->
-                                        <div class="filter-item">
-                                            <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
-                                                <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
-                                                <md-icon>refresh</md-icon>
-                                            </md-button>
-                                        </div>
-                                    </filter-tools>
-                                    <table class="edit-table" dynamic-table columns="columns" execute="list({sql :sql})">
-                                        <tbody>
-                                        <tr ng-repeat="item in items">
-                                            <!--<td has-permissions="KEYCLOAK_SETTING:SYNC">
-                                                <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
-                                                             ng-model="item.enable"
-                                                             class="md-primary"></md-checkbox>
-                                            </td>-->
-                                            <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
-                                            <td>{{item.module}}</td>
-                                            <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
-                                                <a class="edit-span" class="md-primary" style="cursor:pointer;text-decoration:none!important;" href="" >
-                                                    <!--{{item.statuInfo}}-->
-                                                    {{item.dynamicInfo}}
-                                                    <md-tooltip md-direction="top" class="f2c-tooltip-version">
-                                                        <table class="node_tip_table">
-                                                            <tr>
-                                                                <th align="left">{{'i18n_model_node_field_node_running' | translator:'在线节点'}}</th>
-                                                            </tr>
-
-                                                            <tr ng-repeat="node in _eurekaData[item.module]">
-                                                                <td>{{node}}</td>
-                                                            </tr>
-                                                        </table>
-                                                    </md-tooltip>
-                                                </a>
-                                            </td>
-                                            <td class="edit-td" ng-if="indexServer.model_env=='host'">
-                                                <a class="edit-span" class="md-primary" style="cursor:pointer;" href="" ng-click="openNodeInfo(item)">
-                                                    {{item.statuInfo}}
-                                                    <md-tooltip md-direction="top" class="f2c-tooltip-version">
-
-                                                        <table class="node_tip_table">
-                                                            <tr>
-                                                                <th align="left">{{'i18n_model_node_field_node' | translator:'节点'}}</th>
-                                                                <th align="left">{{'i18n_model_node_field_status' | translator:'状态'}}</th>
-                                                                <th align="left">{{'i18n_model_node_field_create_time' | translator:'安装时间'}}</th>
-                                                            </tr>
-
-                                                            <tr ng-repeat="node in _nodeData[item.module]">
-                                                                <td>{{node.nodeHost}}</td>
-                                                                <td>{{node.nodeStatus}}</td>
-                                                                <td>{{node.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>
-                                                            </tr>
-                                                        </table>
-                                                    </md-tooltip>
-                                                </a>
-                                            </td>
-                                            <td>{{item.lastRevision}}</td>
-                                            <td>{{item.installTime | date:'yyyy-MM-dd HH:mm'}}</td>
-                                            <td>{{item.overview}}</td>
-                                            <td >
-
-
-                                                <table-menus>
-                                                    <md-menu-item ng-if="indexServer.model_env=='host'">
-                                                        <md-button ng-click="openNodeInfo(item)" ng-if="indexServer.model_env=='host'">
-                                                            <md-icon class="md-18">apps</md-icon>
-                                                            {{'i18n_model_op_pod_eidt' | translator:'服务实例'}}
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item ng-if="isRePassword(item)" ng-if="indexServer.model_env=='k8s'">
-                                                        <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
-                                                            <md-icon class="md-18">edit</md-icon>
-                                                            {{'i18n_model_op_pod_eidt' | translator:'服务实例'}}
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">
-                                                        <md-button ng-click="uninstallK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">
-                                                            <md-icon class="md-18">delete_forever</md-icon>
-                                                            {{'i18n_model_op_uninstall' | translator:'卸载'}}
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </table-menus>
-
-
-
-                                            </td>
-
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <table-pagination pagination="pagination"></table-pagination>
-                                </md-content>
-                            </md-tab>
-                            <md-tab label="{{'i18n_model_tab_title_customize' | translator:'自定义'}}" has-permission="KEYCLOAK_SETTING:SYNC">
-                                <h1>玩命开发中。。。。。。</h1>
-                            </md-tab>
-
-                        </md-tabs>
-
-                    </md-content>
-                </wizard-step>
-                <wizard-step id="3">
-                    <md-content flex="100">
-                        <div cg-busy="{promise:loadingLayer,minDuration:500}" layout-align="center center" layout="column">
-                            <md-content layout="column" class="md-padding" style="overflow-y: auto;width: 100%;padding: 0 16px!important;">
-                                <div class="module-header" layout="row" layout-align="center center">
-
-                                    <!--<div>
-                                        <md-button class="md-raised" ng-repeat="tag in tags" ng-click="selectTag(tag.tagKey)"
-                                                   ng-class="{'md-primary':tag.selected === true}">{{tag.tagValue}}
-                                        </md-button>
-                                    </div>-->
-
-                                    <div layout="row" layout-align="start center">
-                                        <div class="module-input">
-                                            <md-input-container style="margin: 0">
-                                                <md-icon>search</md-icon>
-                                                <input ng-model="param" type="text" ng-change="modelShow.search(param)"
-                                                       placeholder="{{'i18n_module_name' | translator:'模块名称'}}">
-                                            </md-input-container>
-                                        </div>
-                                    </div>
-                                    <div flex="auto"></div>
-                                </div>
-                                <div class="module-content model-content" ng-if="cards.length>0" style="margin-top: 0px!important;">
-
-                                    <div layout="row" layout-wrap layout-padding>
-                                        <div ng-repeat="item in cards" style="padding: 10px 20px!important;" flex-gt-lg="25" flex-gt-md="33" flex-md="33" flex-gt-xs="50" flex-xs="100">
-
-                                            <div class="module-card md-whiteframe-2dp" layout="column">
-                                                <div class="header">
-                                                    <div class="title">
-                                                        {{item.name}}
-                                                    </div>
-                                                    <div style="float: right;display: inline;" layout="column" >
-                                                        <!--这是打开日志的按钮-->
-                                                        <md-button class="md-icon-button f2c-icon-button" ng-click="modelShow.openLog(item)" style="padding: 0px;height: 24px;min-height: 0;width: 24px;margin: 0px">
-                                                            <md-icon class="cursor" auto-open="false">list<md-tooltip>{{'i18n_search_log' | translator:'查看日志'}}</md-tooltip></md-icon>
-                                                        </md-button>
-                                                    </div>
-                                                </div>
-                                                <div class="content">
-                                                    {{item.content}}
-                                                    <md-tooltip md-direction="top" class="f2c-tooltip-version">
-
-                                                        <table class="node_tip_table">
-                                                            <tr>
-                                                                <th align="left">{{'i18n_model_node_field_node' | translator:'节点'}}</th>
-                                                                <th align="left">{{'i18n_model_node_field_status' | translator:'状态'}}</th>
-                                                                <!--<th align="left">{{'i18n_model_node_field_create_time' | translator:'安装时间'}}</th>-->
-                                                            </tr>
-
-                                                            <tr ng-repeat="node in _nodeData[item.module]">
-                                                                <td>{{node.nodeHost}}</td>
-                                                                <td>{{node.nodeStatus}}</td>
-                                                                <!--<td>{{node.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>-->
-                                                            </tr>
-                                                        </table>
-                                                    </md-tooltip>
-                                                </div>
-                                                <div flex="auto"></div>
-                                                <div layout="row" layout-align="center center" class="footer">
-                                                    <div flex="50" style="margin: 16px 0">
-                                                        <div ng-if="item.auth ">
-                                                            <span>
-                                                                {{item.statuInfo}}
-                                                            </span>
-                                                            </span>
-                                                        </div>
-                                                        <div ng-if="!item.auth" md-colors="{color: 'red'}"> {{'i18n_module_unauthorized' | translator:'未授权'}}
-                                                        </div>
-                                                    </div>
-                                                    <div flex="50" layout-align="end" layout="row">
-                                                        <div style="margin: 21px 5px;">
-                                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_model_status_'+item.module_status | translator:'停止'}}</span>
-                                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_model_status_'+item.module_status | translator:'运行'}}</span>
-                                                        </div>
-                                                        <md-switch class="md-primary" ng-model="item.active" disabled>
-                                                        </md-switch>
-                                                    </div>
-                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        </td>
+
+                                        <td>{{item.overview}}</td>
+                                        <td>
+                                            <md-button ng-click="item.enable = true;modelInstaller.executeUpdate()">
+                                                <md-icon class="md-18">build</md-icon>
+                                                {{'i18n_model_op_update' | translator:'更新'}}
+                                            </md-button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <!--<table-pagination pagination="pagination"></table-pagination>-->
                             </md-content>
                         </div>
-                    </md-content>
-                </wizard-step>
-            </div>
-        </md-content>
+                    </md-tab>
 
+                    <md-tab ng-click="modelInstaller.loadData()" label="{{'i18n_model_tab_title_Installable' | translator:'可安装'}}" has-permission="KEYCLOAK_SETTING:SYNC">
+                        <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
+                            <filter-tools conditions="modelInstaller.conditions" results="modelInstaller.filters" search="'true'" execute="modelInstaller.loadData()">
+                                <div class="filter-item" ng-if="indexServer.model_env == 'host'">
+                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.executeInstall()">
+                                        <md-tooltip md-delay="300">{{'i18n_model_op_install' | translator:'安装'}}</md-tooltip>
+                                        <md-icon>build</md-icon>
+                                    </md-button>
+                                </div>
+                            </filter-tools>
+                            <table class="edit-table" dynamic-table columns="modelInstaller.installableColumns" execute="modelInstaller.loadInstallable()">
+                                <tbody>
+                                <tr ng-repeat="item in installableItems">
+                                    <td has-permissions="KEYCLOAK_SETTING:SYNC">
+                                        <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
+                                                     ng-model="item.enable"
+                                                     class="md-primary"></md-checkbox>
+                                    </td>
+                                    <!--<td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>-->
+                                    <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                    <!--<td>{{item.module}}</td>-->
+                                    <td class="edit-td">
+                                        <div layout="row">
+                                            <a class="edit-span" class="md-primary" style="cursor:pointer;text-decoration: none!important;" href=""
+                                               ng-if="!!item.lastRevision" ng-hide="item._versionEdit" >
+                                                {{item.lastRevision}}
+                                                <md-tooltip md-direction="top" class="f2c-tooltip-version">
+                                                    {{'i18n_model_node_version_info' | translator:'版本信息'}}：{{item.last_version.revision}}<br>
+                                                    {{'i18n_model_node_create_time' | translator:'创建时间'}}：{{item.last_version.created}}<br>
+                                                    {{'i18n_model_node_down_url' | translator:'下载地址'}}：{{item.last_version.downloadUrl}}<br>
+                                                    <span class="auto-break">{{'i18n_model_node_over_view' | translator:'描述信息'}}：{{item.last_version.description}}</span>
+                                                </md-tooltip>
+                                            </a>
+                                            <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
+                                            <md-select ng-show="item._versionEdit" ng-model="item.lastRevision" ng-change="modelInstaller.doneEditVersion(item)">
+                                                <md-option ng-repeat="vitem in currentRevisions" value="{{vitem.revision}}">{{vitem.revision}}
+                                                </md-option>
+                                            </md-select>
+                                            <span ng-if="item.revisions.length > 1" class="hide-content" >
+                                                            <md-icon ng-if="!item._versionEdit" ng-click="modelInstaller.editVersion(item)" >edit</md-icon>
+                                                            <md-icon ng-if="item._versionEdit" ng-click="modelInstaller.doneEditVersion(item)" >done</md-icon>
+                                                        </span>
+                                        </div>
+                                    </td>
+                                    <td>{{item.last_version.created}}</td>
+                                    <td>{{item.overview}}</td>
+                                    <td>
+                                        <table-menus>
+                                            <md-menu-item ng-if="indexServer.model_env == 'host'">
+                                                <md-button ng-click="item.enable = true;modelInstaller.executeInstall()" ng-if="indexServer.model_env == 'host'">
+                                                    <md-icon class="md-18">build</md-icon>
+                                                    {{'i18n_model_op_install' | translator:'安装'}}
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="indexServer.model_env == 'k8s'">
+                                                <md-button ng-click="item.enable = true;modelInstaller.executeInstall_k8s()" ng-if="indexServer.model_env == 'k8s'">
+                                                    <md-icon class="md-18">build</md-icon>
+                                                    {{'i18n_model_op_install' | translator:'安装'}}
+                                                </md-button>
+                                            </md-menu-item>
+
+                                            <md-menu-item ng-if="indexServer.model_env == 'host'">
+                                                <md-button ng-click="mcNodeInfo(item)" ng-if="indexServer.model_env == 'host'">
+                                                    <md-icon class="md-18">apps</md-icon>
+                                                    {{'i18n_model_op_node' | translator:'显示节点'}}
+                                                </md-button>
+                                            </md-menu-item>
+                                        </table-menus>
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!--<table-pagination pagination="pagination"></table-pagination>-->
+                        </md-content>
+
+                    </md-tab>
+
+                    <md-tab label="{{'i18n_model_tab_title_senior' | translator:'高级'}}" has-permission="KEYCLOAK_SETTING:SYNC">
+                        <md-content flex="100">
+                            <div>
+                                <form name="modelFrom" class="md-padding"
+                                      cg-busy="{promise:loadingLayer,minDuration:500}">
+                                    <md-input-container md-no-float class="md-block"
+                                                        layout-gt-xs="row"
+                                                        style="margin-bottom: 0px" >
+                                        <label>{{'i18n_index_type' | translator:'使用在线索引服务'}}：</label>
+                                        <md-switch class="md-primary" aria-label="enable" ng-change="indexServer.changeOnline()" ng-model="indexServer.onLine" ></md-switch>
+
+                                    </md-input-container>
+                                    <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+                                                        layout-gt-xs="row"
+                                                        style="margin-bottom: 0px" >
+                                        <label>{{'i18n_docker_registry' | translator:'镜像仓库'}}</label>
+                                        <input ng-model="indexServer.dockerRegistry.url" required
+                                               type="text"
+                                               placeholder="{{'i18n_docker_registry' | translator:'镜像仓库'}}">
+                                    </md-input-container>
+
+                                    <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+                                                        layout-gt-xs="row"
+                                                        style="margin-bottom: 0px" >
+                                        <label>{{'i18n_docker_registry_user' | translator:'用户名'}}</label>
+                                        <input ng-model="indexServer.dockerRegistry.user" required
+                                               type="text"
+                                               placeholder="{{'i18n_docker_registry_user' | translator:'用户名'}}">
+                                    </md-input-container>
+
+                                    <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+                                                        layout-gt-xs="row"
+                                                        style="margin-bottom: 0px" >
+                                        <label>{{'i18n_docker_registry_passws' | translator:'密码'}}</label>
+                                        <i layout-gt-xs id="eye" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('password','eye')"></i>
+                                        <input   id="password" ng-model="indexServer.dockerRegistry.passwd" required type="password"  name="password"
+                                                 placeholder="{{'i18n_docker_registry_passws' | translator:'密码'}}">
+
+                                    </md-input-container>
+
+                                    <md-input-container ng-show="!!indexServer.onLine" md-no-float class="md-block"
+                                                        layout-gt-xs="row"
+                                                        style="margin-bottom: 0px" >
+                                        <md-icon>link</md-icon>
+                                        <input style="cursor:pointer;" ng-model="indexServer.address"
+                                               type="text"
+                                               placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}">
+                                    </md-input-container>
+
+                                    <md-content ng-show="!!indexServer.onLine" class="md-block" flex="100" style="margin-left: 30px">
+                                        <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
+                                        <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
+                                    </md-content>
+                                </form>
+                                <div layout="row" layout-align="start center" layout-margin>
+
+                                    <md-button class="md-raised md-primary" ng-click="indexServer.saveData()">
+
+                                        {{'i18n_save' | translator}}
+                                    </md-button>
+                                </div>
+                            </div>
+                        </md-content>
+                    </md-tab>
+
+                </md-tabs>
+
+            </md-content>
+
+
+
+        </div>
+
+        <!--<info-form width="50%"></info-form>
+        <side-form></side-form>-->
+        <side-form></side-form>
+        <info-form></info-form>
     </div>
 
-    <info-form width="50%"></info-form>
-    <side-form></side-form>
 </div>
 

@@ -229,6 +229,7 @@
   "i18n_model_tab_title_updatable": "updatable",
   "i18n_model_tab_title_installed": "installed",
   "i18n_model_tab_title_customize": "customize",
+  "i18n_model_tab_title_senior": "senior",
   "i18n_model_field_name": "Name",
   "i18n_model_k8s-status_expand": "Expanding",
   "i18n_model_k8s-status_shrinke": "Shrinking",

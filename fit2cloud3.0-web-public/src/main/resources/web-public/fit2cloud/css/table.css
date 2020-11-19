@@ -89,6 +89,10 @@
     text-decoration: underline!important;
 }
 
+.table > tbody > tr > td img {
+    padding-right: 10px;
+}
+
 .table > tbody > tr:nth-child(odd) {
     background-color: #F4F4F4;
 }

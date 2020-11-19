@@ -211,8 +211,9 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             this.installableColumns = [
                 checkColumn,
                 {value: Translator.get("i18n_model_field_name"), key: "name", sort: false},
-                {value: Translator.get("i18n_model_field_module"), key: "module", sort: false},
+                /*{value: Translator.get("i18n_model_field_module"), key: "module", sort: false},*/
                 {value: Translator.get("i18n_model_field_available_version"), key: "lastRevision", sort: false},
+                {value: Translator.get("i18n_model_field_release_time"), key: "created", sort: false},
                 {value: Translator.get("i18n_model_field_overview"), key: "overview", sort: false},
                 // {value: '操作', key: "name", sort: false}
             ];
@@ -767,7 +768,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         },*/
         {value: Translator.get("i18n_model_field_name"), key: "name", sort: false},
         {value: Translator.get("i18n_model_field_module"), key: "module", sort: false},
-        {value: Translator.get("i18n_model_field_status"), key: "currentStatus", sort: false},
+        /*{value: Translator.get("i18n_model_field_status"), key: "currentStatus", sort: false},*/
+        {value: Translator.get("i18n_model_field_status_new"), key: "currentStatus", sort: false},
         {value: Translator.get("i18n_model_field_current_version"), key: "lastRevision", sort: false},
         {value: Translator.get("i18n_model_field_install_time"), key: "installTime", sort: false},
         {value: Translator.get("i18n_model_field_overview"), key: "overview", sort: false}

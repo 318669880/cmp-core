@@ -117,7 +117,7 @@
                  {{'i18n_workspace_create' | translator}}
             </md-switch>
 
-            <virtual-select-multiple
+            <!--<virtual-select-multiple
                     name="workspaceIds{{$index}}"
                     value="id"
                     label="name"
@@ -126,9 +126,13 @@
                     results="roleInfo.workspaceIds"
                     required="true"
                     ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"
-            ></virtual-select-multiple>
+            ></virtual-select-multiple>-->
+            <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace">
+                <label> {{'i18n_workspace_add' | translator}}</label>
+                <wks-select required="true"  results="roleInfo.workspaceIds" ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"></wks-select>
+            </md-input-container>
 
-            <virtual-select
+            <!--<virtual-select
                     name="organizationIds{{$index}}"
                     value="id"
                     label="name"
@@ -137,9 +141,13 @@
                     result="roleInfo.selectOrganizationId"
                     required="true"
                     ng-if="roleInfo.roleType=== roleConst.user && roleInfo.workspace"
-            ></virtual-select>
+            ></virtual-select>-->
+            <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType=== roleConst.user && roleInfo.workspace">
+                <label> {{'i18n_organization_select' | translator}}</label>
+                <org-select-single single="true" required="true" name="organizationIds{{$index}}" result="roleInfo.selectOrganizationId" ></org-select-single>
+            </md-input-container>
 
-            <virtual-select-multiple
+            <!--<virtual-select-multiple
                     name="organizationIds{{$index}}"
                     value="id"
                     label="name"
@@ -148,7 +156,11 @@
                     results="roleInfo.organizationIds"
                     required="true"
                     ng-if="roleInfo.roleType===roleConst.orgAdmin"
-            ></virtual-select-multiple>
+            ></virtual-select-multiple>-->
+            <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.orgAdmin">
+                <label> {{'i18n_organization_add' | translator}}</label>
+                <org-select required="true" name="organizationIds{{$index}}" results="roleInfo.organizationIds" ng-if="roleInfo.roleType===roleConst.orgAdmin"></org-select>
+            </md-input-container>
         </div>
         <md-button layout="row" layout-align="center" class="md-raised md-success"
                    ng-disabled="addUserForm.$invalid || !isAddLineAble"

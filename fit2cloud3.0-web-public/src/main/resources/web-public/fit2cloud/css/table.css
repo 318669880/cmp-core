@@ -86,6 +86,7 @@
 
 .table > tbody > tr > td a {
     color: rgb(63, 81, 181);
+    text-decoration: underline!important;
 }
 
 .table > tbody > tr:nth-child(odd) {

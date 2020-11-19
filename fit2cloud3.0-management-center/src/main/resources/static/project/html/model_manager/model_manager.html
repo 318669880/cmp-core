@@ -102,7 +102,7 @@
                                                 </md-button>
                                             </md-menu-item>
 
-                                            <md-menu-item ng-if="isRePassword(item)" ng-if="indexServer.model_env=='k8s'">
+                                            <md-menu-item ng-if="indexServer.model_env=='k8s'">
                                                 <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
                                                     <md-icon class="md-18">edit</md-icon>
                                                     {{'i18n_model_op_pod_eidt' | translator:'服务实例'}}

@@ -51,8 +51,8 @@ public class EurekaStateChangeListener {
     public void listen(EurekaServerStartedEvent event) {
         LogUtil.info("Eureka Server Startup");
         try {
-            modelNodeTask.registerCurrentMc();//注册自己
             modelNodeTask.clearRedisCache();
+            modelNodeTask.registerCurrentMc();//注册自己
         } catch (Exception e) {
             e.printStackTrace();
         }

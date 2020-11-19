@@ -2,6 +2,7 @@ package com.fit2cloud.mc.job;
 
 
 import com.fit2cloud.commons.server.constants.ResourceOperation;
+import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
 import com.fit2cloud.mc.common.constants.WsTopicConstants;
@@ -14,6 +15,7 @@ import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.service.WsService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Lazy;
@@ -63,13 +65,12 @@ public class CheckModuleStatus {
             List<ServiceInstance> instances = discoveryClient.getInstances(module);
             int eurekaPodNum = CollectionUtils.isEmpty(instances) ? 0 : instances.size();
             Integer podNum = modelBasic.getPodNum();
-            /*LogUtil.info("currentStatus = ["+modelBasic.getCurrentStatus()+"] ,StringUtils.isEmpty(modelBasic.getCurrentStatus()) = " + StringUtils.isEmpty(modelBasic.getCurrentStatus()));*/
-            /*LogUtil.info("dbPodNum = ["+podNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");*/
+
             if (podNum == eurekaPodNum ){
                 modelBasic.setCurrentStatus("");
-                LogUtil.info("The global check Timer of k8s module status is running");
+                LogUtil.info("The global check Timer of k8s module status is running for +["+module+"]");
                 int i = modelManagerService.updateModelBasic(modelBasic);
-                LogUtil.info("reset status "+i);
+                clearCache();
                 sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_START);
             }
         });
@@ -94,29 +95,34 @@ public class CheckModuleStatus {
             if (StringUtils.isEmpty(modelBaisc.getCurrentStatus())){
                 return;
             }
+            if (StringUtils.equals(modelBaisc.getCurrentStatus(), "uninstalling") ){
+                if (!onLine){
+                    clearCache();
+                }
+                //卸载不参与此逻辑
+                return;
+            }
             if (StringUtils.equals(modelBaisc.getCurrentStatus(), ResourceOperation.EXPANSION) && !onLine){
                 return;
             }
             if (StringUtils.equals(modelBaisc.getCurrentStatus(), ResourceOperation.SHRINK) && onLine){
                 return;
             }
-            LogUtil.info("eurekaEvent was triggered");
             LogUtil.info("Start operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));
-            LogUtil.info("eureka detected ["+appName+"] "+onLine+" success");
+
             WsTopicConstants wsTopicConstants = WsTopicConstants.K8S_MODEL_START;
             if (!onLine){
                 wsTopicConstants = WsTopicConstants.K8S_MODEL_STOP;
             }
-            //int eurekaPodNum = discoveryClient.getInstances(modelBaisc.getModule()).size();
             int eurekaPodNum = currentPodNum(model, serviceId, onLine);
             Integer dbPodNum = modelBaisc.getPodNum();
-
             LogUtil.info("eureka Event show dbPodNum = ["+dbPodNum+"] , eurekaPodNum = ["+eurekaPodNum+"]");
             if (dbPodNum == eurekaPodNum){
                 modelBaisc.setCurrentStatus("");
                 modelManagerService.updateModelBasic(modelBaisc);
                 LogUtil.info("The status of module["+appName+"] has been reset by eureka");
             }
+            clearCache();
             sendMessage(modelBaisc, wsTopicConstants);
             LogUtil.info("End operate node ["+appName +":"+ serviceId +"] for "+(onLine?"running":"stopped"));
         });
@@ -268,6 +274,14 @@ public class CheckModuleStatus {
         if (CollectionUtils.isEmpty(instances)) return false;
         String nodeIp = node.getNodeIp();
         return instances.stream().anyMatch(instance -> instance.getUri().toString().indexOf(nodeIp) != -1);
+    }
+
+    @CacheEvict(value = "k8s-pod-cache", allEntries = true)
+    public void clearPodsCache(){}
+
+    private void clearCache(){
+        CheckModuleStatus proxy = CommonBeanFactory.getBean(CheckModuleStatus.class);
+        proxy.clearPodsCache();
     }
 
 

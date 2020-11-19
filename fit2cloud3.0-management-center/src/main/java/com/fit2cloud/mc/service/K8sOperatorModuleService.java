@@ -3,7 +3,6 @@ package com.fit2cloud.mc.service;
 import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.server.constants.ResourceTypeConstants;
 import com.fit2cloud.commons.server.service.OperationLogService;
-import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.CommonThreadPool;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.common.constants.WsTopicConstants;
@@ -12,23 +11,18 @@ import com.fit2cloud.mc.dto.request.OperatorModuleRequest;
 import com.fit2cloud.mc.job.CheckModuleStatus;
 import com.fit2cloud.mc.model.ModelBasic;
 import com.fit2cloud.mc.model.ModelManager;
-import com.fit2cloud.mc.strategy.util.ModelManagerUtil;
 import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
@@ -79,11 +73,9 @@ public class K8sOperatorModuleService {
                     String action = podNumber > modelBasic.getPodNum() ? ResourceOperation.EXPANSION : ResourceOperation.SHRINK;
                     String msg = "scale pod from " + modelBasic.getPodNum() + " to " + podNumber;
                     LogUtil.info("Begin to operation {} ,: " + msg, module);
-                    //modelManagerService.updateModelBasicPodNum(module, podNumber);
                     modelBasic.setPodNum(podNumber);
                     modelBasic.setCurrentStatus(action);
                     modelManagerService.updateModelBasic(modelBasic);
-                    //modelBasic = modelManagerService.modelBasicInfo(module);
                     K8sUtil.actionService(module, new Gson().fromJson(modelBasic.getCustomData(), ModuleParamData.class), operatorModuleRequest.getParams());
                     LogUtil.info("Success to operation {} ,: " + msg, module);
 
@@ -99,15 +91,6 @@ public class K8sOperatorModuleService {
                             return true;
                         }
 
-                        /*if ( dbPodNum == eurekaPodNum ){
-                            LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);
-                            LogUtil.info("Timer detected ["+module+"] "+action+" success");
-                            modelBasic.setCurrentStatus(null);
-                            modelManagerService.updateModelBasic(modelBasic);
-                            checkModuleStatus.sendMessage(model, WsTopicConstants.K8S_MODEL_START);
-                            LogUtil.info("The status of module["+module+"] has been reset by Timer");
-                            return true;
-                        }*/
                         if (checkModuleStatus.isTimeOut(updateTime, k8s_operate_time_out * abs)) {
                             LogUtil.info("Timer detected ["+module+"] "+action+" timeout");
                             LogUtil.info("dbPodNum = "+dbPodNum+" ,eurekaPodNum = "+eurekaPodNum);
@@ -142,8 +125,6 @@ public class K8sOperatorModuleService {
                     List<ServiceInstance> instances = discoveryClient.getInstances(modelBasic.getModule());
                     if (CollectionUtils.isEmpty(instances)) {
                         modelManagerService.deleteModelBasic(modelBasic.getModule());
-                        K8sOperatorModuleService proxy = CommonBeanFactory.getBean(K8sOperatorModuleService.class);
-                        /*proxy.clearCache();*/
                         checkModuleStatus.sendMessage(modelBasic, WsTopicConstants.K8S_MODEL_UNINSTALL);
                         return true;
                     }
@@ -158,8 +139,8 @@ public class K8sOperatorModuleService {
     }
 
 
-    /*@Cacheable(value = "k8s-pod-cache", condition = "#user_cache==true")*/
-    public Map<String, List<String>> pods(boolean user_cache) {
+    @Cacheable(value = "k8s-pod-cache")
+    public Map<String, List<String>> pods() {
         Map<String, List<String>> result = new HashMap<>();
         discoveryClient.getServices().forEach(module -> {
             List<ServiceInstance> instances = discoveryClient.getInstances(module);
@@ -170,8 +151,5 @@ public class K8sOperatorModuleService {
         return result;
     }
 
-    /*@CacheEvict(value = "k8s-pod-cache", allEntries = true)
-    public void clearCache() {
-    }*/
 
 }

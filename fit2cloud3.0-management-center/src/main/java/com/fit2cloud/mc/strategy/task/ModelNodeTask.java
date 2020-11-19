@@ -173,6 +173,7 @@ public class ModelNodeTask {
                     modelNodeExample.createCriteria().andIsMcEqualTo(false).andMcNodeUuidEqualTo(mc_modelNode_uuid);
                     modelNodeMapper.deleteByExample(modelNodeExample);
                     modelNodeExample.clear();
+                    moduleNodeService.clearNodesCache();
                 }
                 if(is_current_mc_branch)return false; //去除 本机地址 相互注册 无需注册自己
                 return isReachable;

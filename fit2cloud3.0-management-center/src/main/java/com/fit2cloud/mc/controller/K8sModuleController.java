@@ -40,7 +40,7 @@ public class K8sModuleController {
 
     @GetMapping("/pods")
     public Map<String, List<String>> pods(){
-        return k8sOperatorModuleService.pods(false);
+        return k8sOperatorModuleService.pods();
     }
 
 }

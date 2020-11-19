@@ -1060,6 +1060,7 @@ MenuApp.controller('SwitchRoleController', function ($scope, HttpUtils, $http) {
         onChange: function (node) {
             //$scope.cancelCheckAll($scope.treeData);
             $scope.selectItem(node);
+            $scope.switchRole($scope.selectItemId);
         }
     };
 

@@ -243,6 +243,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             this._clearData();
             // 获取json文件中模块数据与本地数据库对比
             let _self = this;
+            $scope._localData = {};
             $scope.executeAjax(this._loadLocalDatasUrl,'GET',null,(res) => {
                 !!res && res.forEach(item => {
                     $scope._localData[item.module] = item;

@@ -499,12 +499,13 @@ public class TagService {
                 mappings = JSONObject.parseArray(tagsMappingStr, TagMapping.class);
             }
             long now = System.currentTimeMillis();
-            if(org.apache.commons.collections.CollectionUtils.isNotEmpty(mappings)) {
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(mappings)) {
                 mappings.forEach(tagMapping -> {
                     tagMapping.setId(UUID.randomUUID().toString());
                     tagMapping.setResourceType(ResourceTypeConstants.VIRTUALMACHINE.name());
                     tagMapping.setCreateTime(now);
                     tagMapping.setResourceId(cloudServerId);
+                    tagMapping.setTagKey(tagMapper.selectByPrimaryKey(tagMapping.getTagId()).getTagKey());
                 });
                 extTagMappingMapper.batchInsert(mappings);
             }
@@ -517,7 +518,7 @@ public class TagService {
         return tagValueMapper.selectByPrimaryKey(tagValueId);
     }
 
-    public List<Tag> getTagList(){
+    public List<Tag> getTagList() {
         return tagMapper.selectByExample(new TagExample());
     }
 }

@@ -1,6 +1,7 @@
 
-<div layout-fill ng-controller="ModelManagerController" class="content-backdrop license-panel" >
-    <div cg-busy="{promise:loadingLayer,minDuration:500}" layout="column" layout-fill>
+<div ng-controller="ModelManagerController" layout-fill class="content-backdrop" ng-cloak >
+
+    <div layout="column" layout-fill>
         <md-toolbar class="content-toolbar">
             <div class="md-toolbar-tools">
                 <div> {{'i18n_model_manager' | translator}}</div>
@@ -11,9 +12,7 @@
             </div>
         </md-toolbar>
         <div layout="row" flex>
-
-            <md-content flex="100" >
-
+            <md-content flex="100">
 
                 <md-tabs md-selected="selectedTableIndex" md-dynamic-height md-border-bottom>
 
@@ -324,13 +323,7 @@
                 </md-tabs>
 
             </md-content>
-
-
-
         </div>
-
-        <!--<info-form width="50%"></info-form>
-        <side-form></side-form>-->
         <side-form></side-form>
         <info-form width="40%"></info-form>
     </div>

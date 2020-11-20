@@ -48,7 +48,7 @@
                                                      class="md-primary"></md-checkbox>
                                     </td>-->
                                     <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
-                                    <td>{{item.module}}</td>
+                                    <!--<td>{{item.module}}</td>-->
                                     <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
                                         <a class="edit-span" class="md-primary" style="cursor:pointer;text-decoration:none!important;" href="" >
                                             <!--{{item.statuInfo}}-->
@@ -134,7 +134,7 @@
                                     <tbody>
                                     <tr ng-repeat="item in installupdateItems">
                                         <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
-                                        <td>{{item.module}}</td>
+                                        <!--<td>{{item.module}}</td>-->
                                         <td>{{item.current_version}}</td>
                                         <td>{{item.installTime | date:'yyyy-MM-dd HH:mm'}}</td>
                                         <!--<td>{{item.lastRevision}}</td>-->
@@ -164,10 +164,16 @@
 
                                         <td>{{item.overview}}</td>
                                         <td>
-                                            <md-button ng-click="item.enable = true;modelInstaller.executeUpdate()">
-                                                <md-icon class="md-18">build</md-icon>
-                                                {{'i18n_model_op_update' | translator:'更新'}}
-                                            </md-button>
+
+                                            <table-menus>
+                                                <md-menu-item >
+                                                    <md-button ng-click="item.enable = true;modelInstaller.executeUpdate()">
+                                                        <md-icon class="md-18">build</md-icon>
+                                                        {{'i18n_model_op_update' | translator:'更新'}}
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </table-menus>
+
                                         </td>
                                     </tr>
                                     </tbody>

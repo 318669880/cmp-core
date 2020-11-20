@@ -186,4 +186,14 @@ public class TagMgtController {
         List<TagDTO> tagDTOS = tagService.selectTags(new HashMap<>(), orgTree);
         return tagDTOS.stream().peek(tag -> tag.setTagAlias(tag.getTagAlias() + "[" + tag.getResourceName() + "]")).collect(Collectors.toList());
     }
+
+    @PostMapping("getTagByValue/{tagValue}")
+    public Map getTagByValue(@PathVariable String tagValue) {
+        return tagService.selectTagByValueId(tagValue);
+    }
+
+    @PostMapping(value = "list/tagValue")
+    public List<Map> getTagValueList(@RequestBody List<String> tagId) {
+        return tagService.getTagValueList(tagId);
+    }
 }

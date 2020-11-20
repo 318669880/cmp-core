@@ -1,7 +1,10 @@
 package com.fit2cloud.commons.server.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fit2cloud.commons.server.base.domain.*;
 import com.fit2cloud.commons.server.base.mapper.*;
+import com.fit2cloud.commons.server.base.mapper.ext.ExtTagMappingMapper;
+import com.fit2cloud.commons.server.constants.ResourceTypeConstants;
 import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
@@ -39,6 +42,8 @@ public class TagService {
     private OrganizationMapper organizationMapper;
     @Resource
     private WorkspaceMapper workspaceMapper;
+    @Resource
+    private ExtTagMappingMapper extTagMappingMapper;
 
     public List<TagDTO> selectTagsList(Map<String, Object> params) {
         TagExample example = new TagExample();
@@ -462,5 +467,57 @@ public class TagService {
             }
         }
         return orgIds;
+    }
+
+    public Map selectTagByValueId(String id) {
+        Map map = extTagMappingMapper.selectTagByValueId(id);
+        if (map != null && map.get("scope") != null) {
+            if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ADMIN.name(), (String) map.get("scope"))) {
+                map.put("resourceName", Translator.get("i18n_all_scope"));
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.ORGADMIN.name(), (String) map.get("scope"))) {
+                map.put("resourceName", organizationMapper.selectByPrimaryKey((String) map.get("resourceId")).getName());
+            } else if (StringUtils.equalsIgnoreCase(RoleConstants.Id.USER.name(), (String) map.get("scope"))) {
+                map.put("resourceName", workspaceMapper.selectByPrimaryKey((String) map.get("resourceId")).getName());
+            } else {
+                map.put("resourceName", "Other");
+            }
+        }
+        return map;
+    }
+
+    public List<Map> getTagValueList(List<String> tagId) {
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(tagId)) {
+            return extTagMappingMapper.selectTagValues(tagId);
+        }
+        return null;
+    }
+
+    public void saveResourceTags(String cloudServerId, String tagsMappingStr) {
+        try {
+            List<TagMapping> mappings = new ArrayList<>();
+            if (StringUtils.isNotBlank(tagsMappingStr)) {
+                mappings = JSONObject.parseArray(tagsMappingStr, TagMapping.class);
+            }
+            long now = System.currentTimeMillis();
+            if(org.apache.commons.collections.CollectionUtils.isNotEmpty(mappings)) {
+                mappings.forEach(tagMapping -> {
+                    tagMapping.setId(UUID.randomUUID().toString());
+                    tagMapping.setResourceType(ResourceTypeConstants.VIRTUALMACHINE.name());
+                    tagMapping.setCreateTime(now);
+                    tagMapping.setResourceId(cloudServerId);
+                });
+                extTagMappingMapper.batchInsert(mappings);
+            }
+        } catch (Exception e) {
+            LogUtil.error("failed to saveResourceTags, resourceId:{}, tagsMappingStr:{}", cloudServerId, tagsMappingStr);
+        }
+    }
+
+    public TagValue getTagValueById(String tagValueId) {
+        return tagValueMapper.selectByPrimaryKey(tagValueId);
+    }
+
+    public List<Tag> getTagList(){
+        return tagMapper.selectByExample(new TagExample());
     }
 }

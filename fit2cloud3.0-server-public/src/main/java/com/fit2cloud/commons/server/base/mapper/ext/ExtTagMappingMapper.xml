@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtTagMappingMapper">
+    <insert id="batchInsert">
+        INSERT INTO tag_mapping (id, resource_id, resource_type, tag_key, tag_value_id, create_time)
+        VALUES
+        <foreach collection="mappings" item="mapping" index="index" separator=",">
+            (#{mapping.id}, #{mapping.resourceId}, #{mapping.resourceType}, #{mapping.tagKey}, #{mapping.tagValueId},
+            #{mapping.createTime})
+        </foreach>
+    </insert>
+
+    <select id="selectTagValues" resultType="Map">
+        select concat('(',tag_alias,')',tag_value_alias) as label,tag_value_alias as `value` from tag_value,tag where
+        tag_value.tag_id=tag.tag_id
+        and
+        tag.tag_id IN
+        <foreach collection="tagId" item="key" separator="," open="(" close=")">
+            #{key, jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <select id="selectTagByValueId" parameterType="java.lang.String" resultType="Map">
+        select tv.id as id,
+        tv.tag_key as tagKey,
+        tv.tag_value as tagValue,
+        tv.tag_value_alias as tagValueAlias,
+        tv.create_time as createTime,
+        tv.tag_id as tagId,
+        t.tag_alias as tagAlias,
+        t.scope as scope,
+        t.resource_id as resourceId
+        from tag_value tv
+        LEFT JOIN tag t ON t.tag_id = tv.tag_id
+        <where>
+            <if test="id != null">
+                AND tv.id = #{id}
+            </if>
+        </where>
+    </select>
+</mapper>

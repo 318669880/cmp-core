@@ -137,7 +137,12 @@ public class ExtraUserService {
                             } else {
                                 extraUser.setDisplayName(keycloakUser.getUsername());
                             }
-                            extraUser.setPhone(extraUser.getPhone());
+                            if(keycloakUser.getAttributes() != null && CollectionUtils.isNotEmpty(keycloakUser.getAttributes().getPhone())){
+                                extraUser.setPhone(keycloakUser.getAttributes().getPhone().get(0));
+                            }else {
+                                extraUser.setPhone(extraUser.getPhone());
+
+                            }
                             extraUser.setSyncTime(Instant.now().toEpochMilli());
                             extraUser.setType(UserConstants.Source.EXTRA.getValue());
                             extraUserMapper.insert(extraUser);

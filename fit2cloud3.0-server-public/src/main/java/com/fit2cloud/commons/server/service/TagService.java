@@ -463,10 +463,12 @@ public class TagService {
                     orgId = organizationParent.getPid();
                 }
             } else {
+                orgIds.add(organization.getId());
                 orgId = null;
             }
         }
-        return orgIds;
+        LinkedHashSet<String> set = new LinkedHashSet<>(orgIds);
+        return new ArrayList<>(set);
     }
 
     public Map selectTagByValueId(String id) {

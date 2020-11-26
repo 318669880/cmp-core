@@ -408,6 +408,18 @@ ProjectApp.controller('UserController', function ($scope, HttpUtils, FilterSearc
                 params: condition
             }, 'users.xlsx', 'application/octet-stream');
         };
+
+        $scope.wks_param = {excludeWs: false}
+        $scope.org_param = {excludeWs: true}
+        $scope.builder =  {
+            id: "nodeId",
+            name: "nodeName",
+            children: "childNodes"
+        }
+        $scope.ts_changed = function(){}
+        $scope.enableCheckBox = function (node) {
+            return node.nodeType == 'wks'
+        }
     }
 );
 

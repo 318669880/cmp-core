@@ -1,6 +1,7 @@
 <div class="tree-node-checkbox">
     <md-checkbox ng-checked="isChecked(node)" md-indeterminate="isIndeterminate(node)" ng-click="toggle(node);"
-                 ng-disabled="node.disabled" aria-label="{{node[option.label]}}" class="md-primary">
+                 ng-disabled="node.disabled" aria-label="{{node[option.label]}}" class="md-primary" ng-hide="node.hiddenBox">
         {{node[option.label]}}
     </md-checkbox>
+    <span ng-hide="!node.hiddenBox">{{node[option.label]}}</span>
 </div>

@@ -2163,7 +2163,8 @@
                 noCascade: "@",
                 name: "@",
                 builder: "=",
-                required: "@"
+                required: "@",
+                checkCondition:"&"
             },
             link: function ($scope, element, attr, ctrl) {
 
@@ -2174,7 +2175,6 @@
                 $scope.values = [];
                 $scope.results = [];
                 $scope.form = ctrl;
-
 
                 $scope.validate = function(values){
                     let parentDom = element.find("[name='"+$scope.name+"']").parent().parent().parent().parent();
@@ -2204,7 +2204,10 @@
                         $scope.validate($scope.values);
                     }
                     $scope.values2Selected();
-                    $scope.changed()($scope.selected);
+                    if ($scope.changed && $scope.changed()){
+                        $scope.changed()($scope.selected);
+                    }
+
                 }
 
                 $scope.setNodeStatus = function(id, status){
@@ -2291,7 +2294,7 @@
                     onChange: function (node) {
                         $scope.results = $scope.results || [];
                         if (node.checked && !$scope.nodeInResults(node)){
-                            if ($scope.single && $scope.results.length > 0){
+                            if ($scope.single && $scope.single == 'true' && $scope.results.length > 0){
                                 $scope.results.forEach(rNode => $scope.unCheckNode(rNode));
                             }
                             $scope.results.push(node);
@@ -2301,7 +2304,9 @@
                         }
                         $scope.setValues();
                         $scope.values2Selected();
-                        $scope.changed()($scope.selected);
+                        if ($scope.changed && $scope.changed()){
+                            $scope.changed()($scope.selected);
+                        }
                     }
                 };
 
@@ -2340,6 +2345,11 @@
                             node.checked = true
                         }
                         node.collapsed = false;
+                        if (!!$scope.checkCondition && $scope.checkCondition()){
+                            let enableCheckBox = $scope.checkCondition()(node);
+                            node.disabled = !enableCheckBox;
+                            node.hiddenBox = node.disabled;
+                        }
                         $scope.buildTreeData(node.children);
                     })
                 }

@@ -85,7 +85,21 @@
             ></virtual-select-multiple>-->
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.user">
                 <label> {{'i18n_workspace_add' | translator}}</label>
-                <wks-select required="true" name="workspaceIds" selected="roleInfo.workspaceIds" results="roleInfo.workspaceIds" ></wks-select>
+                <!--<wks-select required="true" name="workspaceIds" selected="roleInfo.workspaceIds" results="roleInfo.workspaceIds" ></wks-select>-->
+                <tree-select-a
+                        name="workspaceIds"
+                        where="wks_param"
+                        ts-url="user/orgtreeselect"
+                        method="post"
+                        builder="builder"
+                        single="false"
+                        changed="ts_changed"
+                        selected="roleInfo.workspaceIds"
+                        no-cascade="true"
+                        required="true"
+                        check-condition="enableCheckBox"
+                        ng-if="roleInfo.roleType===roleConst.user"
+                ></tree-select-a>
                 <div ng-messages="editUserForm.workspaceIds.$error">
                     <div ng-message="required"> {{'i18n_required' | translator}}</div>
                 </div>
@@ -103,7 +117,20 @@
             ></virtual-select-multiple>-->
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.orgAdmin">
                 <label> {{'i18n_organization_add' | translator}}</label>
-                <org-select required="true" name="organizationIds" selected="roleInfo.organizationIds" results="roleInfo.organizationIds" ></org-select>
+                <!--<org-select required="true" name="organizationIds" selected="roleInfo.organizationIds" results="roleInfo.organizationIds" ></org-select>-->
+                <tree-select-a
+                        name="organizationIds"
+                        where="org_param"
+                        ts-url="user/orgtreeselect"
+                        method="post"
+                        builder="builder"
+                        single="false"
+                        changed="ts_changed"
+                        selected="roleInfo.organizationIds"
+                        no-cascade="true"
+                        required="true"
+                        ng-if="roleInfo.roleType===roleConst.orgAdmin"
+                ></tree-select-a>
                 <div ng-messages="editUserForm.organizationIds.$error">
                     <div ng-message="required"> {{'i18n_required' | translator}}</div>
                 </div>

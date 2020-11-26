@@ -303,7 +303,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             }).map(model => {
                 model.lastRevision = null;
                 //model.remoteImageUrl = model.icon.indexOf($scope.indexServer.address)==-1 ? ($scope.indexServer.address+ "/" + model.icon) : model.icon;
-                model.enable = false;
+                //model.enable = false;
                 model.lastRevision = _self._lastVersion(model);
                 model._versionEdit = false;//默认是非编辑状态
                 return model;
@@ -336,25 +336,82 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             $scope.installableItems.forEach( item => item._versionEdit = false);
         },
 
-        executeInstall_k8s: function(){
-            this.executeInstall(null, 0);
-        },
 
-        //  执行安装
-        executeInstall: function (nodeId, pod_num) {
+        executeInstall_k8s: function(item){
             let _self = this;
-            let param = $scope.installableItems.filter(model => model.enable === true).map(model => {
-                let dto = Object.create({});
+            let param = $scope.installableItems.filter(model => model.module === item.module).map(model => {
+                let dto = {};
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
-                if($scope.indexServer.model_env === 'k8s' || !!pod_num) {
-                    dto.modelBasic.podNum = pod_num;
-                }
+                dto.modelBasic.podNum = 0 ;
                 let modelVersion = model.last_version;
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
             });
+            this.executeInstall(null, param);
+        },
+
+        installK8sBatch: function(){
+            let _self = this;
+            let param = $scope.installableItems.filter(model => model.enable === true).map(model => {
+                let dto = {};
+                model.lastRevision = model.lastRevision || _self._lastVersion(model);
+                dto.modelBasic = model;
+                dto.modelBasic.podNum = 0 ;
+                let modelVersion = model.last_version;
+                modelVersion.created = new Date(modelVersion.created).getTime();
+                dto.modelVersion = modelVersion
+                return dto;
+            });
+            this.executeInstall(null, param);
+        },
+
+        installModules: function(){
+            let _self = this;
+            let param = $scope.installableItems.filter(model => model.enable === true).map(model => {
+                let dto = {};
+                model.lastRevision = model.lastRevision || _self._lastVersion(model);
+                dto.modelBasic = model;
+                let modelVersion = model.last_version;
+                modelVersion.created = new Date(modelVersion.created).getTime();
+                dto.modelVersion = modelVersion
+                return dto;
+            });
+            this.executeInstall(null, param);
+        },
+
+        installModule: function(item){
+            let _self = this;
+            let param = $scope.installableItems.filter(model => model.module === item.module).map(model => {
+                let dto = {};
+                model.lastRevision = model.lastRevision || _self._lastVersion(model);
+                dto.modelBasic = model;
+                let modelVersion = model.last_version;
+                modelVersion.created = new Date(modelVersion.created).getTime();
+                dto.modelVersion = modelVersion
+                return dto;
+            });
+            this.executeInstall(null, param);
+        },
+        installModuleNode: function(nodeId){
+            let _self = this;
+            let param = $scope.installableItems.filter(model => model.name === $scope.model_name).map(model => {
+                let dto = {};
+                model.lastRevision = model.lastRevision || _self._lastVersion(model);
+                dto.modelBasic = model;
+                let modelVersion = model.last_version;
+                modelVersion.created = new Date(modelVersion.created).getTime();
+                dto.modelVersion = modelVersion
+                return dto;
+            });
+            this.executeInstall(nodeId, param);
+        },
+
+
+        //  执行安装
+        executeInstall: function (nodeId, param) {
+            let _self = this;
             if (param.length == 0 ){
                 $scope.showWarn('i18n_model_check_no',"请至少选择一个模块！");
                 return;
@@ -417,10 +474,10 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
 
         //  执行更新
-        executeUpdate: function () {
+        executeUpdate: function (item) {
             let _self = this;
             let opmodel = null;
-            let param = $scope.installupdateItems.filter(model => model.enable === true).map(model => {
+            let param = $scope.installupdateItems.filter(model => model.module === item.module).map(model => {
                 opmodel = model;
                 let dto = Object.create({});
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
@@ -442,7 +499,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 };
                 $scope.loadingLayer = HttpUtils.post(this._batchInstallUrl+"/-1/update", param, callBackMethod,callBackMethod);
             });
-            opmodel.enable = false;
+            //opmodel.enable = false;
         },
 
 
@@ -730,7 +787,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             let status_array = item.status.split(",");
             //let runing_array = !!is_fresh && $scope._nodeData[item.module] && $scope._nodeData[item.module].filter(item => item.nodeStatus==='running') || status_array.filter(item => item==='running');
             let runing_array = $scope._nodeData[item.module].filter(item => item.nodeStatus==='running');
-            item.enable = false;
+            //item.enable = false;
             let statuInfo = (!!runing_array ? runing_array.length : 0 )+ "/" + (!!status_array ? status_array.length : 0 );
             item.statuInfo = statuInfo;
             $scope.items[index].statuInfo = statuInfo;
@@ -742,7 +799,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             let podNum = item.podNum;
             let podInstances = $scope._eurekaData[item.module];
             let runningPods = !!podInstances && podInstances.length || 0;
-            item.enable = false;
+            //item.enable = false;
             item.runningPods = runningPods;
             item.statuInfo = runningPods + "/" + podNum;
             let prefix = runningPods > podNum ? "i18n_model_k8s-status_shrinke"
@@ -755,6 +812,10 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             }
             let _dynamic = runningPods + " -> "+ podNum;
             item.dynamicInfo = !!prefix && (Translator.get(prefix) + ": ("+_dynamic+")") || item.statuInfo;
+            let syncStatus = ["i18n_model_k8s-status_shrinke", "i18n_model_k8s-status_expand", "i18n_model_k8s-status_uninstall"];
+            if (syncStatus.indexOf(_dynamic) != -1){
+                item.sync = true;
+            }
         })
     };
     $scope.loadEurekaData = function(callBack) {
@@ -786,7 +847,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             $scope.closeInformation();
             return;
         }
-        item.enable = true;
+        //item.enable = true;
         $scope.selected = item.$$hashKey;
         $scope.current_module = "management-center";
         $scope.model_name = item.name;
@@ -808,9 +869,9 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         let module_arr = [];
         if(item){
             module_arr.push(item.module);
-        }else{
+        }/*else{
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
-        }
+        }*/
         if (module_arr.length == 0 ){
             $scope.showWarn('i18n_module_null_msg','模块不能为空')
             return;
@@ -847,9 +908,9 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         let module_arr = [];
         if(item){
             module_arr.push(item.module);
-        }else{
+        }/*else{
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
-        }
+        }*/
         if (module_arr.length == 0 ){
             $scope.showWarn('i18n_module_null_msg','模块不能为空.')
             return;
@@ -869,9 +930,9 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         let module_arr = [];
         if(item){
             module_arr.push(item.module);
-        }else{
+        }/*else{
             module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
-        }
+        }*/
         if (module_arr.length == 0 ){
             $scope.showWarn('i18n_module_null_msg','模块不能为空.')
             return;

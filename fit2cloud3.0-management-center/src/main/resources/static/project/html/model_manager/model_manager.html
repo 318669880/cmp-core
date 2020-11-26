@@ -52,7 +52,11 @@
                                     <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
                                         <a class="edit-span" class="md-primary" style="cursor:pointer;text-decoration:none!important;" href="" >
                                             <!--{{item.statuInfo}}-->
-                                            {{item.dynamicInfo}}
+                                            <span ng-if="item.sync" md-colors="{color: 'blue'}">
+                                                <i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i>
+                                                {{item.dynamicInfo}}
+                                            </span>
+                                            <span ng-if="!item.sync">{{item.dynamicInfo}}</span>
                                             <md-tooltip md-direction="top" class="f2c-tooltip-version">
                                                 <table class="node_tip_table">
                                                     <tr>
@@ -115,9 +119,6 @@
                                                 </md-button>
                                             </md-menu-item>
                                         </table-menus>
-
-
-
                                     </td>
 
                                 </tr>
@@ -167,7 +168,7 @@
 
                                             <table-menus>
                                                 <md-menu-item >
-                                                    <md-button ng-click="item.enable = true;modelInstaller.executeUpdate()">
+                                                    <md-button ng-click="modelInstaller.executeUpdate(item)">
                                                         <md-icon class="md-18">build</md-icon>
                                                         {{'i18n_model_op_update' | translator:'更新'}}
                                                     </md-button>
@@ -187,7 +188,14 @@
                         <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}">
                             <filter-tools conditions="modelInstaller.conditions" results="modelInstaller.filters" search="'true'" execute="modelInstaller.loadData()">
                                 <div class="filter-item" ng-if="indexServer.model_env == 'host'">
-                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.executeInstall()">
+                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.installModules()">
+                                        <md-tooltip md-delay="300">{{'i18n_model_op_install' | translator:'安装'}}</md-tooltip>
+                                        <md-icon>build</md-icon>
+                                    </md-button>
+                                </div>
+
+                                <div class="filter-item" ng-if="indexServer.model_env == 'k8s'">
+                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.installK8sBatch()">
                                         <md-tooltip md-delay="300">{{'i18n_model_op_install' | translator:'安装'}}</md-tooltip>
                                         <md-icon>build</md-icon>
                                     </md-button>
@@ -232,13 +240,13 @@
                                     <td>
                                         <table-menus>
                                             <md-menu-item ng-if="indexServer.model_env == 'host'">
-                                                <md-button ng-click="item.enable = true;modelInstaller.executeInstall()" ng-if="indexServer.model_env == 'host'">
+                                                <md-button ng-click="modelInstaller.installModule(item)" ng-if="indexServer.model_env == 'host'">
                                                     <md-icon class="md-18">build</md-icon>
                                                     {{'i18n_model_op_install' | translator:'安装'}}
                                                 </md-button>
                                             </md-menu-item>
                                             <md-menu-item ng-if="indexServer.model_env == 'k8s'">
-                                                <md-button ng-click="item.enable = true;modelInstaller.executeInstall_k8s()" ng-if="indexServer.model_env == 'k8s'">
+                                                <md-button ng-click="modelInstaller.executeInstall_k8s(item)" ng-if="indexServer.model_env == 'k8s'">
                                                     <md-icon class="md-18">build</md-icon>
                                                     {{'i18n_model_op_install' | translator:'安装'}}
                                                 </md-button>

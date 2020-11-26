@@ -35,7 +35,7 @@
             <td>{{item.nodeCreateTime | date:'yyyy-MM-dd HH:mm'}}</td>
 
             <td>
-                <md-button ng-click="modelInstaller.executeInstall(item.modelNodeUuid)" ng-if="!!is_mc" >
+                <md-button ng-click="modelInstaller.installModuleNode(item.modelNodeUuid)" ng-if="!!is_mc" >
                     <md-icon class="md-18">build</md-icon>
                     {{'i18n_model_op_install' | translator:'安装'}}
                 </md-button>

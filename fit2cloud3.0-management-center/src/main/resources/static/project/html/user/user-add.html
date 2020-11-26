@@ -117,19 +117,10 @@
                  {{'i18n_workspace_create' | translator}}
             </md-switch>
 
-            <!--<virtual-select-multiple
-                    name="workspaceIds{{$index}}"
-                    value="id"
-                    label="name"
-                    items="workspaces"
-                    placeholder=" {{'i18n_workspace_add' | translator}}"
-                    results="roleInfo.workspaceIds"
-                    required="true"
-                    ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"
-            ></virtual-select-multiple>-->
+
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace">
                 <label> {{'i18n_workspace_add' | translator}}</label>
-                <tree-select-a
+                <tree-select
                         name="workspaceIds"
                         where="wks_param"
                         ts-url="user/orgtreeselect"
@@ -142,24 +133,13 @@
                         required="true"
                         check-condition="enableCheckBox"
                         ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"
-                ></tree-select-a>
-                <!--<wks-select required="true"  results="roleInfo.workspaceIds" ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"></wks-select>-->
+                ></tree-select>
             </md-input-container>
 
-            <!--<virtual-select
-                    name="organizationIds{{$index}}"
-                    value="id"
-                    label="name"
-                    items="orgs"
-                    placeholder=" {{'i18n_organization_select' | translator}}"
-                    result="roleInfo.selectOrganizationId"
-                    required="true"
-                    ng-if="roleInfo.roleType=== roleConst.user && roleInfo.workspace"
-            ></virtual-select>-->
+
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType=== roleConst.user && roleInfo.workspace">
                 <label> {{'i18n_organization_select' | translator}}</label>
-                <!--<org-select-single single="true" required="true" name="organizationIds{{$index}}" result="roleInfo.selectOrganizationId" ></org-select-single>-->
-                <tree-select-a
+                <tree-select
                         name="organizationIds{{$index}}"
                         where="org_param"
                         ts-url="user/orgtreeselect"
@@ -171,23 +151,13 @@
                         no-cascade="true"
                         required="true"
                         ng-if="roleInfo.roleType=== roleConst.user && roleInfo.workspace"
-                ></tree-select-a>
+                ></tree-select>
             </md-input-container>
 
-            <!--<virtual-select-multiple
-                    name="organizationIds{{$index}}"
-                    value="id"
-                    label="name"
-                    items="orgs"
-                    placeholder=" {{'i18n_organization_add' | translator}}"
-                    results="roleInfo.organizationIds"
-                    required="true"
-                    ng-if="roleInfo.roleType===roleConst.orgAdmin"
-            ></virtual-select-multiple>-->
+
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.orgAdmin">
                 <label> {{'i18n_organization_add' | translator}}</label>
-                <!--<org-select required="true" name="organizationIds{{$index}}" results="roleInfo.organizationIds" ng-if="roleInfo.roleType===roleConst.orgAdmin"></org-select>-->
-                <tree-select-a
+                <tree-select
                         name="organizationIds{{$index}}"
                         where="org_param"
                         ts-url="user/orgtreeselect"
@@ -199,7 +169,7 @@
                         no-cascade="true"
                         required="true"
                         ng-if="roleInfo.roleType===roleConst.orgAdmin"
-                ></tree-select-a>
+                ></tree-select>
             </md-input-container>
         </div>
         <md-button layout="row" layout-align="center" class="md-raised md-success"

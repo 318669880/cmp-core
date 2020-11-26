@@ -73,20 +73,10 @@
                 </md-icon>
             </md-input-container>
 
-            <!--<virtual-select-multiple
-                    name="workspaceIds"
-                    value="id"
-                    label="name"
-                    items="workspaces"
-                    placeholder=" {{'i18n_workspace_add' | translator}}"
-                    results="roleInfo.workspaceIds"
-                    required="true"
-                    ng-if="roleInfo.roleType===roleConst.user"
-            ></virtual-select-multiple>-->
+
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.user">
                 <label> {{'i18n_workspace_add' | translator}}</label>
-                <!--<wks-select required="true" name="workspaceIds" selected="roleInfo.workspaceIds" results="roleInfo.workspaceIds" ></wks-select>-->
-                <tree-select-a
+                <tree-select
                         name="workspaceIds"
                         where="wks_param"
                         ts-url="user/orgtreeselect"
@@ -99,26 +89,15 @@
                         required="true"
                         check-condition="enableCheckBox"
                         ng-if="roleInfo.roleType===roleConst.user"
-                ></tree-select-a>
+                ></tree-select>
                 <div ng-messages="editUserForm.workspaceIds.$error">
                     <div ng-message="required"> {{'i18n_required' | translator}}</div>
                 </div>
             </md-input-container>
 
-            <!--<virtual-select-multiple
-                    name="organizationIds"
-                    value="id"
-                    label="name"
-                    items="orgs"
-                    placeholder=" {{'i18n_organization_add' | translator}}"
-                    results="roleInfo.organizationIds"
-                    required="true"
-                    ng-if="roleInfo.roleType===roleConst.orgAdmin"
-            ></virtual-select-multiple>-->
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.orgAdmin">
                 <label> {{'i18n_organization_add' | translator}}</label>
-                <!--<org-select required="true" name="organizationIds" selected="roleInfo.organizationIds" results="roleInfo.organizationIds" ></org-select>-->
-                <tree-select-a
+                <tree-select
                         name="organizationIds"
                         where="org_param"
                         ts-url="user/orgtreeselect"
@@ -130,7 +109,7 @@
                         no-cascade="true"
                         required="true"
                         ng-if="roleInfo.roleType===roleConst.orgAdmin"
-                ></tree-select-a>
+                ></tree-select>
                 <div ng-messages="editUserForm.organizationIds.$error">
                     <div ng-message="required"> {{'i18n_required' | translator}}</div>
                 </div>

@@ -20,7 +20,7 @@
         <div layout="row" layout-align="start" flex ng-if="currentRole===roleConst.admin">
             <md-input-container flex="100">
                 <label> {{'i18n_organization' | translator}}</label>
-                <tree-select-a
+                <tree-select
                         name="organizationId"
                         where="ts_param"
                         ts-url="user/orgtreeselect"
@@ -31,7 +31,7 @@
                         selected="selectedOrgIds"
                         no-cascade="true"
                         required="true"
-                ></tree-select-a>
+                ></tree-select>
                 <div ng-messages="workspaceForm.organizationId.$error">
                     <div ng-message="required"> {{'i18n_required' | translator}}</div>
                 </div>

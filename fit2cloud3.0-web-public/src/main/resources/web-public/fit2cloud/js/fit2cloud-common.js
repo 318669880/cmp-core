@@ -1817,15 +1817,23 @@
                 }
 
                 $scope.getNodeById = function(nodes,id){
-                    for (let i = 0; i < nodes.length; i++) {
-                        let node = nodes[i];
-                        if (node.id == id){
-                            return node;
-                        }
-                        if (node.children && node.children.length > 0){
-                            return $scope.getNodeById(node.children, id);
+                    let result = null;
+                    let hasFound = false;
+                    let find = function(arrs) {
+                        if (arrs && !hasFound){
+                            arrs.forEach(item => {
+                                if (item.id == id){
+                                    result = item;
+                                    hasFound = true;
+                                    return true;
+                                }else if (item.children && item.children.length > 0){
+                                    find(item.children);
+                                }
+                            })
                         }
                     }
+                    find(nodes);
+                    return result;
                 }
 
                 $scope.selected2Results = function() {

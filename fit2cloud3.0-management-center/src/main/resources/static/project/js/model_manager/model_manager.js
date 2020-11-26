@@ -813,7 +813,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             let _dynamic = runningPods + " -> "+ podNum;
             item.dynamicInfo = !!prefix && (Translator.get(prefix) + ": ("+_dynamic+")") || item.statuInfo;
             let syncStatus = ["i18n_model_k8s-status_shrinke", "i18n_model_k8s-status_expand", "i18n_model_k8s-status_uninstall"];
-            if (syncStatus.indexOf(_dynamic) != -1){
+            if (syncStatus.indexOf(prefix) != -1){
                 item.sync = true;
             }
         })

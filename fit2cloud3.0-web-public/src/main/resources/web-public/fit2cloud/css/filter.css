@@ -166,3 +166,7 @@ md-checkbox.select-columns {
 .filter-multistage-tree button.md-icon-button{
     min-width: 30px!important;
 }
+
+.tree-select-new input + div {
+    display: none;
+}

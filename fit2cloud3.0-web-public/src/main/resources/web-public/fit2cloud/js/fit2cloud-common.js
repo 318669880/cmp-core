@@ -2146,6 +2146,209 @@
             }
         };
     });
+
+    F2CModule.directive("treeSelectA", function ($compile, HttpUtils) {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree-select-a.html" + '?_t=' + window.appversion,
+            require: '?^form',
+            scope: {
+                tsUrl: "@",
+                where: "=",
+                method : "@",
+                changed: "&",
+                single: "@",
+                selected: "=",
+                noCascade: "@",
+                name: "@",
+                builder: "=",
+                required: "@"
+            },
+            link: function ($scope, element, attr, ctrl) {
+
+                $scope.selected = $scope.selected || [];
+                $scope.option = {
+                    no_cascade: ($scope.noCascade && $scope.noCascade == 'true')
+                }
+                $scope.values = [];
+                $scope.results = [];
+                $scope.form = ctrl;
+
+
+                $scope.validate = function(values){
+                    let parentDom = element.find("[name='"+$scope.name+"']").parent().parent().parent().parent();
+                    if (!parentDom || parentDom.length==0) return;
+                    $scope.domClass(parentDom, "md-input-focused", false);
+                    if ((!values || values.length==0) ){
+                        $scope.domClass(parentDom, "md-input-has-value", false);
+                        if ($scope.required && $scope.required == 'true')
+                        $scope.domClass(parentDom, "md-input-invalid", true);
+                    }else {
+                        $scope.domClass(parentDom, "md-input-invalid", false);
+                        $scope.domClass(parentDom, "md-input-has-value", true);
+                    }
+                }
+
+                $scope.onValuesAdd = function(chip, index){
+
+                }
+                $scope.onValuesRemove = function(chip, index){
+                    $scope.results.forEach(tNode => {
+                        if (tNode.name == chip){
+                            $scope.nodeRemoveResults(tNode);
+                            $scope.setNodeStatus(tNode.id, false);
+                        }
+                    })
+                    if (!$scope.values || $scope.values.length == 0){
+                        $scope.validate($scope.values);
+                    }
+                    $scope.values2Selected();
+                    $scope.changed()($scope.selected);
+                }
+
+                $scope.setNodeStatus = function(id, status){
+                    let node = $scope.getNodeById($scope.treeData, id);
+                    node.checked = status ? status : undefined;
+                }
+
+                $scope.getNodeById = function(nodes,id){
+                    for (let i = 0; i < nodes.length; i++) {
+                        let node = nodes[i];
+                        if (node.id == id){
+                            return node;
+                        }
+                        if (node.children && node.children.length > 0){
+                            return $scope.getNodeById(node.children, id);
+                        }
+                    }
+                }
+
+                $scope.selected2Results = function() {
+                    let resultNodes = [];
+                    $scope.allNodes($scope.treeData, resultNodes);
+                    $scope.results =  resultNodes.filter(node => $scope.selected.some(tNode => tNode == node.id));
+                }
+
+                $scope.allNodes = function(nodes, resultNodes){
+                    nodes.forEach(node => {
+                        resultNodes.push(node);
+                        if (node.children && node.children.length > 0) {
+                            $scope.allNodes(node.children, resultNodes);
+                        }
+                    })
+                }
+
+                $scope.values2Selected = function() {
+                    $scope.selected = $scope.results.map(tNode => tNode.id);
+                }
+
+                $scope.domClass = function(dom, className, add){
+                    if (dom.hasClass(className) && !add){
+                        dom.removeClass(className);
+                    }
+                    if (!dom.hasClass(className) && add){
+                        dom.addClass(className);
+                    }
+                }
+
+
+                $scope.afterClose = function() {
+                    $scope.validate($scope.values);
+                    $scope.values2Selected();
+                }
+
+
+
+                $scope.edit = function(){
+                    $scope.form[$scope.name].$setTouched();
+                    let parentDom = element.find("[name='"+$scope.name+"']").parent().parent().parent().parent();
+                    $scope.domClass(parentDom, "md-input-invalid", false);
+                    $scope.domClass(parentDom, "md-input-has-value", false);
+                    $scope.domClass(parentDom, "md-input-focused", true);
+                }
+
+                $scope.setValues = function(){
+                    $scope.values = $scope.results.map( node => node.name);
+                }
+
+                $scope.nodeInResults = tNode => {
+                    return $scope.results.some(cNode => cNode.id == tNode.id);
+                }
+
+                $scope.nodeRemoveResults = tNode => {
+                    let i = -1;
+                    let inResults = $scope.results.some((cNode ,index) => {
+                        i = index;
+                        return cNode.id == tNode.id;
+                    });
+                    if (inResults){
+                        $scope.results.splice(i,1);
+                    }
+                }
+
+                $scope.noroot = {
+                    onChange: function (node) {
+                        $scope.results = $scope.results || [];
+                        if (node.checked && !$scope.nodeInResults(node)){
+                            if ($scope.single && $scope.results.length > 0){
+                                $scope.results.forEach(rNode => $scope.unCheckNode(rNode));
+                            }
+                            $scope.results.push(node);
+                        }
+                        if (!node.checked && $scope.nodeInResults(node)){
+                            $scope.nodeRemoveResults(node);
+                        }
+                        $scope.setValues();
+                        $scope.values2Selected();
+                        $scope.changed()($scope.selected);
+                    }
+                };
+
+                $scope.unCheckNode = function(node){
+                    if (!!node.checked){
+                        node.checked = undefined;
+                    }
+                    $scope.nodeRemoveResults(node);
+                }
+
+                $scope.removeResultNode = function(node) {
+                    $scope.nodeRemoveResults(node);
+                };
+                $scope.init = function () {
+                    $scope.loadTreeData();
+                }
+
+                $scope.loadTreeData = function(){
+                    HttpUtils.post($scope.tsUrl, $scope.where, function (response) {
+                        let nodes = response.data;
+                        $scope.buildTreeData(nodes);
+                        $scope.treeData = nodes;
+                        $scope.selected2Results();
+                        $scope.setValues();
+                        if ($scope.results && $scope.results.length > 0){
+                            $scope.validate($scope.values);
+                        }
+                    }, function (data) {
+                        $scope.error = data;
+                    })
+                }
+                $scope.buildTreeData = (nodes) => {
+                    angular.forEach(nodes ,(node) => {
+                        angular.forEach($scope.builder, (value, key) => node[key] = node[value]);
+                        if ($scope.selected.some(tNode => tNode == node.id)){
+                            node.checked = true
+                        }
+                        node.collapsed = false;
+                        $scope.buildTreeData(node.children);
+                    })
+                }
+
+                $scope.init();
+            }
+        };
+    });
+
 })();
 
 
@@ -2187,7 +2390,7 @@
         return {
             restrict: 'E',
             transclude: true,
-            templateUrl: "web-public/fit2cloud/html/filter/filter.html" + '?_t=' + window.appversion,
+            templateUrl: "web-public/fit2cloud/html/filter/filter.html?_t=" + window.appversion,
             scope: {
                 execute: "&",
                 results: "=",
@@ -2360,12 +2563,19 @@
                         clickOutsideToClose: true,
                         escapeToClose: true,
                         focusOnOpen: false,
+                        onDomRemoved: $scope.onClose
                     };
 
                     $mdPanel.open(config).then(function (result) {
                         $scope.popoverRef = result;
                     });
                 };
+
+                $scope.onClose = function(){
+                    if ($scope.popoverRef.config.scope.afterClose){
+                        $scope.popoverRef.config.scope.afterClose();
+                    }
+                }
 
                 $scope.$on('$destroy', function () {
                     if ($scope.popoverRef) $scope.popoverRef.close();
@@ -3285,7 +3495,7 @@
                 };
 
                 $scope.isChecked = function (node) {
-                    if ($scope.hasChildren(node)) {
+                    if ($scope.hasChildren(node) && !$scope.option.no_cascade) {
                         for (let i = 0; i < node.children.length; i++) {
                             if (!$scope.isChecked(node.children[i])) {
                                 return false;
@@ -3297,6 +3507,9 @@
                 };
 
                 $scope.isIndeterminate = function (node) {
+                    if ($scope.option.no_cascade){
+                        return false;
+                    }
                     if ($scope.hasChildren(node)) {
                         let checkChild = false;
                         let checkAll = true;
@@ -3318,6 +3531,9 @@
 
                 $scope.toggle = function (node, checked) {
                     node.checked = checked !== undefined ? checked : !node.checked;
+                    if ($scope.option.no_cascade){
+                        return;
+                    }
                     if (!node.checked) {
                         let parent = $scope.getParent($scope.data, node.$$hashKey);
                         if (parent) {

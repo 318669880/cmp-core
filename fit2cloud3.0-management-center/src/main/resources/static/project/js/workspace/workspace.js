@@ -143,22 +143,17 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
         $scope.selected = "";
         $scope.toggleInfoForm(false);
     };
-
-    $scope.ts_url = "user/orgtreeselect";
-    $scope.ts_param = {excludeWs: true};
-    $scope.method = "post";
+    $scope.ts_param = {excludeWs: true}
+    $scope.builder =  {
+        id: "nodeId",
+        name: "nodeName",
+        children: "childNodes"
+    }
     $scope.organizationId = null;
     $scope.ts_changed = (values) => {
         $scope.organizationId = (!!values && values.length > 0) ? values[0] : null;
     };
 
-    $scope.start = (e) => {
-        angular.element('#_treeSelectTs_').parent().addClass("md-input-focused");
-    };
-    $scope.end = (e) => {
-        angular.element('#_treeSelectTs_').parent().removeClass("md-input-focused");
-        angular.element('#_treeSelectTs_').parent().addClass(!!$scope.organizationId ? "md-input-has-value" : "md-input-invalid");
-    };
 });
 ProjectApp.controller('WorkspaceAuthorizeController', function ($scope, HttpUtils, Translator) {
 

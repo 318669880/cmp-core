@@ -117,7 +117,7 @@
                  {{'i18n_workspace_create' | translator}}
             </md-switch>
 
-            <!--<virtual-select-multiple
+            <virtual-select-multiple
                     name="workspaceIds{{$index}}"
                     value="id"
                     label="name"
@@ -126,11 +126,11 @@
                     results="roleInfo.workspaceIds"
                     required="true"
                     ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"
-            ></virtual-select-multiple>-->
-            <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace">
+            ></virtual-select-multiple>
+            <!--<md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace">
                 <label> {{'i18n_workspace_add' | translator}}</label>
                 <wks-select required="true"  results="roleInfo.workspaceIds" ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"></wks-select>
-            </md-input-container>
+            </md-input-container>-->
 
             <!--<virtual-select
                     name="organizationIds{{$index}}"

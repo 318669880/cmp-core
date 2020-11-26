@@ -16,7 +16,7 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
         checkValue: false,
         change: function (checked) {
             $scope.items.forEach(function (item) {
-                if (!item.countWorkspace > 0) {
+                if (!item.countWorkspace > 0 && !$scope.hasKid(item)) {
                     item.enable = checked;
                     $scope.singleClick(checked, item, true);
                 }
@@ -26,7 +26,16 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
     };
 
     $scope.clickChecked = function (checked, item, isSelectAll) {
-        $scope.singleClick(checked, item, isSelectAll);
+        let nodes = [];
+        $scope.getChildNodes([item], nodes);
+        let opItems = $scope.items.filter(cItem => (!cItem.countWorkspace>0) && !$scope.hasKid(item) && nodes.some(tNode => tNode.id == cItem.id));
+        opItems.forEach(opItem => {
+            if (item.id != opItem.id ){
+                opItem.enable = checked;
+            }
+            $scope.singleClick(checked, opItem, isSelectAll);
+        });
+        //$scope.singleClick(checked, item, isSelectAll);
         // $scope.selectAll();
     };
 
@@ -80,8 +89,93 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
             angular.forEach($scope.items, function (item) {
                 item.enable = false;
             });
+            $scope.items = $scope.formatTree();
         });
     };
+    $scope.hasKid = function(node){
+        return node.childNodes && node.childNodes.length > 0;
+    };
+
+    $scope.getChildNodes = function(nodes, results){
+        if (!results) results = [];
+        nodes.forEach(node => {
+            results.push(node);
+            if (node.childNodes && node.childNodes.length > 0){
+                $scope.getChildNodes(node.childNodes, results);
+            }
+        })
+    }
+
+    $scope.toggleNode = function(node, status){
+        if (node.status == 'close'){
+            node.status = 'open';
+        }else{
+            node.status = 'close';
+        }
+        if (node.childNodes && node.childNodes.length > 0){
+            $scope.toggleChilds(node.childNodes, node.status);
+        }
+    }
+
+    $scope.toggleChilds = function(nodes, parent_status){
+        nodes.forEach(node => {
+            if (parent_status == 'close'){
+                node.show = false;
+            }
+            if (parent_status == 'open'){
+                node.show = true;
+            }
+            if (node.childNodes && node.childNodes.length > 0){
+                $scope.toggleChilds(node.childNodes, node.show ? node.status : "close");
+            }
+        })
+    }
+
+
+    $scope.formatTree = function(){
+        let formatItems = [];
+        $scope.items.forEach(item => {
+            item.show = true;
+            if (!item.pid) {
+                //item.level = 0;
+                formatItems.push(item);
+            }
+            $scope.items.forEach(tempItem => {
+                if (tempItem.pid == item.id){
+                    if (item.childNodes == null){
+                        item.childNodes = [];
+                    }
+                    item.childNodes.push(tempItem);
+                }
+            })
+        });
+        let results = [];
+        $scope.expandTree(formatItems, results, 0);
+        return results;
+    };
+
+    $scope.expandTree = function(treeDatas, results, level){
+        if (!results) results = [];
+        treeDatas.forEach(node => {
+            node.level = level;
+            node._prefix = $scope.treeNodePrefix(level);
+            node.name = node.name;
+            results.push(node);
+            if (node.childNodes && node.childNodes.length > 0){
+                node.status = 'open';
+                $scope.expandTree(node.childNodes, results, level+1);
+            }
+        });
+    }
+
+    $scope.treeNodePrefix = function (sum){
+        let result = [];
+        for (let i = 0; i< sum ;i++){
+            result.push(i);
+        }
+        return result;
+    }
+
     $scope.list();
 
     $scope.create = function () {
@@ -91,12 +185,14 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
 
     $scope.edit = function (data) {
         $scope.item = angular.copy(data);
+        $scope.selectedOrgIds.push(data.pid)
         $scope.formUrl = 'project/html/organization/organization-edit.html' + '?_t=' + Math.random();
         $scope.toggleForm();
     };
 
 
     $scope.submit = function (type, data) {
+        data.pid = $scope.pid;
         if (type === 'add') {
             HttpUtils.post("organization/add", data, function () {
                 $scope.list();
@@ -139,7 +235,7 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
     $scope.linkWorkspace = function (item) {
         sessionStorage.setItem("orgParam", angular.toJson({
                 label: item.name,
-                value: item.id
+                value: [item.id]
             }
         ));
         $state.go("workspace")
@@ -160,6 +256,19 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
         $scope.item = {};
         $scope.selected = "";
         $scope.toggleInfoForm(false);
+    };
+
+
+    $scope.builder =  {
+        id: "nodeId",
+        name: "nodeName",
+        children: "childNodes"
+    }
+    $scope.selectedOrgIds = [];
+    $scope.ts_param = {excludeWs: true};
+    $scope.pid = null;
+    $scope.ts_changed = (values) => {
+        $scope.pid = (!!values && values.length > 0) ? values[0] : null;
     };
 });
 

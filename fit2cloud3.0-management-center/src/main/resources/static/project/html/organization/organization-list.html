@@ -28,14 +28,29 @@
                 <table dynamic-table columns="columns" execute="list({sql: sql})"
                        ng-class="{'tr-selected':selected === item.$$hashKey}">
                     <tbody>
-                    <tr ng-repeat="item in items">
+                    <tr ng-repeat="item in items" ng-if="item.show">
                         <td>
                             <md-checkbox md-no-ink aria-label=" {{'i18n_module_enable' | translator}}" ng-model="item.enable"
                                          ng-click="clickChecked(!item.enable,item,false)"
-                                         ng-disabled="item.countWorkspace>0"
+                                         ng-disabled="item.countWorkspace>0 || hasKid(item)"
                                          class="md-primary"></md-checkbox>
                         </td>
-                        <td>{{item.name}}</td>
+
+                        <td>
+                            <div class="tree-node">
+                                <div layout="row" layout-align="start center">
+                                    <span ng-repeat="pre in item._prefix" >&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <md-button class="md-icon-button" ng-click="toggleNode(item)" ng-if="item.childNodes && item.childNodes.length > 0">
+                                        <md-icon ng-if="item.status == 'close'" >keyboard_arrow_right</md-icon>
+                                        <md-icon ng-if="item.status == 'open'" >keyboard_arrow_down</md-icon>
+                                    </md-button>
+                                    <div class="tree-node-prefix" ng-if="!item.childNodes || item.childNodes.length == 0"></div>
+                                    <div class="tree-node-content">
+                                        {{item.name}}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             <a href="" style="cursor:pointer" ng-if="item.countWorkspace>0" md-no-ink class="md-primary"
                                ng-click="linkWorkspace(item)">

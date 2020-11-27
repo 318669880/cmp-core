@@ -50,7 +50,7 @@
                                     <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
                                     <!--<td>{{item.module}}</td>-->
                                     <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
-                                        <a class="edit-span" class="md-primary" style="cursor:pointer;text-decoration:none!important;" href="" >
+                                        <a class="edit-span" class="md-primary" style="cursor:pointer;" href="" ng-click="toPodNumPage(item)">
                                             <!--{{item.statuInfo}}-->
                                             <span ng-if="item.sync" md-colors="{color: 'blue'}">
                                                 <i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i>
@@ -105,12 +105,7 @@
                                                 </md-button>
                                             </md-menu-item>
 
-                                            <md-menu-item ng-if="indexServer.model_env=='k8s'">
-                                                <md-button ng-click="startK8sModule(item)" ng-if="indexServer.model_env=='k8s'">
-                                                    <md-icon class="md-18">edit</md-icon>
-                                                    {{'i18n_model_op_pod_eidt' | translator:'服务实例'}}
-                                                </md-button>
-                                            </md-menu-item>
+
 
                                             <md-menu-item ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">
                                                 <md-button ng-click="uninstallK8sModule(item)" ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">

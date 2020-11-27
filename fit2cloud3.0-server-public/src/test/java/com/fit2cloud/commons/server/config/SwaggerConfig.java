@@ -44,7 +44,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("FIT2CLOUD Restful APIs")
                 .contact(contact)
-                .version("2.0")
+                .version("3.0")
                 .build();
     }
 
@@ -72,7 +72,7 @@ public class SwaggerConfig {
         return () -> {
             SwaggerResource wsResource = new SwaggerResource();
             wsResource.setName("FIT2CLOUD");
-            wsResource.setSwaggerVersion("2.0");
+            wsResource.setSwaggerVersion("3.0");
             wsResource.setLocation("/v2/websockets.json");
 
             List<SwaggerResource> resources = new ArrayList<>(defaultResourcesProvider.get());

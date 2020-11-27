@@ -815,6 +815,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             let syncStatus = ["i18n_model_k8s-status_shrinke", "i18n_model_k8s-status_expand", "i18n_model_k8s-status_uninstall"];
             if (syncStatus.indexOf(prefix) != -1){
                 item.sync = true;
+            }else{
+                item.sync = false;
             }
         })
     };

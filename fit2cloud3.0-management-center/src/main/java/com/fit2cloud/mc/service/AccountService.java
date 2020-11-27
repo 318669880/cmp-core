@@ -160,7 +160,7 @@ public class AccountService extends CloudAccountService {
             List<CloudAccount> cloudAccounts = cloudAccountMapper.selectByExample(example);
             cloudAccounts.forEach(account -> {
                 account.setStatus(CloudAccountConstants.Status.DELETED.name());
-                cloudAccountMapper.deleteByPrimaryKey(account.getId());
+                cloudAccountMapper.updateByPrimaryKeySelective(account);
                 redisMessagePublisher.publish(RedisConstants.Topic.CLOUD_ACCOUNT, account);
             });
         }
@@ -170,7 +170,6 @@ public class AccountService extends CloudAccountService {
         CloudAccount cloudAccount = cloudAccountMapper.selectByPrimaryKey(accountId);
         if (cloudAccount != null) {
             cloudAccount.setStatus(CloudAccountConstants.Status.DELETED.name());
-            cloudAccountMapper.deleteByPrimaryKey(cloudAccount.getId());
             redisMessagePublisher.publish(RedisConstants.Topic.CLOUD_ACCOUNT, cloudAccount);
         }
     }

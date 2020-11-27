@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `cloud_image` (
   `region` varchar(100) DEFAULT NULL COMMENT '数据中心/区域',
   `image_name` VARCHAR(512) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT ''  NOT NULL  COMMENT '镜像名',
   `description` text COMMENT '描述',
-  `os` varchar(50) DEFAULT NULL COMMENT '操作系统',
+  `os` varchar(512) DEFAULT NULL COMMENT '操作系统',
   `create_time` bigint(13) DEFAULT NULL COMMENT '创建时间',
   `workspace_id` varchar(50) NOT NULL DEFAULT '' COMMENT '工作空间 ID',
   `last_sync_timestamp` bigint(13) NOT NULL COMMENT '上次同步时间',

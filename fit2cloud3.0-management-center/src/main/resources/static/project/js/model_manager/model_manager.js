@@ -1020,8 +1020,12 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
 
 ProjectApp.controller('PodNumController', function($scope, HttpUtils, Translator, $state, $filter, Notification){
 
-
-    $scope.value = 0;
+    $scope.old_pod_num = angular.copy($scope.k8sModule.podNum) || 0;
+    $scope.value = $scope.old_pod_num;
+    $scope.valueChanged = function(){
+        let changed = $scope.value != $scope.old_pod_num;
+        return changed;
+    };
     $scope.modifyPodNum = function(){
         let pod_number = $scope.value;
         let item = $scope.k8sModule;

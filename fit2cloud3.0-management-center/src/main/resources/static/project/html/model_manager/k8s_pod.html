@@ -21,7 +21,7 @@
         <md-button class="md-raised" ng-click="closeToggleForm()">
             {{'i18n_cancel' | translator}}
         </md-button>
-        <md-button class="md-raised md-primary" ng-disabled="podForm.$invalid" ng-click="modifyPodNum()">
+        <md-button class="md-raised md-primary" ng-disabled="!valueChanged() || podForm.$invalid" ng-click="modifyPodNum()">
             {{'i18n_ok' | translator}}
         </md-button>
     </div>

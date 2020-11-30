@@ -344,7 +344,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
                 dto.modelBasic.podNum = 0 ;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -359,7 +359,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
                 dto.modelBasic.podNum = 0 ;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -373,7 +373,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 let dto = {};
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -387,7 +387,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 let dto = {};
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -400,7 +400,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 let dto = {};
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -815,6 +815,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             let syncStatus = ["i18n_model_k8s-status_shrinke", "i18n_model_k8s-status_expand", "i18n_model_k8s-status_uninstall"];
             if (syncStatus.indexOf(prefix) != -1){
                 item.sync = true;
+            }else{
+                item.sync = false;
             }
         })
     };
@@ -856,6 +858,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         $scope.toggleInfoForm(true);
     };
 
+
     $scope.closeInformation = function () {
         $scope.item = {};
         $scope.current_module = null;
@@ -865,66 +868,24 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         $scope.toggleInfoForm(false);
     };
 
-    $scope.startK8sModule = function (item) {
-        let module_arr = [];
-        if(item){
-            module_arr.push(item.module);
-        }/*else{
-            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
-        }*/
-        if (module_arr.length == 0 ){
-            $scope.showWarn('i18n_module_null_msg','模块不能为空')
-            return;
-        }
-        let obj = {
-            title: $filter('translator')('i18n_pod_number', 'Pod 数量'),
-            text: $filter('translator')('i18n_pod_number', 'Pod 数量'),
-            required: true,
-            type:'number',
-            init: 1
-        };
 
-        Notification.prompt(obj, function (result) {
-            let pod_number = result;
-            if (pod_number < 0){
-                Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于0'));
-                return;
-            }
-            if(pod_number < 1){
-                //Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于1'));
-                $scope.stopK8sModule(item);
-                return;
-            }
-            let params = {"pod_number": pod_number};
-            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr, params: params}, function (resp) {
-                Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
-                $scope.list();
-            }, function (resp) {
-            });
-        });
-    }
 
-    $scope.stopK8sModule = function (item) {
-        let module_arr = [];
-        if(item){
-            module_arr.push(item.module);
-        }/*else{
-            module_arr = $scope.items.filter(item => item.enable).map(item => item.module);
-        }*/
-        if (module_arr.length == 0 ){
-            $scope.showWarn('i18n_module_null_msg','模块不能为空.')
-            return;
-        }
+    $scope.toPodNumPage = function(item){
+        $scope.selected = item.$$hashKey;
+        $scope.k8sModule = item;
+        $scope.infoUrl = 'project/html/model_manager/k8s_pod.html' + '?_t=' + Math.random();
+        $scope.toggleInfoForm(true);
+    };
 
-        Notification.confirm($filter('translator')("i18n_stop_modules_confirm", "确定停止所选模块？"), function () {
-            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function () {
-                Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
-                $scope.list();
-            }, function (resp) {
-            });
+    //关闭pod数量调整页面
+    $scope.closeToggleForm = function(){
+        $scope.selected = "";
+        $scope.infoUrl = null;
+        $scope.k8sModule = null;
+        $scope.toggleInfoForm(false);
+    };
 
-        })
-    }
+
 
     $scope.uninstallK8sModule = function (item) {
         let module_arr = [];
@@ -1055,6 +1016,62 @@ ProjectApp.controller('ModelManagerNodeController', function ($scope, HttpUtils,
     $scope.$on('onNodeRefresh',(evt,args) => {
         $scope.list();
     })
+});
+
+ProjectApp.controller('PodNumController', function($scope, HttpUtils, Translator, $state, $filter, Notification){
+
+    $scope.old_pod_num = angular.copy($scope.k8sModule.podNum) || 0;
+    $scope.value = $scope.old_pod_num;
+    $scope.valueChanged = function(){
+        let changed = $scope.value != $scope.old_pod_num;
+        return changed;
+    };
+    $scope.modifyPodNum = function(){
+        let pod_number = $scope.value;
+        let item = $scope.k8sModule;
+        let module_arr = [];
+        if(item){
+            module_arr.push(item.module);
+        }
+
+        if (pod_number < 0){
+            Notification.warn($filter('translator')('i18n_pod_number_limit', 'Pod 數量不能小于0'));
+            return;
+        }
+        if(pod_number < 1){
+            $scope.stopK8sModule(item);
+            return;
+        }
+        let params = {"pod_number": pod_number};
+        $scope.loadingLayer = HttpUtils.post('k8s-operator-module/start/' , {modules: module_arr, params: params}, function (resp) {
+            $scope.closeToggleForm();
+            Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
+            $scope.list();
+        }, function (resp) {
+        });
+    };
+
+    $scope.stopK8sModule = function (item) {
+        let module_arr = [];
+        if(item){
+            module_arr.push(item.module);
+        }
+        if (module_arr.length == 0 ){
+            $scope.showWarn('i18n_module_null_msg','模块不能为空.')
+            return;
+        }
+
+        Notification.confirm($filter('translator')("i18n_stop_modules_confirm", "确定停止所选模块？"), function () {
+            $scope.loadingLayer = HttpUtils.post('k8s-operator-module/stop/' , {modules: module_arr}, function () {
+                $scope.closeToggleForm();
+                Notification.info($filter('translator')('i18n_excute_resule', "执行成功，请稍后刷新模块状态.")) ;
+                $scope.list();
+            }, function (resp) {
+            });
+
+        })
+    }
+
 });
 
 

@@ -106,6 +106,10 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
         })
     }
 
+    $scope.filterSelf = function (node) {
+        return $scope.item.id != node.id
+    }
+
     $scope.toggleNode = function(node, status){
         if (node.status == 'close'){
             node.status = 'open';
@@ -185,7 +189,7 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
 
     $scope.edit = function (data) {
         $scope.item = angular.copy(data);
-        $scope.selectedOrgIds.push(data.pid)
+        $scope.selectedOrgIds = [data.pid];
         $scope.formUrl = 'project/html/organization/organization-edit.html' + '?_t=' + Math.random();
         $scope.toggleForm();
     };

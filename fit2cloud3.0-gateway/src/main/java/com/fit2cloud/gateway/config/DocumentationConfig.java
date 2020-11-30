@@ -38,7 +38,7 @@ public class DocumentationConfig implements SwaggerResourcesProvider {
         SwaggerResource swaggerResource = new SwaggerResource();
         swaggerResource.setName(Translator.clusterGet(name));
         swaggerResource.setLocation(location);
-        swaggerResource.setSwaggerVersion("2.0");
+        swaggerResource.setSwaggerVersion("3.0");
         return swaggerResource;
     }
 

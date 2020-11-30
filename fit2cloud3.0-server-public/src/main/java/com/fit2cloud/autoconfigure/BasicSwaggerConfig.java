@@ -45,7 +45,7 @@ public class BasicSwaggerConfig {
         return new ApiInfoBuilder()
                 .title("FIT2CLOUD Restful APIs")
                 .contact(contact)
-                .version("2.0")
+                .version("3.0")
                 .build();
     }
 

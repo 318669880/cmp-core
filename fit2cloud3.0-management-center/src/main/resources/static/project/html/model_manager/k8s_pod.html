@@ -1,0 +1,28 @@
+<div ng-cloak ng-controller="PodNumController">
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_pod_number' | translator}}</div>
+        </div>
+    </md-toolbar>
+    <form name="podForm" class="md-padding">
+
+        <md-input-container class="md-block">
+            <label> {{'i18n_pod_number' | translator}}</label>
+            <input type="number" min="0" max="100" required name="podNum" ng-model="value"  />
+            <div ng-messages="podForm.podNum.$error">
+                <div ng-message="required">{{'i18n_required' | translator}}</div>
+                <div ng-message-exp="['required', 'min' ,'max']">
+                    {{'i18n_pod_number_limit' | translator}}
+                </div>
+            </div>
+        </md-input-container>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="closeToggleForm()">
+            {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="!valueChanged() || podForm.$invalid" ng-click="modifyPodNum()">
+            {{'i18n_ok' | translator}}
+        </md-button>
+    </div>
+</div>

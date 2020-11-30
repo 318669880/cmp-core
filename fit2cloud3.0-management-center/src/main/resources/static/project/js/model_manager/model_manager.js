@@ -344,7 +344,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
                 dto.modelBasic.podNum = 0 ;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -359,7 +359,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
                 dto.modelBasic.podNum = 0 ;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -373,7 +373,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 let dto = {};
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -387,7 +387,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 let dto = {};
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;
@@ -400,7 +400,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 let dto = {};
                 model.lastRevision = model.lastRevision || _self._lastVersion(model);
                 dto.modelBasic = model;
-                let modelVersion = model.last_version;
+                let modelVersion = angular.copy(model.last_version);
                 modelVersion.created = new Date(modelVersion.created).getTime();
                 dto.modelVersion = modelVersion
                 return dto;

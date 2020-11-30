@@ -1931,6 +1931,9 @@
                     $scope.nodeRemoveResults(node);
                 };
                 $scope.init = function () {
+                    $scope.selected = Array.from(new Set($scope.selected));
+                    $scope.values = [];
+                    $scope.results = [];
                     $scope.loadTreeData();
                 }
 

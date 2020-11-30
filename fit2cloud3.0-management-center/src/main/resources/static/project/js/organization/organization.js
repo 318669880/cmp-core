@@ -106,6 +106,10 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
         })
     }
 
+    $scope.filterSelf = function (node) {
+        return $scope.item.id != node.id
+    }
+
     $scope.toggleNode = function(node, status){
         if (node.status == 'close'){
             node.status = 'open';

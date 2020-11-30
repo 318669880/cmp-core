@@ -1921,7 +1921,8 @@
 
                 $scope.unCheckNode = function(node){
                     if (!!node.checked){
-                        node.checked = undefined;
+                        /*node.checked = undefined;*/
+                        $scope.noroot.setSelected("id", node.id, undefined);
                     }
                     $scope.nodeRemoveResults(node);
                 }
@@ -3259,6 +3260,10 @@
                 });
 
                 $scope.api = angular.extend($scope.api, {
+                    setSelected: function (key, value, checked) {
+                        let node = this.getNode(key, value);
+                        node.checked = checked;
+                    },
                     getSelected: function () {
                         return $scope.getSelected(angular.copy($scope.data));
                     },

@@ -1952,21 +1952,50 @@
                     })
                 }
                 $scope.buildTreeData = (nodes) => {
-                    angular.forEach(nodes ,(node) => {
+                    if (!nodes || nodes.length == 0) return;
+                    let index = nodes.length;
+                    while (index --){
+                        let node = nodes[index];
                         angular.forEach($scope.builder, (value, key) => node[key] = node[value]);
                         if ($scope.selected.some(tNode => tNode == node.id)){
                             node.checked = true
                         }
                         node.collapsed = false;
+                        let allChildHidden = true;
                         if (!!$scope.checkCondition && $scope.checkCondition()){
                             let enableCheckBox = $scope.checkCondition()(node);
                             node.disabled = !enableCheckBox;
                             node.hiddenBox = node.disabled;
+                            if (node.hiddenBox){
+                                let kids = node.children;
+                                if (kids && kids.length > 0){
+                                    allChildHidden = $scope.allKidsHidden(kids);
+                                }
+                                if (allChildHidden){
+                                    //如果所有子节点都不可选择 那么就隐藏
+                                    nodes.splice(index, 1);
+                                    continue;
+                                }
+                            }
                         }
                         $scope.buildTreeData(node.children);
-                    })
+                    }
                 }
 
+                $scope.allKidsHidden = function(kids){
+                    let result = true;
+                    for (let i = 0; i < kids.length; i++) {
+                        let kid = angular.copy(kids[i]);
+                        angular.forEach($scope.builder, (value, key) => kid[key] = kid[value]);
+                        let enable = $scope.checkCondition()(kid);
+                        if (enable) return false;
+                        let childs = kid.children;
+                        if (childs && childs.length > 0){
+                            return $scope.allKidsHidden(childs);
+                        }
+                    }
+                    return result;
+                }
                 $scope.init();
             }
         };

@@ -871,6 +871,9 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
 
     $scope.toPodNumPage = function(item){
+        if (!!item.currentStatus && item.currentStatus == 'uninstalling'){
+            return;
+        }
         $scope.selected = item.$$hashKey;
         $scope.k8sModule = item;
         $scope.infoUrl = 'project/html/model_manager/k8s_pod.html' + '?_t=' + Math.random();

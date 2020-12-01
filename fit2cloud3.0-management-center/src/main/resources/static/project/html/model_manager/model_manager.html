@@ -105,8 +105,8 @@
                                                 </md-button>
                                             </md-menu-item>
 
-                                            <md-menu-item ng-if="indexServer.model_env=='k8s'">
-                                                <md-button ng-click="toPodNumPage(item)" ng-if="indexServer.model_env=='k8s'">
+                                            <md-menu-item ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">
+                                                <md-button ng-click="toPodNumPage(item)" ng-if="indexServer.model_env=='k8s' && item.currentStatus != 'uninstalling'">
                                                     <md-icon class="md-18">apps</md-icon>
                                                     {{'i18n_model_op_pod_eidt' | translator:'服务实例'}}
                                                 </md-button>

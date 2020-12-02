@@ -6,6 +6,8 @@ public class UserDTO {
     private String name;
     private String email;
     private String label;
+    private String phone;
+    private String wechatAccount;
 
     public String getId() {
         return id;
@@ -37,5 +39,21 @@ public class UserDTO {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getWechatAccount() {
+        return wechatAccount;
+    }
+
+    public void setWechatAccount(String wechatAccount) {
+        this.wechatAccount = wechatAccount;
     }
 }

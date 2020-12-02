@@ -367,5 +367,8 @@
   "i18n_tag_scope_user": "工作空間用戶",
   "i18n_user_notification_setting": "通知設置",
   "i18n_wechat_account": "企業微信賬號",
-  "i18n_notification_tip": "郵箱、手機號設置後將與用戶基本信息關聯。手機號將做為釘釘平臺推送標識。企業微信賬號參考 https://work.weixin.qq.com/api/doc/90000/90135/90665"
+  "i18n_notification_tip": "郵箱、手機號設置後將與用戶基本信息關聯。手機號將做為釘釘平臺推送標識。企業微信賬號參考 https://work.weixin.qq.com/api/doc/90000/90135/90665",
+  "i18n_other_user": "其他用戶",
+  "i18n_process_sms_type_dingtalk":"釘釘推送",
+  "i18n_process_sms_type_wechat": "企業微信推送"
 }

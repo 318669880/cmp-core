@@ -65,20 +65,20 @@
             LinkManagement.add();
         };
 
-        $scope.$on("type",function (event , data) {
+        $scope.$on("type", function (event, data) {
             $scope.type = data;
         });
 
-        $scope.$on("linkItem",function (event , data) {
+        $scope.$on("linkItem", function (event, data) {
             $scope.linkItem = data;
         });
 
-        $scope.$on("formUrl",function (event , data) {
+        $scope.$on("formUrl", function (event, data) {
             $scope.formUrl = data;
             $scope.toggleForm();
         });
 
-        $scope.submit  =function(){
+        $scope.submit = function () {
             LinkManagement.init($scope);
             LinkManagement.submit();
         };
@@ -159,18 +159,18 @@
 
         this.delete = function (item) {
             let self = this;
-            var desc ;
-            if(item.used){
+            var desc;
+            if (item.used) {
                 desc = Translator.get("i18n_process_role_used");
-                if(item.models){
+                if (item.models) {
                     desc = desc + Translator.get("i18n_process_model") + ": " + item.models + ", "
                 }
-                if(item.linkKeys){
+                if (item.linkKeys) {
                     desc = desc + Translator.get("i18n_process_model_link_predefine") + ": " + item.linkKeys + ", "
                 }
                 desc = desc + Translator.get("i18n_delete_after_reconfig");
                 Notification.danger(desc);
-            }else {
+            } else {
                 desc = Translator.get("i18n_confirm_perform_delete");
                 Notification.confirm(desc, function () {
                     HttpUtils.get('flow/design/role/delete?key=' + item.roleKey, function () {
@@ -191,7 +191,7 @@
                 HttpUtils.post("flow/design/role/used", roleKeys, function (response) {
                     angular.forEach($scope.items, function (item) {
                         angular.forEach(response.data, function (value) {
-                            if(item.roleKey === value.roleKey){
+                            if (item.roleKey === value.roleKey) {
                                 item.used = value.used;
                                 item.models = value.models;
                                 item.linkKeys = value.linkKeys;
@@ -476,7 +476,7 @@
                             $scope.api.open(act);
                             return false;
                         }
-                        if(act.linkType !== 'PREDEFINE'){
+                        if (act.linkType !== 'PREDEFINE') {
                             let assignee = validate(act.assignee, Translator.get("i18n_process_link_handler_required"));
                             if (!assignee) {
                                 $scope.api.open(act);
@@ -547,7 +547,7 @@
 
                 $scope.changeLinkKey = function (linkKey) {
                     angular.forEach($scope.preDefineLinks, function (link) {
-                        if(link.linkKey === linkKey){
+                        if (link.linkKey === linkKey) {
                             $scope.item.name = link.linkAlias;
                         }
                     });
@@ -700,8 +700,10 @@
                 ];
 
                 $scope.smsTypes = [
+                    {key: "ANNOUNCEMENT", name: Translator.get("i18n_process_sms_type_announcement")},
                     {key: "EMAIL", name: Translator.get("i18n_process_sms_type_email")},
-                    {key: "ANNOUNCEMENT", name: Translator.get("i18n_process_sms_type_announcement")}
+                    {key: "DINGTALK", name: Translator.get("i18n_process_sms_type_dingtalk")},
+                    {key: "WECHAT", name: Translator.get("i18n_process_sms_type_wechat")}
                 ];
 
                 $scope.processOperations = [
@@ -789,7 +791,7 @@
 
                 $scope.transform = function (chip) {
                     if (angular.isObject(chip)) {
-                        return chip.email;
+                        return chip.id;
                     }
 
                     return chip;
@@ -960,7 +962,7 @@
 
         $scope.deleteLink = function (item) {
             var desc;
-            if(item.modelCount === 0){
+            if (item.modelCount === 0) {
                 desc = Translator.get("i18n_confirm_perform_delete");
                 Notification.confirm(desc, function () {
                     HttpUtils.get('flow/design/link/delete?key=' + item.linkId, function () {
@@ -970,7 +972,7 @@
                         Notification.danger(Translator.get("i18n_menu_delete_fail") + "，" + response.message);
                     });
                 });
-            }else {
+            } else {
                 desc = item.modelCount + Translator.get("i18n_flow_used_link") + item.modelNames + ", " + Translator.get("i18n_delete_after_reconfig");
                 Notification.danger(desc);
                 return;
@@ -991,7 +993,7 @@
                 HttpUtils.post("flow/design/link/models", linkKeys, function (response) {
                     angular.forEach($scope.items, function (item) {
                         angular.forEach(response.data, function (value) {
-                            if(item.linkKey === value.linkKey){
+                            if (item.linkKey === value.linkKey) {
                                 item.modelCount = value.modelCount;
                                 item.modelNames = value.modelNames;
                             }
@@ -1001,13 +1003,13 @@
             });
         };
 
-        $scope.editValues = function(item){
+        $scope.editValues = function (item) {
             sessionStorage.setItem("parent", $state.current.name);
             $state.go("link_values", {link: item, parent: $state.current.name});
         };
 
-        $scope.editLinkStatus = function(item){
-            if(item.modelCount > 0 && !item.enable){
+        $scope.editLinkStatus = function (item) {
+            if (item.modelCount > 0 && !item.enable) {
                 Notification.confirm(item.modelCount + Translator.get("i18n_flow_used_link") + Translator.get("i18n_confirm_forbidden"), function () {
                     HttpUtils.post("flow/design/link/update", item, function () {
                         Notification.success(Translator.get('i18n_process_link_edit_success', '修改完成'));
@@ -1015,7 +1017,7 @@
                 }, function () {
                     item.enable = !item.enable;
                 });
-            }else {
+            } else {
                 HttpUtils.post("flow/design/link/update", item, function () {
                     Notification.success(Translator.get('i18n_process_link_edit_success', '修改完成'));
                 });
@@ -1047,7 +1049,7 @@
         };
 
         $scope.timer = $interval(function () {
-            if($scope.systemRoles && $scope.roles){
+            if ($scope.systemRoles && $scope.roles) {
                 $scope.list();
                 $interval.cancel($scope.timer);
             }
@@ -1056,27 +1058,27 @@
         $scope.list = function () {
             HttpUtils.paging($scope, "flow/design/link/value/list/" + $scope.link.linkKey, {}, function () {
                 angular.forEach($scope.items, function (item) {
-                    if(item.assigneeType === 'CREATOR'){
+                    if (item.assigneeType === 'CREATOR') {
                         item.assigneeDesc = Translator.get("i18n_process_model_link_handler_creator");
                     }
-                    if(item.assigneeType === 'SYSTEM_ROLE'){
+                    if (item.assigneeType === 'SYSTEM_ROLE') {
                         angular.forEach($scope.systemRoles, function (systemRole) {
                             if (systemRole.id === item.assignee) {
                                 item.assigneeDesc = systemRole.name;
                             }
                         });
                     }
-                    if(item.assigneeType === 'PROCESS_ROLE'){
+                    if (item.assigneeType === 'PROCESS_ROLE') {
                         angular.forEach($scope.roles, function (role) {
                             if (role.roleKey === item.assignee) {
                                 item.assigneeDesc = role.roleName;
                             }
                         });
                     }
-                    if(item.assigneeType === 'VARIABLES'){
+                    if (item.assigneeType === 'VARIABLES') {
                         item.assigneeDesc = item.assignee;
                     }
-                    if(item.assigneeType === 'USER'){
+                    if (item.assigneeType === 'USER') {
                         item.assigneeDesc = item.assignee;
                     }
                 });
@@ -1128,17 +1130,17 @@
                             );
                             return false;
                         }
-                        if (!$scope.item.linkValuePriority ) {
+                        if (!$scope.item.linkValuePriority) {
                             Notification.info($filter('translator')('i18n_process_link_value_priority', '优先级') + $filter('translator')('i18n_no_empty', '不能为空')
                             );
                             return false;
                         }
-                        if (!$scope.item.assigneeType ) {
+                        if (!$scope.item.assigneeType) {
                             Notification.info($filter('translator')('i18n_process_model_link_handler', '处理人') + $filter('translator')('i18n_no_empty', '不能为空')
                             );
                             return false;
                         }
-                        if ($scope.item.assigneeType !== 'CREATOR' && !$scope.item.assigneeValue ) {
+                        if ($scope.item.assigneeType !== 'CREATOR' && !$scope.item.assigneeValue) {
                             Notification.info($filter('translator')('i18n_process_model_link_handler', '处理人') + $filter('translator')('i18n_no_empty', '不能为空')
                             );
                             return false;
@@ -1166,8 +1168,8 @@
             }
         };
 
-        $scope.listProductGroupWorkspaceTree = function() {
-            $scope.loadingLayer = HttpUtils.get("flow/design/workspace/tree/" + $scope.item.id, function(response) {
+        $scope.listProductGroupWorkspaceTree = function () {
+            $scope.loadingLayer = HttpUtils.get("flow/design/workspace/tree/" + $scope.item.id, function (response) {
                 $scope.item.treeData = response.data;
             }, function (rep) {
                 Notification.danger(rep.message);
@@ -1190,7 +1192,7 @@
         $scope.submit = function () {
             convert($scope.item);
             $scope.commit = true;
-            if($scope.noroot.getSelected) {
+            if ($scope.noroot.getSelected) {
                 $scope.item.treeNodes = $scope.noroot.getSelected();
             }
             $scope.loadingLayer = HttpUtils.post("flow/design/link/value/" + $scope.type, $scope.item, function () {
@@ -1206,7 +1208,7 @@
             });
         };
 
-        $scope.editLinkValueScope = function(item) {
+        $scope.editLinkValueScope = function (item) {
             $scope.item = angular.copy(item);
             $scope.formUrl = 'web-public/fit2cloud/html/process/link-value-workspace-edit.html' + '?_t=' + Math.random();
             $scope.toggleForm();
@@ -1219,7 +1221,7 @@
                 $scope.item.assigneeValue = "";
             }
         };
-        
+
         let convert = function (activity) {
             switch (activity.assigneeType) {
                 case "CREATOR":
@@ -1283,25 +1285,25 @@
         $scope.init();
     });
 
-    F2CProcess.controller('LinkValueEditWorkspaceController', function($scope, HttpUtils, Notification, $filter) {
+    F2CProcess.controller('LinkValueEditWorkspaceController', function ($scope, HttpUtils, Notification, $filter) {
         $scope.model = {
-            id:             $scope.item.id,
+            id: $scope.item.id,
             permissionMode: $scope.item.permissionMode
         };
-        if($scope.model.permissionMode == undefined || $scope.model.permissionMode == null){
+        if ($scope.model.permissionMode == undefined || $scope.model.permissionMode == null) {
             $scope.model.permissionMode = "WHITELIST";
         }
         $scope.commit = false;
 
         $scope.noroot = {};
 
-        $scope.submit = function() {
+        $scope.submit = function () {
             $scope.commit = true;
             //如果是个空树getSelected属性将是undefinded
-            if($scope.noroot.getSelected) {
+            if ($scope.noroot.getSelected) {
                 $scope.model.treeNodes = $scope.noroot.getSelected();
             }
-            $scope.loadingLayer = HttpUtils.post("flow/design/workspace/tree/update/" + $scope.item.id , $scope.model, function() {
+            $scope.loadingLayer = HttpUtils.post("flow/design/workspace/tree/update/" + $scope.item.id, $scope.model, function () {
                 $scope.commit = false;
                 $scope.list();
                 Notification.success($filter('translator')('i18n_opt_success', '操作成功'));
@@ -1314,8 +1316,8 @@
             })
         };
 
-        $scope.listProductGroupWorkspaceTree = function() {
-            $scope.loadingLayer = HttpUtils.get("flow/design/workspace/tree/" + $scope.item.id, function(response) {
+        $scope.listProductGroupWorkspaceTree = function () {
+            $scope.loadingLayer = HttpUtils.get("flow/design/workspace/tree/" + $scope.item.id, function (response) {
                 $scope.model.treeData = response.data;
             }, function (rep) {
                 Notification.danger(rep.message);

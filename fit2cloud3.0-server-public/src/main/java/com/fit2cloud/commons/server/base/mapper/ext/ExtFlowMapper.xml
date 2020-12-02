@@ -31,7 +31,10 @@
     </select>
 
     <select id="listUser" resultType="com.fit2cloud.commons.server.process.dto.UserDTO">
-        SELECT id, name, email, CONCAT(name, ' [ ', email, ' ]') as label FROM user
+        SELECT id, name, email,phone, CONCAT(name, ' [ ', email, ' ]') as label ,
+        n.wechat_account as wechatAccount
+        FROM user
+        left join user_notification_setting n on user.id = n.user_id
         WHERE active = '1'
         <if test='search !=null and search != ""'>
             and (name like #{search} or email like #{search})

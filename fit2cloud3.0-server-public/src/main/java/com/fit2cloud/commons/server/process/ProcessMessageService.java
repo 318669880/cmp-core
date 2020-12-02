@@ -6,9 +6,8 @@ import com.fit2cloud.commons.server.base.mapper.FlowNotificationConfigMapper;
 import com.fit2cloud.commons.server.base.mapper.FlowNotificationInboxMapper;
 import com.fit2cloud.commons.server.base.mapper.ext.ExtFlowMapper;
 import com.fit2cloud.commons.server.constants.ProcessConstants;
-import com.fit2cloud.commons.server.service.MailService;
-import com.fit2cloud.commons.server.service.NotificationService;
-import com.fit2cloud.commons.server.service.UserCommonService;
+import com.fit2cloud.commons.server.model.UserNotificationSettingDTO;
+import com.fit2cloud.commons.server.service.*;
 import com.fit2cloud.commons.utils.CommonThreadPool;
 import com.fit2cloud.commons.utils.LogUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +53,12 @@ public class ProcessMessageService {
 
     @Resource
     private NotificationService notificationService;
+    @Resource
+    private DingtalkService dingtalkService;
+    @Resource
+    private WechatService wechatService;
+    @Resource
+    private UserNotificationService userNotificationService;
 
     public List<FlowNotificationConfig> listConfig(String modelId, int step, String activityId) {
         if (step == -1) return listConfig(modelId, step);
@@ -169,7 +174,7 @@ public class ProcessMessageService {
             for (String receiver : receivers) {
                 // 继续计算参数
                 if (action != null) action.accept(receiver);
-                
+
                 content = ProcessEmail.getContent(config.getId(), template, params);
 
                 // 站内通知
@@ -190,6 +195,20 @@ public class ProcessMessageService {
                     mailService.sendHtmlEmail(title, content, email);
                     saveMailLog(receiver, title, content, config, ProcessConstants.MessageStatus.SUCCESS.name());
                     LogUtil.debug("Successfully sent mail，title: " + title);
+                }
+                // 钉钉通知
+                if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.DINGTALK.name())) {
+                    UserNotificationSettingDTO userNotification = userNotificationService.getUserNotification(receiver);
+                    dingtalkService.sendTextMessageToUser(content, userNotification.getPhone());
+                    saveMailLog(receiver, title, content, config, ProcessConstants.MessageStatus.SUCCESS.name());
+                    LogUtil.debug("Successfully sent dingtalk");
+                }
+                // 企业微信通知
+                if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.WECHAT.name())) {
+                    UserNotificationSettingDTO userNotification = userNotificationService.getUserNotification(receiver);
+                    wechatService.sendTextMessageToUser(content, userNotification.getWechatAccount());
+                    saveMailLog(receiver, title, content, config, ProcessConstants.MessageStatus.SUCCESS.name());
+                    LogUtil.debug("Successfully sent wechat work");
                 }
             }
         } catch (Exception e) {

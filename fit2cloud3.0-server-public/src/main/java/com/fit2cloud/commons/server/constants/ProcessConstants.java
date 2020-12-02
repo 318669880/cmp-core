@@ -38,7 +38,7 @@ public class ProcessConstants {
      * 消息种类
      */
     public enum SmsType {
-        EMAIL, SMS, ANNOUNCEMENT
+        EMAIL, SMS, ANNOUNCEMENT, DINGTALK, WECHAT
     }
 
     /**
@@ -73,7 +73,7 @@ public class ProcessConstants {
      * 环节类型
      */
     public enum LinkType {
-        CUSTOM,  SYSTEM
+        CUSTOM, SYSTEM
     }
 
 

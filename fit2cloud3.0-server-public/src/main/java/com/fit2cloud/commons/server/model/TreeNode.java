@@ -10,6 +10,8 @@ public class TreeNode implements Serializable {
     private String name;
     private int order = 0;
 
+    private String type;
+
     List<TreeNode> children = new ArrayList<>();
 
     private boolean checked = false;
@@ -67,5 +69,13 @@ public class TreeNode implements Serializable {
 
     public void setChildren(List<TreeNode> children) {
         this.children = children;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

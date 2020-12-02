@@ -478,6 +478,26 @@ public class UserCommonService {
     }
 
     public List<OrgTreeNode> orgTreeSelect (String rootId, boolean excludeWs) {
-        return formatRoot(orgTreeNodeList(rootId, null, excludeWs));
+        List<OrgTreeNode> orgTreeNodes = formatRoot(orgTreeNodeList(rootId, null, excludeWs));
+        if (ObjectUtils.isNotEmpty(rootId)){
+            OrgTreeNode result = getTreeByRootId(orgTreeNodes, rootId);
+            return new ArrayList<OrgTreeNode>(){{add(result);}};
+        }
+        return orgTreeNodes;
+    }
+
+    private OrgTreeNode getTreeByRootId(List<OrgTreeNode> nodes, String rootId){
+        OrgTreeNode resultNode = null;
+        for (OrgTreeNode node : nodes){
+            if (StringUtils.equals(node.getNodeId(), rootId)){
+                resultNode =  node;
+                break;
+            }
+            if (CollectionUtils.isNotEmpty(node.getChildNodes())){
+                resultNode = getTreeByRootId(node.getChildNodes(), rootId);
+                if (ObjectUtils.isNotEmpty(resultNode)) break;
+            }
+        }
+        return resultNode;
     }
 }

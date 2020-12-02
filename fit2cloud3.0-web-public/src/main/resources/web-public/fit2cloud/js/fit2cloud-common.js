@@ -1776,7 +1776,11 @@
                 $scope.values = [];
                 $scope.results = [];
                 $scope.form = ctrl;
-
+                $scope.$watch("where.rootId", function (value) {
+                    if (value !== undefined) {
+                        $scope.init();
+                    }
+                });
                 $scope.validate = function(values){
                     let parentDom = element.find("[name='"+$scope.name+"']").parent().parent().parent().parent();
                     if (!parentDom || parentDom.length==0) return;

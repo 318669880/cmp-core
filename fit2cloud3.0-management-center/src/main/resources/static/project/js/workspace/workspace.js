@@ -32,7 +32,7 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
         })
     }
     $scope.filters = [];
-    if ($scope.orgParam && $scope.currentRole === $scope.roleConst.admin) {
+    if ($scope.orgParam && ($scope.currentRole === $scope.roleConst.admin || $scope.currentRole === $scope.roleConst.orgAdmin)) {
         $scope.filters = [{
             key: "organizationIds",
             name: Translator.get("i18n_organization"),

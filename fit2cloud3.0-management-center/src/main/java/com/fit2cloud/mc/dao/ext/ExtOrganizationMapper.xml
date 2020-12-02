@@ -25,11 +25,18 @@
         <if test="map.name!=null">
             and organization.name like #{map.name}
         </if>
+        <if test="map.orgIds != null">
+            and organization.id in
+            <foreach collection="map.orgIds" item="orgId" index="index" open="(" close=")" separator=",">
+                #{orgId}
+            </foreach>
+        </if>
         <if test="map.sort!=null">
             order by ${map.sort}
         </if>
         <if test="map.sort == null">
             order by name
         </if>
+
     </select>
 </mapper>

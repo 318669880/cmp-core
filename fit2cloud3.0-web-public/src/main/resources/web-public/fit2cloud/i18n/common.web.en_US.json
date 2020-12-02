@@ -322,12 +322,10 @@
   "i18n_model_installer": "Module Installer",
   "i18n_model_show": "Module ShowCase",
   "i18n_delete_after_reconfig": "Please delete after modifying the configuration!",
-
   "i18n_model_check_no": "Please select at least one",
   "i18n_model_check_no_stop": "Please select at least one module in stop state",
   "i18n_model_check_no_start": "Please select at least one module in start state",
   "i18n_model_result": "please see the result of start-up in logs file",
-
   "i18n_label": "Label",
   "i18n_label_add": "Create label",
   "i18n_label_edit": "Edit label",
@@ -364,5 +362,8 @@
   "i18n_permission_tag_value_read_import": "Import",
   "i18n_tag_scope_admin": "Admin",
   "i18n_tag_scope_orgadmin": "Org Admin",
-  "i18n_tag_scope_user": "Workspace"
+  "i18n_tag_scope_user": "Workspace",
+  "i18n_user_notification_setting": "Notification Setting",
+  "i18n_wechat_account": "Wechat Work Account",
+  "i18n_notification_tip": "Email、Phone will link User basic info.Phone will pushed by Dingtalk.Wechat Work Account go to https://work.weixin.qq.com/api/doc/90000/90135/90665"
 }

@@ -76,6 +76,12 @@
                                          {{'i18n_edit' | translator}}
                                     </md-button>
                                 </md-menu-item>
+                                <md-menu-item has-permissions="USER:READ+EDIT">
+                                    <md-button ng-click="editNotification(item)">
+                                        <md-icon class="md-18">notifications</md-icon>
+                                        {{'i18n_user_notification_setting' | translator}}
+                                    </md-button>
+                                </md-menu-item>
                                 <md-menu-item ng-if="isRePassword(item)"
                                               has-permissions="USER:READ+RESET_PASSWORD">
                                     <md-button ng-click="resetPassword(item)">

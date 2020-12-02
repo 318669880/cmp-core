@@ -1,0 +1,40 @@
+<div ng-cloak cg-busy="{promise:editLoadingLayer,minDuration:500}">
+    <md-toolbar class="content-toolbar">
+        <div class="md-toolbar-tools">
+            <div> {{'i18n_user_notification_setting' | translator}}</div>
+        </div>
+    </md-toolbar>
+    <form name="editUserForm" class="md-padding" autocomplete="off">
+        <md-input-container class="md-block">
+            <label>Email</label>
+            <input required name="email" ng-model="item.email"
+                   ng-pattern="/[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/"
+            >
+            <div ng-messages="editUserForm.email.$error" role="alert">
+                <div ng-message-exp="['required', 'pattern']">
+                    {{'i18n_email_limit_msg' | translator}}
+                </div>
+            </div>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label> {{'i18n_phone' | translator}}</label>
+            <input name="phone" ng-model="item.phone" ng-pattern="/^(1[0-9][0-9])\d{8}$/"/>
+            <div ng-messages="editUserForm.phone.$error">
+                <div ng-message="pattern"> {{'i18n_phone_limit_msg' | translator}}</div>
+            </div>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+            <label> {{'i18n_wechat_account' | translator}}</label>
+            <input name="wechat" ng-model="item.wechatAccount"/>
+        </md-input-container>
+        <span>{{'i18n_notification_tip' | translator}}</span>
+    </form>
+    <div layout="row" layout-align="start center" layout-margin>
+        <md-button class="md-raised" ng-click="closeToggleForm()">
+            {{'i18n_cancel' | translator}}
+        </md-button>
+        <md-button class="md-raised md-primary" ng-disabled="editUserForm.$invalid" ng-click="submitNotification(item)">
+            {{'i18n_save' | translator}}
+        </md-button>
+    </div>
+</div>

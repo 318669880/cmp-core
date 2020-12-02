@@ -780,3 +780,8 @@ ALTER TABLE `cloud_datastore`
 ALTER TABLE `cloud_cluster`
   ADD  INDEX `IDX_LAST_SYNC` (`last_sync_timestamp`);
 
+CREATE TABLE IF NOT EXISTS `user_notification_setting` (
+  `user_id` varchar(50) NOT NULL,
+  `wechat_account` varchar(50) COMMENT '企业微信account',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

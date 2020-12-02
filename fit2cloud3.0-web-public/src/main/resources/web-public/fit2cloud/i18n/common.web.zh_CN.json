@@ -368,5 +368,8 @@
   "i18n_permission_tag_value_read_import": "导入标签值",
   "i18n_tag_scope_admin": "系统管理员",
   "i18n_tag_scope_orgadmin": "组织管理员",
-  "i18n_tag_scope_user": "工作空间用户"
+  "i18n_tag_scope_user": "工作空间用户",
+  "i18n_user_notification_setting": "通知设置",
+  "i18n_wechat_account": "企业微信账号",
+  "i18n_notification_tip": "邮箱、手机号设置后将与用户基本信息关联。手机号将做为钉钉平台推送标识。企业微信账号参考 https://work.weixin.qq.com/api/doc/90000/90135/90665"
 }

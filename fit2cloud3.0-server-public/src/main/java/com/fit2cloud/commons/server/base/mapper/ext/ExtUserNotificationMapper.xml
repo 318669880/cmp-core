@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fit2cloud.commons.server.base.mapper.ext.ExtUserNotificationMapper">
+
+    <select id="getUserNotification" parameterType="java.lang.String"
+            resultType="com.fit2cloud.commons.server.model.UserNotificationSettingDTO">
+        select `user`.id as id,
+        `user`.email as email,
+        `user`.phone as phone,
+        user_notification_setting.wechat_account as wechatAccount
+        from `user` left join user_notification_setting on `user`.id = user_notification_setting.user_id
+        where `user`.id = #{id}
+    </select>
+</mapper>

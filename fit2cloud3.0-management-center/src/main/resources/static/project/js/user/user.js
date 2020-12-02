@@ -261,6 +261,22 @@ ProjectApp.controller('UserController', function ($scope, HttpUtils, FilterSearc
             $scope.toggleForm();
         };
 
+        $scope.editNotification = function (data) {
+            $scope.editLoadingLayer = HttpUtils.post('userNotification/getNotification/' + data.id, {}, function (response) {
+                $scope.item = response.data;
+            });
+            $scope.formUrl = 'project/html/user/user-notification-edit.html' + '?_t=' + Math.random();
+            $scope.toggleForm();
+        };
+
+        $scope.submitNotification = function (item) {
+            $scope.editLoadingLayer = HttpUtils.post('userNotification/save', item, function (response) {
+                Notification.success(Translator.get("i18n_save_success"));
+                $scope.closeToggleForm();
+                $scope.list();
+            });
+        };
+
         $scope.changeRole = function (roleInfo, roleId) {
             roleInfo.roleType = $scope.getParentId(roleId);
             switch (roleInfo.roleType) {
@@ -411,12 +427,13 @@ ProjectApp.controller('UserController', function ($scope, HttpUtils, FilterSearc
 
         $scope.wks_param = {excludeWs: false}
         $scope.org_param = {excludeWs: true}
-        $scope.builder =  {
+        $scope.builder = {
             id: "nodeId",
             name: "nodeName",
             children: "childNodes"
         }
-        $scope.ts_changed = function(){}
+        $scope.ts_changed = function () {
+        }
         $scope.enableCheckBox = function (node) {
             return node.nodeType == 'wks'
         }
@@ -454,15 +471,15 @@ ProjectApp.controller('ResourceController', function ($scope, HttpUtils, $http) 
         node.children = [];
         nodeLists.forEach(item => {
 
-            if (item.parentId == node.id){
-                if (item.switchable){
+            if (item.parentId == node.id) {
+                if (item.switchable) {
                     item.name = item.name + "[" + item.desc + "]"
                 }
                 $scope.setChildren(item, nodeLists);
                 node.children.push(item);
             }
         })
-        if (node.children.length == 0){
+        if (node.children.length == 0) {
             node.children = null;
         }
     }

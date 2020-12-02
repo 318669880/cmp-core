@@ -176,6 +176,7 @@ public class ProcessMessageService {
                 if (action != null) action.accept(receiver);
 
                 content = ProcessEmail.getContent(config.getId(), template, params);
+                UserNotificationSettingDTO userNotification = userNotificationService.getUserNotification(receiver);
 
                 // 站内通知
                 if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.ANNOUNCEMENT.name())) {
@@ -197,15 +198,13 @@ public class ProcessMessageService {
                     LogUtil.debug("Successfully sent mail，title: " + title);
                 }
                 // 钉钉通知
-                if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.DINGTALK.name())) {
-                    UserNotificationSettingDTO userNotification = userNotificationService.getUserNotification(receiver);
+                if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.DINGTALK.name()) && StringUtils.isNotEmpty(userNotification.getPhone())) {
                     dingtalkService.sendTextMessageToUser(content, userNotification.getPhone());
                     saveMailLog(receiver, title, content, config, ProcessConstants.MessageStatus.SUCCESS.name());
                     LogUtil.debug("Successfully sent dingtalk");
                 }
                 // 企业微信通知
-                if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.WECHAT.name())) {
-                    UserNotificationSettingDTO userNotification = userNotificationService.getUserNotification(receiver);
+                if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.WECHAT.name()) && StringUtils.isNotEmpty(userNotification.getWechatAccount())) {
                     wechatService.sendTextMessageToUser(content, userNotification.getWechatAccount());
                     saveMailLog(receiver, title, content, config, ProcessConstants.MessageStatus.SUCCESS.name());
                     LogUtil.debug("Successfully sent wechat work");

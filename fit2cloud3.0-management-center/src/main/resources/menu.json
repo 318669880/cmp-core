@@ -59,6 +59,13 @@
               "permissions": [
                 "ORGANIZATION:READ"
               ]
+            },
+            {
+              "role": "ORGADMIN",
+              "logical": "OR",
+              "permissions": [
+                "ORGANIZATION:READ"
+              ]
             }
           ]
         },

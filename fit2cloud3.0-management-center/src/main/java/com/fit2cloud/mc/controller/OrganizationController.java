@@ -2,16 +2,20 @@ package com.fit2cloud.mc.controller;
 
 import com.fit2cloud.commons.server.base.domain.Organization;
 import com.fit2cloud.commons.server.base.domain.Workspace;
+import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.model.OrgTreeNode;
 import com.fit2cloud.commons.server.model.OrgTreeQueryDto;
 import com.fit2cloud.commons.server.model.SessionUser;
 import com.fit2cloud.commons.server.model.UserDTO;
 import com.fit2cloud.commons.server.service.UserCommonService;
+import com.fit2cloud.commons.server.utils.OrganizationUtils;
 import com.fit2cloud.commons.server.utils.SessionUtils;
+import com.fit2cloud.commons.server.utils.WorkspaceUtils;
 import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
+import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.PermissionConstants;
 import com.fit2cloud.mc.dto.OrganizationDTO;
 import com.fit2cloud.mc.dto.request.CreateOrganizationRequest;
@@ -24,6 +28,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,8 +71,14 @@ public class OrganizationController {
     @PostMapping(value = "/{goPage}/{pageSize}")
     @RequiresPermissions(PermissionConstants.ORGANIZATION_READ)
     public Pager<List<OrganizationDTO>> paging(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody OrganizationRequest request) {
+        Map<String, Object> map = BeanUtils.objectToMap(request);
+        if (StringUtils.equals(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ORGADMIN.name())) {
+            String orgId = SessionUtils.getUser().getOrganizationId();
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(orgId);
+            map.put("orgIds", orgIds);
+        }
         Page page = PageHelper.startPage(goPage, pageSize, true);
-        return PageUtils.setPageInfo(page, organizationService.paging(BeanUtils.objectToMap(request)));
+        return PageUtils.setPageInfo(page, organizationService.paging(map));
     }
 
     @ApiOperation(value = Translator.PREFIX + "i18n_mc_organization_list" + Translator.SUFFIX)

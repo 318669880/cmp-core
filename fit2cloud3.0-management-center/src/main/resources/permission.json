@@ -93,7 +93,8 @@
       "name": "i18n_permission_role_read",
       "resourceId": "ROLE",
       "parentRoles": [
-        "ADMIN"
+        "ADMIN",
+        "ORGADMIN"
       ]
     },
     {
@@ -125,7 +126,8 @@
       "name": "i18n_permission_organization_read",
       "resourceId": "ORGANIZATION",
       "parentRoles": [
-        "ADMIN"
+        "ADMIN",
+        "ORGADMIN"
       ]
     },
     {
@@ -133,7 +135,8 @@
       "name": "i18n_permission_organization_read_create",
       "resourceId": "ORGANIZATION",
       "parentRoles": [
-        "ADMIN"
+        "ADMIN",
+        "ORGADMIN"
       ]
     },
     {
@@ -141,7 +144,8 @@
       "name": "i18n_permission_organization_read_edit",
       "resourceId": "ORGANIZATION",
       "parentRoles": [
-        "ADMIN"
+        "ADMIN",
+        "ORGADMIN"
       ]
     },
     {
@@ -149,7 +153,8 @@
       "name": "i18n_permission_organization_read_delete",
       "resourceId": "ORGANIZATION",
       "parentRoles": [
-        "ADMIN"
+        "ADMIN",
+        "ORGADMIN"
       ]
     },
     {

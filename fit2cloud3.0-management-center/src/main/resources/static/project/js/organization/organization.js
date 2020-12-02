@@ -1,4 +1,4 @@
-ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, FilterSearch, $http, Notification, operationArr, $state, Translator) {
+ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, FilterSearch, $http, Notification, operationArr, $state, Translator, UserService) {
 
     // 定义搜索条件
     $scope.conditions = [
@@ -89,6 +89,8 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
             angular.forEach($scope.items, function (item) {
                 item.enable = false;
             });
+            $scope.sourceItems = angular.copy($scope.items);
+            $scope.enableIds = $scope.sourceItems.map(item => item.id)
             $scope.items = $scope.formatTree();
         });
     };
@@ -106,9 +108,17 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
         })
     }
 
+    $scope.userInfo = UserService.getUserInfo();
     $scope.filterSelf = function (node) {
-        return $scope.item.id != node.id
+        return $scope.item.id != node.id && $scope.filterPermission(node);
     }
+
+    $scope.filterPermission = function(node){
+        if ($scope.userInfo.roleIdList.indexOf("ORGADMIN") == -1) return true;
+        return $scope.enableIds.some(item => item == node.id);
+        return true;
+    }
+
 
     $scope.toggleNode = function(node, status){
         if (node.status == 'close'){
@@ -136,7 +146,13 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
     }
 
 
+    $scope.formatWithPermission = function(){
+        if ($scope.userInfo.roleIdList.indexOf("ORGADMIN") == -1) return;
+        $scope.items.forEach(item => !$scope.items.some(cItem => item.pid == cItem.id) && (item.pid = null));
+    }
+
     $scope.formatTree = function(){
+        $scope.formatWithPermission();
         let formatItems = [];
         $scope.items.forEach(item => {
             item.show = true;
@@ -183,13 +199,23 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
     $scope.list();
 
     $scope.create = function () {
+        $scope.enableIds = $scope.sourceItems.map(item => item.id);
+        $scope.selectedOrgIds = [];
         $scope.formUrl = 'project/html/organization/organization-add.html' + '?_t=' + Math.random();
         $scope.toggleForm();
     };
 
     $scope.edit = function (data) {
+        if ($scope.userInfo.roleIdList.indexOf("ORGADMIN") != -1){
+            let cData = null;
+            $scope.sourceItems.some(sItem => { cData = sItem;return sItem.id == data.id}) && (data = cData)
+        }
         $scope.item = angular.copy(data);
         $scope.selectedOrgIds = [data.pid];
+        if ($scope.userInfo.roleIdList.indexOf("ORGADMIN") != -1){
+            $scope.enableIds = $scope.sourceItems.map(item => item.id)
+            $scope.enableIds.push(data.pid);
+        }
         $scope.formUrl = 'project/html/organization/organization-edit.html' + '?_t=' + Math.random();
         $scope.toggleForm();
     };

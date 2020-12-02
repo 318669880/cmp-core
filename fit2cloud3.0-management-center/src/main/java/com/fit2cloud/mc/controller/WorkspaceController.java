@@ -5,6 +5,7 @@ import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.handle.annotation.I18n;
 import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.model.UserDTO;
+import com.fit2cloud.commons.server.utils.OrganizationUtils;
 import com.fit2cloud.commons.server.utils.SessionUtils;
 import com.fit2cloud.commons.server.utils.WorkspaceUtils;
 import com.fit2cloud.commons.utils.BeanUtils;
@@ -62,7 +63,8 @@ public class WorkspaceController {
         Map<String, Object> map = BeanUtils.objectToMap(request);
         if (StringUtils.equals(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ORGADMIN.name())) {
             map.put("role", RoleConstants.Id.ORGADMIN.name());
-            List<String> resourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(SessionUtils.getOrganizationId());
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(SessionUtils.getOrganizationId());
+            List<String> resourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(orgIds);
             resourceIds.add(UUIDUtil.newUUID());
             map.put("resourceIds", resourceIds);
         }

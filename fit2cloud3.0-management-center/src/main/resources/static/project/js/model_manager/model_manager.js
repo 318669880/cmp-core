@@ -7,6 +7,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
      */
     let IndexServer = function() {
         this._loadAddressUrl = 'modelManager/indexServer/address';
+        this._indexDataUrl = "modelManager/indexServer/indexData";
         this._init_address = null;
         this._loadDataUrl = 'modelManager/indexServer/query';
         this._saveDataUrl = 'modelManager/indexServer/save';
@@ -69,36 +70,38 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         },
 
         validateAddress: function(isvalidate) {
-            if( !this.onLine ){
+            /*if( !this.onLine ){
+                //离线使用同源索引服务
                 //this.address = "http://62.234.205.170/nexus/repository/maven-releases/";
                 this.address = window.location.origin + "/nexus/repository/maven-releases/";
-            }
+            }*/
             let _self = this;
             if(!this.address){
                 $scope.showError('i18n_name_require', '索引服务不能为空');
                 this.validate = false;
                 return;
             }
-            if(!this.onLine && this.model_env == 'k8s' && !this.dockerRegistry.url){
+            if(!this.onLine && !this.dockerRegistry.url){
                 $scope.showError('i18n_docker_registry_url_require', '镜像仓库地址不能为空');
                 this.validate = false;
                 return;
             }
-            if(!this.onLine && this.model_env == 'k8s' && !this.dockerRegistry.user){
+            if(!this.onLine && !this.dockerRegistry.user){
                 $scope.showError('i18n_docker_registry_user_require', '镜像仓库用户名不能为空');
                 this.validate = false;
                 return;
             }
-            if(!this.onLine && this.model_env == 'k8s' && !this.dockerRegistry.passwd){
+            if(!this.onLine && !this.dockerRegistry.passwd){
                 $scope.showError('i18n_docker_registry_passwd_require', '镜像仓库密码不能为空');
                 this.validate = false;
                 return;
             }
-            let dataUrl = this.address+"/json/data.js";
-            if(!this.onLine){
-                dataUrl = this.address + "com/fit2cloud/indexserver/3.0/indexserver-3.0.js";
-            }
-            $scope.executeAjax(dataUrl,'GET', {remarks: 'query_version_json'}, function(text){
+            let dataUrl = (this.address.endsWith("/") ? this.address : (this.address+"/"))+"json/data.js";
+            /*if(!this.onLine){
+                let baseUrl = this.address.endsWith("/") ? this.address : (this.address+"/");
+                dataUrl = baseUrl + "com/fit2cloud/indexserver/3.0/indexserver-3.0.js";
+            }*/
+            $scope.executeAjax(this._indexDataUrl,'POST', {dataUrl: dataUrl}, function(text){
                 try {
                     if(!!text && text.indexOf('let templateDate') !=-1){
                         let json = text.substr(text.indexOf("{"));
@@ -164,7 +167,6 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             }
             this.address = "";
         }
-
     };
     /**
      * 模块安装工具

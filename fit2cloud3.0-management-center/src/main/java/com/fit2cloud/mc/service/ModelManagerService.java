@@ -3,7 +3,7 @@ package com.fit2cloud.mc.service;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.RuntimeEnvironment;
-import com.fit2cloud.mc.config.DockerRegistry;
+import com.fit2cloud.mc.dto.DockerRegistry;
 import com.fit2cloud.mc.dao.*;
 import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.dto.ModelInstalledDto;

@@ -283,35 +283,57 @@
                                         <md-switch class="md-primary" aria-label="enable" ng-change="indexServer.changeOnline()" ng-model="indexServer.onLine" ></md-switch>
 
                                     </md-input-container>
-                                    <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+
+
+                                    <md-input-container md-no-float class="md-block"
+                                                        layout-gt-xs="row"
+                                                        style="margin-bottom: 0px" >
+                                        <label>{{'i18n_index_server_addr' | translator:'索引服务地址'}}</label>
+                                        <input name="address" required style="cursor:pointer;" ng-model="indexServer.address" type="text" placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}" >
+
+                                        <div ng-messages="modelFrom.address.$error">
+                                            <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                                        </div>
+                                    </md-input-container>
+
+
+                                    <md-input-container ng-if="!indexServer.onLine" md-no-float class="md-block"
                                                         layout-gt-xs="row"
                                                         style="margin-bottom: 0px" >
                                         <label>{{'i18n_docker_registry' | translator:'镜像仓库'}}</label>
-                                        <input ng-model="indexServer.dockerRegistry.url" required
+                                        <input ng-model="indexServer.dockerRegistry.url" required name="dockerUrl"
                                                type="text"
                                                placeholder="{{'i18n_docker_registry' | translator:'镜像仓库'}}">
+                                        <div ng-messages="modelFrom.dockerUrl.$error">
+                                            <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                                        </div>
                                     </md-input-container>
 
-                                    <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+                                    <md-input-container ng-if="!indexServer.onLine" md-no-float class="md-block"
                                                         layout-gt-xs="row"
                                                         style="margin-bottom: 0px" >
                                         <label>{{'i18n_docker_registry_user' | translator:'用户名'}}</label>
-                                        <input ng-model="indexServer.dockerRegistry.user" required
+                                        <input ng-model="indexServer.dockerRegistry.user" required name="dockerUser"
                                                type="text"
                                                placeholder="{{'i18n_docker_registry_user' | translator:'用户名'}}">
+                                        <div ng-messages="modelFrom.dockerUser.$error">
+                                            <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                                        </div>
                                     </md-input-container>
 
-                                    <md-input-container ng-show="!indexServer.onLine && indexServer.model_env=='k8s'" md-no-float class="md-block"
+                                    <md-input-container ng-if="!indexServer.onLine" md-no-float class="md-block"
                                                         layout-gt-xs="row"
                                                         style="margin-bottom: 0px" >
                                         <label>{{'i18n_docker_registry_passws' | translator:'密码'}}</label>
                                         <i layout-gt-xs id="eye" class="fa fa-eye f2c-eye" aria-hidden="true" ng-click="view('password','eye')"></i>
                                         <input   id="password" ng-model="indexServer.dockerRegistry.passwd" required type="password"  name="password"
                                                  placeholder="{{'i18n_docker_registry_passws' | translator:'密码'}}">
-
+                                        <div ng-messages="modelFrom.password.$error">
+                                            <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                                        </div>
                                     </md-input-container>
 
-                                    <md-input-container ng-show="!!indexServer.onLine" md-no-float class="md-block"
+                                    <!--<md-input-container ng-show="!!indexServer.onLine" md-no-float class="md-block"
                                                         layout-gt-xs="row"
                                                         style="margin-bottom: 0px" >
                                         <md-icon>link</md-icon>
@@ -323,11 +345,11 @@
                                     <md-content ng-show="!!indexServer.onLine" class="md-block" flex="100" style="margin-left: 30px">
                                         <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
                                         <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
-                                    </md-content>
+                                    </md-content>-->
                                 </form>
                                 <div layout="row" layout-align="start center" layout-margin>
 
-                                    <md-button class="md-raised md-primary" ng-click="indexServer.saveData()">
+                                    <md-button class="md-raised md-primary" ng-disabled="modelFrom.$invalid" ng-click="indexServer.saveData()">
 
                                         {{'i18n_save' | translator}}
                                     </md-button>

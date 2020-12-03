@@ -2,16 +2,13 @@ package com.fit2cloud.mc.utils;
 
 import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.server.exception.F2CException;
-import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
-import com.fit2cloud.mc.config.DockerRegistry;
+import com.fit2cloud.mc.dto.DockerRegistry;
 import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.model.ModelManager;
 import com.google.gson.Gson;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
-import io.fabric8.kubernetes.api.model.SecretList;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -20,7 +17,6 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
-
 import java.io.*;
 import java.util.*;
 

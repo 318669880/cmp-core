@@ -1,14 +1,6 @@
-package com.fit2cloud.mc.config;
+package com.fit2cloud.mc.dto;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@ConfigurationProperties(
-        prefix = "docker.registry",
-        ignoreUnknownFields = true
-)
 public class DockerRegistry {
 
     private String user;

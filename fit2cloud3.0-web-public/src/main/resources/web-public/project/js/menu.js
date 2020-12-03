@@ -2,7 +2,7 @@
  * FIT2CLOUD Menu Frame
  */
 
-let MenuApp = angular.module('MenuApp', ['ngMaterial', 'pascalprecht.translate', 'ngMessages', 'ngSanitize', 'cgBusy', 'TaskApp', 'f2c.common']);
+let MenuApp = angular.module('MenuApp', ['ngMaterial', 'pascalprecht.translate', 'ngMessages', 'ngSanitize', 'cgBusy', 'TaskApp']);
 
 MenuApp.config(function ($httpProvider, $mdThemingProvider, $mdAriaProvider) {
     $mdAriaProvider.disableWarnings();
@@ -1462,6 +1462,145 @@ MenuApp.controller('SwitchRoleController', function ($scope, HttpUtils, $http) {
 
         $scope.count();
         $scope.list();
+    });
+
+
+
+
+    TaskApp.directive("tree", function ($timeout) {
+        return {
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree.html" + '?_t=' + window.appversion,
+            scope: {
+                data: "=",
+                api: "=",
+                option: "=",
+                type: "@",
+                width: "@",
+                height: "@"
+            },
+            link: function ($scope) {
+                $scope.nodes = [];
+
+                $scope.api.refresh = function () {
+                    $timeout(function () {
+                        let copy = angular.isDefined($scope.data) ? angular.copy($scope.data) : [];
+                        $scope.nodes = angular.isArray(copy) ? copy : [copy];
+                    });
+                };
+
+                $scope.api.refresh();
+
+                if ($scope.api.manual !== true) {
+                    $scope.$watch("data", function () {
+                        $scope.api.refresh();
+                    }, true);
+                }
+            }
+        };
+    });
+
+    TaskApp.directive("treeNode", function () {
+        return {
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree-node.html" + '?_t=' + window.appversion,
+            scope: {
+                data: "=",
+                node: "=",
+                api: "=",
+                option: "=",
+                type: "@"
+            },
+            link: function ($scope) {
+                $scope.option = angular.extend({
+                    icon: {
+                        collapsed: "keyboard_arrow_right",
+                        expand: "keyboard_arrow_down"
+                    }
+                }, $scope.option);
+
+                $scope.collapsed = angular.isDefined($scope.node.collapsed) ? $scope.node.collapsed : true;
+
+                $scope.toggle = function () {
+                    $scope.collapsed = !$scope.collapsed;
+                    $scope.node.collapsed = $scope.collapsed;
+                };
+
+                $scope.hasChildren = function () {
+                    if (angular.isFunction($scope.option.hasChildren)) {
+                        return $scope.option.hasChildren($scope.node);
+                    }
+                    return angular.isArray($scope.node.children) && $scope.node.children.length > 0;
+                }
+            }
+        };
+    });
+
+    TaskApp.directive("treeType", function ($compile) {
+        return {
+            replace: true,
+            scope: false,
+            link: function ($scope, element) {
+                switch ($scope.type) {
+                    case "radio":
+                        $scope.directive = "tree-node-radio";
+                        break;
+                    case "checkbox":
+                        $scope.directive = "tree-node-checkbox";
+                        break;
+                    case "file":
+                        $scope.directive = "tree-node-file";
+                        break;
+                    case "text":
+                        $scope.directive = "tree-node-text";
+                        break;
+                    case "link":
+                        $scope.directive = "tree-node-link";
+                        break;
+                    default:
+                        $scope.directive = "tree-node-checkbox";
+                        break;
+                }
+                let html = '<' + $scope.directive + ' data="data" node="node" api="api" option="option"></' + $scope.directive + '>';
+                element.html(html).show();
+                $compile(element.contents())($scope);
+            }
+        };
+    });
+
+    TaskApp.directive("treeNodeLink", function () {
+        return {
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/tree/tree-node-link.html" + '?_t=' + window.appversion,
+            scope: {
+                data: "=",
+                node: "=",
+                api: "=",
+                option: "="
+            },
+            link: function ($scope) {
+                $scope.selected = false;
+                $scope.option = angular.extend({
+                    label: "name",
+                    key: "id",
+                    multiple: false,
+                }, $scope.option);
+
+                $scope.hasChildren = function () {
+                    return angular.isArray($scope.node.children);
+                };
+
+                $scope.select = function (node) {
+                    if ($scope.api.onChange) {
+                        $scope.api.onChange(node);
+                    }
+                    $scope.api.selected = node;
+                };
+                $scope.selected = function () {
+                    return $scope.api.selected.id === $scope.node.id;
+                }
+            }
+        };
     });
 
 })();

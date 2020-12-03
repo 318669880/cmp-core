@@ -11,6 +11,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +33,7 @@ public class ProcessText {
         Object o = params.get(instances);
         JSONArray jsonArray = JSONObject.parseArray(new Gson().toJson(o));
         for (int i = 0; i < jsonArray.size(); i++) {
-            Object ins = jsonArray.get(i);
+            JSONObject ins = jsonArray.getJSONObject(i);
             String content = getContent(text, objectToMap(ins));
             stringBuffer.append(content).append("\n\n");
         }
@@ -56,20 +57,14 @@ public class ProcessText {
         return stringBuffer.toString();
     }
 
-    private static Map<String, Object> objectToMap(Object obj) throws Exception {
+    private static Map<String, Object> objectToMap(JSONObject obj) throws Exception {
         if (obj == null)
             return null;
         Map<String, Object> map = new HashMap<String, Object>();
-        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        for (PropertyDescriptor property : propertyDescriptors) {
-            String key = property.getName();
-            if (key.compareToIgnoreCase("class") == 0) {
-                continue;
-            }
-            Method getter = property.getReadMethod();
-            Object value = getter != null ? getter.invoke(obj) : null;
-            map.put(key, value);
+        Iterator it = obj.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) it.next();
+            map.put(entry.getKey(), entry.getValue());
         }
         return map;
     }

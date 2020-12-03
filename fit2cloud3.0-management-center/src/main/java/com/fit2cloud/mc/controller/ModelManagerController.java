@@ -1,10 +1,7 @@
 package com.fit2cloud.mc.controller;
 
 import com.fit2cloud.commons.server.exception.F2CException;
-import com.fit2cloud.commons.utils.BeanUtils;
-import com.fit2cloud.commons.utils.LogUtil;
-import com.fit2cloud.commons.utils.PageUtils;
-import com.fit2cloud.commons.utils.Pager;
+import com.fit2cloud.commons.utils.*;
 import com.fit2cloud.mc.common.constants.WsTopicConstants;
 import com.fit2cloud.mc.dto.ModelInstalledDto;
 import com.fit2cloud.mc.dto.request.ModelInstalledRequest;
@@ -41,15 +38,19 @@ public class ModelManagerController {
     @Resource
     private ModelManagerService modelManagerService;
 
-
-
     @Resource
     @Lazy
     private ModuleNodeService moduleNodeService;
 
-
     @Resource
     private ModelNodeTask modelNodeTask;
+
+
+    @PostMapping("/indexServer/indexData")
+    public String indexData(@RequestBody Map<String, String> param){
+        String resultStr = HttpClientUtil.get(param.get("dataUrl"), null);
+        return resultStr;
+    }
 
     //  无敏感信息 无需使用dto
     @PostMapping("/indexServer/save")

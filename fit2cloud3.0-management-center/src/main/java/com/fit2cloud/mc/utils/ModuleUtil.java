@@ -4,7 +4,8 @@ import com.fit2cloud.commons.server.constants.ResourceOperation;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.fit2cloud.commons.utils.LogUtil;
-import com.fit2cloud.mc.config.DockerRegistry;
+import com.fit2cloud.mc.dto.DockerRegistry;
+import com.fit2cloud.mc.service.DockerRegistryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -72,8 +73,8 @@ public class ModuleUtil {
         checkFileExist(extensionTmpDir,  dockerComposeFile);
 
         if(!onLine){
-            // 离线环境，需要事先把docker images 导入，这里不做处理
-            // handleWithInternalDockerRegistry(extensionTmpDir);
+            // 离线环境，需要修改image前缀
+            handleWithInternalDockerRegistry(extensionTmpDir);
         }
 
         List<String> newModuleNameList = new ArrayList<>();
@@ -152,7 +153,7 @@ public class ModuleUtil {
     }
 
     private static void handleWithInternalDockerRegistry(String extensionTmpDir) throws IOException {
-        DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistry.class);
+        DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistryService.class).get();
         String url = dockerRegistry.getUrl().contains("://") ? dockerRegistry.getUrl().split("://")[1] : dockerRegistry.getUrl();
         if(url.endsWith("/")) url = url.substring(0, url.length() -1);
         StringBuilder stringBuilder = new StringBuilder();
@@ -236,35 +237,39 @@ public class ModuleUtil {
     }
 
     private static void pullImages(List<String> command, StringBuilder result, List<String> newImageNameList, boolean onLine) throws Exception {
-//        离线环境，需要预先把docker images 导入，这里不做处理
-//        if(!onLine){
-//            DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistry.class);
-//            command.add(docker);
-//            command.add("login");
-//            command.add(dockerRegistry.getUrl());
-//            command.add("-u");
-//            command.add(dockerRegistry.getUser());
-//            command.add("-p");
-//            command.add(dockerRegistry.getPasswd());
-//            execCommand(result, command);
-//            command.clear();
-//            result.setLength(0);
-//        }
-        if(onLine){
-            LogUtil.info("Pull images" +  newImageNameList);
-            for (String image : newImageNameList) {
-                command.add(docker);
-                command.add("pull");
-                command.add(image);
-                int pullExitCode = execCommand(result, command);
-                command.clear();
-                if(pullExitCode != 0){
-                    throw new Exception("Filed to pull image, " + image);
-                }
+        //离线环境，需要先登录私服
+        if(!onLine){
+            DockerRegistry dockerRegistry = CommonBeanFactory.getBean(DockerRegistryService.class).get();
+            command.add(docker);
+            command.add("login");
+            command.add(dockerRegistry.getUrl());
+            command.add("-u");
+            command.add(dockerRegistry.getUser());
+            command.add("-p");
+            command.add(dockerRegistry.getPasswd());
+            int i = execCommand(result, command);
+            command.clear();
+            if (i !=0){
+                throw new Exception("Filed to login registry, " + dockerRegistry.getUrl());
             }
-            LogUtil.info("Result of pull images: " + result.toString());
             result.setLength(0);
         }
+        LogUtil.info("Pull images" +  newImageNameList);
+        for (String image : newImageNameList) {
+            command.add(docker);
+            command.add("pull");
+            command.add(image);
+            int pullExitCode = execCommand(result, command);
+            command.clear();
+            if(pullExitCode != 0){
+                throw new Exception("Filed to pull image, " + image);
+            }
+        }
+        LogUtil.info("Result of pull images: " + result.toString());
+        result.setLength(0);
+        /*if(onLine){
+
+        }*/
     }
 
     private static void execScripts(List<String> command, StringBuilder result, String scipt) throws Exception {

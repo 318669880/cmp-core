@@ -16,10 +16,7 @@ import com.fit2cloud.commons.server.model.UserDTO;
 import com.fit2cloud.commons.server.service.OperationLogService;
 import com.fit2cloud.commons.server.service.RoleCommonService;
 import com.fit2cloud.commons.server.service.UserCommonService;
-import com.fit2cloud.commons.server.utils.RoleUtils;
-import com.fit2cloud.commons.server.utils.SessionUtils;
-import com.fit2cloud.commons.server.utils.UserRoleUtils;
-import com.fit2cloud.commons.server.utils.WorkspaceUtils;
+import com.fit2cloud.commons.server.utils.*;
 import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.EncryptUtils;
 import com.fit2cloud.commons.utils.ExcelExportUtils;
@@ -375,8 +372,9 @@ public class UserService {
         Map<String, Object> param = new HashMap<>();
         param.put("userId", userId);
         if (roleCommonService.isOrgAdmin()) {
-            List<String> resourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(SessionUtils.getOrganizationId());
-            resourceIds.add(SessionUtils.getOrganizationId());
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(SessionUtils.getOrganizationId());
+            List<String> resourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(orgIds);
+            resourceIds.addAll(orgIds);
             param.put("resourceIds", resourceIds);
         }
         List<RoleInfo> roleInfos = extUserMapper.roleInfo(param);

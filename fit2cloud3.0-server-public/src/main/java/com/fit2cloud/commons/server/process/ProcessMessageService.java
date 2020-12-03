@@ -10,6 +10,7 @@ import com.fit2cloud.commons.server.model.UserNotificationSettingDTO;
 import com.fit2cloud.commons.server.service.*;
 import com.fit2cloud.commons.utils.CommonThreadPool;
 import com.fit2cloud.commons.utils.LogUtil;
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -163,6 +164,7 @@ public class ProcessMessageService {
     }
 
     private void sendMessage(FlowNotificationConfig config, Map<String, Object> params, Consumer<String> action) {
+        LogUtil.info(new Gson().toJson(params));
         String title = null;
         String[] receivers = new String[0];
         String content = null;

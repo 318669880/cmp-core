@@ -826,6 +826,17 @@
                         Notification.danger(Translator.get("i18n_save_fail") + "，" + response.message);
                     });
                 };
+
+                $scope.checkSmsType = function (types, info) {
+                    if (!types) {
+                        return false;
+                    }
+                    if (info === 'mail') {
+                        return types.indexOf("ANNOUNCEMENT") !== -1 || types.indexOf("EMAIL") !== -1;
+                    } else {
+                        return types.indexOf("DINGTALK") !== -1 || types.indexOf("WECHAT") !== -1;
+                    }
+                }
             }
         };
     });
@@ -1327,4 +1338,5 @@
         $scope.listProductGroupWorkspaceTree();
     });
 
-})();
+})
+();

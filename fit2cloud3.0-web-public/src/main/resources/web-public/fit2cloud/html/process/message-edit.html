@@ -52,8 +52,18 @@
 
                 <md-input-container>
                     <label>{{'i18n_process_mail_content' | translator}}</label>
-                    <textarea md-no-autogrow ng-model="item.json.content" name="content" rows="5" required></textarea>
+                    <textarea md-no-autogrow ng-model="item.json.content" name="content" rows="3"
+                              ng-required="checkSmsType(item.smsTypes,'mail')"></textarea>
                     <div ng-messages="messageForm.content.$error">
+                        <div ng-message="required">{{'i18n_required' | translator}}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>{{'i18n_process_text_content' | translator}}</label>
+                    <textarea md-no-autogrow ng-model="item.json.simpleContent" name="simpleContent" rows="3"
+                              ng-required="checkSmsType(item.smsTypes,'text')"></textarea>
+                    <div ng-messages="messageForm.simpleContent.$error">
                         <div ng-message="required">{{'i18n_required' | translator}}</div>
                     </div>
                 </md-input-container>
@@ -82,7 +92,8 @@
                 <md-input-container ng-if="step > -1">
                     <label>{{'i18n_process_trigger' | translator}}</label>
                     <md-select ng-model="item.operation" name="operation" required>
-                        <md-option ng-value="'PENDING'" ng-if="step > 0">{{'i18n_process_pending' | translator}}</md-option>
+                        <md-option ng-value="'PENDING'" ng-if="step > 0">{{'i18n_process_pending' | translator}}
+                        </md-option>
                         <md-option ng-value="'COMPLETE'">{{'i18n_process_complete' | translator}}</md-option>
                     </md-select>
                     <div ng-messages="messageForm.operation.$error">

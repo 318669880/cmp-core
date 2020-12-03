@@ -134,6 +134,9 @@
                         check-condition="enableCheckBox"
                         ng-if="roleInfo.roleType===roleConst.user && !roleInfo.workspace"
                 ></tree-select>
+                <div ng-messages="addUserForm.workspaceIds.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
             </md-input-container>
 
 
@@ -150,8 +153,12 @@
                         selected="roleInfo.selectOrganizationId"
                         no-cascade="true"
                         required="true"
+                        check-condition="filterCurrentOrg"
                         ng-if="roleInfo.roleType=== roleConst.user && roleInfo.workspace"
                 ></tree-select>
+                <div ng-messages="addUserForm.organizationIds{{$index}}.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
             </md-input-container>
 
 
@@ -168,8 +175,12 @@
                         selected="roleInfo.organizationIds"
                         no-cascade="true"
                         required="true"
+                        check-condition="filterCurrentOrg"
                         ng-if="roleInfo.roleType===roleConst.orgAdmin"
                 ></tree-select>
+                <div ng-messages="addUserForm.organizationIds{{$index}}.$error">
+                    <div ng-message="required"> {{'i18n_required' | translator}}</div>
+                </div>
             </md-input-container>
         </div>
         <md-button layout="row" layout-align="center" class="md-raised md-success"

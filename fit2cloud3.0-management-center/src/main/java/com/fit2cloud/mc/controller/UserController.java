@@ -8,6 +8,7 @@ import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.model.ExcelExportRequest;
 import com.fit2cloud.commons.server.model.UserDTO;
 import com.fit2cloud.commons.server.service.UserKeysService;
+import com.fit2cloud.commons.server.utils.OrganizationUtils;
 import com.fit2cloud.commons.server.utils.SessionUtils;
 import com.fit2cloud.commons.server.utils.WorkspaceUtils;
 import com.fit2cloud.commons.utils.BeanUtils;
@@ -55,7 +56,8 @@ public class UserController {
         Map<String, Object> map = BeanUtils.objectToMap(request);
         String parentRoleId = SessionUtils.getUser().getParentRoleId();
         if (StringUtils.equals(parentRoleId, RoleConstants.Id.ORGADMIN.name())) {
-            List<String> resourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(SessionUtils.getOrganizationId());
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(SessionUtils.getOrganizationId());
+            List<String> resourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(orgIds);
             resourceIds.add(SessionUtils.getOrganizationId());
             map.put("resourceIds", resourceIds);
             Page page = PageHelper.startPage(goPage, pageSize, true);

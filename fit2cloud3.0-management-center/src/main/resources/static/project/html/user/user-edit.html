@@ -108,6 +108,7 @@
                         selected="roleInfo.organizationIds"
                         no-cascade="true"
                         required="true"
+                        check-condition="filterCurrentOrg"
                         ng-if="roleInfo.roleType===roleConst.orgAdmin"
                 ></tree-select>
                 <div ng-messages="editUserForm.organizationIds.$error">

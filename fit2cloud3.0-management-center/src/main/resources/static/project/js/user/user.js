@@ -433,10 +433,24 @@ ProjectApp.controller('UserController', function ($scope, HttpUtils, FilterSearc
             children: "childNodes"
         }
         $scope.ts_changed = function () {
+
         }
+
         $scope.enableCheckBox = function (node) {
             return node.nodeType == 'wks'
         }
+
+        $scope.filterCurrentOrg = function (node) {
+            if ($scope.userInfo.roleIdList.indexOf("ORGADMIN") == -1) return true;
+            return node.id != $scope.userInfo.organizationId;
+        }
+
+        $scope.userInfo = UserService.getUserInfo();
+        if ($scope.userInfo.roleIdList.indexOf("ORGADMIN") != -1){
+            $scope.org_param.rootId = $scope.userInfo.organizationId;
+            $scope.wks_param.rootId = $scope.userInfo.organizationId;
+        }
+
     }
 );
 

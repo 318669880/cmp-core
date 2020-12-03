@@ -13,6 +13,7 @@ import com.fit2cloud.commons.server.model.OrgTreeNode;
 import com.fit2cloud.commons.server.model.UserDTO;
 import com.fit2cloud.commons.server.model.UserRoleDTO;
 import com.fit2cloud.commons.server.model.UserRoleHelpDTO;
+import com.fit2cloud.commons.server.utils.OrganizationUtils;
 import com.fit2cloud.commons.server.utils.SessionUtils;
 import com.fit2cloud.commons.server.utils.WorkspaceUtils;
 import com.fit2cloud.commons.utils.BeanUtils;
@@ -166,8 +167,9 @@ public class UserCommonService {
         List<UserRoleHelpDTO> helpDTOList = extUserRoleMapper.getUserRoleHelpList(userId);
         //List<UserRoleHelpDTO> helpDTOList = extUserRoleMapper.getRoleTreeHelpList(userId);
         if (roleCommonService.isOrgAdmin()) {
-            List<String> sourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(SessionUtils.getOrganizationId());
-            sourceIds.add(SessionUtils.getOrganizationId());
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(SessionUtils.getOrganizationId());
+            List<String> sourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(orgIds);
+            sourceIds.addAll(orgIds);
             return convertUserRoleDTO(helpDTOList.stream()
                     .filter(userRoleHelpDTO -> sourceIds.contains(userRoleHelpDTO.getSourceId()))
                     .collect(Collectors.toList()), nodes);

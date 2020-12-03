@@ -1795,6 +1795,16 @@
                     }
                 }
 
+                element.ready(function(e){
+                    let index = 0;
+                    let interval = window.setTimeout(function(){
+                        $scope.disableRemoveNode();
+                        index ++;
+                        if (index == 5)
+                            window.clearTimeout(interval);
+                    },500)
+                })
+
                 $scope.onValuesAdd = function(chip, index){
 
                 }
@@ -1888,6 +1898,11 @@
                     $scope.values = $scope.results.map( node => node.name);
                 }
 
+                $scope.disableChip = function(value){
+                    let cDom = element.find("span:contains("+value+")").parent().next();
+                    cDom.css("display", "none");
+                }
+
                 $scope.nodeInResults = tNode => {
                     return $scope.results.some(cNode => cNode.id == tNode.id);
                 }
@@ -1948,11 +1963,18 @@
                         $scope.treeData = nodes;
                         $scope.selected2Results();
                         $scope.setValues();
+
                         if ($scope.results && $scope.results.length > 0){
                             $scope.validate($scope.values);
                         }
                     }, function (data) {
                         $scope.error = data;
+                    })
+                }
+
+                $scope.disableRemoveNode = function(){
+                    $scope.results.filter(node => node.hiddenBox).forEach(node => {
+                        $scope.disableChip(node.name);
                     })
                 }
                 $scope.buildTreeData = (nodes) => {

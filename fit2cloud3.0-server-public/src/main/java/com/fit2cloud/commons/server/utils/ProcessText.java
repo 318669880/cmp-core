@@ -29,7 +29,7 @@ public class ProcessText {
         }
         String[] split = simpleContent.split("\n");
         String instances = split[0].replace("{", "").replace("}", "");
-        String text = simpleContent.replace("{" + split[0] + "}", "");
+        String text = simpleContent.replace(split[0], "");
         Object o = params.get(instances);
         JSONArray jsonArray = JSONObject.parseArray(new Gson().toJson(o));
         for (int i = 0; i < jsonArray.size(); i++) {

@@ -58,7 +58,7 @@ public class UserController {
         if (StringUtils.equals(parentRoleId, RoleConstants.Id.ORGADMIN.name())) {
             List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(SessionUtils.getOrganizationId());
             List<String> resourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(orgIds);
-            resourceIds.add(SessionUtils.getOrganizationId());
+            resourceIds.addAll(orgIds);
             map.put("resourceIds", resourceIds);
             Page page = PageHelper.startPage(goPage, pageSize, true);
             return PageUtils.setPageInfo(page, userService.paging(map));

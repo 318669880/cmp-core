@@ -48,7 +48,7 @@ public class ProcessText {
             String key = m.group(2);
             String value = null;
             if (parameters.containsKey(key)) {
-                value = (String) parameters.get(key);
+                value = String.valueOf(parameters.get(key));
             }
             value = (value == null) ? "" : value;
             m.appendReplacement(stringBuffer, value);

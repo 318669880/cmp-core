@@ -258,12 +258,13 @@ public class UserService {
             //删除要编辑的用户在当前组织下的user_role的信息，然后reinsert
             //由于userOperate.roleInfoList 传的数据有特殊性 注意
             List<String> list = new ArrayList<>();
-            list.add(SessionUtils.getOrganizationId());
-            List<Workspace> workspaces = workspaceService.workspacesByOrgId(SessionUtils.getOrganizationId());
-            if (CollectionUtils.isNotEmpty(workspaces)) {
-                list.addAll(workspaces.stream().map(Workspace::getId).collect(Collectors.toList()));
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(SessionUtils.getOrganizationId());
+            list.addAll(orgIds);
+            //List<Workspace> workspaces = workspaceService.workspacesByOrgId(SessionUtils.getOrganizationId());
+            List<String> workspaceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(orgIds);
+            if (CollectionUtils.isNotEmpty(workspaceIds)) {
+                list.addAll(workspaceIds);
             }
-
             deleteCriteria.andSourceIdIn(list);
             userRoleMapper.deleteByExample(deleteExample);
         }

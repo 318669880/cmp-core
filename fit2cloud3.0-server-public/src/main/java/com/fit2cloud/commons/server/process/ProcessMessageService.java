@@ -165,7 +165,6 @@ public class ProcessMessageService {
     }
 
     private void sendMessage(FlowNotificationConfig config, Map<String, Object> params, Consumer<String> action) {
-        LogUtil.info(new Gson().toJson(params));
         String title = null;
         String[] receivers = new String[0];
         String content = null;

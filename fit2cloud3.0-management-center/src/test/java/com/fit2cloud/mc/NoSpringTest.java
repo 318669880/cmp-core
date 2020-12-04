@@ -1,18 +1,10 @@
 package com.fit2cloud.mc;
 
-import com.fit2cloud.mc.config.DockerRegistry;
+
 import com.fit2cloud.mc.dto.ModuleParamData;
 import com.fit2cloud.mc.utils.K8sUtil;
 import com.google.gson.Gson;
-import org.apache.commons.io.FileUtils;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Author: chunxing

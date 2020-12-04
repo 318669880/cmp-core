@@ -2017,7 +2017,7 @@
                         if (enable) return false;
                         let childs = kid.children;
                         if (childs && childs.length > 0){
-                            return $scope.allKidsHidden(childs);
+                            if (!$scope.allKidsHidden(childs)) return false;
                         }
                     }
                     return result;

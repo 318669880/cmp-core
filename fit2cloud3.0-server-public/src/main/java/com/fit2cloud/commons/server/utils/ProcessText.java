@@ -37,7 +37,7 @@ public class ProcessText {
             String content = getContent(text, objectToMap(ins));
             stringBuffer.append(content).append("\n\n");
         }
-        return stringBuffer.toString();
+        return stringBuffer.toString().trim();
     }
 
     private static String getContent(String tempalte, Map<String, Object> parameters) {

@@ -182,6 +182,7 @@ public class ProcessMessageService {
                 content = ProcessEmail.getContent(config.getId(), template, params);
                 // simple content to push dingtalk or wechat
                 String simpleContent = ProcessText.parseText(config, params);
+                simpleContent = title + "\n\n" + simpleContent;
 
                 UserNotificationSettingDTO userNotification = userNotificationService.getUserNotification(receiver);
                 // 站内通知

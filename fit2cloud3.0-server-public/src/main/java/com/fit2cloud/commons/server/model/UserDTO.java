@@ -40,6 +40,8 @@ public class UserDTO {
     @ApiModelProperty("角色列表")
     private List<Role> roles = new ArrayList<>();
 
+    private String wechatAccount;
+
     public String getId() {
         return id;
     }
@@ -110,5 +112,13 @@ public class UserDTO {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getWechatAccount() {
+        return wechatAccount;
+    }
+
+    public void setWechatAccount(String wechatAccount) {
+        this.wechatAccount = wechatAccount;
     }
 }

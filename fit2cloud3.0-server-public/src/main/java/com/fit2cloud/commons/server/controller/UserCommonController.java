@@ -6,6 +6,7 @@ import com.fit2cloud.commons.server.handle.annotation.I18n;
 import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.model.SessionUser;
 import com.fit2cloud.commons.server.model.UserDTO;
+import com.fit2cloud.commons.server.model.UserNotificationSettingDTO;
 import com.fit2cloud.commons.server.model.UserRoleDTO;
 import com.fit2cloud.commons.server.service.UserCommonService;
 import com.fit2cloud.commons.server.swagger.annotation.ApiHasModules;
@@ -41,7 +42,7 @@ public class UserCommonController {
      * 用户修改全局密码
      */
     @RequestMapping("current/edit/info")
-    public void editUserInfo(@RequestBody User user) {
+    public void editUserInfo(@RequestBody UserNotificationSettingDTO user) {
         userCommonService.editUserInfo(user);
     }
 

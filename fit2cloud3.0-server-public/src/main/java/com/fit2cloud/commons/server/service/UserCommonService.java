@@ -9,10 +9,7 @@ import com.fit2cloud.commons.server.constants.RoleConstants;
 import com.fit2cloud.commons.server.constants.WebConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
-import com.fit2cloud.commons.server.model.OrgTreeNode;
-import com.fit2cloud.commons.server.model.UserDTO;
-import com.fit2cloud.commons.server.model.UserRoleDTO;
-import com.fit2cloud.commons.server.model.UserRoleHelpDTO;
+import com.fit2cloud.commons.server.model.*;
 import com.fit2cloud.commons.server.utils.OrganizationUtils;
 import com.fit2cloud.commons.server.utils.SessionUtils;
 import com.fit2cloud.commons.server.utils.WorkspaceUtils;
@@ -54,6 +51,10 @@ public class UserCommonService {
     private RoleCommonService roleCommonService;
     @Resource
     private ParameterCommonService parameterCommonService;
+    @Resource
+    private UserNotificationService userNotificationService;
+    @Resource
+    private UserNotificationSettingMapper userNotificationSettingMapper;
 
 
     public User getUserById(String userId) {
@@ -127,7 +128,7 @@ public class UserCommonService {
         return userMapper.selectByPrimaryKey(SessionUtils.getUser().getId());
     }
 
-    public void editUserInfo(User user) {
+    public void editUserInfo(UserNotificationSettingDTO user) {
         if (!SessionUtils.getUser().getId().equals(user.getId())) {
             F2CException.throwException(Translator.get("i18n_ex_not_current_user"));
         }
@@ -156,6 +157,14 @@ public class UserCommonService {
         u.setName(user.getName());
         u.setPhone(user.getPhone());
         userMapper.updateByPrimaryKeySelective(u);
+
+        UserNotificationSetting notificationSetting = new UserNotificationSetting();
+        notificationSetting.setUserId(user.getId());
+        notificationSetting.setWechatAccount(user.getWechatAccount());
+        int i = userNotificationSettingMapper.updateByPrimaryKey(notificationSetting);
+        if (i != 1) {
+            userNotificationSettingMapper.insert(notificationSetting);
+        }
     }
 
 
@@ -177,16 +186,16 @@ public class UserCommonService {
         return convertUserRoleDTO(helpDTOList, nodes);
     }
 
-    private List<String> cascadeIds(String parentId, List<OrgTreeNode> nodes){
+    private List<String> cascadeIds(String parentId, List<OrgTreeNode> nodes) {
         List<String> result = new ArrayList<>();
         AtomicReference<String> parent = new AtomicReference<>(parentId);
         AtomicReference<OrgTreeNode> currentNode = new AtomicReference<>();
-        while (!StringUtils.isEmpty(parent.get())){
+        while (!StringUtils.isEmpty(parent.get())) {
             boolean existParent = nodes.stream().anyMatch(node -> {
                 currentNode.set(node);
                 return StringUtils.equals(parent.get(), node.getNodeId());
             });
-            if (existParent){
+            if (existParent) {
                 result.add(currentNode.get().getNodeId());
                 parent.set(currentNode.get().getParentId());
                 continue;
@@ -208,7 +217,7 @@ public class UserCommonService {
 
         Set<String> parentSet = new HashSet<>();
 
-        Map<String,OrgTreeNode> nodesMap = orgTreeNodes.stream().collect(Collectors.toMap(OrgTreeNode::getNodeId , node -> node, (k1,k2) -> k1));
+        Map<String, OrgTreeNode> nodesMap = orgTreeNodes.stream().collect(Collectors.toMap(OrgTreeNode::getNodeId, node -> node, (k1, k2) -> k1));
 
         for (UserRoleHelpDTO helpDTO : helpDTOList) {
             String source_id = helpDTO.getSourceId();
@@ -242,7 +251,6 @@ public class UserCommonService {
             }
 
 
-
             //第三方角色
             if ("other".equalsIgnoreCase(helpDTO.getRoleParentId())) {
                 UserRoleDTO dto = new UserRoleDTO();
@@ -260,7 +268,7 @@ public class UserCommonService {
 
             if (userRoleDTO == null) {
                 userRoleDTO = new UserRoleDTO();
-                String type = (!StringUtils.isEmpty(node.getNodeType()) && StringUtils.equals("wks",node.getNodeType())) ?
+                String type = (!StringUtils.isEmpty(node.getNodeType()) && StringUtils.equals("wks", node.getNodeType())) ?
                         "workspace" : "organization";
                 parentSet.add(node.getNodeId());
                 userRoleDTO.setType(type);
@@ -286,7 +294,7 @@ public class UserCommonService {
 
         List<UserRoleDTO> orgWorkSpace = new ArrayList<>(roleMap.values());
 
-        parentSet  = parentSet.stream().filter(parentId -> !orgWorkSpace.stream().anyMatch(roleDto -> StringUtils.equals(roleDto.getId(), parentId))).collect(Collectors.toSet());
+        parentSet = parentSet.stream().filter(parentId -> !orgWorkSpace.stream().anyMatch(roleDto -> StringUtils.equals(roleDto.getId(), parentId))).collect(Collectors.toSet());
 
         if (!CollectionUtils.isEmpty(parentSet)) {
             parentSet.forEach(parentId -> {
@@ -357,6 +365,8 @@ public class UserCommonService {
         List<Role> roleList = roleMapper.selectByExample(roleExample);
         userDTO.setRoles(roleList);
 
+        UserNotificationSettingDTO userNotification = userNotificationService.getUserNotification(userDTO.getId());
+        userDTO.setWechatAccount(userNotification.getWechatAccount());
         return userDTO;
     }
 
@@ -392,9 +402,9 @@ public class UserCommonService {
     }
 
     public List<User> getUsersByIdList(List<String> ids) {
-       if(CollectionUtils.isEmpty(ids)){
-           return new ArrayList<>();
-       }
+        if (CollectionUtils.isEmpty(ids)) {
+            return new ArrayList<>();
+        }
         UserExample userExample = new UserExample();
         userExample.createCriteria().andIdIn(ids);
         return userMapper.selectByExample(userExample);
@@ -413,10 +423,10 @@ public class UserCommonService {
 
         if (CollectionUtils.isEmpty(treeNodes)) return null;
 
-        Map<String,OrgTreeNode> nodesMap = nodes.stream().collect(Collectors.toMap(OrgTreeNode::getNodeId, node -> node, (k1,k2) -> k1));
+        Map<String, OrgTreeNode> nodesMap = nodes.stream().collect(Collectors.toMap(OrgTreeNode::getNodeId, node -> node, (k1, k2) -> k1));
 
         treeNodes.stream().forEach(node -> {
-            while (ObjectUtils.isNotEmpty(node) ){
+            while (ObjectUtils.isNotEmpty(node)) {
                 nodeIdSets.add(node.getNodeId());
                 String parentId = node.getParentId();
                 node = StringUtils.isNotEmpty(parentId) ? nodesMap.get(parentId) : null;
@@ -426,13 +436,13 @@ public class UserCommonService {
         return nodeIdSets.stream().map(nodesMap::get).collect(Collectors.toList());
     }
 
-    public List<OrgTreeNode> orgTreeNodeList(String rootId, String orgName, boolean excludeWs){
+    public List<OrgTreeNode> orgTreeNodeList(String rootId, String orgName, boolean excludeWs) {
         List<OrgTreeNode> nodes = orgTreeMapper.nodes(!!excludeWs);
-        List<Map<String,Object>> nums = orgTreeMapper.relativeNum();
-        if (ObjectUtils.isNotEmpty(rootId)){
+        List<Map<String, Object>> nums = orgTreeMapper.relativeNum();
+        if (ObjectUtils.isNotEmpty(rootId)) {
             //这里需要过滤
         }
-        if (ObjectUtils.isNotEmpty(orgName)){
+        if (ObjectUtils.isNotEmpty(orgName)) {
             nodes = filterByName(orgName, nodes);
         }
         if (CollectionUtils.isEmpty(nodes)) return nodes;
@@ -441,13 +451,13 @@ public class UserCommonService {
         //设置relativeNums
         Map<String, List<Map<String, Object>>> numDataMap = nums.stream().collect(Collectors.groupingBy(num -> num.get("source_id").toString()));
         nodes.forEach(node -> {
-            String nodeType = StringUtils.equalsIgnoreCase(node.getNodeType(),"org") ? RoleConstants.Id.ORGADMIN.name(): RoleConstants.Id.USER.name();
+            String nodeType = StringUtils.equalsIgnoreCase(node.getNodeType(), "org") ? RoleConstants.Id.ORGADMIN.name() : RoleConstants.Id.USER.name();
             List<Map<String, Object>> nodeNums = numDataMap.get(node.getNodeId());
             boolean existNums = !CollectionUtils.isEmpty(nodeNums) && nodeNums.stream().anyMatch(num -> {
                 node.setRelativeNum(Integer.parseInt(num.get("nums").toString()));
                 return StringUtils.equals(num.get("role_type").toString(), nodeType);
             });
-            if(!existNums)
+            if (!existNums)
                 node.setRelativeNum(0);
         });
         return nodes;
@@ -457,6 +467,7 @@ public class UserCommonService {
     /**
      * 根据List格式化为树结构
      * 时间复杂度为o(n平方)
+     *
      * @param lists
      * @return
      */
@@ -467,8 +478,8 @@ public class UserCommonService {
                 rootNodes.add(node);
             }
             lists.forEach(tNode -> {
-                if(StringUtils.equals(tNode.getParentId(), node.getNodeId())){
-                    if (node.getChildNodes() == null){
+                if (StringUtils.equals(tNode.getParentId(), node.getNodeId())) {
+                    if (node.getChildNodes() == null) {
                         node.setChildNodes(new ArrayList<OrgTreeNode>());
                     }
                     //tNode.setParentNode(node);
@@ -479,23 +490,25 @@ public class UserCommonService {
         return rootNodes;
     }
 
-    public List<OrgTreeNode> orgTreeSelect (String rootId, boolean excludeWs) {
+    public List<OrgTreeNode> orgTreeSelect(String rootId, boolean excludeWs) {
         List<OrgTreeNode> orgTreeNodes = formatRoot(orgTreeNodeList(rootId, null, excludeWs));
-        if (ObjectUtils.isNotEmpty(rootId)){
+        if (ObjectUtils.isNotEmpty(rootId)) {
             OrgTreeNode result = getTreeByRootId(orgTreeNodes, rootId);
-            return new ArrayList<OrgTreeNode>(){{add(result);}};
+            return new ArrayList<OrgTreeNode>() {{
+                add(result);
+            }};
         }
         return orgTreeNodes;
     }
 
-    private OrgTreeNode getTreeByRootId(List<OrgTreeNode> nodes, String rootId){
+    private OrgTreeNode getTreeByRootId(List<OrgTreeNode> nodes, String rootId) {
         OrgTreeNode resultNode = null;
-        for (OrgTreeNode node : nodes){
-            if (StringUtils.equals(node.getNodeId(), rootId)){
-                resultNode =  node;
+        for (OrgTreeNode node : nodes) {
+            if (StringUtils.equals(node.getNodeId(), rootId)) {
+                resultNode = node;
                 break;
             }
-            if (CollectionUtils.isNotEmpty(node.getChildNodes())){
+            if (CollectionUtils.isNotEmpty(node.getChildNodes())) {
                 resultNode = getTreeByRootId(node.getChildNodes(), rootId);
                 if (ObjectUtils.isNotEmpty(resultNode)) break;
             }

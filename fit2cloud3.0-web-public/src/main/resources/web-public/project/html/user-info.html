@@ -56,6 +56,10 @@
                         <div ng-message="pattern">{{'i18n_phone_limit_msg' | translator}}</div>
                     </div>
                 </md-input-container>
+                <md-input-container class="md-block">
+                    <label>{{'i18n_wechat_account' | translator}}</label>
+                    <input name="phone" ng-model="itemUser.wechatAccount" autocomplete="off"/>
+                </md-input-container>
             </div>
         </md-dialog-content>
 

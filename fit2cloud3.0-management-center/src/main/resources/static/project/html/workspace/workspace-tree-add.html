@@ -17,7 +17,7 @@
             </div>
         </md-input-container>
 
-        <div layout="row" layout-align="start" flex ng-if="currentRole===roleConst.admin">
+        <div layout="row" layout-align="start" flex ng-if="currentRole===roleConst.admin || currentRole===roleConst.orgAdmin">
             <md-input-container flex="100">
                 <label> {{'i18n_organization' | translator}}</label>
                 <tree-select

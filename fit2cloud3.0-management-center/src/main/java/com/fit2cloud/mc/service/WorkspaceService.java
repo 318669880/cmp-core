@@ -78,13 +78,16 @@ public class WorkspaceService {
             F2CException.throwException(Translator.get("i18n_ex_workspace_name_no_empty"));
         }
 
-        if (StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ADMIN.name())
+        if ((StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ADMIN.name()) ||
+                StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ORGADMIN.name()))
                 && StringUtils.isBlank(request.getOrganizationId())) {
             F2CException.throwException(Translator.get("i18n_ex_workspace_orgId_no_empty"));
         }
 
         Organization organization = organizationMapper.selectByPrimaryKey(request.getOrganizationId());
-        if (organization == null && StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ADMIN.name())) {
+        if (organization == null &&
+                (StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ADMIN.name()) ||
+                        StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ORGADMIN.name()))) {
             F2CException.throwException(Translator.get("i18n_ex_workspace_org_no_exist"));
         }
 
@@ -103,9 +106,9 @@ public class WorkspaceService {
         String workspaceId = UUIDUtil.newUUID();
         workspace.setId(workspaceId);
         workspace.setCreateTime(Instant.now().toEpochMilli());
-        if (StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ORGADMIN.name())) {
+        /*if (StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ORGADMIN.name())) {
             workspace.setOrganizationId(SessionUtils.getOrganizationId());
-        }
+        }*/
         workspaceMapper.insert(workspace);
 
         OperationLogService.log(null, workspace.getId(), workspace.getName(), ResourceTypeConstants.WORKSPACE.name(), ResourceOperation.CREATE, null);
@@ -124,7 +127,8 @@ public class WorkspaceService {
             F2CException.throwException(Translator.get("i18n_ex_workspace_name_no_empty"));
         }
 
-        if (StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ADMIN.name())
+        if ((StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ADMIN.name()) ||
+                StringUtils.equalsIgnoreCase(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ORGADMIN.name()))
                 && StringUtils.isBlank(request.getOrganizationId())) {
             F2CException.throwException(Translator.get("i18n_ex_workspace_orgId_no_empty"));
         }

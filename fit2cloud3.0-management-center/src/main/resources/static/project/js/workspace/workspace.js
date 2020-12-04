@@ -1,4 +1,4 @@
-ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, FilterSearch, $http, Notification, $state, Translator) {
+ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, FilterSearch, $http, Notification, $state, Translator, UserService) {
     $scope.orgParam = angular.fromJson(sessionStorage.getItem("orgParam"));
     sessionStorage.removeItem("orgParam");
     // 定义搜索条件
@@ -143,6 +143,7 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
         $scope.selected = "";
         $scope.toggleInfoForm(false);
     };
+    $scope.userInfo = UserService.getUserInfo();
     $scope.ts_param = {excludeWs: true}
     $scope.builder =  {
         id: "nodeId",
@@ -150,6 +151,9 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
         children: "childNodes"
     }
     $scope.organizationId = null;
+    if ($scope.userInfo.roleIdList.indexOf("ORGADMIN") != -1){
+        $scope.ts_param.rootId = $scope.userInfo.organizationId;
+    }
     $scope.ts_changed = (values) => {
         $scope.organizationId = (!!values && values.length > 0) ? values[0] : null;
     };

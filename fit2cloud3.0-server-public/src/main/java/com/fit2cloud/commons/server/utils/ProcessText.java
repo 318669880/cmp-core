@@ -50,7 +50,7 @@ public class ProcessText {
             if (parameters.containsKey(key)) {
                 value = String.valueOf(parameters.get(key));
             }
-            value = (value == null) ? "" : value;
+            value = (StringUtils.isEmpty(value)) ? "N/A" : value;
             m.appendReplacement(stringBuffer, value);
         }
         m.appendTail(stringBuffer);

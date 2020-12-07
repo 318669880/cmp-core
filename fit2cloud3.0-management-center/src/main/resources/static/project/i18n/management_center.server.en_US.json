@@ -72,7 +72,7 @@
   "i18n_menu_sys_state": "System Status",
   "i18n_menu_sys_log": "System Log",
   "i18n_menu_about": "About",
-  "i18n_model_manager": "Model Manager",
+  "i18n_model_manager": "Module Management",
   "i18n_permission_user_read": "Query",
   "i18n_permission_user_read_import": "Import",
   "i18n_permission_user_read_create": "Create",

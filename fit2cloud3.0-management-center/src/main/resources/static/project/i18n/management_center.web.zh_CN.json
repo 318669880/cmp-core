@@ -251,6 +251,7 @@
   "i18n_model_op_stop": "停止",
   "i18n_model_op_pod_eidt": "服务实例",
   "i18n_model_op_node": "显示节点",
+  "i18n_model_node_field_node": "节点",
   "i18n_model_node_version_info": "版本信息",
   "i18n_model_node_create_time": "创建时间",
   "i18n_model_node_down_url": "下载地址",
@@ -298,5 +299,13 @@
   "i18n_dingtalk_basic_url": "钉钉基本概念",
   "i18n_dingtalk_limit_url": "钉钉消息频率限制",
   "i18n_reload_mc_success": "重载成功",
-  "i18n_reload_mc_faild": "重载失败"
+  "i18n_reload_mc_faild": "重载失败",
+  "i18n_model_billing-center": "账单中心",
+  "i18n_model_vm-service": "虚拟机管理模块",
+  "i18n_model_container-service": "容器服务",
+  "i18n_model_devops": "经典 Devops",
+  "i18n_model_ticket-center": "工单中心",
+  "i18n_model_operation-analytics": "运营分析模块",
+  "i18n_model_management-center": "管理中心"
+
 }

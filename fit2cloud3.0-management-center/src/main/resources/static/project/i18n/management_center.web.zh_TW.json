@@ -299,5 +299,12 @@
   "i18n_dingtalk_basic_url": "釘釘基本概念",
   "i18n_dingtalk_limit_url": "釘釘消息頻率限制",
   "i18n_reload_mc_success": "重載成功",
-  "i18n_reload_mc_faild": "重載失敗"
+  "i18n_reload_mc_faild": "重載失敗",
+  "i18n_model_billing-center": "賬單中心",
+  "i18n_model_vm-service": "虛擬機管理模塊",
+  "i18n_model_container-service": "容器服務",
+  "i18n_model_devops": "經典 Devops",
+  "i18n_model_ticket-center": "工單中心",
+  "i18n_model_operation-analytics": "運營分析模塊",
+  "i18n_model_management-center": "管理中心"
 }

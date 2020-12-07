@@ -47,7 +47,7 @@
                                                      ng-model="item.enable"
                                                      class="md-primary"></md-checkbox>
                                     </td>-->
-                                    <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>
+                                    <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.fName || item.name}}</td>
                                     <!--<td>{{item.module}}</td>-->
                                     <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
                                         <a class="edit-span" class="md-primary" style="cursor:pointer;" href="" ng-click="toPodNumPage(item)">

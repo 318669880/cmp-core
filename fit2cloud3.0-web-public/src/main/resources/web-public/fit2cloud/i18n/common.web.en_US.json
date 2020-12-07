@@ -369,5 +369,14 @@
   "i18n_other_user": "Others",
   "i18n_process_sms_type_dingtalk":"Dingtalk",
   "i18n_process_sms_type_wechat": "Wechat Work",
-  "i18n_process_text_content": "Text Content"
+  "i18n_process_text_content": "Text Content",
+  "i18n_proxy_add": "Add proxy",
+  "i18n_proxy_edit": "Edit proxy",
+  "i18n_proxy_port": "Proxy Port",
+  "i18n_proxy_username": "Proxy username",
+  "i18n_proxy_password": "Proxy password",
+  "i18n_proxy_list": "Proxies",
+  "i18n_proxy": "Proxy",
+  "i18n_proxy_scope": "Scope",
+  "i18n_proxy_ip": "Proxy IP"
 }

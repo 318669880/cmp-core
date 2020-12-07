@@ -32,6 +32,9 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         initAddress: function () {
             if(!this.address){
                 this.address = 'https://f2c-index.oss-cn-beijing.aliyuncs.com';
+                if (this.onLine){//默认保存在线索引服务
+                    this.saveData();
+                }
             }
         },
 

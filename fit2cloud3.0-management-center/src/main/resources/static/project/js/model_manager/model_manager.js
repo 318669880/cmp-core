@@ -717,7 +717,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
     $scope.show = true;
 
     $scope.showError = function (template,defaultMessage) {
-        return Notification.info($filter('translator')(template, defaultMessage)) && false;
+        return Notification.danger($filter('translator')(template, defaultMessage)) && false;
     }
     $scope.showWarn = function(template,defaultMessage) {
         return Notification.warn($filter('translator')(template, defaultMessage))  && false;

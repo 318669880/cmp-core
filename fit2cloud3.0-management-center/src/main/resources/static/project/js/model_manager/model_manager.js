@@ -735,8 +735,8 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
 
 
     $scope.conditions = [
-        {key: "name", name: '名称', directive: "filter-contains"},
-        {key: "module", name: '模块', directive: "filter-contains"}
+        {key: "name", name: Translator.get("i18n_workspace_name"), directive: "filter-contains"},
+        {key: "module", name: Translator.get("i18n_module"), directive: "filter-contains"}
     ];
 
     // 用于传入后台的参数
@@ -775,7 +775,12 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         }
         HttpUtils.paging($scope, "modelManager/runner", condition, function (rep) {
             $scope.formatModuleStatus();
+            $scope.formatItemName();
         });
+    };
+
+    $scope.formatItemName = function () {
+        $scope.items.forEach(item => item.fName = (Translator.get("i18n_model_"+item.module)) || item.name);
     };
     $scope.formatModuleStatus = function(){
         if($scope.indexServer.model_env=='host'){
@@ -840,6 +845,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         $scope.selected = item.$$hashKey;
         $scope.current_module = item.module;
         $scope.model_name = item.name;
+        $scope.fName = Translator.get("i18n_model_"+$scope.current_module) || item.name;
         $scope.infoUrl = 'project/html/model_manager/node-list.html' + '?_t=' + Math.random();
         $scope.is_mc = false;
         $scope.toggleInfoForm(true);
@@ -854,6 +860,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         //item.enable = true;
         $scope.selected = item.$$hashKey;
         $scope.current_module = "management-center";
+        $scope.fName = Translator.get("i18n_model_"+$scope.current_module) || item.name;
         $scope.model_name = item.name;
         $scope.infoUrl = 'project/html/model_manager/node-list.html' + '?_t=' + Math.random();
         $scope.is_mc = true;
@@ -866,6 +873,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         $scope.current_module = null;
         $scope.model_name = null;
         $scope.selected = "";
+        $scope.fName = null;
         $scope.infoUrl = null;
         $scope.toggleInfoForm(false);
     };

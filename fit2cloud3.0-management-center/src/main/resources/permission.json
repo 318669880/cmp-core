@@ -614,7 +614,7 @@
     },
     {
       "id": "MODEL_MANAGER",
-      "name": "i18n_permission_model_manager"
+      "name": "i18n_permission_module_management"
     }
   ]
 }

@@ -33,7 +33,7 @@ public class ProcessText {
         if (split[0].contains("{") && split[0].contains("}")) {
             text = simpleContent.replace(split[0], "");
         } else {
-            text = simpleContent;
+            return simpleContent;
         }
         Object o = params.get(instances);
         JSONArray jsonArray = JSONObject.parseArray(new Gson().toJson(o));

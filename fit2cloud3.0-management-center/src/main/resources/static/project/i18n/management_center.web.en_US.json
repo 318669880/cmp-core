@@ -39,6 +39,7 @@
   "i18n_index_server_online": "On Indexing Service",
   "i18n_index_server_offline": "Offline Indexing Service",
   "i18n_index_server_addr": "Indexing Service Addr",
+  "i18n_index_server_addr_valid": "Indexing Service Addr Valid",
   "i18n_index_server_local_files": "Local Index File",
   "i18n_index_server_online_explain": "The purpose is to pull the image from the server",
   "i18n_index_server_offline_explain": "The purpose is to pull images from local files",

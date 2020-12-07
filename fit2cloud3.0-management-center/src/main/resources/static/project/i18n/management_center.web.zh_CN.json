@@ -39,6 +39,7 @@
   "i18n_index_server_online": "在线索引服务",
   "i18n_index_server_offline": "离线索引服务",
   "i18n_index_server_addr": "索引服务地址",
+  "i18n_index_server_addr_valid": "索引服务地址无效",
   "i18n_index_server_local_files": "本地索引文件",
   "i18n_index_server_online_explain": "此设置的目的是为了从索引服务器拉取镜像",
   "i18n_index_server_offline_explain": "此设置的目的是为了从本地索引文件拉取镜像",

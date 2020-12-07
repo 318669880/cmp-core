@@ -125,10 +125,13 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                             return;
                         }
                         this.validateSave();
+                    }else {
+                        this.validate = false;
+                        $scope.showError('i18n_index_server_addr_valid','索引地址无效');
                     }
                 }catch (e) {
                     this.validate = false;
-                    $scope.showError(null,'索引地址无效');
+                    $scope.showError('i18n_index_server_addr_valid','索引地址无效');
                     throw e;
                 }
             }.bind(this));

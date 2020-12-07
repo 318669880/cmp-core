@@ -39,6 +39,7 @@
   "i18n_index_server_online": "在線索引服務",
   "i18n_index_server_offline": "離線索引服務",
   "i18n_index_server_addr": "索引服務地址",
+  "i18n_index_server_addr_valid": "索引服務地址無效",
   "i18n_index_server_local_files": "本地索引文件",
   "i18n_index_server_online_explain": "此設置的目的是為了從索引服務器拉取鏡像",
   "i18n_index_server_offline_explain": "此設置的目的是為了從本地索引文件拉取鏡像",

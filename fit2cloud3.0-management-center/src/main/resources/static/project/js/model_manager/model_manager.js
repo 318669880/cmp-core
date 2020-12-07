@@ -308,6 +308,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                 //model.enable = false;
                 model.lastRevision = _self._lastVersion(model);
                 model._versionEdit = false;//默认是非编辑状态
+                model.fName = Translator.get("i18n_model_"+model.module) || model.name;
                 return model;
             });
         },
@@ -452,6 +453,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
                     let itemVersionTime = new Date(_self.getVersionInfo(model.module,model.current_version).created).getTime()
                     return tempTime > itemVersionTime;
                 });
+                model.fName = Translator.get("i18n_model_"+model.module) || model.name;
                 return model;
             });
 

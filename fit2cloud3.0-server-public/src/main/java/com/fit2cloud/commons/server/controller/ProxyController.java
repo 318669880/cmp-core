@@ -2,7 +2,9 @@ package com.fit2cloud.commons.server.controller;
 
 import com.fit2cloud.commons.server.base.domain.Proxy;
 import com.fit2cloud.commons.server.model.ProxyDTO;
+import com.fit2cloud.commons.server.model.request.ProxyRequest;
 import com.fit2cloud.commons.server.service.ProxyService;
+import com.fit2cloud.commons.utils.BeanUtils;
 import com.fit2cloud.commons.utils.PageUtils;
 import com.fit2cloud.commons.utils.Pager;
 import com.github.pagehelper.Page;
@@ -25,9 +27,9 @@ public class ProxyController {
 
     @ApiOperation("$[{i18n_proxy_list}]")
     @PostMapping("list/{goPage}/{pageSize}")
-    public Pager getProxys(@PathVariable int goPage, @PathVariable int pageSize) {
+    public Pager getProxys(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody ProxyRequest proxyRequest) {
         Page page = PageHelper.startPage(goPage, pageSize, true);
-        return PageUtils.setPageInfo(page, proxyService.selectProxys());
+        return PageUtils.setPageInfo(page, proxyService.selectProxys(BeanUtils.objectToMap(proxyRequest)));
     }
 
     @ApiOperation("$[{i18n_add_proxy}]")
@@ -49,8 +51,8 @@ public class ProxyController {
     }
 
     @PostMapping("listAll")
-    public List<ProxyDTO> listAllProxy() {
-        return proxyService.selectProxys();
+    public List<ProxyDTO> listAllProxy(@RequestBody ProxyRequest proxyRequest) {
+        return proxyService.selectProxys(BeanUtils.objectToMap(proxyRequest));
     }
 
 

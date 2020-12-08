@@ -9,6 +9,7 @@ import com.fit2cloud.commons.server.constants.ScopeConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.model.ProxyDTO;
 import com.fit2cloud.commons.server.model.SessionUser;
+import com.fit2cloud.commons.server.model.request.ProxyRequest;
 import com.fit2cloud.commons.server.utils.SessionUtils;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +30,7 @@ public class ProxyService {
     @Resource
     private ProxyMapper proxyMapper;
 
-    public List<ProxyDTO> selectProxys() {
-        Map params = new HashMap();
+    public List<ProxyDTO> selectProxys(Map<String, Object> params) {
         SessionUser user = SessionUtils.getUser();
         if (user.getParentRoleId().equals(RoleConstants.Id.USER.name()) || user.getParentRoleId().equals(RoleConstants.Id.ORGADMIN.name())) {
             params.put("organizationId", user.getOrganizationId());

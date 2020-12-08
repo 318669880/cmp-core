@@ -380,5 +380,11 @@
   "i18n_proxy_list": "代理列表",
   "i18n_proxy": "代理",
   "i18n_proxy_scope": "可見級別",
-  "i18n_proxy_ip": "代理IP"
+  "i18n_proxy_ip": "代理IP",
+  "i18n_set_proxy": "設置代理",
+  "i18n_unset_proxy": "取消代理",
+  "i18n_please_select_host_for_proxy": "請選擇要設置代理的主機!",
+  "i18n_please_select_host_for_unproxy": "請選擇要取消代理的主機.",
+  "i18n_confirm_unset_proxy": "確定取消代理？",
+  "i18n_unset_proxy_success": "取消代理成功！"
 }

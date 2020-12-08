@@ -378,5 +378,11 @@
   "i18n_proxy_list": "Proxies",
   "i18n_proxy": "Proxy",
   "i18n_proxy_scope": "Scope",
-  "i18n_proxy_ip": "Proxy IP"
+  "i18n_proxy_ip": "Proxy IP",
+  "i18n_set_proxy": "Set proxy",
+  "i18n_unset_proxy": "Unset proxy",
+  "i18n_please_select_host_for_proxy": "Please select the host to set the proxy!",
+  "i18n_please_select_host_for_unproxy": "Please select the host to unset the proxy.",
+  "i18n_confirm_unset_proxy": "Confirm to cancel the proxy？",
+  "i18n_unset_proxy_success": "Cancel proxy success！"
 }

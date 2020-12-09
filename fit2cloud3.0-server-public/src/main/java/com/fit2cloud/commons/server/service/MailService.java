@@ -3,6 +3,7 @@ package com.fit2cloud.commons.server.service;
 import com.fit2cloud.commons.server.base.domain.SystemParameter;
 import com.fit2cloud.commons.server.base.mapper.SystemParameterMapper;
 import com.fit2cloud.commons.server.constants.ParamConstants;
+import com.fit2cloud.commons.server.model.Authentication;
 import com.fit2cloud.commons.server.model.MailAttachmentInfo;
 import com.fit2cloud.commons.utils.EncryptUtils;
 import com.fit2cloud.commons.utils.LogUtil;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,15 +54,19 @@ public class MailService {
         }
         Properties props = new Properties();
         String auth = "mail.smtp.auth";
-        props.put(auth, !isAnon);
+        props.put(auth, String.valueOf(!isAnon));
+        Authentication authentication = new Authentication(getNotNullValue(ParamConstants.MAIL.ACCOUNT.getKey()), getNotNullValue(ParamConstants.MAIL.PASSWORD.getKey()));
+        Session session = Session.getDefaultInstance(javaMailSender.getJavaMailProperties(), authentication);
         if (BooleanUtils.toBoolean(getValue(ParamConstants.MAIL.SSL.getKey()))) {
             String stlKey = "mail.smtp.socketFactory.class";
             String stlValue = "javax.net.ssl.SSLSocketFactory";
             props.put(stlKey, stlValue);//tsl
+            javaMailSender.setSession(session);
         }
         if (BooleanUtils.toBoolean(getValue(ParamConstants.MAIL.TLS.getKey()))) {
             String ssl = "mail.smtp.starttls.enable";
             props.put(ssl, String.valueOf(true));//ssl
+            javaMailSender.setSession(session);
         }
         javaMailSender.setJavaMailProperties(props);
         return javaMailSender;

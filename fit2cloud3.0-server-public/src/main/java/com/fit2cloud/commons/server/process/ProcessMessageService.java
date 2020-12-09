@@ -190,7 +190,7 @@ public class ProcessMessageService {
                 }
                 // 邮件通知
                 if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.EMAIL.name())) {
-                    LogUtil.info("Send mail：" + StringUtils.join(receivers, ";"));
+                    LogUtil.info("Send mail：" + receiver);
                     String email = receiver;
                     User user = userCommonService.getUserById(receiver);
                     if (user != null && StringUtils.isNotBlank(user.getEmail())) {
@@ -206,6 +206,7 @@ public class ProcessMessageService {
                 // 钉钉通知
                 if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.DINGTALK.name()) && StringUtils.isNotEmpty(userNotification.getPhone())) {
                     try {
+                        LogUtil.info("Send dingtalk：" + userNotification.getPhone());
                         dingtalkService.sendTextMessageToUser(simpleContent, userNotification.getPhone());
                         saveMailLog(receiver, title, simpleContent, config, ProcessConstants.MessageStatus.SUCCESS.name());
                         LogUtil.info("Successfully sent dingtalk:" + simpleContent);
@@ -216,6 +217,7 @@ public class ProcessMessageService {
                 // 企业微信通知
                 if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.WECHAT.name()) && StringUtils.isNotEmpty(userNotification.getWechatAccount())) {
                     try {
+                        LogUtil.info("Send wechat：" + userNotification.getWechatAccount());
                         wechatService.sendTextMessageToUser(simpleContent, userNotification.getWechatAccount());
                         saveMailLog(receiver, title, simpleContent, config, ProcessConstants.MessageStatus.SUCCESS.name());
                         LogUtil.info("Successfully sent wechat work:" + simpleContent);

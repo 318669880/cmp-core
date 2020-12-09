@@ -205,22 +205,30 @@ public class ProcessMessageService {
                 }
                 // 钉钉通知
                 if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.DINGTALK.name()) && StringUtils.isNotEmpty(userNotification.getPhone())) {
-                    dingtalkService.sendTextMessageToUser(simpleContent, userNotification.getPhone());
-                    saveMailLog(receiver, title, simpleContent, config, ProcessConstants.MessageStatus.SUCCESS.name());
-                    LogUtil.info("Successfully sent dingtalk:" + simpleContent);
+                    try {
+                        dingtalkService.sendTextMessageToUser(simpleContent, userNotification.getPhone());
+                        saveMailLog(receiver, title, simpleContent, config, ProcessConstants.MessageStatus.SUCCESS.name());
+                        LogUtil.info("Successfully sent dingtalk:" + simpleContent);
+                    } catch (Exception e) {
+                        LogUtil.error("Send Dingtalk error:", e);
+                    }
                 }
                 // 企业微信通知
                 if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.WECHAT.name()) && StringUtils.isNotEmpty(userNotification.getWechatAccount())) {
-                    wechatService.sendTextMessageToUser(simpleContent, userNotification.getWechatAccount());
-                    saveMailLog(receiver, title, simpleContent, config, ProcessConstants.MessageStatus.SUCCESS.name());
-                    LogUtil.info("Successfully sent wechat work:" + simpleContent);
+                    try {
+                        wechatService.sendTextMessageToUser(simpleContent, userNotification.getWechatAccount());
+                        saveMailLog(receiver, title, simpleContent, config, ProcessConstants.MessageStatus.SUCCESS.name());
+                        LogUtil.info("Successfully sent wechat work:" + simpleContent);
+                    } catch (Exception e) {
+                        LogUtil.error("Send Wechat error:", e);
+                    }
                 }
             }
         } catch (Exception e) {
             for (String receiver : receivers) {
                 saveMailLog(receiver, title, content, config, ProcessConstants.MessageStatus.ERROR.name());
             }
-            LogUtil.error("Send mail error:", e);
+            LogUtil.error("Send Message error:", e);
         }
     }
 

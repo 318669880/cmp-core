@@ -184,6 +184,8 @@ public class ProcessMessageService {
                 simpleContent = title + "\n\n" + simpleContent;
 
                 UserNotificationSettingDTO userNotification = userNotificationService.getUserNotification(receiver);
+                LogUtil.info(new Gson().toJson(userNotification));
+                LogUtil.info(new Gson().toJson(config));
                 // 站内通知
                 if (StringUtils.contains(config.getSmsType(), ProcessConstants.SmsType.ANNOUNCEMENT.name())) {
                     notificationService.sendAnnouncement(title, content, receiver);

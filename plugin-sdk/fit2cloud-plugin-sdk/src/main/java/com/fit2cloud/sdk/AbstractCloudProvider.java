@@ -455,6 +455,14 @@ public abstract class AbstractCloudProvider implements ICloudProvider {
         return false;
     }
 
+    public boolean isSupportMultiNetwork() {
+        return false;
+    }
+
+    public List<F2CNetwork> getF2cNetworks(Request networkRequest) throws PluginException{
+        return new ArrayList<F2CNetwork>();
+    };
+
     public <T> T invokeCustomMethod(String methodName, Object... parameters) throws PluginException {
         try {
             List<Class> paramsClass = new ArrayList<Class>();

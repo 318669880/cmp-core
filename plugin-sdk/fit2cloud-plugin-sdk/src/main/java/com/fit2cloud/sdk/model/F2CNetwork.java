@@ -10,7 +10,7 @@ public class F2CNetwork extends F2CResource {
 	private Boolean external;
 	private String regionId;
 	private String regionName;
-
+	private String networkId;
 	public F2CNetwork() {
 	}
 
@@ -95,6 +95,14 @@ public class F2CNetwork extends F2CResource {
 
 	public void setRegionId(String regionId) {
 		this.regionId = regionId;
+	}
+
+	public String getNetworkId() {
+		return networkId;
+	}
+
+	public void setNetworkId(String networkId) {
+		this.networkId = networkId;
 	}
 
 }

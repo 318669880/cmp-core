@@ -198,6 +198,11 @@ public interface ICloudProvider {
     /**是否支持快照管理**/
     boolean isSupportSnapshotManage();
 
+    /**是否支持多网卡管理**/
+    boolean isSupportMultiNetwork();
+
+    List<F2CNetwork> getF2cNetworks(Request networkRequest)throws PluginException;
+
     /** 自定义方法，不通用的逻辑请override这个方法**/
     <T> T invokeCustomMethod(String methodName, Object... parameters) throws PluginException;
 }

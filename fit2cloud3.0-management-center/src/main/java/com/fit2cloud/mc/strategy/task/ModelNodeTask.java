@@ -189,7 +189,8 @@ public class ModelNodeTask {
             List<String> currentServersLists = Arrays.asList(servers);
             List<String> newServers = dbEurekaServers.stream().filter(server -> !currentServersLists.contains(server)).collect(Collectors.toList());
             if(!CollectionUtils.isEmpty(newServers)){
-                List<String> realServers = Stream.of(newServers, currentServersLists).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+                //List<String> realServers = Stream.of(newServers, currentServersLists).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+                List<String> realServers = newServers;
                 String fixedEureka = environment.getProperty("fixed-eureka");
                 if (StringUtils.isNotEmpty(fixedEureka) && StringUtils.equals(fixedEureka, "true")) return;
                 eurekaClientConfigBean.getServiceUrl().put(EurekaClientConfigBean.DEFAULT_ZONE, StringUtils.join(realServers, ","));

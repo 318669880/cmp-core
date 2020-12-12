@@ -2,10 +2,12 @@ package com.fit2cloud.mc.strategy.task;
 
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.utils.CommonBeanFactory;
+import com.fit2cloud.commons.utils.HttpClientUtil;
 import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.fit2cloud.mc.common.constants.BusinessCacheConstants;
 import com.fit2cloud.mc.common.constants.ModuleStatusConstants;
+import com.fit2cloud.mc.dao.ConfigPropertiesMapper;
 import com.fit2cloud.mc.dao.ModelNodeMapper;
 import com.fit2cloud.mc.dto.request.OperatorModuleRequest;
 import com.fit2cloud.mc.job.SyncEurekaServer;
@@ -37,6 +39,8 @@ import java.util.stream.Stream;
 
 @Service
 public class ModelNodeTask {
+
+    private static final String DEFAULT_ZONE_PROPERTIES = "eureka.client.service-url.defaultZone";
 
     @Resource
     private Environment environment;
@@ -85,6 +89,7 @@ public class ModelNodeTask {
 
     @Async
     public void syncNode() throws Exception{
+        initCurrentConfig();
         syncFromDb();
         chainStart();//关联启动下属所有子模块
     }
@@ -143,7 +148,7 @@ public class ModelNodeTask {
     /**
      * 加入eureka集群
      */
-    @Scheduled(fixedDelay = 10000,initialDelay = 10000)
+    @Scheduled(fixedDelay = 30000,initialDelay = 60000)
     public void joinEurekaCluster(){
         if (SyncEurekaServer.IS_KUBERNETES) return;
         final String eureka_instance_ip_address = environment.getProperty("eureka.instance.ip-address");
@@ -190,11 +195,62 @@ public class ModelNodeTask {
             List<String> newServers = dbEurekaServers.stream().filter(server -> !currentServersLists.contains(server)).collect(Collectors.toList());
             if(!CollectionUtils.isEmpty(newServers)){
                 //List<String> realServers = Stream.of(newServers, currentServersLists).flatMap(Collection::stream).distinct().collect(Collectors.toList());
-                List<String> realServers = newServers;
+                /*List<String> realServers = newServers;
                 String fixedEureka = environment.getProperty("fixed-eureka");
-                if (StringUtils.isNotEmpty(fixedEureka) && StringUtils.equals(fixedEureka, "true")) return;
-                eurekaClientConfigBean.getServiceUrl().put(EurekaClientConfigBean.DEFAULT_ZONE, StringUtils.join(realServers, ","));
+                if (StringUtils.isNotEmpty(fixedEureka) && StringUtils.equals(fixedEureka, "true")) return;*/
+                //eurekaClientConfigBean.getServiceUrl().put(EurekaClientConfigBean.DEFAULT_ZONE, StringUtils.join(realServers, ","));
+                joinCurrentEureka2Cluster(newServers);
             }
+        }
+    }
+
+
+    @Resource
+    private ConfigPropertiesMapper configPropertiesMapper;
+
+
+
+    private String currentConfigPk(){
+        String eureka_key = DEFAULT_ZONE_PROPERTIES;
+        String host = environment.getProperty("eureka.instance.ip-address")+":"+port;
+        return host+eureka_key;
+    }
+    private void joinCurrentEureka2Cluster(List<String> newEurekaServers){
+        String pk = currentConfigPk();
+        Optional.ofNullable(configPropertiesMapper.selectByPrimaryKey(pk)).ifPresent(config -> {
+            config.setConfv(StringUtils.join(newEurekaServers, ","));
+            configPropertiesMapper.updateByPrimaryKey(config);
+            ModelNodeTask proxy = CommonBeanFactory.getBean(ModelNodeTask.class);
+            proxy.refreshConfig();
+        });
+    }
+
+    /**
+     * 刷新配置
+     * 避免阻塞主线程 采用异步方式
+     */
+    @Async
+    public void refreshConfig(){
+        String host = "http://"+environment.getProperty("eureka.instance.ip-address")+":"+port;
+        String url = host+"/actuator/refresh";
+        String result = HttpClientUtil.post(url, "{}");
+        LogUtil.info("The config of "+host + "has changed with ["+result+"]");
+    }
+
+
+    @Value("${spring.cloud.config.profile}")
+    private String currentProfile;
+    private void initCurrentConfig(){
+        String pk = currentConfigPk();
+        if (ObjectUtils.isEmpty(configPropertiesMapper.selectByPrimaryKey(pk))){
+            ConfigProperties config = new ConfigProperties();
+            config.setId(pk);
+            config.setConfk(DEFAULT_ZONE_PROPERTIES);
+            config.setConfv(environment.getProperty(DEFAULT_ZONE_PROPERTIES));
+            config.setApplication("management-center");
+            config.setProfile(currentProfile);
+            config.setLabel("master");
+            configPropertiesMapper.insert(config);
         }
     }
 

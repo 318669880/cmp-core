@@ -4,19 +4,19 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class ModelManager implements Serializable {
-    @ApiModelProperty(value = "模块环境唯一标识", required = true)
+    @ApiModelProperty(value = "", required = true)
     private String uuid;
 
-    @ApiModelProperty(value = "索引服务域名", required = true)
+    @ApiModelProperty(value = "", required = true)
     private String modelAddress;
 
-    @ApiModelProperty(value = "是否在线服务", required = true)
+    @ApiModelProperty(value = "", required = true)
     private Boolean onLine;
 
-    @ApiModelProperty(value = "运行环境", required = true)
+    @ApiModelProperty(value = "", required = true)
     private String env;
 
-    @ApiModelProperty("验证结果")
+    @ApiModelProperty("")
     private Integer validate;
 
     @ApiModelProperty("Docker registry 信息")

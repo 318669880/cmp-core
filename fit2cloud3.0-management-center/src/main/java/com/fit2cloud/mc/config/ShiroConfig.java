@@ -30,6 +30,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/web-public/**", "anon");
         filterChainDefinitionMap.put("/project/**", "anon");
         filterChainDefinitionMap.put("/modelNode/**", "anon");
+        filterChainDefinitionMap.put("/actuator/**", "anon");
+
 
 
 

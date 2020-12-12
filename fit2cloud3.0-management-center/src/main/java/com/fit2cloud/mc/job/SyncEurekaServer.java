@@ -25,7 +25,7 @@ public class SyncEurekaServer implements ApplicationRunner {
 
     private static final String KUBERNETES_ENVIRONMENT = "KUBERNETES_PORT";
 
-    private static final String DEFAULT_ZONE_PROPERTIES = "eureka.client.serviceUrl.defaultZone";
+    private static final String DEFAULT_ZONE_PROPERTIES = "eureka.client.service-url.defaultZone";
 
     private static final String MEMBER_PREFIX = "eureka.server.";
 

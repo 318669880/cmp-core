@@ -192,7 +192,8 @@ public class ModelNodeTask {
         if(!CollectionUtils.isEmpty(dbEurekaServers)){
             String[] servers = eurekaClientConfigBean.getServiceUrl().get(EurekaClientConfigBean.DEFAULT_ZONE).split(",");
             List<String> currentServersLists = Arrays.asList(servers);
-            List<String> newServers = dbEurekaServers.stream().filter(server -> !currentServersLists.contains(server)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(currentServersLists) ) return;
+            List<String> newServers = dbEurekaServers.stream().filter(server -> !currentServersLists.contains(server) && isHostConnectable(server)).collect(Collectors.toList());
             if(!CollectionUtils.isEmpty(newServers)){
                 //List<String> realServers = Stream.of(newServers, currentServersLists).flatMap(Collection::stream).distinct().collect(Collectors.toList());
                 /*List<String> realServers = newServers;

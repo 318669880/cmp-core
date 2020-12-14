@@ -811,3 +811,8 @@ ALTER TABLE devops_cloud_server_devops ADD proxy_id VARCHAR(50) DEFAULT NULL  NU
 ALTER TABLE  `devops_cloud_server_devops` CHANGE COLUMN `cluster_id` `cluster_id` VARCHAR(50)  NULL DEFAULT NULL ;
 
 alter table devops_cloud_server_devops modify cluster_role_id varchar(50) DEFAULT null;
+
+alter table devops_proxy rename to proxy;
+alter table devops_cloud_server_devops rename to proxy_resource;
+
+alter table proxy_resource add resource_type varchar(50);

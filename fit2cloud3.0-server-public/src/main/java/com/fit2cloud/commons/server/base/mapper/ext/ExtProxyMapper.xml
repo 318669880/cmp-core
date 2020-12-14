@@ -9,10 +9,10 @@
 
     <select id="selectProxys" parameterType="java.util.Map" resultMap="BaseResultMap">
         SELECT
-        devops_proxy.*,
+        proxy.*,
         organization.name organization_name
-        FROM devops_proxy
-        LEFT JOIN organization ON devops_proxy.organization_id = organization.id
+        FROM proxy
+        LEFT JOIN organization ON proxy.organization_id = organization.id
         <where>
             <if test="organizationId != null">
                 and (organization_id=#{organizationId} OR organization_id='ROOT')

@@ -54,3 +54,14 @@ CREATE TABLE IF NOT EXISTS `model_node` (
   `update_time` bigint(13) NOT NULL COMMENT '节点更新时间',
   PRIMARY KEY (`model_node_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS `config_properties` (
+  `id` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '配置唯一ID',
+  `confk` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '配置项键',
+  `confv` varchar(500) COLLATE utf8_bin DEFAULT NULL COMMENT '配置项值',
+  `application` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '配置应用名称',
+  `profile` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '配置对应profile',
+  `label` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '配置分支',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

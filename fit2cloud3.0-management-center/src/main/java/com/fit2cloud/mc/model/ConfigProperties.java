@@ -4,22 +4,22 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class ConfigProperties implements Serializable {
-    @ApiModelProperty("")
+    @ApiModelProperty("配置唯一ID")
     private String id;
 
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "配置项键", required = true)
     private String confk;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("配置项值")
     private String confv;
 
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "配置应用名称", required = true)
     private String application;
 
-    @ApiModelProperty(value = "", required = true)
+    @ApiModelProperty(value = "配置对应profile", required = true)
     private String profile;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("配置分支")
     private String label;
 
     /**

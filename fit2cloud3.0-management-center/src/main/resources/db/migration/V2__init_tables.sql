@@ -801,6 +801,6 @@ CREATE TABLE IF NOT EXISTS `proxy`
 CREATE TABLE IF NOT EXISTS `proxy_resource` (
   `id` varchar(50) NOT NULL DEFAULT '',
   proxy_id VARCHAR(50) DEFAULT NULL,
-  resource_type varchar(50) DEFAULT NULL
+  resource_type varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

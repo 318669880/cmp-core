@@ -785,3 +785,29 @@ CREATE TABLE IF NOT EXISTS `user_notification_setting` (
   `wechat_account` varchar(50) COMMENT '企业微信account',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS devops_proxy
+(
+    id VARCHAR(50) PRIMARY KEY NOT NULL,
+    port INT DEFAULT 22,
+    username VARCHAR(64),
+    password VARCHAR(64),
+    scope VARCHAR(32),
+    organization_id VARCHAR(50),
+    ip VARCHAR(128)
+);
+
+ALTER TABLE devops_proxy ADD created_time  BIGINT(16) NULL;
+
+CREATE TABLE IF NOT EXISTS `devops_cloud_server_devops` (
+  `id` varchar(50) NOT NULL DEFAULT '',
+  `cluster_id` varchar(50) NOT NULL DEFAULT '',
+  `cluster_role_id` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE devops_cloud_server_devops ADD proxy_id VARCHAR(50) DEFAULT NULL  NULL;
+
+ALTER TABLE  `devops_cloud_server_devops` CHANGE COLUMN `cluster_id` `cluster_id` VARCHAR(50)  NULL DEFAULT NULL ;
+
+alter table devops_cloud_server_devops modify cluster_role_id varchar(50) DEFAULT null;

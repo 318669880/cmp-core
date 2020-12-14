@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.config.server.EnableConfigServer;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -20,6 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         PluginManagerAutoConfiguration.class,
         MetricConfig.class,
         AsyncConfig.class})
+@EnableConfigServer
 public class Application {
 
 

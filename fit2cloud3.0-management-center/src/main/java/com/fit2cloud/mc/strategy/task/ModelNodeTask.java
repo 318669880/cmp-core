@@ -148,7 +148,7 @@ public class ModelNodeTask {
     /**
      * 加入eureka集群
      */
-    @Scheduled(fixedDelay = 30000,initialDelay = 60000)
+    @Scheduled(fixedDelay = 10000,initialDelay = 10000)
     public void joinEurekaCluster(){
         if (SyncEurekaServer.IS_KUBERNETES) return;
         final String eureka_instance_ip_address = environment.getProperty("eureka.instance.ip-address");
@@ -177,6 +177,7 @@ public class ModelNodeTask {
                     modelNodeExample.clear();
                     modelNodeExample.createCriteria().andIsMcEqualTo(false).andMcNodeUuidEqualTo(mc_modelNode_uuid);
                     modelNodeMapper.deleteByExample(modelNodeExample);
+                    removeConfigByHost(node.getNodeHost());
                     modelNodeExample.clear();
                     moduleNodeService.clearNodesCache();
                 }
@@ -193,7 +194,10 @@ public class ModelNodeTask {
             String[] servers = eurekaClientConfigBean.getServiceUrl().get(EurekaClientConfigBean.DEFAULT_ZONE).split(",");
             List<String> currentServersLists = Arrays.asList(servers);
             if (CollectionUtils.isEmpty(currentServersLists) ) return;
-            List<String> newServers = dbEurekaServers.stream().filter(server -> !currentServersLists.contains(server) && isHostConnectable(server)).collect(Collectors.toList());
+            List<String> newServers = dbEurekaServers.stream().filter(server -> {
+                String cHost = server.substring(0, server.indexOf("/eureka"));
+                return !currentServersLists.contains(server) && isHostConnectable(cHost);
+            }).collect(Collectors.toList());
             if(!CollectionUtils.isEmpty(newServers)){
                 //List<String> realServers = Stream.of(newServers, currentServersLists).flatMap(Collection::stream).distinct().collect(Collectors.toList());
                 /*List<String> realServers = newServers;
@@ -241,18 +245,29 @@ public class ModelNodeTask {
 
     @Value("${spring.cloud.config.profile}")
     private String currentProfile;
+    @Value("${spring.cloud.config.name}")
+    private String configName;
     private void initCurrentConfig(){
         String pk = currentConfigPk();
-        if (ObjectUtils.isEmpty(configPropertiesMapper.selectByPrimaryKey(pk))){
-            ConfigProperties config = new ConfigProperties();
-            config.setId(pk);
-            config.setConfk(DEFAULT_ZONE_PROPERTIES);
-            config.setConfv(environment.getProperty(DEFAULT_ZONE_PROPERTIES));
-            config.setApplication("management-center");
-            config.setProfile(currentProfile);
-            config.setLabel("master");
-            configPropertiesMapper.insert(config);
-        }
+        Optional.ofNullable(configPropertiesMapper.selectByPrimaryKey(pk)).ifPresent(config -> {
+            configPropertiesMapper.deleteByPrimaryKey(pk);
+        });
+        ConfigProperties config = new ConfigProperties();
+        config.setId(pk);
+        config.setConfk(DEFAULT_ZONE_PROPERTIES);
+        config.setConfv(environment.getProperty(DEFAULT_ZONE_PROPERTIES));
+        config.setApplication(configName);
+        config.setProfile(currentProfile);
+        config.setLabel("master");
+        configPropertiesMapper.insert(config);
+    }
+
+    private void removeConfigByHost(String host){
+        String splitStr = "://";
+        int start = host.indexOf(splitStr);
+        start = (start == -1) ? 0 : (start + splitStr.length());
+        String pk = host.substring(start);
+        configPropertiesMapper.deleteByPrimaryKey(pk);
     }
 
 

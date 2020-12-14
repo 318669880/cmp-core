@@ -796,7 +796,7 @@ CREATE TABLE IF NOT EXISTS `proxy`
     organization_id VARCHAR(50),
     ip VARCHAR(128),
     created_time  BIGINT(16)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `proxy_resource` (
   `id` varchar(50) NOT NULL DEFAULT '',

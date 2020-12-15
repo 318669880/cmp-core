@@ -17,7 +17,9 @@ import com.fit2cloud.commons.server.model.CloudAccountDTO;
 import com.fit2cloud.commons.server.model.SessionUser;
 import com.fit2cloud.commons.server.model.UserTooltip;
 import com.fit2cloud.commons.server.model.WorkspaceOrganization;
+import com.fit2cloud.commons.server.utils.OrganizationUtils;
 import com.fit2cloud.commons.server.utils.SessionUtils;
+import com.fit2cloud.commons.server.utils.WorkspaceUtils;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,10 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +62,9 @@ public class ConditionService {
             if (!StringUtils.isBlank(organizationId)) {
                 criteria.andOrganizationIdEqualTo(organizationId);
             } else {
-                criteria.andOrganizationIdEqualTo(SessionUtils.getUser().getOrganizationId());
+                List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(SessionUtils.getUser().getOrganizationId());
+                criteria.andOrganizationIdIn(orgIds);
+                //criteria.andOrganizationIdEqualTo(SessionUtils.getUser().getOrganizationId());
             }
             workspaces = workspaceMapper.selectByExample(workspaceExample);
         }
@@ -97,10 +98,13 @@ public class ConditionService {
         SessionUser user = SessionUtils.getUser();
         if (StringUtils.equals(user.getParentRoleId(), RoleConstants.Id.ORGADMIN.name())) {
             String organizationId = user.getOrganizationId();
-            WorkspaceExample workspaceExample = new WorkspaceExample();
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(organizationId);
+            /*WorkspaceExample workspaceExample = new WorkspaceExample();
             workspaceExample.createCriteria().andOrganizationIdEqualTo(organizationId);
             List<Workspace> workspaces = workspaceMapper.selectByExample(workspaceExample);
-            List<String> list = workspaces.stream().map(Workspace::getId).collect(Collectors.toList());
+            List<String> list = workspaces.stream().map(Workspace::getId).collect(Collectors.toList());*/
+            List<String> list = WorkspaceUtils.getWorkspaceIdsByOrgIds(orgIds);
+            Optional.ofNullable(list).orElse(new ArrayList<String>());
             if (CollectionUtils.isEmpty(list)) {
                 //避免没有工作空间 组织管理员查询全部
                 list.add(UUIDUtil.newUUID());

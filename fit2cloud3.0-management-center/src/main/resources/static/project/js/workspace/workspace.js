@@ -5,6 +5,12 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
     $scope.conditions = [
         {key: "name", name: Translator.get("i18n_workspace_name"), directive: "filter-contains"},
     ];
+    $scope.conditions.push({
+        key: "organizationIds",
+        name: Translator.get("i18n_organization"),
+        directive: "filter-org-tree",
+        multiple: true
+    })
 
     if ($scope.currentRole === $scope.roleConst.admin) {
         /*$scope.conditions.push({
@@ -15,7 +21,7 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
             search: true,
             convert: {value: "id", label: "name"}
         });*/
-        $scope.conditions.push({
+        /*$scope.conditions.push({
             key: "organizationIds",
             name: Translator.get("i18n_organization"),
             directive: "filter-multistage-tree",
@@ -29,7 +35,8 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
                 children: "childNodes"
             }
 
-        })
+        })*/
+
     }
     $scope.filters = [];
     if ($scope.orgParam && ($scope.currentRole === $scope.roleConst.admin || $scope.currentRole === $scope.roleConst.orgAdmin)) {

@@ -3044,6 +3044,227 @@
         };
     });
 
+
+    F2CModule.directive("filterOrgTree", function (FilterSearch, HttpUtils, UserService) {
+        return {
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/filter/filter-org-tree.html" + '?_t=' + window.appversion,
+            scope: {
+                results: "=",
+                condition: "=",
+                remove: "&",
+                complete: "&"
+            },
+            link: function ($scope) {
+                $scope.condition.selecteds = [];
+                $scope.condition.convert = {value: "nodeId", label: "nodeName"};
+                if ($scope.condition.multiple == null || typeof $scope.condition.multiple == "undefined"){
+                    $scope.condition.multiple = true;
+                }
+                $scope.option = {
+                    no_cascade: true
+                }
+                $scope.noroot = {
+                    onChange: function (node) {
+                        $scope.onChangeTree(node);
+                    }
+                };
+                $scope.onChangeTree = function (node) {
+                    if (!node.checked){
+                        if ($scope.condition.selecteds.length > 0){
+                            $scope.condition.selecteds = $scope.condition.selecteds.filter(selected => node.id != selected.id);
+                        }
+                    }else{
+                        if (!$scope.condition.multiple){
+                            $scope.condition.selecteds.forEach(cnode => cnode.id!==node.id && $scope.noroot.setSelected("id", cnode.id, undefined));
+                            $scope.condition.selecteds = [];
+                        }
+                        $scope.condition.selecteds.push(node);
+                    }
+                };
+
+
+                $scope.loadData = function () {
+                    let url = "user/orgtreeselect";
+                    let param = {excludeWs: true};
+                    if (UserService.isOrgAdmin()) param.rootId = UserService.getOrganizationId();
+                    HttpUtils.post(url, param, function (response) {
+                        let nodes = response.data;
+                        $scope.buildTreeData(nodes);
+                        $scope.treeData = nodes;
+                    }, function (data) {
+                        $scope.error = data;
+                    })
+                }
+
+                $scope.nodeMapping = {
+                    name: "nodeName",
+                    children: "childNodes",
+                    id: "nodeId"
+                }
+                $scope.buildTreeData = (nodes) => {
+                    angular.forEach(nodes ,(node) => {
+                        angular.forEach($scope.nodeMapping, (value, key) => node[key] = node[value]);
+                        $scope.buildTreeData(node.children);
+                    })
+                }
+
+
+                // 核心方法，必须有，名字随便，用于添加条件到results
+                $scope.add = function () {
+                    let values = [];
+                    let labels = [];
+                    $scope.condition.selecteds.forEach(function (c) {
+                        if (c.checked) {
+                            values.push(c.id);
+                            labels.push(c.name);
+                        }
+                    });
+                    if (values.length === 0) {
+                        $scope.remove();
+                        return;
+                    }
+                    $scope.condition.values = values;
+                    $scope.condition.label = labels.join(", ");
+                    FilterSearch.push($scope.results, $scope.condition);
+                    $scope.remove();
+                    $scope.complete();
+                    $scope.close();
+                };
+
+                $scope.loadData();
+            }
+        };
+    })
+
+    F2CModule.directive("filterWksTree", function (FilterSearch, HttpUtils, UserService) {
+        return {
+            replace: true,
+            templateUrl: "web-public/fit2cloud/html/filter/filter-wks-tree.html" + '?_t=' + window.appversion,
+            scope: {
+                results: "=",
+                condition: "=",
+                remove: "&",
+                complete: "&"
+            },
+            link: function ($scope) {
+                $scope.condition.selecteds = [];
+                $scope.condition.convert = {value: "nodeId", label: "nodeName"};
+                if ($scope.condition.multiple == null || typeof $scope.condition.multiple == "undefined"){
+                    $scope.condition.multiple = true;
+                }
+                $scope.option = {
+                    no_cascade: true
+                }
+                $scope.noroot = {
+                    onChange: function (node) {
+                        $scope.onChangeTree(node);
+                    }
+                };
+                $scope.onChangeTree = function (node) {
+                    if (!node.checked){
+                        if ($scope.condition.selecteds.length > 0){
+                            $scope.condition.selecteds = $scope.condition.selecteds.filter(selected => node.id != selected.id);
+                        }
+                    }else{
+                        if (!$scope.condition.multiple){
+                            $scope.condition.selecteds.forEach(cnode => cnode.id!==node.id && $scope.noroot.setSelected("id", cnode.id, undefined));
+                            $scope.condition.selecteds = [];
+                        }
+                        $scope.condition.selecteds.push(node);
+                    }
+                };
+
+                $scope.loadData = function () {
+                    let url = "user/orgtreeselect";
+                    let param = {excludeWs: false};
+                    if (UserService.isOrgAdmin()) param.rootId = UserService.getOrganizationId();
+                    HttpUtils.post(url, param, function (response) {
+                        let nodes = response.data;
+                        $scope.buildTreeData(nodes);
+                        $scope.treeData = nodes;
+                    }, function (data) {
+                        $scope.error = data;
+                    })
+                }
+
+                $scope.enableCheckCondition = function (node){
+                    return node.nodeType == 'wks';
+                }
+
+                $scope.allKidsHidden = function(kids){
+                    let result = true;
+                    for (let i = 0; i < kids.length; i++) {
+                        let kid = angular.copy(kids[i]);
+                        angular.forEach($scope.nodeMapping, (value, key) => kid[key] = kid[value]);
+                        let enable = $scope.enableCheckCondition(kid);
+                        if (enable) return false;
+                        let childs = kid.children;
+                        if (childs && childs.length > 0){
+                            if (!$scope.allKidsHidden(childs)) return false;
+                        }
+                    }
+                    return result;
+                }
+
+                $scope.nodeMapping = {
+                    name: "nodeName",
+                    children: "childNodes",
+                    id: "nodeId"
+                }
+                $scope.buildTreeData = (nodes) => {
+                    if (!nodes || nodes.length == 0) return;
+                    let index = nodes.length;
+                    while (index --){
+                        let node = nodes[index];
+                        angular.forEach($scope.nodeMapping, (value, key) => node[key] = node[value]);
+                        let allChildHidden = true;
+                        let enableCheckBox = $scope.enableCheckCondition(node);
+                        node.disabled = !enableCheckBox;
+                        node.hiddenBox = node.disabled;
+                        if (node.hiddenBox){
+                            let kids = node.children;
+                            if (kids && kids.length > 0){
+                                allChildHidden = $scope.allKidsHidden(kids);
+                            }
+                            if (allChildHidden){
+                                //如果所有子节点都不可选择 那么就隐藏
+                                nodes.splice(index, 1);
+                            }
+                        }
+
+                        $scope.buildTreeData(node.children);
+                    }
+
+                }
+
+                // 核心方法，必须有，名字随便，用于添加条件到results
+                $scope.add = function () {
+                    let values = [];
+                    let labels = [];
+                    $scope.condition.selecteds.forEach(function (c) {
+                        if (c.checked) {
+                            values.push(c.id);
+                            labels.push(c.name);
+                        }
+                    });
+                    if (values.length === 0) {
+                        $scope.remove();
+                        return;
+                    }
+                    $scope.condition.values = values;
+                    $scope.condition.label = labels.join(", ");
+                    FilterSearch.push($scope.results, $scope.condition);
+                    $scope.remove();
+                    $scope.complete();
+                    $scope.close();
+                };
+
+                $scope.loadData();
+            }
+        };
+    })
+
 })();
 
 /**
@@ -3185,9 +3406,7 @@
                 };
 
                 $scope.isIndeterminate = function (node) {
-                    if ($scope.option.no_cascade){
-                        return false;
-                    }
+                    if (node.checked && $scope.option.no_cascade) return false;
                     if ($scope.hasChildren(node)) {
                         let checkChild = false;
                         let checkAll = true;
@@ -3195,6 +3414,7 @@
                             let child = node.children[i];
                             if (child.checked) {
                                 checkChild = true;
+                                if ($scope.option.no_cascade) return true;
                             } else {
                                 checkAll = false;
                             }

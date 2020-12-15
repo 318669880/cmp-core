@@ -1,0 +1,27 @@
+<div class="filter-condition">
+    <script type="text/ng-template" id="filter-org-select">
+        <md-content layout="column" class="md-whiteframe-2dp">
+            <!-- <input class="filter-select-search" type="search" ng-model="label" placeholder="{{'i18n_filter_quick_query' | translator:'快速查找'}}"
+                    ng-show="condition.search">-->
+
+            <div layout="column" class="filter-list">
+                <div class="md-padding">
+                    <tree data="treeData" api="noroot" option="option" type="checkbox" style="height: 60vh" class="filter-multistage-tree"></tree>
+                </div>
+            </div>
+
+            <div>
+                <md-button class="md-accent" ng-click="remove();close()">
+                    {{'i18n_filter_condition_cancel' | translator:'取消'}}
+                </md-button>
+                <md-button class="md-primary" ng-click="add()">
+                    {{'i18n_filter_condition_ok' | translator:'确定'}}
+                </md-button>
+            </div>
+        </md-content>
+    </script>
+
+    <span>{{condition.name}} : </span>
+    <input id="_input_" type="text" class="filter-input-text pointer" ng-model="condition.value" ng-click="open()"
+           placeholder="{{'i18n_filter_condition_select' | translator:'请选择'}}{{condition.name}}" readonly filter-popover popover-template="filter-org-select">
+</div>

@@ -5,6 +5,7 @@ import com.fit2cloud.commons.utils.LogUtil;
 import com.fit2cloud.mc.dao.McSysStatsMapper;
 import com.fit2cloud.mc.model.McSysStats;
 import com.fit2cloud.mc.model.McSysStatsExample;
+import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
@@ -42,6 +43,9 @@ public class SyncEurekaServer implements ApplicationRunner {
     @Resource
     private EurekaClientConfigBean eurekaClientConfigBean;
 
+    @Resource
+    private ModelNodeTask modelNodeTask;
+
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
@@ -62,7 +66,11 @@ public class SyncEurekaServer implements ApplicationRunner {
         if (LogUtil.getLogger().isTraceEnabled()) {
             LogUtil.getLogger().trace("serverUrls: " + serverUrls);
         }
-        eurekaClientConfigBean.getServiceUrl().put(EurekaClientConfigBean.DEFAULT_ZONE, StringUtils.join(serverUrls, ","));
+        //eurekaClientConfigBean.getServiceUrl().put(EurekaClientConfigBean.DEFAULT_ZONE, StringUtils.join(serverUrls, ","));
+        if (CollectionUtils.isNotEmpty(serverUrls)){
+            LogUtil.info("ready to regist current eureka [" +localIp+ " to others eureka cluster ["+StringUtils.join(serverUrls, ",")+"]");
+            modelNodeTask.joinCurrentEureka2Cluster(serverUrls);
+        }
         if (LogUtil.getLogger().isTraceEnabled()) {
             LogUtil.getLogger().trace("getServiceUrl: " + eurekaClientConfigBean.getServiceUrl());
         }
@@ -105,9 +113,9 @@ public class SyncEurekaServer implements ApplicationRunner {
         } catch (Exception e) {
             // do nothing
         }
-        if (CollectionUtils.isEmpty(result)) {
+        /*if (CollectionUtils.isEmpty(result)) {
             result.add(defaultUrl);
-        }
+        }*/
         return result;
     }
 

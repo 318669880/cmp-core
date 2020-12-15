@@ -35,7 +35,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class ModelNodeTask {
@@ -78,6 +77,7 @@ public class ModelNodeTask {
      * @throws Exception
      */
     public void registerCurrentMc() throws Exception{
+        initCurrentConfig();
         if (SyncEurekaServer.IS_KUBERNETES) {
             chainK8sStart();//关联启动下属所有子模块
             return;
@@ -89,7 +89,7 @@ public class ModelNodeTask {
 
     @Async
     public void syncNode() throws Exception{
-        initCurrentConfig();
+
         syncFromDb();
         chainStart();//关联启动下属所有子模块
     }
@@ -199,6 +199,7 @@ public class ModelNodeTask {
                 return !currentServersLists.contains(server) && isHostConnectable(cHost);
             }).collect(Collectors.toList());
             if(!CollectionUtils.isEmpty(newServers)){
+                LogUtil.info("ready to regist current eureka [" +host+ " to others eureka cluster ["+StringUtils.join(newServers, ",")+"]");
                 //List<String> realServers = Stream.of(newServers, currentServersLists).flatMap(Collection::stream).distinct().collect(Collectors.toList());
                 /*List<String> realServers = newServers;
                 String fixedEureka = environment.getProperty("fixed-eureka");
@@ -220,7 +221,7 @@ public class ModelNodeTask {
         String host = environment.getProperty("eureka.instance.ip-address")+":"+port;
         return host+eureka_key;
     }
-    private void joinCurrentEureka2Cluster(List<String> newEurekaServers){
+    public void joinCurrentEureka2Cluster(List<String> newEurekaServers){
         String pk = currentConfigPk();
         Optional.ofNullable(configPropertiesMapper.selectByPrimaryKey(pk)).ifPresent(config -> {
             config.setConfv(StringUtils.join(newEurekaServers, ","));

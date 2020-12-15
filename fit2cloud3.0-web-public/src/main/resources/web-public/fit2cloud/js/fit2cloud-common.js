@@ -3124,7 +3124,11 @@
                         $scope.remove();
                         return;
                     }
-                    $scope.condition.values = values;
+                    if ($scope.condition.multiple){
+                        $scope.condition.values = values;
+                    }else {
+                        $scope.condition.value = values[0];
+                    }
                     $scope.condition.label = labels.join(", ");
                     FilterSearch.push($scope.results, $scope.condition);
                     $scope.remove();
@@ -3252,7 +3256,11 @@
                         $scope.remove();
                         return;
                     }
-                    $scope.condition.values = values;
+                    if ($scope.condition.multiple){
+                        $scope.condition.values = values;
+                    }else {
+                        $scope.condition.value = values[0];
+                    }
                     $scope.condition.label = labels.join(", ");
                     FilterSearch.push($scope.results, $scope.condition);
                     $scope.remove();

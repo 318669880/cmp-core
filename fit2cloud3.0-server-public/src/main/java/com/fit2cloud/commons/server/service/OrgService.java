@@ -2,7 +2,10 @@ package com.fit2cloud.commons.server.service;
 
 import com.fit2cloud.commons.server.base.domain.Organization;
 import com.fit2cloud.commons.server.base.domain.OrganizationExample;
+import com.fit2cloud.commons.server.base.domain.Workspace;
+import com.fit2cloud.commons.server.base.domain.WorkspaceExample;
 import com.fit2cloud.commons.server.base.mapper.OrganizationMapper;
+import com.fit2cloud.commons.server.base.mapper.WorkspaceMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ import java.util.List;
 public class OrgService {
     @Resource
     private OrganizationMapper organizationMapper;
+    @Resource
+    private WorkspaceMapper workspaceMapper;
 
     public Organization getOrg(String id) {
         return organizationMapper.selectByPrimaryKey(id);
@@ -41,5 +46,17 @@ public class OrgService {
                 getTree(organizationList, org);
             }
         }
+    }
+
+    public List<Workspace> getWorkspacesByOrgIds(List<String> orgIds) {
+        WorkspaceExample workspaceExample = new WorkspaceExample();
+        workspaceExample.createCriteria().andOrganizationIdIn(orgIds);
+        return workspaceMapper.selectByExample(workspaceExample);
+    }
+
+    public List<Organization> getFirstOrganizations() {
+        OrganizationExample organizationExample = new OrganizationExample();
+        organizationExample.createCriteria().andPidIsNull();
+        return organizationMapper.selectByExample(organizationExample);
     }
 }

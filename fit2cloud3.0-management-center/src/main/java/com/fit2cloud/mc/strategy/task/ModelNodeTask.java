@@ -218,8 +218,8 @@ public class ModelNodeTask {
 
     private String currentConfigPk(){
         String eureka_key = DEFAULT_ZONE_PROPERTIES;
-        String host = environment.getProperty("eureka.instance.ip-address")+":"+port;
-        return host+eureka_key;
+        //String host = environment.getProperty("eureka.instance.ip-address")+":"+port;
+        return currentProfile+eureka_key;
     }
     public void joinCurrentEureka2Cluster(List<String> newEurekaServers){
         String pk = currentConfigPk();
@@ -237,7 +237,7 @@ public class ModelNodeTask {
      */
     @Async
     public void refreshConfig(){
-        String host = "http://"+environment.getProperty("eureka.instance.ip-address")+":"+port;
+        String host = "http://127.0.0.1:"+port;
         String url = host+"/actuator/refresh";
         String result = HttpClientUtil.post(url, "{}");
         LogUtil.info("The config of "+host + "has changed with ["+result+"]");

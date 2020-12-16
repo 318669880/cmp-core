@@ -17,9 +17,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class SyncEurekaServer implements ApplicationRunner {
@@ -66,10 +65,13 @@ public class SyncEurekaServer implements ApplicationRunner {
         if (LogUtil.getLogger().isTraceEnabled()) {
             LogUtil.getLogger().trace("serverUrls: " + serverUrls);
         }
+        String[] currentServers = eurekaClientConfigBean.getServiceUrl().get(EurekaClientConfigBean.DEFAULT_ZONE).split(",");
+        List<String> currentServerList = Arrays.asList(currentServers);
+        List<String> otherEurekaUrls = serverUrls.stream().filter(serverUrl -> !currentServerList.contains(serverUrl)).distinct().collect(Collectors.toList());
         //eurekaClientConfigBean.getServiceUrl().put(EurekaClientConfigBean.DEFAULT_ZONE, StringUtils.join(serverUrls, ","));
-        if (CollectionUtils.isNotEmpty(serverUrls)){
-            LogUtil.info("ready to regist current eureka [" +localIp+ " to others eureka cluster ["+StringUtils.join(serverUrls, ",")+"]");
-            modelNodeTask.joinCurrentEureka2Cluster(serverUrls);
+        if (CollectionUtils.isNotEmpty(otherEurekaUrls)){
+            LogUtil.info("ready to regist current eureka [" +localIp+ " to others eureka cluster ["+StringUtils.join(otherEurekaUrls, ",")+"]");
+            modelNodeTask.joinCurrentEureka2Cluster(otherEurekaUrls);
         }
         if (LogUtil.getLogger().isTraceEnabled()) {
             LogUtil.getLogger().trace("getServiceUrl: " + eurekaClientConfigBean.getServiceUrl());

@@ -48,6 +48,13 @@ public class ModelNodeTask {
     @Value("${server.port}")
     private String port;
 
+    @Value("${spring.cloud.config.profile}")
+    private String currentProfile;
+    @Value("${spring.cloud.config.name}")
+    private String configName;
+    @Value("${spring.cloud.config.label}")
+    private String label;
+
 
     @Resource
     @Lazy
@@ -71,6 +78,11 @@ public class ModelNodeTask {
 
     @Resource
     private DiscoveryClient discoveryClient;
+
+    @Resource
+    private ConfigPropertiesMapper configPropertiesMapper;
+
+
 
     /**
      * 注册当前服务到eureka集群
@@ -211,14 +223,10 @@ public class ModelNodeTask {
     }
 
 
-    @Resource
-    private ConfigPropertiesMapper configPropertiesMapper;
-
 
 
     private String currentConfigPk(){
         String eureka_key = DEFAULT_ZONE_PROPERTIES;
-        //String host = environment.getProperty("eureka.instance.ip-address")+":"+port;
         return currentProfile+eureka_key;
     }
     public void joinCurrentEureka2Cluster(List<String> newEurekaServers){
@@ -244,10 +252,7 @@ public class ModelNodeTask {
     }
 
 
-    @Value("${spring.cloud.config.profile}")
-    private String currentProfile;
-    @Value("${spring.cloud.config.name}")
-    private String configName;
+
     private void initCurrentConfig(){
         String pk = currentConfigPk();
         Optional.ofNullable(configPropertiesMapper.selectByPrimaryKey(pk)).ifPresent(config -> {
@@ -259,7 +264,7 @@ public class ModelNodeTask {
         config.setConfv(environment.getProperty(DEFAULT_ZONE_PROPERTIES));
         config.setApplication(configName);
         config.setProfile(currentProfile);
-        config.setLabel("master");
+        config.setLabel(label);
         configPropertiesMapper.insert(config);
     }
 

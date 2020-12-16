@@ -109,8 +109,10 @@ public class SyncEurekaServer implements ApplicationRunner {
         List<String> result = new ArrayList<>();
         try {
             String host = new URL(defaultUrl).getHost();
+            LogUtil.info("The default eureka host is " +host);
             members.forEach(ip -> result.add(StringUtils.replaceFirst(defaultUrl, host, ip)));
         } catch (Exception e) {
+            LogUtil.error("get Default eureka host error : "+e.getMessage());
             // do nothing
         }
         /*if (CollectionUtils.isEmpty(result)) {

@@ -194,19 +194,9 @@ public class ModelNodeController {
     }
 
 
-    @Value("${eureka.client.service-url.defaultZone}")
-    private String eurekaUrl;
-
-    @GetMapping("/test")
-    public Object test(){
-        return eurekaUrl;
-    }
-
-
 
     @Resource
     private DiscoveryClient discoveryClient;
-
     @GetMapping("/services")
     public List<ServiceInstance> showAllService(){
         List<String> services = discoveryClient.getServices();
@@ -214,8 +204,6 @@ public class ModelNodeController {
             return discoveryClient.getInstances(service).stream();
         }).collect(Collectors.toList());
         return collect;
-
-
     }
 
 }

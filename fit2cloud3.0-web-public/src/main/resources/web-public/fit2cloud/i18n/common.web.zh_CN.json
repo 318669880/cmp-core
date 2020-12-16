@@ -390,5 +390,6 @@
   "i18n_please_select_host_for_proxy": "请选择要设置代理的主机!",
   "i18n_please_select_host_for_unproxy": "请选择要取消代理的主机.",
   "i18n_confirm_unset_proxy": "确定取消代理？",
-  "i18n_unset_proxy_success": "取消代理成功！"
+  "i18n_unset_proxy_success": "取消代理成功！",
+  "i18n_all_organizations": "所有组织"
 }

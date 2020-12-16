@@ -1748,7 +1748,7 @@
 
 
 
-    F2CModule.directive("treeSelect", function ($compile, HttpUtils) {
+    F2CModule.directive("treeSelect", function ($compile, HttpUtils, $filter) {
         return {
             restrict: 'E',
             replace: true,
@@ -1765,7 +1765,8 @@
                 name: "@",
                 builder: "=",
                 required: "@",
-                checkCondition:"&"
+                checkCondition:"&",
+                isShowExtItem: "@"
             },
             link: function ($scope, element, attr, ctrl) {
 
@@ -1959,6 +1960,19 @@
                 $scope.loadTreeData = function(){
                     HttpUtils.post($scope.tsUrl, $scope.where, function (response) {
                         let nodes = response.data;
+                        if ($scope.isShowExtItem){
+                            nodes.unshift({
+                                "nodeId":null,
+                                "nodeName":$filter('translator')('i18n_all_organizations', '所有组织'),
+                                "nodeType":"org",
+                                "relativeNum":99,
+                                "description":"",
+                                "parentId":null,
+                                "createTime":null,
+                                "parentNode":null,
+                                "childNodes":[]
+                            });
+                        }
                         $scope.buildTreeData(nodes);
                         $scope.treeData = nodes;
                         $scope.selected2Results();

@@ -76,6 +76,10 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
         {value: Translator.get("i18n_create_time"), key: "create_time"},
     ];
 
+    $scope.highLight = function(item){
+        return $scope.filters && $scope.filters.some(filter => filter.key == "name" && item.name.indexOf(filter.label) != -1) ;
+    };
+
     $scope.list = function (sortObj) {
         var condition = FilterSearch.convert($scope.filters);
         if (sortObj) {
@@ -92,6 +96,7 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
             $scope.sourceItems = angular.copy($scope.items);
             $scope.enableIds = $scope.sourceItems.map(item => item.id)
             $scope.items = $scope.formatTree();
+
         });
     };
     $scope.hasKid = function(node){

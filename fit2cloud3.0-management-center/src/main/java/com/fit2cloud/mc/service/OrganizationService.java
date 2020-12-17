@@ -21,6 +21,7 @@ import com.fit2cloud.mc.dao.ext.ExtWorkspaceMapper;
 import com.fit2cloud.mc.dto.OrganizationDTO;
 import com.fit2cloud.mc.dto.request.CreateOrganizationRequest;
 import com.fit2cloud.mc.dto.request.UpdateOrganizationRequest;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DuplicateKeyException;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Author: chunxing
@@ -66,6 +68,55 @@ public class OrganizationService {
     public List<OrganizationDTO> paging(Map<String, Object> map) {
         return extOrganizationMapper.paging(map);
     }
+
+    public List<String> currentLineIds(List<String> orgIds){
+        List<Map<String, String>> idMaps = extOrganizationMapper.ids();
+        List<String> results = lineIds(orgIds, idMaps);
+        return results;
+    }
+
+    public List<String> lineIds(List<String> orgIds, List<Map<String,String>> allIdMaps){
+        Set<String> pNodeIdSets = new HashSet<>();
+        Set<String> cNodeIdSets = new HashSet<>();
+        List<Map<String, String>> currentIds = allIdMaps.stream().filter(idMap -> orgIds.contains(idMap.get("id"))).collect(Collectors.toList());
+
+
+        Map<String, Map<String, String>> nodesMap = allIdMaps.stream().collect(Collectors.toMap(idMap -> idMap.get("id"), k -> k));
+        Map<String, List<Map<String, String>>> pnodesMap = allIdMaps.stream().collect(Collectors.groupingBy(idMap -> Optional.ofNullable(idMap.get("pid")).orElse("-1")));
+        //向上依次获取父节点ID
+        currentIds.stream().forEach(idMap -> {
+            while (ObjectUtils.isNotEmpty(idMap)) {
+                pNodeIdSets.add(idMap.get("id"));
+                String parentId = idMap.get("pid");
+                idMap = StringUtils.isNotEmpty(parentId) ? nodesMap.get(parentId) : null;
+            }
+        });
+
+        while (CollectionUtils.isNotEmpty(currentIds)){
+            List<Map<String, String>> kids = new ArrayList<>();
+            for (int i = 0; i < currentIds.size(); i++) {
+                Map<String, String> idMap = currentIds.get(i);
+                String id = idMap.get("id");
+                cNodeIdSets.add(id);
+                Optional.ofNullable(pnodesMap.get(id)).ifPresent(kids::addAll);
+            }
+            currentIds = kids;
+        }
+
+        pNodeIdSets.addAll(cNodeIdSets);
+
+        return new ArrayList<>(pNodeIdSets);
+    }
+
+
+
+    public List<String> currentOrganizationByName(String name){
+        OrganizationExample example = new OrganizationExample();
+        example.createCriteria().andNameLike(name);
+        List<Organization> organizations = organizationMapper.selectByExample(example);
+        return organizations.stream().map(Organization::getId).collect(Collectors.toList());
+    }
+
 
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<String> organizationIds) {

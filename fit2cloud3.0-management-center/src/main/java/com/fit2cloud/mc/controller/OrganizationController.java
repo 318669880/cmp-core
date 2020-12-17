@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @RequestMapping("/organization")
@@ -77,6 +78,18 @@ public class OrganizationController {
             List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(orgId);
             map.put("orgIds", orgIds);
         }
+        Optional.ofNullable(map.get("name")).ifPresent(name -> {
+            List<String> ids = organizationService.currentOrganizationByName((String) name);
+            List<String> orgIdLists = organizationService.currentLineIds(ids);
+            AtomicReference<List<String>> reference = new AtomicReference<>(orgIdLists);
+            Optional.ofNullable(map.get("orgIds")).ifPresent(authIds -> {
+                List<String> authIdList = (List<String>) authIds;
+                List<String> intersection = authIdList.stream().filter(id -> orgIdLists.stream().anyMatch(cId -> StringUtils.equals(cId, id))).collect(Collectors.toList());
+                reference.set(intersection);
+            });
+            map.put("orgIds", reference.get());
+            map.remove("name");
+        });
         Page page = PageHelper.startPage(goPage, pageSize, true);
         return PageUtils.setPageInfo(page, organizationService.paging(map));
     }

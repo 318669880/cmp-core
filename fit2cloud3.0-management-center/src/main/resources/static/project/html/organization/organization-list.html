@@ -45,7 +45,10 @@
                                         <md-icon ng-if="item.status == 'open'" >keyboard_arrow_down</md-icon>
                                     </md-button>
                                     <div class="tree-node-prefix" ng-if="!item.childNodes || item.childNodes.length == 0"></div>
-                                    <div class="tree-node-content">
+                                    <div ng-if="highLight(item)" class="tree-node-content" style="background-color: red;">
+                                        {{item.name}}
+                                    </div>
+                                    <div ng-if="!highLight(item)" class="tree-node-content">
                                         {{item.name}}
                                     </div>
                                 </div>

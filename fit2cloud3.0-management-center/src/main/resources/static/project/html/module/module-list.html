@@ -79,7 +79,7 @@
                                 </div>
                                 <div flex="auto"></div>
                                 <div layout="row" layout-align="center center" class="footer">
-                                    <div flex="50" style="margin: 16px 0">
+                                    <div flex="100" style="margin: 16px 0">
                                         <div ng-if="item.auth ">
                                             <span ng-switch="item.status">
                                                 <span ng-switch-when="stopped" md-colors="{color: 'red'}"
@@ -95,17 +95,17 @@
                                             translator:'未授权'}}
                                         </div>
                                     </div>
-                                    <div flex="50" layout-align="end" layout="row">
-                                        <div ng-if="item.auth && item.id !== 'dashboard' &&  item.id !== 'management-center' && item.id !== 'gateway'"
-                                             style="margin: 21px 5px;">
-                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_module_disable' | translator:'禁用'}}</span>
-                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_module_enable' | translator:'启用'}}</span>
-                                        </div>
-                                        <md-switch class="md-primary" ng-model="item.active"
-                                                   ng-change="changeActive(item)"
-                                                   has-permission="MODULE:READ+ACTIVE"
-                                                   ng-hide="!item.auth || item.id === 'dashboard' || item.id === 'management-center' || item.id === 'gateway'"></md-switch>
-                                    </div>
+<!--                                    <div flex="50" layout-align="end" layout="row">-->
+<!--                                        <div ng-if="item.auth && item.id !== 'dashboard' &&  item.id !== 'management-center' && item.id !== 'gateway'"-->
+<!--                                             style="margin: 21px 5px;">-->
+<!--                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_module_disable' | translator:'禁用'}}</span>-->
+<!--                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_module_enable' | translator:'启用'}}</span>-->
+<!--                                        </div>-->
+<!--                                        <md-switch class="md-primary" ng-model="item.active"-->
+<!--                                                   ng-change="changeActive(item)"-->
+<!--                                                   has-permission="MODULE:READ+ACTIVE"-->
+<!--                                                   ng-hide="!item.auth || item.id === 'dashboard' || item.id === 'management-center' || item.id === 'gateway'"></md-switch>-->
+<!--                                    </div>-->
                                 </div>
                             </div>
                         </div>
@@ -147,14 +147,14 @@
                                                          {{'i18n_search_log' | translator}}
                                                     </md-button>
                                                 </md-menu-item>
-                                                <md-menu-item class="f2c-menu-item" has-permission="MODULE:READ+DELETE">
-                                                    <md-button ng-click="deleteModule(item.id)">
-                                                        <md-icon md-font-icon="material-icons md-24"
-                                                                 style="margin-right: 6px">delete
-                                                        </md-icon>
-                                                         {{'i18n_delete' | translator}}
-                                                    </md-button>
-                                                </md-menu-item>
+<!--                                                <md-menu-item class="f2c-menu-item" has-permission="MODULE:READ+DELETE">-->
+<!--                                                    <md-button ng-click="deleteModule(item.id)">-->
+<!--                                                        <md-icon md-font-icon="material-icons md-24"-->
+<!--                                                                 style="margin-right: 6px">delete-->
+<!--                                                        </md-icon>-->
+<!--                                                         {{'i18n_delete' | translator}}-->
+<!--                                                    </md-button>-->
+<!--                                                </md-menu-item>-->
                                             </md-menu-content>
                                         </md-menu>
                                     </div>
@@ -164,7 +164,7 @@
                                 </div>
                                 <div flex="auto"></div>
                                 <div layout="row" layout-align="end center" class="footer">
-                                    <div flex="50" style="margin: 16px 0">
+                                    <div flex="100" style="margin: 16px 0">
                                         <div ng-if="item.auth ">
                                             <span ng-if="item.active">
                                                 <span ng-switch="item.status">
@@ -180,17 +180,17 @@
 
                                         </div>
                                     </div>
-                                    <div flex="50" layout-align="end" layout="row">
-                                        <div ng-if="item.auth " style="margin: 21px 5px;">
-                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_module_disable' | translator:'禁用'}}</span>
-                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_module_enable' | translator:'启用'}}</span>
+<!--                                    <div flex="50" layout-align="end" layout="row">-->
+<!--                                        <div ng-if="item.auth " style="margin: 21px 5px;">-->
+<!--                                            <span ng-if="!item.active" md-colors="{color: 'red'}">{{'i18n_module_disable' | translator:'禁用'}}</span>-->
+<!--                                            <span ng-if="item.active" md-colors="{color: 'green'}">{{'i18n_module_enable' | translator:'启用'}}</span>-->
 
-                                        </div>
-                                        <md-switch class="md-primary" ng-model="item.active"
-                                                   ng-change="changeActive(item)"
-                                                   has-permission="MODULE:READ+ACTIVE"
-                                                   ng-hide="!item.auth ||item.id === 'dashboard' || item.id === 'management-center' || item.id === 'gateway'"></md-switch>
-                                    </div>
+<!--                                        </div>-->
+<!--                                        <md-switch class="md-primary" ng-model="item.active"-->
+<!--                                                   ng-change="changeActive(item)"-->
+<!--                                                   has-permission="MODULE:READ+ACTIVE"-->
+<!--                                                   ng-hide="!item.auth ||item.id === 'dashboard' || item.id === 'management-center' || item.id === 'gateway'"></md-switch>-->
+<!--                                    </div>-->
                                 </div>
                             </div>
                         </div>

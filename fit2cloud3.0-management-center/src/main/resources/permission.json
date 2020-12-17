@@ -418,6 +418,14 @@
       ]
     },
     {
+      "id": "DICTIONARY_OS:READ+VERSION_DELETE",
+      "name": "i18n_permission_os_version_delete",
+      "resourceId": "DICTIONARY_OS",
+      "parentRoles": [
+        "ADMIN"
+      ]
+    },
+    {
       "id": "KEYCLOAK_SETTING:READ",
       "name": "i18n_permission_keycloak_settings_read",
       "resourceId": "KEYCLOAK_SETTING",

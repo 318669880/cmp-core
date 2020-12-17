@@ -157,8 +157,8 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
         $scope.items.forEach(item => {
             item.show = true;
             if (!item.pid) {
-                //item.level = 0;
                 formatItems.push(item);
+                item.is_root = true;
             }
             $scope.items.forEach(tempItem => {
                 if (tempItem.pid == item.id){
@@ -166,24 +166,30 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
                         item.childNodes = [];
                     }
                     item.childNodes.push(tempItem);
+                    tempItem.is_child = true;
                 }
             })
         });
+        /**
+         * 解决分页第二页因为没有根节点无法展示的bug
+         */
+        let missionItems = $scope.items.filter(item => !item.is_root && !item.is_child);
+        formatItems = formatItems.concat(missionItems);
+
         let results = [];
-        $scope.expandTree(formatItems, results, 0);
+        formatItems && formatItems.length > 0 && $scope.expandTree(formatItems, results);
         return results;
     };
 
-    $scope.expandTree = function(treeDatas, results, level){
+    $scope.expandTree = function(treeDatas, results){
         if (!results) results = [];
         treeDatas.forEach(node => {
-            node.level = level;
-            node._prefix = $scope.treeNodePrefix(level);
+            node._prefix = $scope.treeNodePrefix(node.level);
             node.name = node.name;
             results.push(node);
             if (node.childNodes && node.childNodes.length > 0){
                 node.status = 'open';
-                $scope.expandTree(node.childNodes, results, level+1);
+                $scope.expandTree(node.childNodes, results);
             }
         });
     }

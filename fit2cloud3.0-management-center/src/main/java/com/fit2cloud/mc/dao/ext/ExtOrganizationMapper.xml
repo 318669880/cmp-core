@@ -31,11 +31,12 @@
                 #{orgId}
             </foreach>
         </if>
+        ORDER BY LEVEL ASC, create_time DESC
         <if test="map.sort!=null">
-            order by ${map.sort}
+            , ${map.sort}
         </if>
         <if test="map.sort == null">
-            order by name
+            , name
         </if>
 
     </select>

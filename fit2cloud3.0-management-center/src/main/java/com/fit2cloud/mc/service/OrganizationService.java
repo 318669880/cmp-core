@@ -21,6 +21,7 @@ import com.fit2cloud.mc.dao.ext.ExtWorkspaceMapper;
 import com.fit2cloud.mc.dto.OrganizationDTO;
 import com.fit2cloud.mc.dto.request.CreateOrganizationRequest;
 import com.fit2cloud.mc.dto.request.UpdateOrganizationRequest;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -90,10 +91,17 @@ public class OrganizationService {
         if (StringUtils.isBlank(request.getName())) {
             F2CException.throwException(Translator.get("i18n_ex_organization_name"));
         }
+
         Organization organization = new Organization();
         BeanUtils.copyBean(organization, request);
         organization.setId(UUIDUtil.newUUID());
         organization.setCreateTime(Instant.now().toEpochMilli());
+        organization.setLevel(0);
+        Optional.ofNullable(request.getPid()).ifPresent(pid -> {
+            Organization parentOrganization = organizationMapper.selectByPrimaryKey(pid);
+            Integer pLevel = ObjectUtils.isEmpty(parentOrganization) ? -1 : parentOrganization.getLevel();
+            organization.setLevel(pLevel + 1);
+        });
         try {
             organizationMapper.insert(organization);
             OperationLogService.log(null, organization.getId(), organization.getName(), ResourceTypeConstants.ORGANIZATION.name(), ResourceOperation.CREATE, null);
@@ -114,13 +122,18 @@ public class OrganizationService {
         }
         Organization organization = new Organization();
         BeanUtils.copyBean(organization, request);
+        organization.setLevel(0);
+        Optional.ofNullable(request.getPid()).ifPresent(pid -> {
+            Organization parentOrganization = organizationMapper.selectByPrimaryKey(pid);
+            Integer pLevel = ObjectUtils.isEmpty(parentOrganization) ? -1 : parentOrganization.getLevel();
+            organization.setLevel(pLevel + 1);
+        });
         try {
             organizationMapper.updateByPrimaryKeySelective(organization);
             OperationLogService.log(null, organization.getId(), organization.getName(), ResourceTypeConstants.ORGANIZATION.name(), ResourceOperation.UPDATE, null);
         } catch (DuplicateKeyException e) {
             F2CException.throwException(MessageConstants.NameDuplicateKey);
         }
-
         return organization;
     }
 

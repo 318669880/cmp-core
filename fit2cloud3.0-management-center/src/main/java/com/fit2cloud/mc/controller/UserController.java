@@ -135,7 +135,7 @@ public class UserController {
 
 
     @PostMapping(value = "/ids/{userId}")
-    @RequiresPermissions(PermissionConstants.USER_DELETE)
+    @RequiresPermissions(PermissionConstants.USER_EDIT)
     public Object resourceIds(@PathVariable String userId) {
         return userService.resourceIds(userId);
     }
@@ -153,7 +153,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/role/info/{userId}")
-    @RequiresPermissions(value = PermissionConstants.USER_DELETE)
+    @RequiresPermissions(value = PermissionConstants.USER_EDIT)
     public Object roleInfo(@PathVariable String userId) {
         return userService.roleInfo(userId);
     }

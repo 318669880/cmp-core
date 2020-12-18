@@ -53,8 +53,11 @@
             <if test="params.workspaceId!=null">
                 AND cloud_server.workspace_id = #{params.workspaceId}
             </if>
-            <if test="params.organizationId!=null">
-                AND workspace.organization_id = #{params.organizationId}
+            <if test="params.organizationIds!=null">
+                AND workspace.organization_id IN
+                <foreach collection="params.organizationIds" item="organizationId" separator="," open="(" close=")">
+                    #{organizationId, jdbcType=VARCHAR}
+                </foreach>
             </if>
             <if test="params.os!=null">
                 AND cloud_server.os like #{params.os}

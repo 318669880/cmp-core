@@ -14,9 +14,6 @@ public class WorkspaceRequest {
     @FuzzyQuery
     private String name;
 
-    @ApiModelProperty("组织ID")
-    private List<String> organizationIds;
-
     @ApiModelProperty(hidden = true)
     private List<String> resourceIds;
 
@@ -39,21 +36,17 @@ public class WorkspaceRequest {
         this.name = name;
     }
 
-    /*public String getOrganizationId() {
+    @ApiModelProperty("组织ID")
+    private String organizationId;
+
+    public String getOrganizationId() {
         return organizationId;
     }
 
     public void setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
-    }*/
-
-    public List<String> getOrganizationIds() {
-        return organizationIds;
     }
 
-    public void setOrganizationIds(List<String> organizationIds) {
-        this.organizationIds = organizationIds;
-    }
 
     public List<String> getResourceIds() {
         return resourceIds;

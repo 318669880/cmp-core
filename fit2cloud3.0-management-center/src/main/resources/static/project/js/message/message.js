@@ -112,6 +112,11 @@ ProjectApp.controller('MessageController', function ($scope, $http, Notification
         })
     };
 
+    $scope.support = function (url) {
+        window.open(url, '_blank');
+    };
+
+
     $scope.view = function (password, eye) {
         eyeService.view("#" + password, "#" + eye);
     };

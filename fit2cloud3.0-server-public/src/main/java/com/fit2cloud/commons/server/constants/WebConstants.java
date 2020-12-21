@@ -65,8 +65,7 @@ public class WebConstants {
                 ui.put(ParamConstants.UI.SYSTEM_NAME.getValue(), Translator.get("i18n_p_ui_system_name"));
             }
             if (StringUtils.isBlank(ui.get(ParamConstants.UI.THEME_PRIMARY.getValue()))) {
-//                ui.put(ParamConstants.UI.THEME_COLOR.getValue(), "#3c77e7");
-                ui.put(ParamConstants.UI.THEME_PRIMARY.getValue(), "#004A71");
+                ui.put(ParamConstants.UI.THEME_PRIMARY.getValue(), "#0A7BE0");
             }
 
             if (StringUtils.isBlank(ui.get(ParamConstants.UI.THEME_ACCENT.getValue()))) {

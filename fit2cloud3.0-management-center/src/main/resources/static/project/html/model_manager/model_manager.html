@@ -20,18 +20,6 @@
                         <md-content class="md-padding" cg-busy="{promise:loadingLayer,minDuration:500}" >
                             <filter-tools conditions="conditions" results="filters" search="'true'" execute="list()">
                                 <select-columns columns="columns"></select-columns>
-                                <!--<div class="filter-item" ng-if="indexServer.model_env == 'host'">
-                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStart()">
-                                        <md-tooltip md-delay="300">{{'i18n_model_op_start' | translator:'启动'}}</md-tooltip>
-                                        <md-icon>touch_app</md-icon>
-                                    </md-button>
-                                </div>
-                                <div class="filter-item" ng-if="indexServer.model_env == 'host'">
-                                    <md-button class="md-icon-button md-whiteframe-1dp" ng-click="modelInstaller.allNodeStop()">
-                                        <md-tooltip md-delay="300">{{'i18n_model_op_stop' | translator:'停止'}}</md-tooltip>
-                                        <md-icon>stop</md-icon>
-                                    </md-button>
-                                </div>-->
                                 <div class="filter-item">
                                     <md-button class="md-icon-button md-whiteframe-1dp" ng-click="list()">
                                         <md-tooltip md-delay="300">{{'i18n_refresh' | translator:'刷新'}}</md-tooltip>
@@ -42,16 +30,9 @@
                             <table class="edit-table" dynamic-table columns="columns" execute="list({sql :sql})">
                                 <tbody>
                                 <tr ng-repeat="item in items">
-                                    <!--<td has-permissions="KEYCLOAK_SETTING:SYNC">
-                                        <md-checkbox md-no-ink aria-label=" {{'i18n_mail_enable' | translator}}"
-                                                     ng-model="item.enable"
-                                                     class="md-primary"></md-checkbox>
-                                    </td>-->
                                     <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.fName || item.name}}</td>
-                                    <!--<td>{{item.module}}</td>-->
                                     <td class="edit-td" ng-if="indexServer.model_env=='k8s'">
                                         <a class="edit-span" class="md-primary" style="cursor:pointer;" href="" ng-click="toPodNumPage(item)">
-                                            <!--{{item.statuInfo}}-->
                                             <span ng-if="item.sync" md-colors="{color: 'blue'}">
                                                 <i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i>
                                                 {{item.dynamicInfo}}
@@ -211,9 +192,7 @@
                                                      ng-model="item.enable"
                                                      class="md-primary"></md-checkbox>
                                     </td>
-                                    <!--<td><img ng-src="{{item.remoteImageUrl}}" height="16px" width="16px" style="vertical-align:middle">{{item.name}}</td>-->
                                     <td><img ng-src="{{item.icon}}" height="16px" width="16px" style="vertical-align:middle">{{item.fName}}</td>
-                                    <!--<td>{{item.module}}</td>-->
                                     <td class="edit-td">
                                         <div layout="row">
                                             <a class="edit-span" class="md-primary" style="cursor:pointer;text-decoration: none!important;" href=""
@@ -226,7 +205,6 @@
                                                     <span class="auto-break">{{'i18n_model_node_over_view' | translator:'描述信息'}}：{{item.last_version.description}}</span>
                                                 </md-tooltip>
                                             </a>
-                                            <!--<span class="edit-span" ng-hide="item._versionEdit" >{{item.lastRevision}}</span>-->
                                             <md-select ng-show="item._versionEdit" ng-model="item.lastRevision" ng-change="modelInstaller.doneEditVersion(item)">
                                                 <md-option ng-repeat="vitem in currentRevisions" value="{{vitem.revision}}">{{vitem.revision}}
                                                 </md-option>
@@ -266,7 +244,6 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            <!--<table-pagination pagination="pagination"></table-pagination>-->
                         </md-content>
 
                     </md-tab>
@@ -333,19 +310,6 @@
                                         </div>
                                     </md-input-container>
 
-                                    <!--<md-input-container ng-show="!!indexServer.onLine" md-no-float class="md-block"
-                                                        layout-gt-xs="row"
-                                                        style="margin-bottom: 0px" >
-                                        <md-icon>link</md-icon>
-                                        <input style="cursor:pointer;" ng-model="indexServer.address"
-                                               type="text"
-                                               placeholder="{{'i18n_index_server_addr' | translator:'索引服务地址'}}">
-                                    </md-input-container>
-
-                                    <md-content ng-show="!!indexServer.onLine" class="md-block" flex="100" style="margin-left: 30px">
-                                        <label>{{'i18n_mc_explain' | translator:'说明'}}：</label>
-                                        <span> {{'i18n_index_server_online_explain' | translator:'此设置的目的是为了从索引服务器拉取镜像' }}</span>
-                                    </md-content>-->
                                 </form>
                                 <div layout="row" layout-align="start center" layout-margin>
 

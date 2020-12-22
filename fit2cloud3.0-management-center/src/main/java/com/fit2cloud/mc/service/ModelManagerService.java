@@ -87,8 +87,7 @@ public class ModelManagerService {
             } else {
                 modelManager.setEnv(RuntimeEnvironment.HOST);
             }
-            //modelManager.setModelAddress(modelAddress);
-            modelManager.setOnLine(true);
+            modelManager.setOnLine(false);
         }
         return modelManager;
     }

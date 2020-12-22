@@ -15,7 +15,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         this.validate = false;
         this.autoNext = true;
         this.model_env = 'host';
-        this.onLine = true;
+        this.onLine = false;
         this.dockerRegistry = {};
         this._dockerRegistry = {};
         this.manager_uuid = null;
@@ -41,6 +41,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         loadData: function() {
             let _self = this;
             $scope.executeAjax(this._loadDataUrl,'GET',{},response => {
+                console.log(response);
                 _self.manager_uuid = response.uuid;
                 _self._init_address = response.modelAddress
                 _self.address = response.modelAddress;

@@ -40,9 +40,9 @@ public class SwaggerConfig {
     private TypeResolver typeResolver;
 
     private ApiInfo apiInfo() {
-        Contact contact = new Contact("FIT2CLOUD", null, null);
+        Contact contact = new Contact("CloudExplorer", null, null);
         return new ApiInfoBuilder()
-                .title("FIT2CLOUD Restful APIs")
+                .title("CloudExplorer Restful APIs")
                 .contact(contact)
                 .version("3.0")
                 .build();
@@ -71,7 +71,7 @@ public class SwaggerConfig {
     public SwaggerResourcesProvider swaggerResourcesProvider(InMemorySwaggerResourcesProvider defaultResourcesProvider) {
         return () -> {
             SwaggerResource wsResource = new SwaggerResource();
-            wsResource.setName("FIT2CLOUD");
+            wsResource.setName("CloudExplorer");
             wsResource.setSwaggerVersion("3.0");
             wsResource.setLocation("/v2/websockets.json");
 

@@ -6,10 +6,10 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
         {key: "name", name: Translator.get("i18n_workspace_name"), directive: "filter-contains"},
     ];
     $scope.conditions.push({
-        key: "organizationIds",
+        key: "organizationId",
         name: Translator.get("i18n_organization"),
         directive: "filter-org-tree",
-        multiple: true
+        multiple: false
     })
 
     if ($scope.currentRole === $scope.roleConst.admin) {

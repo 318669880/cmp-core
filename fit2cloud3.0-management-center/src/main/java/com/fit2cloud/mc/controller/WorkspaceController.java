@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -61,13 +62,14 @@ public class WorkspaceController {
     @I18n
     public Pager<List<WorkspaceDTO>> paging(@PathVariable int goPage, @PathVariable int pageSize, @RequestBody WorkspaceRequest request) {
         Map<String, Object> map = BeanUtils.objectToMap(request);
-        if (StringUtils.equals(SessionUtils.getUser().getParentRoleId(), RoleConstants.Id.ORGADMIN.name())) {
-            map.put("role", RoleConstants.Id.ORGADMIN.name());
-            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(SessionUtils.getOrganizationId());
-            List<String> resourceIds = WorkspaceUtils.getWorkspaceIdsByOrgIds(orgIds);
-            resourceIds.add(UUIDUtil.newUUID());
-            map.put("resourceIds", resourceIds);
-        }
+        Optional.ofNullable(SessionUtils.getOrganizationId()).ifPresent(orgId -> {
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(orgId);
+            map.put("organizationIds", orgIds);
+        });
+        Optional.ofNullable(request.getOrganizationId()).ifPresent(orgId -> {
+            List<String> orgIds = OrganizationUtils.getOrgIdsByOrgId(orgId);
+            map.put("organizationIds", orgIds);
+        });
         Page page = PageHelper.startPage(goPage, pageSize, true);
         return PageUtils.setPageInfo(page, workspaceService.paging(map));
     }

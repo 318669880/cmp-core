@@ -39,15 +39,8 @@
                 #{organizationId}
             </foreach>
         </if>
-        <!--<if test="map.organizationId!=null">
-            and workspace.organization_id = #{map.organizationId}
-        </if>-->
-        <if test="map.role!=null">
-            and workspace.id in
-            <foreach collection="map.resourceIds" item="resourceId" index="index" open="(" close=")" separator=",">
-                #{resourceId}
-            </foreach>
-        </if>
+
+
         <if test="map.sort==null">
             order by workspace.name
         </if>

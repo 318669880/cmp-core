@@ -65,8 +65,7 @@ public class WebConstants {
                 ui.put(ParamConstants.UI.SYSTEM_NAME.getValue(), Translator.get("i18n_p_ui_system_name"));
             }
             if (StringUtils.isBlank(ui.get(ParamConstants.UI.THEME_PRIMARY.getValue()))) {
-//                ui.put(ParamConstants.UI.THEME_COLOR.getValue(), "#3c77e7");
-                ui.put(ParamConstants.UI.THEME_PRIMARY.getValue(), "#004A71");
+                ui.put(ParamConstants.UI.THEME_PRIMARY.getValue(), "#0A7BE0");
             }
 
             if (StringUtils.isBlank(ui.get(ParamConstants.UI.THEME_ACCENT.getValue()))) {
@@ -74,10 +73,10 @@ public class WebConstants {
             }
 
             if (StringUtils.isBlank(ui.get(ParamConstants.UI.TITLE.getValue()))) {
-                ui.put(ParamConstants.UI.TITLE.getValue(), "FIT2CLOUD " + Translator.get("i18n_p_ui_system_name"));
+                ui.put(ParamConstants.UI.TITLE.getValue(), "CloudExplorer " + Translator.get("i18n_p_ui_system_name"));
             }
             if (StringUtils.isBlank(ui.get(ParamConstants.UI.LOGIN_TITLE.getValue()))) {
-                ui.put(ParamConstants.UI.LOGIN_TITLE.getValue(), "FIT2CLOUD " + Translator.get("i18n_p_ui_system_name"));
+                ui.put(ParamConstants.UI.LOGIN_TITLE.getValue(), "CloudExplorer " + Translator.get("i18n_p_ui_system_name"));
             }
             if (StringUtils.isBlank(ui.get(ParamConstants.UI.LOGIN_IMG.getValue()))) {
                 ui.put(ParamConstants.UI.LOGIN_IMG.getValue(), "/web-public/fit2cloud/img/fit2cloud/login-banner.png?_t=" + timestamp);

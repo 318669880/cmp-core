@@ -11,11 +11,20 @@ import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.gson.Gson;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,8 +51,12 @@ public class ModelManagerController {
     @Lazy
     private ModuleNodeService moduleNodeService;
 
+
     @Resource
-    private ModelNodeTask modelNodeTask;
+    private DiscoveryClient discoveryClient;
+
+    @Resource
+    private RestTemplate restTemplate;
 
 
     @PostMapping("/indexServer/indexData")
@@ -158,14 +171,25 @@ public class ModelManagerController {
 
     @PostMapping("/model/reload")
     public boolean reloadMcInfo() {
-        try {
-            modelNodeTask.clearRedisCache();
-            modelNodeTask.registerCurrentMc();
-            return true;
-        } catch (Exception e) {
-            F2CException.throwException(e);
-            return false;
+        List<ServiceInstance> instances = discoveryClient.getInstances("management-center");
+        if (CollectionUtils.isNotEmpty(instances)){
+            return instances.stream().allMatch(instance -> {
+                String url = instance.getUri().toString() + "/modelNode/mcRefresh";
+                try{
+                    HttpHeaders httpHeaders = new HttpHeaders();
+                    MultiValueMap<String,Object> param = new LinkedMultiValueMap<>();
+                    HttpEntity<MultiValueMap<String,Object>> request = new HttpEntity<>(param,httpHeaders);
+                    ResponseEntity<String> entity = restTemplate.postForEntity(url, request, String.class);
+                    LogUtil.info("refresh management-center："+new Gson().toJson(entity));
+                    return true;
+                }catch (Exception e){
+                    LogUtil.error(e.getMessage(),e);
+                    // 如果不是批量操作 那么直接抛出异常 否则继续运行
+                    return false;
+                }
+            });
         }
+        return true;
     }
 
     @PostMapping("/model/topics")
@@ -176,19 +200,8 @@ public class ModelManagerController {
     }
 
 
-    @Resource
-    private DiscoveryClient discoveryClient;
-
-    @PostMapping("/model/services")
-    public List<ServiceInstance> showAllService(){
-        List<String> services = discoveryClient.getServices();
-        List<ServiceInstance> collect = services.stream().flatMap(service -> {
-            return discoveryClient.getInstances(service).stream();
-        }).collect(Collectors.toList());
-        return collect;
 
 
-    }
 
 
 }

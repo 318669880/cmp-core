@@ -11,6 +11,7 @@ import com.fit2cloud.mc.model.ModelNode;
 import com.fit2cloud.mc.service.ModelManagerService;
 import com.fit2cloud.mc.service.ModuleNodeService;
 import com.fit2cloud.mc.strategy.service.NodeOperateService;
+import com.fit2cloud.mc.strategy.task.ModelNodeTask;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -205,5 +206,16 @@ public class ModelNodeController {
         }).collect(Collectors.toList());
         return collect;
     }
+
+
+
+    @Resource
+    private ModelNodeTask modelNodeTask;
+
+    @PostMapping("/mcRefresh")
+    public void refreshMc() throws Exception {
+        modelNodeTask.registerCurrentMc();
+    }
+
 
 }

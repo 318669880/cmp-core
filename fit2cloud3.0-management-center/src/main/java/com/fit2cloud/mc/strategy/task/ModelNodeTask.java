@@ -89,7 +89,6 @@ public class ModelNodeTask {
      * @throws Exception
      */
     public void registerCurrentMc() throws Exception{
-        initCurrentConfig();
         if (SyncEurekaServer.IS_KUBERNETES) {
             chainK8sStart();//关联启动下属所有子模块
             return;
@@ -253,7 +252,7 @@ public class ModelNodeTask {
 
 
 
-    private void initCurrentConfig(){
+    public void initCurrentConfig(){
         String pk = currentConfigPk();
         Optional.ofNullable(configPropertiesMapper.selectByPrimaryKey(pk)).ifPresent(config -> {
             configPropertiesMapper.deleteByPrimaryKey(pk);

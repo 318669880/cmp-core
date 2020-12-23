@@ -43,7 +43,7 @@ public class BasicSwaggerConfig {
     private ApiInfo apiInfo() {
         Contact contact = new Contact("FIT2CLOUD", null, null);
         return new ApiInfoBuilder()
-                .title("FIT2CLOUD Restful APIs")
+                .title("CloudExplorer Restful APIs")
                 .contact(contact)
                 .version("3.0")
                 .build();

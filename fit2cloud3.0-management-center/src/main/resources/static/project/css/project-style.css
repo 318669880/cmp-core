@@ -195,6 +195,7 @@ table md-switch {
     background-image: url("/web-public/fit2cloud/img/fit2cloud/license_header.png");
     text-align: center;
     padding: 20px 0;
+    background-size: 100% 100%;
 }
 
 .license-content {

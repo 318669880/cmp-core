@@ -46,11 +46,11 @@ public class ModelNodeController {
     private CheckModuleStatus checkModuleStatus;
 
     //节点启动超时时间 默认是90s
-    @Value("${fit2cloud.node_start_time_out:120000}")
+    @Value("${fit2cloud.node_start_time_out:300000}")
     private Long node_start_time_out;
 
     //节点安装超时时间
-    @Value("${fit2cloud.node_install_time_out:3000}")
+    @Value("${fit2cloud.node_install_time_out:30000}")
     private Long node_install_time_out;
 
     @Value("${fit2cloud.node_stop_time_out:30000}")

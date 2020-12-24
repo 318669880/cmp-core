@@ -80,9 +80,15 @@ ProjectApp.directive("cardContentText", function (HttpUtils) {
             setting: "="
         },
         link: function ($scope) {
-            HttpUtils.get($scope.setting.url, function (response) {
-                $scope.data = response.data;
-            });
+            if ($scope.setting.param) {
+                HttpUtils.post($scope.setting.url, $scope.setting.param, function (response) {
+                    $scope.data = response.data;
+                });
+            } else {
+                HttpUtils.get($scope.setting.url, function (response) {
+                    $scope.data = response.data;
+                });
+            }
         }
     }
 });

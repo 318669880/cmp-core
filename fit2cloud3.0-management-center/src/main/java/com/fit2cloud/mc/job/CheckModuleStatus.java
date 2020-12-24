@@ -26,12 +26,15 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 @Component
 public class CheckModuleStatus {
+
+    private static Map<String, Boolean> tagMap = new ConcurrentHashMap<String, Boolean>();
 
 
     @Resource
@@ -145,8 +148,13 @@ public class CheckModuleStatus {
         return (onLine && inEureka) || (!onLine && !inEureka);
     }
 
+    @Async
     public void nodeStatuesTrigger(String appName, String serviceId, Boolean onLine){
         String model = appName.toLowerCase();
+        //if (isEurekaStable(model, serviceId, onLine))return;
+        String key = appName + serviceId;
+        if (tagMap.containsKey(key) && onLine == tagMap.get(key)) return;
+        tagMap.put(key, onLine);
         while (true){
             if (isEurekaStable(model, serviceId, onLine)){
                 break;
@@ -157,6 +165,7 @@ public class CheckModuleStatus {
                 e.printStackTrace();
             }
         }
+        tagMap.remove(key);
         if (SyncEurekaServer.IS_KUBERNETES){
             moduleStatusTrigger(appName, serviceId, onLine);
             return;

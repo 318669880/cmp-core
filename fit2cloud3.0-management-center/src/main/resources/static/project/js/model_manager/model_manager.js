@@ -31,7 +31,7 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
         },
         initAddress: function () {
             if(!this.address){
-                this.address = 'https://f2c-index.oss-cn-beijing.aliyuncs.com';
+                // this.address = 'https://f2c-index.oss-cn-beijing.aliyuncs.com';
                 if (this.onLine){//默认保存在线索引服务
                     this.saveData();
                 }
@@ -167,12 +167,17 @@ ProjectApp.controller('ModelManagerController', function ($scope, $mdDialog, $do
             this.validate = false;
             return false;
         },
-        changeOnline: function () {
+        changeOnline: function (onLine) {
             if(this._init_onLine === this.onLine){
                 this.address = this._init_address;
                 return;
             }
-            this.address = "";
+            if(onLine){
+                this.address = "";
+                // this.address = 'https://f2c-index.oss-cn-beijing.aliyuncs.com';
+            }else {
+                this.address = "";
+            }
         }
     };
     /**

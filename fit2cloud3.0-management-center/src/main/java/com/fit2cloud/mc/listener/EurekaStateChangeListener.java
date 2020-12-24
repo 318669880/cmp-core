@@ -21,13 +21,13 @@ public class EurekaStateChangeListener {
     @Resource
     private CheckModuleStatus checkModuleStatus;
 
-    @EventListener(condition = "#event.replication")
+    @EventListener
     public void listen(EurekaInstanceCanceledEvent event) {
         checkModuleStatus.nodeStatuesTrigger(event.getAppName(), event.getServerId(), false);
         LogUtil.info("Service offline:" + event.getAppName() + "," + event.getServerId());
     }
 
-    @EventListener(condition = "#event.replication")
+    @EventListener
     public void listen(EurekaInstanceRegisteredEvent event) {
         InstanceInfo info = event.getInstanceInfo();
         checkModuleStatus.nodeStatuesTrigger(info.getAppName(), info.getId(), true);

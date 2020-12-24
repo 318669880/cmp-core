@@ -151,7 +151,7 @@ public class CheckModuleStatus {
     @Async
     public void nodeStatuesTrigger(String appName, String serviceId, Boolean onLine){
         String model = appName.toLowerCase();
-        if (isEurekaStable(model, serviceId, onLine))return;
+        //if (isEurekaStable(model, serviceId, onLine))return;
         String key = appName + serviceId;
         if (tagMap.containsKey(key) && onLine == tagMap.get(key)) return;
         tagMap.put(key, onLine);

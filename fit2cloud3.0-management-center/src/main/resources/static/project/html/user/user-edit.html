@@ -77,7 +77,7 @@
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.user">
                 <label> {{'i18n_workspace_add' | translator}}</label>
                 <tree-select
-                        name="workspaceIds"
+                        name="{{roleInfo.$$hashKey}}"
                         where="wks_param"
                         ts-url="user/orgtreeselect"
                         method="post"
@@ -98,7 +98,7 @@
             <md-input-container class="md-block" layout-gt-xs="row" ng-if="roleInfo.roleType===roleConst.orgAdmin">
                 <label> {{'i18n_organization_add' | translator}}</label>
                 <tree-select
-                        name="organizationIds"
+                        name="{{roleInfo.$$hashKey}}"
                         where="org_param"
                         ts-url="user/orgtreeselect"
                         method="post"

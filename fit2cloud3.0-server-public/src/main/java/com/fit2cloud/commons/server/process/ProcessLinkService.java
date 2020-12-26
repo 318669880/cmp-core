@@ -4,14 +4,18 @@ import com.fit2cloud.commons.server.base.domain.*;
 import com.fit2cloud.commons.server.base.mapper.*;
 import com.fit2cloud.commons.server.base.mapper.ext.ExtFlowLinkValueScopeMapper;
 import com.fit2cloud.commons.server.constants.ProcessConstants;
+import com.fit2cloud.commons.server.constants.ResourceTypeConstants;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
 import com.fit2cloud.commons.server.model.LinkValueDTO;
+import com.fit2cloud.commons.server.model.OrgTreeNode;
 import com.fit2cloud.commons.server.model.TreeNode;
 import com.fit2cloud.commons.server.service.OperationLogService;
+import com.fit2cloud.commons.server.service.UserCommonService;
 import com.fit2cloud.commons.utils.UUIDUtil;
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +43,7 @@ public class ProcessLinkService {
     @Resource
     private FlowLinkValueMapper flowLinkValueMapper;
     @Resource
-    private WorkspaceMapper workspaceMapper;
+    private UserCommonService userCommonService;
     @Resource
     private OrganizationMapper organizationMapper;
     @Resource
@@ -166,24 +170,28 @@ public class ProcessLinkService {
             return;
         }
 
+
         List<FlowLinkValueScope> flowLinkValueScopes = new Vector<>();
-        linkValueDTO.getTreeNodes().parallelStream().forEach(treeNode -> {
-            if (treeNode.isChecked()) {
-                flowLinkValueScopes.add(new FlowLinkValueScope() {{
-                    setId(UUIDUtil.newUUID());
-                    setWorkspaceId(treeNode.getId());
-                    setLinkValueId(flowLinkValueId);
-                    setType(ORGANIZATION.toString());
-                }});
-            } else {
-                treeNode.getChildren().forEach(child -> flowLinkValueScopes.add(new FlowLinkValueScope() {{
-                    setId(UUIDUtil.newUUID());
-                    setWorkspaceId(child.getId());
-                    setLinkValueId(flowLinkValueId);
-                    setType(WORKSPACE.toString());
-                }}));
-            }
-        });
+        List<TreeNode> treeNodes = linkValueDTO.getTreeNodes();
+
+        while (!CollectionUtils.isEmpty(treeNodes)){
+            List<TreeNode> tempLists = new ArrayList<>();
+            treeNodes.parallelStream().forEach(treeNode -> {
+                if (treeNode.isChecked()) {
+                    flowLinkValueScopes.add(new FlowLinkValueScope() {{
+                        setId(UUIDUtil.newUUID());
+                        setWorkspaceId(treeNode.getId());
+                        setLinkValueId(flowLinkValueId);
+                        setType(treeNode.getType().toUpperCase());
+                    }});
+                }
+                if (!org.springframework.util.CollectionUtils.isEmpty(treeNode.getChildren())){
+                    tempLists.addAll(treeNode.getChildren());
+                }
+            });
+            treeNodes = tempLists;
+        }
+
         flowLinkValueScopes.forEach(flowLinkValueScope -> flowLinkValueScope.setModule(moduleId));
         extFlowLinkValueScopeMapper.batchInsert(flowLinkValueScopes);
     }
@@ -196,7 +204,8 @@ public class ProcessLinkService {
     }
 
     private List<TreeNode> getWorkspaceTree(List<FlowLinkValueScope> FlowLinkValueScopes) {
-        Map<String, Map<String, List<FlowLinkValueScope>>> FlowLinkValueScopeMap = FlowLinkValueScopes.parallelStream().collect(Collectors.groupingBy(FlowLinkValueScope::getType, Collectors.groupingBy(FlowLinkValueScope::getWorkspaceId)));
+        Map<String, Map<String, List<FlowLinkValueScope>>> FlowLinkValueScopeMap = FlowLinkValueScopes.parallelStream()
+                .collect(Collectors.groupingBy(FlowLinkValueScope::getType, Collectors.groupingBy(FlowLinkValueScope::getWorkspaceId)));
 
         return getWorkspaceTree(
                 (organizationId) -> FlowLinkValueScopeMap.containsKey(ORGANIZATION.toString()) && FlowLinkValueScopeMap.get(ORGANIZATION.toString()).containsKey(organizationId),
@@ -206,46 +215,29 @@ public class ProcessLinkService {
     //organizationCheckFunc: 参数是组织ID，返回该组织是否被选中
     //workspaceCheckFunc: 参数是工作空间ID，返回该工作空间是否被选中
     List<TreeNode> getWorkspaceTree(Function<String, Boolean> organizationCheckFunc, Function<String, Boolean> workspaceCheckFunc) {
-        List<Organization> organizations = organizationMapper.selectByExample(null);
-
-        if (org.springframework.util.CollectionUtils.isEmpty(organizations)) {
-            return new ArrayList<>();
-        }
-
-        Map<String, String> organizationMap = new ConcurrentHashMap<>();
-        organizations.parallelStream().forEach(organization -> organizationMap.put(organization.getId(), organization.getName()));
-        Set<String> processedResourcePoolIds = new ConcurrentSkipListSet<>();
-        List<TreeNode> result = new Vector<>();
-
-        List<Workspace> workspaces = workspaceMapper.selectByExample(null);
-        if (!org.springframework.util.CollectionUtils.isEmpty(workspaces)) {
-            Map<String, List<Workspace>> collect = workspaces.parallelStream()
-                    .filter(workspace -> organizationMap.containsKey(workspace.getOrganizationId()))
-                    .collect(Collectors.groupingBy(Workspace::getOrganizationId));
-
-            collect.entrySet().parallelStream().forEach(entry -> result.add(new TreeNode() {{
-                setId(entry.getKey());
-                setName(organizationMap.get(entry.getKey()));
-                processedResourcePoolIds.add(entry.getKey());
-                setChecked(organizationCheckFunc.apply(entry.getKey()));
-                boolean parentChecked = isChecked();
-                setChildren(entry.getValue().parallelStream().map(workspace -> new TreeNode() {{
-                    setId(workspace.getId());
-                    setName(workspace.getName());
-                    setChecked(parentChecked || workspaceCheckFunc.apply(workspace.getId()));
-                }}).collect(Collectors.toList()));
-            }}));
-        }
-
-        final List<String> resourcePoolIds = organizations.stream().map(Organization::getId).filter(id -> !processedResourcePoolIds.contains(id)).collect(Collectors.toList());
-        if (!org.springframework.util.CollectionUtils.isEmpty(resourcePoolIds)) {
-            resourcePoolIds.forEach(id -> result.add(new TreeNode() {{
-                setId(id);
-                setName(organizationMap.get(id));
-                setChecked(organizationCheckFunc.apply(id));
-            }}));
-        }
+        List<OrgTreeNode> orgTreeNodes = userCommonService.orgTreeSelect(null, false);
+        List<TreeNode> result = orgTreeNodes.stream().map(node -> buildTreeNode(node, organizationCheckFunc, workspaceCheckFunc)).collect(Collectors.toList());
 
         return result.parallelStream().sorted(Comparator.comparing(TreeNode::getName)).collect(Collectors.toList());
     }
+
+    private TreeNode buildTreeNode(OrgTreeNode orgTreeNode , Function<String, Boolean> organizationCheckFunc, Function<String, Boolean> workspaceCheckFunc){
+        TreeNode treeNode = new TreeNode();
+        treeNode.setId(orgTreeNode.getNodeId());
+        treeNode.setName(orgTreeNode.getNodeName());
+
+        if (StringUtils.equals(orgTreeNode.getNodeType(), "wks")){
+            treeNode.setChecked(workspaceCheckFunc.apply(treeNode.getId()));
+            treeNode.setType(ResourceTypeConstants.WORKSPACE.name());
+        }
+        if (StringUtils.equals(orgTreeNode.getNodeType(), "org")){
+            treeNode.setChecked(organizationCheckFunc.apply(treeNode.getId()));
+            treeNode.setType(ResourceTypeConstants.ORGANIZATION.name());
+        }
+        if (!org.springframework.util.CollectionUtils.isEmpty(orgTreeNode.getChildNodes())){
+            treeNode.setChildren(orgTreeNode.getChildNodes().stream().map(node -> buildTreeNode(node, organizationCheckFunc, workspaceCheckFunc)).collect(Collectors.toList()));
+        }
+        return treeNode;
+    }
+
 }

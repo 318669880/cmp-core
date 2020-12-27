@@ -179,8 +179,8 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
          * 解决分页第二页因为没有根节点无法展示的bug
          */
         let missionItems = $scope.items.filter(item => !item.is_root && !item.is_child);
-        formatItems = formatItems.concat(missionItems);
-
+        //formatItems = formatItems.concat(missionItems);
+        formatItems = missionItems.concat(formatItems);
         let results = [];
         formatItems && formatItems.length > 0 && $scope.expandTree(formatItems, results);
         return results;

@@ -210,6 +210,7 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
     $scope.list();
 
     $scope.create = function () {
+        $scope.pid = null;
         $scope.enableIds = $scope.sourceItems.map(item => item.id);
         $scope.selectedOrgIds = [];
         $scope.formUrl = 'project/html/organization/organization-add.html' + '?_t=' + Math.random();
@@ -217,6 +218,7 @@ ProjectApp.controller('OrganizationController', function ($scope, HttpUtils, Fil
     };
 
     $scope.edit = function (data) {
+        $scope.pid = null;
         if ($scope.userInfo.roleIdList.indexOf("ORGADMIN") != -1){
             let cData = null;
             $scope.sourceItems.some(sItem => { cData = sItem;return sItem.id == data.id}) && (data = cData)

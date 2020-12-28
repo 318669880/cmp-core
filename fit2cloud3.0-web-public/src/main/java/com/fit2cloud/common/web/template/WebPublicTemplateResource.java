@@ -98,9 +98,10 @@ public class WebPublicTemplateResource implements ITemplateResource {
             Browser browser = UserAgent.parseUserAgentString(userAgent).getBrowser();
             Version version = browser.getVersion(userAgent);
             if (StringUtils.containsIgnoreCase(browser.getName(), "Internet Explorer")) {
-                if (Integer.valueOf(version.getMajorVersion()) < 11) {
-                    return false;
-                }
+//                if (Integer.valueOf(version.getMajorVersion()) < 11) {
+//                    return false;
+//                }
+                return false;
             }
             if (StringUtils.containsIgnoreCase(browser.getName(), "chrome")) {
                 if (Integer.valueOf(version.getMajorVersion()) < 50) {

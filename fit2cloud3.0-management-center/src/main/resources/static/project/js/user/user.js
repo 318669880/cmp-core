@@ -340,6 +340,15 @@ ProjectApp.controller('UserController', function ($scope, HttpUtils, FilterSearc
         $scope.submit = function (type, data) {
             $scope.submitFlag = true;
             if (type === 'add') {
+                data.roleInfoList && data.roleInfoList.forEach(roleInfo => {
+                    if (roleInfo.selectOrganizationId && Array.isArray(roleInfo.selectOrganizationId)){
+                        if (roleInfo.selectOrganizationId.length > 0){
+                            roleInfo.selectOrganizationId = roleInfo.selectOrganizationId[0];
+                        }else {
+                            roleInfo.selectOrganizationId = null;
+                        }
+                    }
+                })
                 data.source = 'local';
                 HttpUtils.post("user/add", data, function () {
                     Notification.success(Translator.get("i18n_mc_create_success"));

@@ -1796,6 +1796,12 @@
                     }
                 }
 
+                $scope.readyOpen = function(){
+                    $scope.edit();
+                    if (!$scope.treeData || $scope.treeData.length == 0)return;
+                    $scope.open();
+                }
+
                 element.ready(function(e){
                     let index = 0;
                     let interval = window.setTimeout(function(){

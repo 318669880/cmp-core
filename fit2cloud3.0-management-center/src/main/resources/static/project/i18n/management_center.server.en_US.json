@@ -204,5 +204,11 @@
   "i18n_mc_user_api_list": "List API Key",
   "i18n_mc_user_api_create": "Create API Key",
   "i18n_mc_user_api_delete": "Delete API Key",
-  "i18n_plu_limit": "Workspace assets are larger than the limit of license!"
+  "i18n_plu_limit": "Workspace assets are larger than the limit of license!",
+  "i18n_billing_center_name": "Bill Center",
+  "i18n_ticket_center_name": "Ticket Center",
+  "i18n_vm_service_module_name": "Virtual Machine",
+  "i18n_container_service_module_name": "Container Service",
+  "i18n_operation_analytics_module_name": "Operation Analytics",
+  "i18n_devops_module_name": "Classic DevOps"
 }

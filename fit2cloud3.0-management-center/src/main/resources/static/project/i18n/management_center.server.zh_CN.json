@@ -205,5 +205,11 @@
   "i18n_mc_user_api_list": "查询用户API Key",
   "i18n_mc_user_api_create": "创建用户API Key",
   "i18n_mc_user_api_delete": "删除用户API Key",
-  "i18n_plu_limit": "工作空间资产数量大于License的限制!"
+  "i18n_plu_limit": "工作空间资产数量大于License的限制!",
+  "i18n_billing_center_name": "账单中心",
+  "i18n_ticket_center_name": "工单中心",
+  "i18n_vm_service_module_name": "虚拟机服务",
+  "i18n_container_service_module_name": "容器服务",
+  "i18n_operation_analytics_module_name": "运营分析",
+  "i18n_devops_module_name": "经典DevOps"
 }

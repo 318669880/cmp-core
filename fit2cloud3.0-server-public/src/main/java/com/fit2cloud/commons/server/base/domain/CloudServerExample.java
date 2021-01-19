@@ -2094,6 +2094,286 @@ public class CloudServerExample {
             return (Criteria) this;
         }
 
+        public Criteria andNetworkIsNull() {
+            addCriterion("network is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkIsNotNull() {
+            addCriterion("network is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkEqualTo(String value) {
+            addCriterion("network =", value, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkNotEqualTo(String value) {
+            addCriterion("network <>", value, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkGreaterThan(String value) {
+            addCriterion("network >", value, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkGreaterThanOrEqualTo(String value) {
+            addCriterion("network >=", value, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkLessThan(String value) {
+            addCriterion("network <", value, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkLessThanOrEqualTo(String value) {
+            addCriterion("network <=", value, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkLike(String value) {
+            addCriterion("network like", value, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkNotLike(String value) {
+            addCriterion("network not like", value, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkIn(List<String> values) {
+            addCriterion("network in", values, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkNotIn(List<String> values) {
+            addCriterion("network not in", values, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkBetween(String value1, String value2) {
+            addCriterion("network between", value1, value2, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkNotBetween(String value1, String value2) {
+            addCriterion("network not between", value1, value2, "network");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdIsNull() {
+            addCriterion("vpc_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdIsNotNull() {
+            addCriterion("vpc_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdEqualTo(String value) {
+            addCriterion("vpc_id =", value, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdNotEqualTo(String value) {
+            addCriterion("vpc_id <>", value, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdGreaterThan(String value) {
+            addCriterion("vpc_id >", value, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdGreaterThanOrEqualTo(String value) {
+            addCriterion("vpc_id >=", value, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdLessThan(String value) {
+            addCriterion("vpc_id <", value, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdLessThanOrEqualTo(String value) {
+            addCriterion("vpc_id <=", value, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdLike(String value) {
+            addCriterion("vpc_id like", value, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdNotLike(String value) {
+            addCriterion("vpc_id not like", value, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdIn(List<String> values) {
+            addCriterion("vpc_id in", values, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdNotIn(List<String> values) {
+            addCriterion("vpc_id not in", values, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdBetween(String value1, String value2) {
+            addCriterion("vpc_id between", value1, value2, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVpcIdNotBetween(String value1, String value2) {
+            addCriterion("vpc_id not between", value1, value2, "vpcId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdIsNull() {
+            addCriterion("subnet_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdIsNotNull() {
+            addCriterion("subnet_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdEqualTo(String value) {
+            addCriterion("subnet_id =", value, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdNotEqualTo(String value) {
+            addCriterion("subnet_id <>", value, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdGreaterThan(String value) {
+            addCriterion("subnet_id >", value, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdGreaterThanOrEqualTo(String value) {
+            addCriterion("subnet_id >=", value, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdLessThan(String value) {
+            addCriterion("subnet_id <", value, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdLessThanOrEqualTo(String value) {
+            addCriterion("subnet_id <=", value, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdLike(String value) {
+            addCriterion("subnet_id like", value, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdNotLike(String value) {
+            addCriterion("subnet_id not like", value, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdIn(List<String> values) {
+            addCriterion("subnet_id in", values, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdNotIn(List<String> values) {
+            addCriterion("subnet_id not in", values, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdBetween(String value1, String value2) {
+            addCriterion("subnet_id between", value1, value2, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubnetIdNotBetween(String value1, String value2) {
+            addCriterion("subnet_id not between", value1, value2, "subnetId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdIsNull() {
+            addCriterion("network_interface_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdIsNotNull() {
+            addCriterion("network_interface_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdEqualTo(String value) {
+            addCriterion("network_interface_id =", value, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdNotEqualTo(String value) {
+            addCriterion("network_interface_id <>", value, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdGreaterThan(String value) {
+            addCriterion("network_interface_id >", value, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdGreaterThanOrEqualTo(String value) {
+            addCriterion("network_interface_id >=", value, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdLessThan(String value) {
+            addCriterion("network_interface_id <", value, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdLessThanOrEqualTo(String value) {
+            addCriterion("network_interface_id <=", value, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdLike(String value) {
+            addCriterion("network_interface_id like", value, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdNotLike(String value) {
+            addCriterion("network_interface_id not like", value, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdIn(List<String> values) {
+            addCriterion("network_interface_id in", values, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdNotIn(List<String> values) {
+            addCriterion("network_interface_id not in", values, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdBetween(String value1, String value2) {
+            addCriterion("network_interface_id between", value1, value2, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andNetworkInterfaceIdNotBetween(String value1, String value2) {
+            addCriterion("network_interface_id not between", value1, value2, "networkInterfaceId");
+            return (Criteria) this;
+        }
+
         public Criteria andManagementIpv6IsNull() {
             addCriterion("management_ipv6 is null");
             return (Criteria) this;
@@ -2374,283 +2654,63 @@ public class CloudServerExample {
             return (Criteria) this;
         }
 
-        public Criteria andNetworkIsNull() {
-            addCriterion("network is null");
+        public Criteria andSnapShotIsNull() {
+            addCriterion("snap_shot is null");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkIsNotNull() {
-            addCriterion("network is not null");
+        public Criteria andSnapShotIsNotNull() {
+            addCriterion("snap_shot is not null");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkEqualTo(String value) {
-            addCriterion("network =", value, "network");
+        public Criteria andSnapShotEqualTo(Integer value) {
+            addCriterion("snap_shot =", value, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkNotEqualTo(String value) {
-            addCriterion("network <>", value, "network");
+        public Criteria andSnapShotNotEqualTo(Integer value) {
+            addCriterion("snap_shot <>", value, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkGreaterThan(String value) {
-            addCriterion("network >", value, "network");
+        public Criteria andSnapShotGreaterThan(Integer value) {
+            addCriterion("snap_shot >", value, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkGreaterThanOrEqualTo(String value) {
-            addCriterion("network >=", value, "network");
+        public Criteria andSnapShotGreaterThanOrEqualTo(Integer value) {
+            addCriterion("snap_shot >=", value, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkLessThan(String value) {
-            addCriterion("network <", value, "network");
+        public Criteria andSnapShotLessThan(Integer value) {
+            addCriterion("snap_shot <", value, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkLessThanOrEqualTo(String value) {
-            addCriterion("network <=", value, "network");
+        public Criteria andSnapShotLessThanOrEqualTo(Integer value) {
+            addCriterion("snap_shot <=", value, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkLike(String value) {
-            addCriterion("network like", value, "network");
+        public Criteria andSnapShotIn(List<Integer> values) {
+            addCriterion("snap_shot in", values, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkNotLike(String value) {
-            addCriterion("network not like", value, "network");
+        public Criteria andSnapShotNotIn(List<Integer> values) {
+            addCriterion("snap_shot not in", values, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkIn(List<String> values) {
-            addCriterion("network in", values, "network");
+        public Criteria andSnapShotBetween(Integer value1, Integer value2) {
+            addCriterion("snap_shot between", value1, value2, "snapShot");
             return (Criteria) this;
         }
 
-        public Criteria andNetworkNotIn(List<String> values) {
-            addCriterion("network not in", values, "network");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkBetween(String value1, String value2) {
-            addCriterion("network between", value1, value2, "network");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkNotBetween(String value1, String value2) {
-            addCriterion("network not between", value1, value2, "network");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdIsNull() {
-            addCriterion("vpc_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdIsNotNull() {
-            addCriterion("vpc_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdEqualTo(String value) {
-            addCriterion("vpc_id =", value, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdNotEqualTo(String value) {
-            addCriterion("vpc_id <>", value, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdGreaterThan(String value) {
-            addCriterion("vpc_id >", value, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdGreaterThanOrEqualTo(String value) {
-            addCriterion("vpc_id >=", value, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdLessThan(String value) {
-            addCriterion("vpc_id <", value, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdLessThanOrEqualTo(String value) {
-            addCriterion("vpc_id <=", value, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdLike(String value) {
-            addCriterion("vpc_id like", value, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdNotLike(String value) {
-            addCriterion("vpc_id not like", value, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdIn(List<String> values) {
-            addCriterion("vpc_id in", values, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdNotIn(List<String> values) {
-            addCriterion("vpc_id not in", values, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdBetween(String value1, String value2) {
-            addCriterion("vpc_id between", value1, value2, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andVpcIdNotBetween(String value1, String value2) {
-            addCriterion("vpc_id not between", value1, value2, "vpcId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdIsNull() {
-            addCriterion("subnet_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdIsNotNull() {
-            addCriterion("subnet_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdEqualTo(String value) {
-            addCriterion("subnet_id =", value, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdNotEqualTo(String value) {
-            addCriterion("subnet_id <>", value, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdGreaterThan(String value) {
-            addCriterion("subnet_id >", value, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdGreaterThanOrEqualTo(String value) {
-            addCriterion("subnet_id >=", value, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdLessThan(String value) {
-            addCriterion("subnet_id <", value, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdLessThanOrEqualTo(String value) {
-            addCriterion("subnet_id <=", value, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdLike(String value) {
-            addCriterion("subnet_id like", value, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdNotLike(String value) {
-            addCriterion("subnet_id not like", value, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdIn(List<String> values) {
-            addCriterion("subnet_id in", values, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdNotIn(List<String> values) {
-            addCriterion("subnet_id not in", values, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdBetween(String value1, String value2) {
-            addCriterion("subnet_id between", value1, value2, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubnetIdNotBetween(String value1, String value2) {
-            addCriterion("subnet_id not between", value1, value2, "subnetId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdIsNull() {
-            addCriterion("network_interface_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdIsNotNull() {
-            addCriterion("network_interface_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdEqualTo(String value) {
-            addCriterion("network_interface_id =", value, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdNotEqualTo(String value) {
-            addCriterion("network_interface_id <>", value, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdGreaterThan(String value) {
-            addCriterion("network_interface_id >", value, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdGreaterThanOrEqualTo(String value) {
-            addCriterion("network_interface_id >=", value, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdLessThan(String value) {
-            addCriterion("network_interface_id <", value, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdLessThanOrEqualTo(String value) {
-            addCriterion("network_interface_id <=", value, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdLike(String value) {
-            addCriterion("network_interface_id like", value, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdNotLike(String value) {
-            addCriterion("network_interface_id not like", value, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdIn(List<String> values) {
-            addCriterion("network_interface_id in", values, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdNotIn(List<String> values) {
-            addCriterion("network_interface_id not in", values, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdBetween(String value1, String value2) {
-            addCriterion("network_interface_id between", value1, value2, "networkInterfaceId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNetworkInterfaceIdNotBetween(String value1, String value2) {
-            addCriterion("network_interface_id not between", value1, value2, "networkInterfaceId");
+        public Criteria andSnapShotNotBetween(Integer value1, Integer value2) {
+            addCriterion("snap_shot not between", value1, value2, "snapShot");
             return (Criteria) this;
         }
 

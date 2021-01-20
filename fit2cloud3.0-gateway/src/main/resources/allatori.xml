@@ -1,6 +1,6 @@
 <config>
     <input>
-        <jar in="../fit2cloud3.0-gateway-3.0.0.jar" out="../fit2cloud3.0-gateway-3.0.0.jar"/>
+        <jar in="../fit2cloud3.0-gateway-3.0.1.jar" out="../fit2cloud3.0-gateway-3.0.1.jar"/>
     </input>
 
     <keep-names>

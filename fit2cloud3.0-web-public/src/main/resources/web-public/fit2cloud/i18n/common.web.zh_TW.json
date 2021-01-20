@@ -279,6 +279,7 @@
   "i18n_chart_unknown": "未知",
   "i18n_invalid": "無效",
   "i18n_approval_order": "審批訂單",
+  "i18n_edit_order": "修改訂單",
   "i18n_approval_comments": "審批意見",
   "i18n_order_reject": "駁回",
   "i18n_order_back": "打回",

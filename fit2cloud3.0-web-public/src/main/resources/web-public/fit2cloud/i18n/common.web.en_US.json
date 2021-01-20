@@ -279,6 +279,7 @@
   "i18n_chart_unknown": "Unknown",
   "i18n_invalid": "Invalid",
   "i18n_approval_order": "Approval",
+  "i18n_edit_order": "Edit",
   "i18n_approval_comments": "Comments",
   "i18n_order_reject": "Reject",
   "i18n_order_back": "Back",

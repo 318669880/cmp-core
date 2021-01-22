@@ -180,7 +180,8 @@ public class OrganizationService {
             organization.setLevel(pLevel + 1);
         });
         try {
-            organizationMapper.updateByPrimaryKeySelective(organization);
+            //organizationMapper.updateByPrimaryKeySelective(organization);
+            extOrganizationMapper.updateOrganization(organization);
             OperationLogService.log(null, organization.getId(), organization.getName(), ResourceTypeConstants.ORGANIZATION.name(), ResourceOperation.UPDATE, null);
         } catch (DuplicateKeyException e) {
             F2CException.throwException(MessageConstants.NameDuplicateKey);

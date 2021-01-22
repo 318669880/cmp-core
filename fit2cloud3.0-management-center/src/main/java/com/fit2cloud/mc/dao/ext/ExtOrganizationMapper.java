@@ -1,5 +1,6 @@
 package com.fit2cloud.mc.dao.ext;
 
+import com.fit2cloud.commons.server.base.domain.Organization;
 import com.fit2cloud.mc.dto.OrganizationDTO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -18,4 +19,7 @@ public interface ExtOrganizationMapper {
 
     @Select("select id, pid from organization")
     List<Map<String,String>> ids();
+
+
+    int updateOrganization(Organization record);
 }

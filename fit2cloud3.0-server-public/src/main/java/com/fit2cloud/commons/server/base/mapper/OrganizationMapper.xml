@@ -263,7 +263,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=BIGINT},
       </if>
-      pid = #{pid,jdbcType=VARCHAR},
+      <if test="pid != null">
+        pid = #{pid,jdbcType=VARCHAR},
+      </if>
       <if test="level != null">
         level = #{level,jdbcType=INTEGER},
       </if>

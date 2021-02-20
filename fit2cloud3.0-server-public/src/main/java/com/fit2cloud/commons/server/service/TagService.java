@@ -488,10 +488,7 @@ public class TagService {
     }
 
     public List<Map> getTagValueList(List<String> tagId) {
-        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(tagId)) {
-            return extTagMappingMapper.selectTagValues(tagId);
-        }
-        return null;
+        return extTagMappingMapper.selectTagValues(tagId);
     }
 
     public void saveResourceTags(String cloudServerId, String tagsMappingStr) {

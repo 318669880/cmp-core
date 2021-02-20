@@ -13,11 +13,13 @@
     <select id="selectTagValues" resultType="Map">
         select concat('(',tag_alias,')',tag_value_alias) as label,tag_value_alias as `value` from tag_value,tag where
         tag_value.tag_id=tag.tag_id
-        and
-        tag.tag_id IN
-        <foreach collection="tagId" item="key" separator="," open="(" close=")">
-            #{key, jdbcType=VARCHAR}
-        </foreach>
+        <if test="tagId != null and tagId.size>0">
+            and
+            tag.tag_id IN
+            <foreach collection="tagId" item="key" separator="," open="(" close=")">
+                #{key, jdbcType=VARCHAR}
+            </foreach>
+        </if>
     </select>
 
     <select id="selectTagByValueId" parameterType="java.lang.String" resultType="Map">

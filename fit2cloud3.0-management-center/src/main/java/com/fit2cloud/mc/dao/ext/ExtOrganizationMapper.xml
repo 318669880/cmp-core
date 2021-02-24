@@ -47,4 +47,25 @@
         </if>
 
     </select>
+
+
+    <update id="updateOrganization" parameterType="com.fit2cloud.commons.server.base.domain.Organization">
+        update organization
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=BIGINT},
+            </if>
+            pid = #{pid,jdbcType=VARCHAR},
+            <if test="level != null">
+                level = #{level,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
 </mapper>

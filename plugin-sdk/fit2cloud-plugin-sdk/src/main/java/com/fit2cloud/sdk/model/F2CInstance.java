@@ -47,12 +47,13 @@ public class F2CInstance extends F2CResource {
 	private Long keypasswordId;
 	private int sshPort;
 	private String sshUser;
-	//用于海通项目，保存虚拟机的projectId，海通中的OpenStack和工作空间一一对应，所以这里相当于同步虚拟机的工作空间
 	private String projectId;
 	private List<String> volumes;
 	private String vpcId;
 	private String subnetId;
 	private String networkInterfaceId;
+	private int snapShot;
+
 	public String getName() {
 		return name;
 	}
@@ -326,4 +327,13 @@ public class F2CInstance extends F2CResource {
 	public void setNetworkInterfaceId(String networkInterfaceId) {
 		this.networkInterfaceId = networkInterfaceId;
 	}
+
+	public int getSnapShot() {
+		return snapShot;
+	}
+
+	public void setSnapShot(int snapShot) {
+		this.snapShot = snapShot;
+	}
+
 }

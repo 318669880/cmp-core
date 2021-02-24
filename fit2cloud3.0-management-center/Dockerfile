@@ -4,9 +4,9 @@ MAINTAINER FIT2CLOUD <support@fit2cloud.com>
 
 RUN mkdir -p /opt/apps
 
-ADD target/fit2cloud3.0-management-center-3.0.0.jar /opt/apps
+ADD target/fit2cloud3.0-management-center-3.0.1.jar /opt/apps
 
-ENV JAVA_APP_JAR=/opt/apps/fit2cloud3.0-management-center-3.0.0.jar
+ENV JAVA_APP_JAR=/opt/apps/fit2cloud3.0-management-center-3.0.1.jar
 
 ENV AB_OFF=true
 

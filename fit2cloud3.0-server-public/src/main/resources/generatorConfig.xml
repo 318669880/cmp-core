@@ -49,6 +49,8 @@
 <!--        </table>-->
 <!--        <table tableName="user_notification_setting"/>-->
 <!--        <table tableName="proxy" domainObjectName="Proxy"/>-->
-        <table tableName="proxy_resource" domainObjectName="ProxyResource"/>
+        <table tableName="cloud_server" domainObjectName="CloudServer">
+            <columnOverride column="ip_array" javaType="java.lang.String" jdbcType="VARCHAR" />
+        </table>
     </context>
 </generatorConfiguration>

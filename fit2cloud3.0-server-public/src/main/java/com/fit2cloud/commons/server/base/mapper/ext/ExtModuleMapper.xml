@@ -14,10 +14,29 @@
 
     <select id="getModuleList"
             resultMap="com.fit2cloud.commons.server.base.mapper.ModuleMapper.BaseResultMap">
-        SELECT * FROM module
+        SELECT
+        m1.id,
+        m1.NAME,
+        m1.type,
+        m1.license,
+        m1.auth,
+        m1.summary,
+        m1.module_url,
+        m1.PORT,
+        m1.STATUS,
+        m1.active,
+        m1.icon,
+        m1.sort,
+        m1.OPEN,
+        IFNULL(m2.last_revision,m1.version) AS version,
+        m1.ext1,
+        m1.ext2
+        FROM
+        module m1
+        LEFT JOIN model_basic m2 ON m1.id = m2.module
         <where>
             <if test="name !=null">
-                module.name LIKE #{name}
+                m1.name LIKE #{name}
             </if>
         </where>
     </select>

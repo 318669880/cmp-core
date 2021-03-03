@@ -9,9 +9,11 @@ public class F2CImage extends F2CResource {
 	private String os;
 	private String region;
 	private Long created;
-	
+	private Long diskSize;//镜像模板磁盘大小，仅支持vmware
+
 	public F2CImage() {
 	}
+
 	public F2CImage(String id, String name, String description, String os, String region,
 			Long created) {
 		this.id = id;
@@ -21,6 +23,18 @@ public class F2CImage extends F2CResource {
 		this.region = region;
 		this.created = created;
 	}
+
+	public F2CImage(String id, String name, String description, String os, String region,
+					Long created, Long diskSize) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.os = os;
+		this.region = region;
+		this.created = created;
+		this.diskSize = diskSize;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -56,5 +70,13 @@ public class F2CImage extends F2CResource {
 	}
 	public void setRegion(String region) {
 		this.region = region;
+	}
+
+	public Long getDiskSize() {
+		return diskSize;
+	}
+
+	public void setDiskSize(Long diskSize) {
+		this.diskSize = diskSize;
 	}
 }

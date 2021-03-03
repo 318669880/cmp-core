@@ -804,6 +804,66 @@ public class CloudImageExample {
             return (Criteria) this;
         }
 
+        public Criteria andDiskSizeIsNull() {
+            addCriterion("disk_size is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeIsNotNull() {
+            addCriterion("disk_size is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeEqualTo(Long value) {
+            addCriterion("disk_size =", value, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeNotEqualTo(Long value) {
+            addCriterion("disk_size <>", value, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeGreaterThan(Long value) {
+            addCriterion("disk_size >", value, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeGreaterThanOrEqualTo(Long value) {
+            addCriterion("disk_size >=", value, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeLessThan(Long value) {
+            addCriterion("disk_size <", value, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeLessThanOrEqualTo(Long value) {
+            addCriterion("disk_size <=", value, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeIn(List<Long> values) {
+            addCriterion("disk_size in", values, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeNotIn(List<Long> values) {
+            addCriterion("disk_size not in", values, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeBetween(Long value1, Long value2) {
+            addCriterion("disk_size between", value1, value2, "diskSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiskSizeNotBetween(Long value1, Long value2) {
+            addCriterion("disk_size not between", value1, value2, "diskSize");
+            return (Criteria) this;
+        }
+
         public Criteria andSqlCriterion(String value) {
             addCriterion("(" + value + ")");
             return (Criteria) this;

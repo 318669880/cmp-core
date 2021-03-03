@@ -1,12 +1,14 @@
 FROM registry.fit2cloud.com/fit2cloud3/fabric8-java-alpine-openjdk8-jre:helm-v3.5.2
 
+ARG IMAGE_TAG
+
 MAINTAINER FIT2CLOUD <support@fit2cloud.com>
 
 RUN mkdir -p /opt/apps
 
-ADD target/fit2cloud3.0-management-center-3.0.1.jar /opt/apps
+ADD target/fit2cloud3.0-management-center-$IMAGE_TAG.jar /opt/apps
 
-ENV JAVA_APP_JAR=/opt/apps/fit2cloud3.0-management-center-3.0.1.jar
+ENV JAVA_APP_JAR=/opt/apps/fit2cloud3.0-management-center-$IMAGE_TAG.jar
 
 ENV AB_OFF=true
 

@@ -1,4 +1,4 @@
-FROM registry.fit2cloud.com/fit2cloud3/fabric8-java-alpine-openjdk8-jre:helm
+FROM registry.fit2cloud.com/fit2cloud3/fabric8-java-alpine-openjdk8-jre:helm-v3.5.2
 
 MAINTAINER FIT2CLOUD <support@fit2cloud.com>
 

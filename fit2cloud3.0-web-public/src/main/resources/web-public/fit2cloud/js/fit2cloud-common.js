@@ -1941,6 +1941,7 @@
                         $scope.values2Selected();
                         if ($scope.changed && $scope.changed()){
                             $scope.changed()($scope.selected);
+                            $scope.loadTreeData();
                         }
                     }
                 };

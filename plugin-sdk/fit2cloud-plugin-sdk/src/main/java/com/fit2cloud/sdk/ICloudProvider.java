@@ -203,6 +203,8 @@ public interface ICloudProvider {
 
     List<F2CNetwork> getF2cNetworks(Request networkRequest)throws PluginException;
 
+    String subnetIpAvailabilityCount(String request);
+
     /** 自定义方法，不通用的逻辑请override这个方法**/
     <T> T invokeCustomMethod(String methodName, Object... parameters) throws PluginException;
 }

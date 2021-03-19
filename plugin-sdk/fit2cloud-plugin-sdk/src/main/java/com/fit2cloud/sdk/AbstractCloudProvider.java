@@ -463,6 +463,10 @@ public abstract class AbstractCloudProvider implements ICloudProvider {
         return new ArrayList<F2CNetwork>();
     };
 
+    public String subnetIpAvailabilityCount(String request) {
+        return "0";
+    }
+
     public <T> T invokeCustomMethod(String methodName, Object... parameters) throws PluginException {
         try {
             List<Class> paramsClass = new ArrayList<Class>();

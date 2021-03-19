@@ -11,11 +11,16 @@ public class F2CNetwork extends F2CResource {
 	private String regionId;
 	private String regionName;
 	private String networkId;
+	private String vpcId;
+	private String vpcName;
+	private String zoneId;
+	private String zoneName;
+
 	public F2CNetwork() {
 	}
 
 	public F2CNetwork(String id, String name, String subnets, String availableZone, String createTime, Boolean shared,
-			Boolean external) {
+					  Boolean external) {
 		this.id = id;
 		this.name = name;
 		this.subnets = subnets;
@@ -105,4 +110,36 @@ public class F2CNetwork extends F2CResource {
 		this.networkId = networkId;
 	}
 
+	public String getVpcId() {
+		return vpcId;
+	}
+
+	public void setVpcId(String vpcId) {
+		this.vpcId = vpcId;
+	}
+
+	public String getVpcName() {
+		return vpcName;
+	}
+
+	public void setVpcName(String vpcName) {
+		this.vpcName = vpcName;
+	}
+
+	public String getZoneId() {
+		return zoneId;
+	}
+
+	public void setZoneId(String zoneId) {
+		this.zoneId = zoneId;
+	}
+
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
 }
+

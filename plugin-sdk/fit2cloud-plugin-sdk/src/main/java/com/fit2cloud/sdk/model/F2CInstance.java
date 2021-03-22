@@ -53,6 +53,7 @@ public class F2CInstance extends F2CResource {
 	private String subnetId;
 	private String networkInterfaceId;
 	private int snapShot;
+	private String remark;//添加虚拟机备注属性
 
 	public String getName() {
 		return name;
@@ -336,4 +337,11 @@ public class F2CInstance extends F2CResource {
 		this.snapShot = snapShot;
 	}
 
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 }

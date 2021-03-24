@@ -1779,6 +1779,8 @@
                 $scope.form = ctrl;
                 $scope.keyWord = null;
                 $scope.asyncDatas = [];
+                $scope.changeIndex = 0;
+                $scope.timeMachine = null;
                 $scope.$watch("where.rootId", function (value) {
                     if (value !== undefined) {
                         $scope.init();
@@ -1789,17 +1791,27 @@
                         $scope.treeData = angular.copy($scope.asyncDatas);
                         return;
                     }
-                    $scope.filterNodesByKey(value);
+                    $scope.destryTimeMachine()
+                    $scope.changeIndex++
+                    $scope.filterNodesByKey($scope.changeIndex);
                 })
+                $scope.destryTimeMachine = () => {
+                    $scope.timeMachine && clearTimeout($scope.timeMachine)
+                    $scope.timeMachine = null
+                },
+                    $scope.filterNodesByKey = index => {
+                        $scope.timeMachine = setTimeout(() => {
+                            if (index === $scope.changeIndex) {
+                                const nodes = angular.copy($scope.asyncDatas);
+                                const results = [];
+                                $scope.arrayByNodeFilter($scope.keyWord, nodes, results)
+                                $scope.treeData = results
+                                $scope.$apply()
+                            }
+                            $scope.destryTimeMachine()
+                        }, 1500)
+                    }
 
-                $scope.filterNodesByKey = key => {
-                    const nodes = angular.copy($scope.asyncDatas);
-                    const results = [];
-                    $scope.arrayByNodeFilter($scope.keyWord, nodes, results)
-
-                    $scope.treeData = results
-
-                }
 
                 $scope.arrayByNodeFilter = (key, nodes, results) => {
                     const label = $scope.label || 'name';
@@ -1971,7 +1983,6 @@
                         $scope.values2Selected();
                         if ($scope.changed && $scope.changed()){
                             $scope.changed()($scope.selected);
-                            $scope.loadTreeData();
                         }
                     }
                 };
@@ -2038,7 +2049,7 @@
                         if ($scope.selected.some(tNode => tNode == node.id)){
                             node.checked = true
                         }
-                        node.collapsed = false;
+                        // node.collapsed = false;
                         let allChildHidden = true;
                         if (!!$scope.checkCondition && $scope.checkCondition()){
                             let enableCheckBox = $scope.checkCondition()(node);

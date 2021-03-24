@@ -239,6 +239,7 @@ md-sidenav.side-form {
 .tree-node {
     overflow: hidden;
     word-wrap: break-word;
+    min-width: 400px;
 }
 
 .tree-node .tree-node {

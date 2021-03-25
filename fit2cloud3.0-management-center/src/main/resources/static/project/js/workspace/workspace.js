@@ -9,6 +9,7 @@ ProjectApp.controller('WorkspaceController', function ($scope, HttpUtils, Filter
         key: "organizationId",
         name: Translator.get("i18n_organization"),
         directive: "filter-org-tree",
+        search: true,
         multiple: false
     })
 

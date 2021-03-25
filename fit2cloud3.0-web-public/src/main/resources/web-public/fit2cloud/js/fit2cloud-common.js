@@ -1777,11 +1777,53 @@
                 $scope.values = [];
                 $scope.results = [];
                 $scope.form = ctrl;
+                $scope.keyWord = null;
+                $scope.asyncDatas = [];
+                $scope.changeIndex = 0;
+                $scope.timeMachine = null;
                 $scope.$watch("where.rootId", function (value) {
                     if (value !== undefined) {
                         $scope.init();
                     }
                 });
+                $scope.$watch("keyWord" , value => {
+                    if (!value) {
+                        $scope.treeData = angular.copy($scope.asyncDatas);
+                        return;
+                    }
+                    $scope.destryTimeMachine()
+                    $scope.changeIndex++
+                    $scope.filterNodesByKey($scope.changeIndex);
+                })
+                $scope.destryTimeMachine = () => {
+                    $scope.timeMachine && clearTimeout($scope.timeMachine)
+                    $scope.timeMachine = null
+                },
+                    $scope.filterNodesByKey = index => {
+                        $scope.timeMachine = setTimeout(() => {
+                            if (index === $scope.changeIndex) {
+                                const nodes = angular.copy($scope.asyncDatas);
+                                const results = [];
+                                $scope.arrayByNodeFilter($scope.keyWord, nodes, results)
+                                $scope.treeData = results
+                                $scope.$apply()
+                            }
+                            $scope.destryTimeMachine()
+                        }, 1500)
+                    }
+
+
+                $scope.arrayByNodeFilter = (key, nodes, results) => {
+                    const label = $scope.label || 'name';
+                    nodes && (nodes.length > 0) && nodes.forEach(node => {
+                        if (node[label].indexOf(key) != -1){
+                            results.push(node)
+                        }
+                        else if (node.children && node.children.length > 0){
+                            $scope.arrayByNodeFilter(key, node.children, results)
+                        }
+                    })
+                }
                 $scope.validate = function(values){
                     let parentDom = element.find("[name='"+$scope.name+"']").parent().parent().parent().parent();
                     if (!parentDom || parentDom.length==0) return;
@@ -1981,6 +2023,7 @@
                         }
                         $scope.buildTreeData(nodes);
                         $scope.treeData = nodes;
+                        $scope.asyncDatas = nodes;
                         $scope.selected2Results();
                         $scope.setValues();
 
@@ -2006,7 +2049,7 @@
                         if ($scope.selected.some(tNode => tNode == node.id)){
                             node.checked = true
                         }
-                        node.collapsed = false;
+                        // node.collapsed = false;
                         let allChildHidden = true;
                         if (!!$scope.checkCondition && $scope.checkCondition()){
                             let enableCheckBox = $scope.checkCondition()(node);
@@ -3076,6 +3119,8 @@
                 complete: "&"
             },
             link: function ($scope) {
+                $scope.keyWord = null;
+                $scope.asyncDatas = null;
                 $scope.condition.selecteds = [];
                 $scope.condition.convert = {value: "nodeId", label: "nodeName"};
                 if ($scope.condition.multiple == null || typeof $scope.condition.multiple == "undefined"){
@@ -3103,6 +3148,35 @@
                     }
                 };
 
+                $scope.$watch("keyWord" , value => {
+                    if (!value) {
+                        $scope.treeData = angular.copy($scope.asyncDatas);
+                        return;
+                    }
+                    $scope.filterNodesByKey(value);
+                })
+
+                $scope.filterNodesByKey = key => {
+                    const nodes = angular.copy($scope.asyncDatas);
+                    const results = [];
+                    $scope.arrayByNodeFilter($scope.keyWord, nodes, results)
+
+                    $scope.treeData = results
+
+                }
+
+                $scope.arrayByNodeFilter = (key, nodes, results) => {
+                    const label = $scope.label || 'name';
+                    nodes && (nodes.length > 0) && nodes.forEach(node => {
+                        if (node[label].indexOf(key) != -1){
+                            results.push(node)
+                        }
+                        else if (node.children && node.children.length > 0){
+                            $scope.arrayByNodeFilter(key, node.children, results)
+                        }
+                    })
+                }
+
 
                 $scope.loadData = function () {
                     let url = "user/orgtreeselect";
@@ -3111,6 +3185,7 @@
                     HttpUtils.post(url, param, function (response) {
                         let nodes = response.data;
                         $scope.buildTreeData(nodes);
+                        $scope.asyncDatas = nodes;
                         $scope.treeData = nodes;
                     }, function (data) {
                         $scope.error = data;
@@ -3172,6 +3247,8 @@
                 complete: "&"
             },
             link: function ($scope) {
+                $scope.keyWord = null;
+                $scope.asyncDatas = null;
                 $scope.condition.selecteds = [];
                 $scope.condition.convert = {value: "nodeId", label: "nodeName"};
                 if ($scope.condition.multiple == null || typeof $scope.condition.multiple == "undefined"){
@@ -3199,6 +3276,35 @@
                     }
                 };
 
+                $scope.$watch("keyWord" , value => {
+                    if (!value) {
+                        $scope.treeData = angular.copy($scope.asyncDatas);
+                        return;
+                    }
+                    $scope.filterNodesByKey(value);
+                })
+
+                $scope.filterNodesByKey = key => {
+                    const nodes = angular.copy($scope.asyncDatas);
+                    const results = [];
+                    $scope.arrayByNodeFilter($scope.keyWord, nodes, results)
+
+                    $scope.treeData = results
+
+                }
+
+                $scope.arrayByNodeFilter = (key, nodes, results) => {
+                    const label = $scope.label || 'name';
+                    nodes && (nodes.length > 0) && nodes.forEach(node => {
+                        if (node[label].indexOf(key) != -1){
+                            results.push(node)
+                        }
+                        else if (node.children && node.children.length > 0){
+                            $scope.arrayByNodeFilter(key, node.children, results)
+                        }
+                    })
+                }
+
                 $scope.loadData = function () {
                     let url = "user/orgtreeselect";
                     let param = {excludeWs: false};
@@ -3206,6 +3312,7 @@
                     HttpUtils.post(url, param, function (response) {
                         let nodes = response.data;
                         $scope.buildTreeData(nodes);
+                        $scope.asyncDatas = nodes;
                         $scope.treeData = nodes;
                     }, function (data) {
                         $scope.error = data;
@@ -3353,7 +3460,7 @@
                     }
                 }, $scope.option);
 
-                $scope.collapsed = angular.isDefined($scope.node.collapsed) ? $scope.node.collapsed : true;
+                $scope.collapsed = !$scope.node ? false : angular.isDefined($scope.node.collapsed) ? $scope.node.collapsed : true;
 
                 $scope.toggle = function () {
                     $scope.collapsed = !$scope.collapsed;
@@ -3364,7 +3471,7 @@
                     if (angular.isFunction($scope.option.hasChildren)) {
                         return $scope.option.hasChildren($scope.node);
                     }
-                    return angular.isArray($scope.node.children) && $scope.node.children.length > 0;
+                    return $scope.node && angular.isArray($scope.node.children) && $scope.node.children.length > 0;
                 }
             }
         };
@@ -3418,10 +3525,12 @@
                 }, $scope.option);
 
                 $scope.hasChildren = function (node) {
-                    return angular.isArray(node.children) && node.children.length > 0;
+
+                    return node && node.children && angular.isArray(node.children) && node.children.length > 0;
                 };
 
                 $scope.isChecked = function (node) {
+                    if (!node)return false
                     if ($scope.hasChildren(node) && !$scope.option.no_cascade) {
                         for (let i = 0; i < node.children.length; i++) {
                             if (!$scope.isChecked(node.children[i])) {
@@ -3434,7 +3543,8 @@
                 };
 
                 $scope.isIndeterminate = function (node) {
-                    if (node.checked && $scope.option.no_cascade) return false;
+
+                    if (!node || (node.checked && $scope.option.no_cascade)) return false;
                     if ($scope.hasChildren(node)) {
                         let checkChild = false;
                         let checkAll = true;
@@ -3456,6 +3566,7 @@
                 };
 
                 $scope.toggle = function (node, checked) {
+                    if (!node) return;
                     node.checked = checked !== undefined ? checked : !node.checked;
                     if ($scope.option.no_cascade){
                         return;
@@ -3568,7 +3679,7 @@
                 $scope.api = angular.extend($scope.api, {
                     setSelected: function (key, value, checked) {
                         let node = this.getNode(key, value);
-                        node.checked = checked;
+                        node && (node.checked = checked);
                     },
                     getSelected: function () {
                         return $scope.getSelected(angular.copy($scope.data));

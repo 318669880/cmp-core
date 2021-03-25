@@ -3,7 +3,6 @@ package com.fit2cloud.commons.server.license;
 import com.fit2cloud.commons.server.base.domain.License;
 import com.fit2cloud.commons.server.exception.F2CException;
 import com.fit2cloud.commons.server.i18n.Translator;
-import com.fit2cloud.commons.utils.CommonBeanFactory;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,19 +22,14 @@ public class DefaultLicenseService {
     private String moduleId;
 
     private static final String LICENSE_ID = "fit2cloud_license";
-    private static final String linuxValidatorUtil = "/usr/bin/validator_linux_amd64";
-    private static final String macValidatorUtil = "/usr/local/bin/validator_darwin_amd64";
+    private static final String validatorUtil = "/usr/bin/validator";
     private static final String product = "cmp";
     private static final String[] NO_PLU_LIMIT_MODULES = new String[]{"dashboard", "gateway"};
 
     public F2CLicenseResponse validateLicense(String product, String licenseKey){
         List<String> command = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
-        if(System.getProperty("os.name").contains("Mac")){
-            command.add(macValidatorUtil);
-        }else {
-            command.add(linuxValidatorUtil);
-        }
+        command.add(validatorUtil);
         command.add(licenseKey);
         try{
             execCommand(result, command);

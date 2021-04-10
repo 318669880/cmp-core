@@ -209,7 +209,7 @@
   "i18n_ui_upload_file_limit": "上传文件不得大于1M",
   "i18n_role": "角色",
   "i18n_user_source": "来源",
-  "i18n_workspace_delete_pre": "将删除工作空间",
+  "i18n_workspace_delete_pre": "将释放工作空间",
   "i18n_workspace_delete_suffix": "下的所有相关资源，确认删除？",
   "i18n_select_user": "选择用户",
   "i18n_select_user_please": "请选择用户！",

@@ -25,6 +25,9 @@
     background-color: rgb(230, 230, 230);
     color: rgb(66, 66, 66);
 }
+.filter-result >md-chips >md-chips-wrap {
+    box-shadow: none !important;
+}
 
 .filter-add {
     height: 32px;

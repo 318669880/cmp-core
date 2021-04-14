@@ -3,6 +3,7 @@
     <div flex="100" layout="row" layout-align="start center" layout-wrap class="filter-content">
         <div layout="row" layout-align="start center" style="box-shadow:none!important;background-color: transparent!important;min-width: 0px;!important;padding:0 0px!important;" class="filter-result md-whiteframe-1dp">
             <md-chips name="{{name}}"
+                      style="height: 40px!important;"
                       ng-model="values"
                       md-on-add="onValuesAdd($chip, $index)"
                       md-on-remove="onValuesRemove($chip, $index)"

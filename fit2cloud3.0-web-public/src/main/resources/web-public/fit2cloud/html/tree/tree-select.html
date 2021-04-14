@@ -2,20 +2,21 @@
 <div layout="row" class="filter" layout-align="start center" md-colors="{color:'primary'}">
     <div flex="100" layout="row" layout-align="start center" layout-wrap class="filter-content">
         <div layout="row" layout-align="start center" style="box-shadow:none!important;background-color: transparent!important;min-width: 0px;!important;padding:0 0px!important;" class="filter-result md-whiteframe-1dp">
-            <md-chips name="{{name}}" ng-model="values" md-on-add="onValuesAdd($chip, $index)" md-on-remove="onValuesRemove($chip, $index)" readonly="true" ng-required="{{required}}" md-removable="true">
+            <md-chips name="{{name}}"
+                      ng-model="values"
+                      md-on-add="onValuesAdd($chip, $index)"
+                      md-on-remove="onValuesRemove($chip, $index)"
+                      ng-required="{{required}}"
+                      md-removable="true">
+                <!--<input type="number" placeholder="Enter a number" aria-label="Number chips with no model">-->
+                <input id="_input_" type="text" style="border-width: 0px;" class="filter-input-text pointer" readonly="true" ng-click="edit();(treeData && treeData.length > 0) && open();" filter-popover auto-open="false" popover-template="filter-select1">
             </md-chips>
         </div>
         <div class="filter-condition tree-select-new">
             <script type="text/ng-template" id="filter-select1">
                 <md-content layout="column" class="md-whiteframe-2dp">
 
-                    <!--<md-input-container class="md-icon-float md-block">
-                        <label>Name</label>
-                        <md-icon src="/web-public/fit2cloud/img/fit2cloud/search.png" class="name"></md-icon>
-                        <input ng-model="user.name" type="search"  placeholder="{{'i18n_filter_quick_query' | translator:'快速查找'}}" ng-model="label">
-                    </md-input-container>-->
                     <input class="filter-select-search" type="search" ng-model="keyWord" placeholder="{{'i18n_filter_quick_query' | translator:'快速查找'}}" />
-                          <!-- ng-show="condition.search">-->
                     <div layout="column" class="filter-list">
                         <div class="md-padding">
                             <tree data="treeData" option="option" api="noroot" type="checkbox" style="height: 30vh" class="filter-multistage-tree"></tree>
@@ -23,8 +24,7 @@
                     </div>
                 </md-content>
             </script>
-            <!--<input id="_input_" type="text" style="border-width: 0px;" class="filter-input-text pointer" readonly="true" ng-click="edit();open()" filter-popover auto-open="false" popover-template="filter-select1">-->
-            <input id="_input_" type="text" style="border-width: 0px;" class="filter-input-text pointer" readonly="true" ng-click="readyOpen()" filter-popover auto-open="false" popover-template="filter-select1">
+            <!--<input id="_input_" type="text" style="border-width: 0px;" class="filter-input-text pointer" readonly="true" ng-click="readyOpen()" filter-popover auto-open="false" popover-template="filter-select1">-->
         </div>
     </div>
 </div>

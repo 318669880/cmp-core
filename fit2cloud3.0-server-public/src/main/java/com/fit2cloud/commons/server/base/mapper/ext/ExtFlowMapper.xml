@@ -119,7 +119,7 @@
         AND task_assignee = #{assignee}
         AND task_status = 'PENDING'
         <if test='search !=null and search != ""'>
-            AND ( flow_process.process_name like #{search} or flow_task.task_name like #{search} )
+            AND ( flow_process.process_name like #{search} or flow_task.task_name like #{search} or flow_task.business_key like #{search} )
         </if>
         ORDER BY flow_task.task_start_time DESC
     </select>
@@ -132,7 +132,7 @@
         AND task_assignee = #{assignee}
         AND task_status != 'PENDING'
         <if test='search !=null and search != ""'>
-            AND ( flow_process.process_name like #{search} or flow_task.task_name like #{search} )
+            AND ( flow_process.process_name like #{search} or flow_task.task_name like #{search} or flow_task.business_key like #{search} )
         </if>
         ORDER BY flow_task.task_start_time desc
     </select>

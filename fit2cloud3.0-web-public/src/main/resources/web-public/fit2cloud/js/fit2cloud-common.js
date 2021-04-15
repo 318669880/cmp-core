@@ -2328,6 +2328,56 @@
         };
     });
 
+    F2CModule.directive("treeFilterPopover", function ($templateCache, $mdPanel, $compile, $document) {
+        return {
+            restrict: 'A',
+            link: function ($scope, element, attr) {
+                $scope = $scope.$parent
+                let template = $templateCache.get(attr["popoverTemplate"]);
+                let auto = attr["autoOpen"];
+                $compile(template)($scope);
+
+                $scope.open = function () {
+                    let position = $mdPanel.newPanelPosition().relativeTo(element)
+                        .addPanelPosition($mdPanel.xPosition.ALIGN_START, $mdPanel.yPosition.BELOW);
+
+                    let config = {
+                        attachTo: angular.element($document[0].body),
+                        controller: function ($scope, mdPanelRef) {
+                            $scope.close = function () {
+                                mdPanelRef.close();
+                            }
+                        },
+                        scope: $scope,
+                        template: template,
+                        position: position,
+                        clickOutsideToClose: true,
+                        escapeToClose: true,
+                        focusOnOpen: false,
+                        onDomRemoved: $scope.onClose
+                    };
+
+                    $mdPanel.open(config).then(function (result) {
+                        $scope.popoverRef = result;
+                    });
+                };
+
+                $scope.onClose = function(){
+                    if ($scope.popoverRef.config.scope.afterClose){
+                        $scope.popoverRef.config.scope.afterClose();
+                    }
+                }
+
+                $scope.$on('$destroy', function () {
+                    if ($scope.popoverRef) $scope.popoverRef.close();
+                });
+
+                if (auto === 'false') return;
+                $scope.open();
+            }
+        };
+    });
+
     F2CModule.directive("filterNumber", function ($timeout, $filter, FilterSearch) {
         return {
             replace: true,

@@ -1,0 +1,1 @@
+ALTER TABLE `cloud_server` CHANGE COLUMN `image_id` `image_id` VARCHAR(255) NULL DEFAULT NULL COMMENT '镜像 ID' ;

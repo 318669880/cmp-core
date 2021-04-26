@@ -467,6 +467,10 @@ public abstract class AbstractCloudProvider implements ICloudProvider {
         return "0";
     }
 
+    public boolean migrateResource(String request) {
+        return false;
+    }
+
     public <T> T invokeCustomMethod(String methodName, Object... parameters) throws PluginException {
         try {
             List<Class> paramsClass = new ArrayList<Class>();

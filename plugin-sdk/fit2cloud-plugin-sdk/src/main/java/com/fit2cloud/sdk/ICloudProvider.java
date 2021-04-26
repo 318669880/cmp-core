@@ -201,9 +201,14 @@ public interface ICloudProvider {
     /**是否支持多网卡管理**/
     boolean isSupportMultiNetwork();
 
-    List<F2CNetwork> getF2cNetworks(Request networkRequest)throws PluginException;
+    /**获取网络**/
+    List<F2CNetwork> getF2cNetworks(Request networkRequest) throws PluginException;
 
+    /**获取子网可用IP数**/
     String subnetIpAvailabilityCount(String request);
+
+    /**公有云虚拟机变更所属项目、vc虚拟机变更所属文件夹**/
+    boolean migrateResource(String request);
 
     /** 自定义方法，不通用的逻辑请override这个方法**/
     <T> T invokeCustomMethod(String methodName, Object... parameters) throws PluginException;

@@ -638,7 +638,7 @@ MenuApp.controller('MenuCtrl', function ($scope, $http, $mdSidenav, $mdDialog, $
     $scope.buildTreeData = function(callBack){
         let treeData = [];
         $http.get("user/source/list").then(function (rep) {
-
+            $scope.sourceUserRoleList = angular.copy(rep.data.data);
             $scope.rawData = rep.data.data;
             angular.forEach($scope.rawData, function (data) {
                 data.current = data.id === $scope.user.sourceId;
@@ -656,15 +656,15 @@ MenuApp.controller('MenuCtrl', function ($scope, $http, $mdSidenav, $mdDialog, $
             });
             angular.forEach(treeData, function (_treeData) {
                 $scope.setChildren(_treeData, $scope.rawData);
-            })
+            });
             callBack && callBack(treeData);
+            $scope.sourceUserRoleForChild = angular.copy(treeData);
         });
     }
 
     $scope.setChildren = (node, nodeLists) => {
         node.children = [];
         nodeLists.forEach(item => {
-
             if (item.parentId == node.id){
                 if (item.switchable){
                     item.name = item.name + "[" + item.desc + "]"
@@ -1077,6 +1077,28 @@ MenuApp.controller('SwitchRoleController', function ($scope, HttpUtils, $http) {
         $scope.treeData = treeDatas;
         $scope.treeApi.selected = $scope.currentRoleNode;
     })
+
+    $scope.filterUserRoleFun = function(){
+        $scope.treeData = [];
+        if($scope.filterParameter==="") {
+            $scope.treeData = angular.copy($scope.sourceUserRoleForChild);
+            return;
+        }
+
+        let filterListTemp = angular.copy($scope.sourceUserRoleList);
+        let filters = filterListTemp.filter(function (v) {
+            if(v.name.indexOf($scope.filterParameter)>-1) {
+                return true;
+            }
+        });
+
+        angular.forEach(filters, function (item) {
+            if (item.switchable) {
+                item.name = item.name + "[" + item.desc + "]"
+                $scope.treeData.push(item);
+            }
+        });
+    }
 
 });
 
@@ -1604,3 +1626,4 @@ MenuApp.controller('SwitchRoleController', function ($scope, HttpUtils, $http) {
     });
 
 })();
+

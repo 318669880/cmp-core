@@ -386,5 +386,7 @@
   "i18n_please_select_host_for_unproxy": "Please select the host to unset the proxy.",
   "i18n_confirm_unset_proxy": "Confirm to cancel the proxy？",
   "i18n_unset_proxy_success": "Cancel proxy success！",
-  "i18n_all_organizations": "All Organization"
+  "i18n_all_organizations": "All Organization",
+  "i18n_search_tip": "Please enter search content"
+
 }

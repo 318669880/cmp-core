@@ -10,6 +10,12 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="content" ng-controller="SwitchRoleController">
+            <div class="hide-validation-error product-input">
+                <md-input-container style="margin: 0;width: 90%;height: 35px;">
+                    <md-icon>search</md-icon>
+                    <input ng-change="filterUserRoleFun()" ng-model="filterParameter" type="text" placeholder="{{'i18n_search_tip' | translator:'请输入搜索内容'}}">
+                </md-input-container>
+            </div>
             <tree class="resource-tree role-tree" data="treeData" api="treeApi" type="link"></tree>
         </div>
 

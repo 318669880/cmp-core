@@ -1098,6 +1098,7 @@ MenuApp.controller('SwitchRoleController', function ($scope, HttpUtils, $http) {
                 $scope.treeData.push(item);
             }
         });
+        $scope.treeApi.selected = $scope.currentRoleNode;
     }
 
 });

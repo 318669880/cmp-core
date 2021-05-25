@@ -205,7 +205,7 @@ public interface ICloudProvider {
     List<F2CNetwork> getF2cNetworks(Request networkRequest) throws PluginException;
 
     /**获取子网可用IP数**/
-    String subnetIpAvailabilityCount(String request);
+    String subnetIpAvailabilityCount(String request) throws PluginException;
 
     /**公有云虚拟机变更所属项目、vc虚拟机变更所属文件夹**/
     boolean migrateResource(String request);

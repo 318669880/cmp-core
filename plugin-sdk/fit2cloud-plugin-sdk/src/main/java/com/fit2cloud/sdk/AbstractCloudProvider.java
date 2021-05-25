@@ -463,7 +463,7 @@ public abstract class AbstractCloudProvider implements ICloudProvider {
         return new ArrayList<F2CNetwork>();
     };
 
-    public String subnetIpAvailabilityCount(String request) {
+    public String subnetIpAvailabilityCount(String request) throws PluginException {
         return "0";
     }
 

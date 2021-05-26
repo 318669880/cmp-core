@@ -460,11 +460,11 @@ public abstract class AbstractCloudProvider implements ICloudProvider {
     }
 
     public List<F2CNetwork> getF2cNetworks(Request networkRequest) throws PluginException{
-        return new ArrayList<F2CNetwork>();
+        throw new PluginException("The plugin does not yet support get networks!");
     };
 
     public String subnetIpAvailabilityCount(String request) throws PluginException {
-        return "0";
+        throw new PluginException("The plugin does not yet support get ip usage of subnet!");
     }
 
     public boolean migrateResource(String request) {

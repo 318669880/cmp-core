@@ -5,7 +5,7 @@
 
     <groupId>com.fit2cloud</groupId>
     <artifactId>fit2cloud3.0-management-center</artifactId>
-    <version>3.2.1</version>
+    <version>3.2.2</version>
     <packaging>jar</packaging>
 
     <name>fit2cloud3.0-management-center</name>

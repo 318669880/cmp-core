@@ -61,7 +61,7 @@
           and user_role.source_id = #{organizationId}
     </select>
     <select id="authorizeUsersPaging" resultMap="com.fit2cloud.mc.dao.ext.ExtUserMapper.userDtoMap">
-        select user.*
+        select distinct user.*
         from user
                  join user_role
         where user.id = user_role.user_id

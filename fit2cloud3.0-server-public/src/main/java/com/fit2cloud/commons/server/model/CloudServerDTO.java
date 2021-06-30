@@ -28,6 +28,9 @@ public class CloudServerDTO extends CloudServer {
     private String cpuMaxUsagePercent;
     @ApiModelProperty("内存平均使用率")
     private String memoryMaxUsagePercent;
+    @ApiModelProperty("内存平均使用率")
+    private String applyName;
+
 
     public String getCpuMaxUsagePercent() {
         return cpuMaxUsagePercent;
@@ -117,5 +120,13 @@ public class CloudServerDTO extends CloudServer {
 
     public void setMemoryUsagePercent(String memoryUsagePercent) {
         this.memoryUsagePercent = memoryUsagePercent;
+    }
+
+    public String getApplyName() {
+        return applyName;
+    }
+
+    public void setApplyName(String applyName) {
+        this.applyName = applyName;
     }
 }

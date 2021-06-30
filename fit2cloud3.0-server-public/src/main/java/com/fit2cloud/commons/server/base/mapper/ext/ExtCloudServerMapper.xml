@@ -9,6 +9,7 @@
         <result column="workspace_name" jdbcType="VARCHAR" property="workspaceName"/>
         <result column="cloud_provider_zh_name" jdbcType="VARCHAR" property="cloudProviderZHName"/>
         <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="apply_name" jdbcType="VARCHAR" property="applyName"/>
     </resultMap>
 
     <select id="selectCloudServers" resultMap="BaseResultMap">
@@ -18,12 +19,15 @@
         plugin.description AS cloud_provider_zh_name,
         workspace.name AS workspace_name,
         organization.name AS organization_name,
+        user.name AS apply_name,
         plugin.icon
         FROM cloud_server
         LEFT JOIN cloud_account ON cloud_account.id = cloud_server.account_id
         LEFT JOIN plugin ON cloud_account.plugin_name = plugin.name
         LEFT JOIN workspace ON cloud_server.workspace_id = workspace.id
         LEFT JOIN organization ON workspace.organization_id = organization.id
+        LEFT JOIN vm_cloud_server ON cloud_server.id = vm_cloud_server.cloud_server_id
+        LEFT JOIN user ON vm_cloud_server.apply_user = user.id
         <where>
             <if test="params.instanceStatus!=null">
                 AND
@@ -68,6 +72,12 @@
                 <foreach collection="params.ids" item="id" separator="," open="(" close=")">
                     #{id, jdbcType=VARCHAR}
                 </foreach>
+            </if>
+            <if test="params.organizationName!=null">
+                AND organization.name LIKE CONCAT('%',#{params.organizationName},'%')
+            </if>
+            <if test="params.applyName!=null">
+                AND user.name LIKE CONCAT('%',#{params.applyName},'%')
             </if>
         </where>
         <if test="params.sort != null">

@@ -6,6 +6,7 @@ package com.fit2cloud.sdk.model;
 public class VmDisksRequest extends Request {
     private String instanceId;
     private String diskId;
+    private String projectId;
 
     public String getInstanceId() {
         return instanceId;
@@ -21,5 +22,13 @@ public class VmDisksRequest extends Request {
 
     public void setDiskId(String diskId) {
         this.diskId = diskId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 }

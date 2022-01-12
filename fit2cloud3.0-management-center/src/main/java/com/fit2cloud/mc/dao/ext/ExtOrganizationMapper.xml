@@ -39,7 +39,7 @@
         <if test="map.name!=null">
             and o.name like #{map.name}
         </if>
-        <if test="map.orgIds != null">
+        <if test="map.orgIds != null and map.orgIds.size>0">
             and o.id in
             <foreach collection="map.orgIds" item="orgId" index="index" open="(" close=")" separator=",">
                 #{orgId}

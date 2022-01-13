@@ -8,6 +8,7 @@ public class DiskRequest extends Request {
     private List<F2CDisk> disks;
     //卸载磁盘时是否删除磁盘
     private boolean destroy;
+    private String projectId;
 
     public String getResourceId() {
         return resourceId;
@@ -31,5 +32,13 @@ public class DiskRequest extends Request {
 
     public void setDestroy(boolean destroy) {
         this.destroy = destroy;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 }

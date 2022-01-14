@@ -935,6 +935,9 @@
                 if (!$window.parent.cloudAccountMap) {
                     $window.parent.cloudAccountMap = {};
                 }
+                if($scope.id==='Physicalmachine'){
+                    return;
+                }
 
                 if ($window.parent.cloudAccountMap[$scope.id]) {
                     $scope.account = $window.parent.cloudAccountMap[$scope.id];
